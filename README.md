@@ -1,7 +1,7 @@
 # OmniGraph
 Desktop application for creating graphs and algorithms visualisation
 
-[Download jar](https://github.com/Todense/GraphBuilderFX/releases/download/0.1/GraphBuilderFX.jar) (Requires Java 11+)
+[Download jar](https://github.com/Todense/OmniGraph/releases/download/0.0.1/OmniGraph.jar) (Requires Java 11+)
 
 ![exapmple1](https://github.com/Todense/GraphBuilderFX/blob/master/src/main/resources/screenshots/screenshot1.png)
 
