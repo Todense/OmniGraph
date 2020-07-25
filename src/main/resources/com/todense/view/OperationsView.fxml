@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<VBox alignment="CENTER" prefHeight="150.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.OperationsView">
+   <padding>
+      <Insets bottom="5.0" />
+   </padding>
+   <Label text="Graph Actions" textFill="#8a8a8a">
+      <font>
+         <Font size="10.0" />
+      </font>
+   </Label>
+   <Button contentDisplay="CENTER" mnemonicParsing="false" onAction="#pathAction" prefHeight="25.0" prefWidth="100.0" text="Path" />
+   <Button contentDisplay="CENTER" mnemonicParsing="false" onAction="#completeAction" prefHeight="25.0" prefWidth="100.0" styleClass="success" text="Complete" />
+   <Button contentDisplay="CENTER" layoutX="67.0" layoutY="66.0" mnemonicParsing="false" onAction="#complementAction" prefHeight="25.0" prefWidth="100.0" styleClass="success" text="Complement" />
+   <Button contentDisplay="CENTER" layoutX="53.0" layoutY="94.0" mnemonicParsing="false" onAction="#subdivideAction" prefHeight="25.0" prefWidth="100.0" styleClass="success" text="Subdivide" />
+   <Button contentDisplay="CENTER" layoutX="53.0" layoutY="122.0" mnemonicParsing="false" onAction="#deleteEdgesAction" prefHeight="25.0" prefWidth="100.0" styleClass="success" text="Delete edges" />
+</VBox>

@@ -1,0 +1,36 @@
+OmniGraph
+
+1. Basic mouse controls
+
+- Zoom in\out: mouse scroll
+- Add node: left click on background
+- Add edge: right click on first node and drag mouse to second node
+- Remove node/edge: middle click on node/edge or open context menu -> delete
+- Open node/edge context menu: right click on node/edge
+- Select nodes: right click on canvas and drag mouse to create selection area
+- Select/deselect node/edge: CTRL + left click on node/edge
+- Drag one node or all selected nodes: left click on node and drag the mouse
+- Move camera: SHIFT + left mouse drag
+
+
+2. Keyboard shortcuts
+
+CTRL + DEL - delete graph
+CTRL + Q - adjust camera to graph
+CTRL + R - create random graph
+CTRL + L - start graph layout
+CTRL + P - create path 
+CTRL + K - add all edges
+
+
+3. Algorithms
+
+Default start and goal nodes are the first and the last node of a graph. User can select node as start or goal in node context menu.
+
+There are two weight function options for algorithms with weighted edges:
+a) length - weight of an edge is set to its length (used when edge weight option in graph appearance menu is set to 'None' or 'Distance')
+b) custom - weight of an edge is set to its custom weight specified by user (used when edge weight option in graph appearance menu is set to 'Custom')
+
+
+
+

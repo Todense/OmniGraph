@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.ToggleSwitch?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="27.0" prefWidth="754.0" spacing="2.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.AnimationView">
+   <ToggleSwitch fx:id="animationToggleSwitch" contentDisplay="TOP" graphicTextGap="0.0" prefHeight="17.0" prefWidth="78.0" selected="true" text="Animated" textAlignment="CENTER" viewOrder="1.0">
+      <font>
+         <Font name="Serif Regular" size="12.0" />
+      </font>
+      <HBox.margin>
+         <Insets right="5.0" />
+      </HBox.margin>
+   </ToggleSwitch>
+   <HBox fx:id="animationHBox" alignment="CENTER" prefHeight="27.0" prefWidth="654.0" spacing="2.0">
+      <HBox.margin>
+         <Insets right="3.0" />
+      </HBox.margin>
+      <ToggleButton fx:id="pauseButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" textAlignment="CENTER">
+         <font>
+            <Font size="10.0" />
+         </font>
+         <graphic>
+            <FontIcon iconColor="#bfbfbf" iconLiteral="fas-pause" />
+         </graphic>
+         <tooltip>
+            <Tooltip text="Pause" />
+         </tooltip>
+      </ToggleButton>
+      <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#nextStepAction" prefHeight="22.0" prefWidth="22.0">
+         <font>
+            <Font size="10.0" />
+         </font>
+         <graphic>
+            <FontIcon iconColor="#bfbfbf" iconLiteral="fas-step-forward" />
+         </graphic>
+         <tooltip>
+            <Tooltip text="Next Step" />
+         </tooltip>
+         <HBox.margin>
+            <Insets left="3.0" />
+         </HBox.margin>
+      </Button>
+      <Separator maxHeight="-Infinity" minHeight="-Infinity" orientation="VERTICAL" prefHeight="20.0" prefWidth="11.0">
+         <padding>
+            <Insets left="5.0" />
+         </padding>
+      </Separator>
+      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="25.0" prefWidth="70.0" text="Step Time (ms)" textAlignment="CENTER" textFill="#808080">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+      <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stepTimeDecrementAction" prefHeight="15.0" prefWidth="15.0">
+         <graphic>
+            <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
+         </graphic>
+      </Button>
+      <Slider fx:id="stepTimeSlider" blockIncrement="1.0" max="500.0" prefHeight="20.0" prefWidth="416.0" value="100.0">
+         <HBox.margin>
+            <Insets right="3.0" />
+         </HBox.margin>
+      </Slider>
+      <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stepTimeIncrementAction" prefHeight="15.0" prefWidth="15.0">
+         <graphic>
+            <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
+         </graphic>
+      </Button>
+      <TextField fx:id="sleepTimeTextField" alignment="CENTER" prefHeight="25.0" prefWidth="62.0" />
+   </HBox>
+</HBox>

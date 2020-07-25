@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.ToggleSwitch?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<VBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="198.0" prefWidth="165.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.AlgorithmView">
+   <padding>
+      <Insets bottom="5.0" top="5.0" />
+   </padding>
+   <Label alignment="CENTER_RIGHT" prefHeight="13.0" prefWidth="160.0" stylesheets="@../../../darkLabel.css" text="Algorithm" textFill="#2c2c2c">
+      <font>
+         <Font size="9.0" />
+      </font>
+   </Label>
+   <ChoiceBox fx:id="algorithmChoiceBox" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="160.0" />
+   <Separator layoutX="32.0" layoutY="124.0" maxWidth="-Infinity" prefHeight="13.0" prefWidth="145.0">
+      <VBox.margin>
+         <Insets bottom="3.0" top="3.0" />
+      </VBox.margin>
+   </Separator>
+   <VBox fx:id="algorithmsVBox" alignment="TOP_CENTER" prefHeight="81.0" prefWidth="165.0" spacing="3.0">
+      <HBox fx:id="startingNodeHBox" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="160.0" spacing="3.0">
+         <Label prefHeight="25.0" prefWidth="120.0" text="Start node">
+            <font>
+               <Font size="10.0" />
+            </font>
+         </Label>
+         <TextField fx:id="startNodeTextField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="55.0" text="Not set">
+            <font>
+               <Font size="10.0" />
+            </font>
+         </TextField>
+      </HBox>
+      <HBox fx:id="goalNodeHBox" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="160.0" spacing="3.0">
+         <Label prefHeight="25.0" prefWidth="120.0" text="Goal node">
+            <font>
+               <Font size="10.0" />
+            </font>
+         </Label>
+         <TextField fx:id="goalNodeTextField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="55.0" text="Not set">
+            <font>
+               <Font size="10.0" />
+            </font>
+         </TextField>
+      </HBox>
+      <ToggleSwitch fx:id="hcConnToggleSwitch" contentDisplay="CENTER" prefHeight="35.0" prefWidth="160.0" selected="true" text="Check Connectivity">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </ToggleSwitch>
+   </VBox>
+   <Separator maxWidth="-Infinity" prefHeight="13.0" prefWidth="141.0">
+      <VBox.margin>
+         <Insets bottom="3.0" top="3.0" />
+      </VBox.margin>
+   </Separator>
+   <ToggleSwitch fx:id="endpointsToggleSwitch" contentDisplay="CENTER" prefHeight="35.0" prefWidth="160.0" selected="true" text="Show endpoints">
+      <font>
+         <Font size="10.0" />
+      </font>
+   </ToggleSwitch>
+   <Separator layoutX="22.0" layoutY="144.0" maxWidth="-Infinity" prefHeight="11.0" prefWidth="141.0">
+      <VBox.margin>
+         <Insets bottom="3.0" top="3.0" />
+      </VBox.margin>
+   </Separator>
+   <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="3.0">
+      <Button fx:id="algorithmStartButton" alignment="CENTER" mnemonicParsing="false" onAction="#startAlgorithmAction" prefHeight="25.0" prefWidth="79.0" styleClass="danger" text="Start">
+         <graphic>
+            <FontIcon iconColor="#08ae34" iconLiteral="fas-play" />
+         </graphic>
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Button>
+      <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopAlgorithmAction" prefHeight="25.0" prefWidth="25.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+         <graphic>
+            <FontIcon iconColor="#e14444" iconLiteral="fas-stop" iconSize="15" selectionStart="0" />
+         </graphic>
+         <tooltip>
+            <Tooltip text="Stop all" />
+         </tooltip>
+      </Button>
+   </HBox>
+</VBox>

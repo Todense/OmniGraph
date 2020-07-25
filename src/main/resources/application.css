@@ -1,0 +1,313 @@
+*{
+    fx-light: #515151;
+    fx-lighter: derive(fx-light, 30%);
+    fx-medium: derive(-fx-base, 10%);
+    fx-dark: #3D3D3D;
+    fx-hover: #797A78;
+    fx-text-dark: #CFCFCF;
+}
+
+.root{
+    -fx-base: fx-dark;
+    -fx-control-inner-background: fx-medium;
+
+    -fx-background-color: fx-dark;
+    -fx-box-border: transparent;
+    -fx-font: 11px "Didact Gothic";
+
+    -fx-accent: #2E2E2E;
+    -fx-focus-color: transparent ;
+}
+
+.button{
+     -fx-text-fill: fx-text-dark;
+     -fx-background-color: fx-light;
+}
+
+
+
+.button:hover{
+    -fx-text-fill: -fx-text-base-color;
+    -fx-background-color: fx-hover;
+}
+
+.toggle-button {
+     -fx-text-fill: fx-text-dark;
+     -fx-background-color: fx-light;
+
+}
+.toggle-button:hover{
+     -fx-text-fill: -fx-text-base-color;
+     -fx-background-color: fx-hover;
+}
+
+.toggle-button:selected{
+     -fx-text-fill: -fx-text-base-color;
+     -fx-background-color: fx-lighter;
+}
+
+.color-picker{
+    -fx-color-label-visible: false;
+    -fx-background-color: fx-light;
+}
+
+.color-picker:hover{
+    -fx-background-color: fx-hover;
+}
+
+.color-picker > .arrow-button > .arrow {
+    -fx-background-color: fx-text-dark;
+}
+
+.color-picker:hover > .arrow-button > .arrow {
+    -fx-background-color: -fx-text-base-color;
+}
+
+
+.choice-box{
+    -fx-text-fill: fx-text-dark;
+    -fx-background-color: fx-light;
+}
+
+.choice-box:hover{
+    -fx-text-fill: -fx-text-base-color;
+    -fx-background-color: fx-hover;
+}
+
+.choice-box > .open-button > .arrow {
+    -fx-background-color: fx-text-dark;
+}
+
+.choice-box:hover > .open-button > .arrow {
+    -fx-background-color: -fx-text-base-color;
+}
+
+
+//.text-field{
+//    -fx-background-color: #CFCFCF;
+//    -fx-background-insets: 0, 0 0 1 0 ;
+//    -fx-background-radius: 0 ;
+//}
+
+.titled-pane{
+    -fx-text-fill: fx-text-dark;
+}
+
+.titled-pane > .title {
+     -fx-background-color: -fx-text-box-border, -fx-control-inner-background;
+}
+
+SplitPane{
+    -fx-background-color: #3D3D3D;
+     -fx-padding: 1;
+     -fx-border-width: 2 2 2 2;
+     -fx-border-color: #515151;
+}
+
+.titled-pane > .title:hover{
+    -fx-background-color: #545454;
+}
+
+.titled-pane > .title{
+    -fx-background-color: fx-medium;
+    -fx-border-color: derive(fx-medium, 20%);
+     -fx-border-width: 1 1 1 1;
+}
+
+.titled-pane > .content{
+    -fx-border-color: derive(fx-medium, 20%);
+     -fx-border-width: 1 1 1 1;
+}
+
+.titled-pane > .title > .arrow-button > .arrow{
+    -fx-background-color: fx-text-dark
+}
+
+.titled-pane > .content
+{
+    -fx-background-color: transparent;
+    //-fx-padding: 0 -1 -1 -1 ; // this padding setting will help you to ignore the U border when you try to set the background color for the content of titledpane. if you don't do this, because the default css of titledpane, it will appear the U border like I said before.
+    //-fx-background-insets: 0 0 0 0; // well you can add this line or not, depend on you
+}
+
+
+.toggle-switch > .label{
+    -fx-font-size: 5;
+    -fx-text-fill: red;
+}
+
+
+.toggle-switch > .thumb{
+    -fx-background-color: #797A78;
+}
+
+.toggle-switch > .thumb-area{
+    -fx-background-color: #515151;
+}
+
+.toggle-switch:selected > .thumb-area{
+    -fx-background-color: #2D5BAC;
+}
+
+.toggle-switch  .label{
+    -fx-font-size: 10;
+    -fx-text-fill: fx-text-dark;
+}
+
+
+
+.spinner{
+    -fx-background-color: -fx-text-box-border, -fx-control-inner-background;
+}
+
+.spinner > .increment-arrow-button  {
+    -fx-background-color: -fx-text-box-border, -fx-control-inner-background;
+}
+
+.spinner > .increment-arrow-button > .increment-arrow {
+    -fx-background-color: fx-text-dark;
+}
+
+.spinner .decrement-arrow-button  {
+    -fx-background-color: -fx-text-box-border, -fx-control-inner-background;
+}
+
+.spinner > .decrement-arrow-button > .decrement-arrow {
+    -fx-background-color: fx-text-dark;
+}
+
+.slider .track{
+    -fx-background-color: #515151;
+    -fx-pref-height:2;
+}
+
+.slider .thumb{
+    -fx-background-color: #797A78;
+}
+
+.label{
+     -fx-text-fill: #CFCFCF;
+}
+
+.canvas{
+    -fx-background-color: antiquewhite, white ;
+    -fx-background-insets: 0, 20 ;
+    -fx-padding: 20 ;
+}
+
+
+.split-pane:horizontal
+{
+    -fx-padding: 0;
+    -fx-box-border: transparent;
+}
+
+.split-pane:horizontal > .split-pane-divider {
+   -fx-background-color: -fx-base;
+}
+
+.tab{
+    -fx-background-color: derive(fx-dark, -10%);
+    -fx-background-radius: 0;
+    -fx-border-color: derive(fx-dark, 20%);
+    -fx-border-width: 0 0 3 0;
+    -fx-text-fill: derive(fx-text-dark, -30%);
+}
+
+.tab:selected{
+    -fx-background-color: fx-medium;
+    -fx-border-color: derive(fx-dark, 40%);
+     -fx-border-width: 0 0 3 0;
+     fx-text-fill: fx-text-dark;
+}
+
+.tab-label {
+    -fx-text-fill: fx-text-dark ;
+}
+
+.tab {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.tab-pane > .tab-header-area > .tab-header-background{
+       -fx-background-color: -fx-base;
+}
+
+
+.tab:hover{
+    -fx-background-color: #545454;
+    -fx-text-fill: -fx-text-base-color;
+}
+
+.scroll-pane {
+
+}
+
+.scroll-pane:focused {
+    -fx-background-insets: 0;
+}
+
+.scroll-pane .corner {
+    -fx-background-insets: 0;
+}
+
+.scroll-pane .viewport{
+    -fx-background-color: fx-dark;
+}
+
+.scroll-bar:vertical > .thumb{
+    -fx-background-color: -fx-text-box-border, -fx-control-inner-background;
+}
+
+.text-area .scroll-bar:vertical {
+    -fx-pref-width: 1;
+    -fx-opacity: 0;
+}
+
+
+.text-area {
+    text-area-background: -fx-text-box-border, -fx-control-inner-background ;
+    -fx-background-color: transparent;
+    -fx-border-color:derive(-fx-base, 20%);
+    -fx-border-width: 1 1 1 1;
+    -fx-background-insets: 0;
+}
+
+.text-area .content {
+    -fx-background-color: text-area-background ;
+}
+
+.separator:horizontal *.line {
+    -fx-border-style: solid;
+    -fx-border-width: 0 0 1 0; /* its make really one-pixel-border */
+    -fx-border-color: #5D5D5D;
+}
+
+
+.progress-indicator:indeterminate{
+
+    -fx-progress-color: #3B75DA;
+}
+
+.progress-indicator:indeterminate > .spinner{
+     -fx-background-color: fx-dark;
+}
+
+.progress-bar{
+    -fx-accent: #3B75DA ;
+}
+
+.progress-bar > .track {
+     -fx-background-color: #C8C8C8;
+}
+
+
+.popover > .border  {
+    -fx-border-style: none;
+    -fx-padding: 0;
+    -fx-border-width: 0;
+    -fx-fill: #3D3D3D !important;
+}
+
+

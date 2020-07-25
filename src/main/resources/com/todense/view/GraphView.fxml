@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.ToggleSwitch?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" prefWidth="180.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.GraphView">
+   <HBox alignment="CENTER" prefHeight="15.0" prefWidth="170.0">
+      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="94.0" text="Node Size">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+      <Label fx:id="nodeSizeLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="15.0" prefWidth="26.0" text="0.1" textAlignment="CENTER">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+   </HBox>
+   <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="170.0" spacing="2.0">
+      <Button layoutX="143.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#nodeSizeDecrementAction" prefHeight="15.0" prefWidth="15.0">
+         <graphic>
+            <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
+         </graphic>
+      </Button>
+      <Slider fx:id="nodeSizeSlider" blockIncrement="1.0" majorTickUnit="1.0" min="1.0" minorTickCount="1" prefHeight="15.0" prefWidth="150.0" value="30.0" />
+      <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#nodeSizeIncrementAction" prefHeight="15.0" prefWidth="15.0">
+         <graphic>
+            <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
+         </graphic>
+      </Button>
+   </HBox>
+   <Separator maxWidth="-Infinity" minWidth="-Infinity" prefWidth="141.0">
+      <VBox.margin>
+         <Insets bottom="3.0" top="3.0" />
+      </VBox.margin>
+   </Separator>
+   <HBox alignment="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="11.0" prefWidth="170.0">
+      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="98.0" text="Edge width">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+      <Label fx:id="edgeWidthLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+   </HBox>
+   <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="170.0" spacing="2.0">
+      <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#edgeWidthDecrementAction" prefHeight="15.0" prefWidth="15.0">
+         <graphic>
+            <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
+         </graphic>
+      </Button>
+      <Slider fx:id="edgeWidthSlider" blockIncrement="0.01" majorTickUnit="0.01" max="0.5" min="0.01" minorTickCount="0" prefHeight="15.0" prefWidth="150.0" value="0.1" />
+      <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#edgeWidthIncrementAction" prefHeight="15.0" prefWidth="15.0">
+         <graphic>
+            <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
+         </graphic>
+      </Button>
+   </HBox>
+   <Separator maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1.0" prefWidth="141.0">
+      <VBox.margin>
+         <Insets bottom="3.0" top="3.0" />
+      </VBox.margin>
+   </Separator>
+   <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="170.0" spacing="2.0">
+      <Label prefHeight="23.0" prefWidth="55.0" text="Node color">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+      <ColorPicker fx:id="nodeColorPicker" prefHeight="25.0" prefWidth="40.0">
+         <HBox.margin>
+            <Insets right="5.0" />
+         </HBox.margin>
+      </ColorPicker>
+      <Button alignment="CENTER" mnemonicParsing="false" onAction="#changeNodesColorAction" prefHeight="25.0" prefWidth="61.0" text="Apply To All">
+         <font>
+            <Font size="9.0" />
+         </font>
+      </Button>
+   </HBox>
+   <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="170.0" spacing="2.0">
+      <Label prefHeight="23.0" prefWidth="55.0" text="Edge color">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+      <ColorPicker fx:id="edgeColorPicker" prefHeight="25.0" prefWidth="40.0">
+         <HBox.margin>
+            <Insets right="5.0" />
+         </HBox.margin>
+      </ColorPicker>
+      <Button alignment="CENTER" mnemonicParsing="false" onAction="#changeEdgesColorAction" prefHeight="25.0" prefWidth="61.0" text="Apply To All">
+         <font>
+            <Font size="9.0" />
+         </font>
+      </Button>
+   </HBox>
+   <Separator maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="3.0" prefWidth="141.0">
+      <VBox.margin>
+         <Insets bottom="3.0" top="3.0" />
+      </VBox.margin>
+   </Separator>
+   <ToggleSwitch fx:id="nodeBorderToggleSwitch" prefHeight="18.0" prefWidth="136.0" text="Node border">
+      <font>
+         <Font size="10.0" />
+      </font>
+   </ToggleSwitch>
+   <Separator layoutX="30.0" layoutY="173.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="3.0" prefWidth="141.0">
+      <VBox.margin>
+         <Insets bottom="3.0" top="3.0" />
+      </VBox.margin>
+   </Separator>
+   <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefWidth="170.0" spacing="3.0">
+      <Label prefHeight="25.0" prefWidth="60.0" text="Node Labels">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+      <ChoiceBox fx:id="nodeLabelChoiceBox" prefHeight="25.0" prefWidth="65.0" />
+      <ColorPicker fx:id="labelColorPicker" prefHeight="25.0" prefWidth="40.0" />
+   </HBox>
+   <Separator maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="141.0">
+      <VBox.margin>
+         <Insets bottom="3.0" top="3.0" />
+      </VBox.margin>
+   </Separator>
+   <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefWidth="170.0" spacing="3.0">
+      <Label prefHeight="25.0" prefWidth="60.0" text="Edge weight">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+      <ChoiceBox fx:id="edgeWeightChoiceBox" prefHeight="25.0" prefWidth="65.0" />
+      <ColorPicker fx:id="weightColorPicker" prefHeight="25.0" prefWidth="40.0" />
+   </HBox>
+</VBox>
