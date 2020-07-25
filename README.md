@@ -3,7 +3,7 @@ Desktop application for creating graphs and algorithms visualisation
 
 [Download jar](https://github.com/Todense/OmniGraph/releases/download/0.0.1/OmniGraph.jar) (Requires Java 11+)
 
-![exapmple1](https://github.com/Todense/GraphBuilderFX/blob/master/src/main/resources/screenshots/screenshot1.png)
+![exapmple1](https://github.com/Todense/OmniGraph/blob/master/src/main/resources/screenshots/screenshot1.png)
 
 
 ## Main Features
@@ -18,19 +18,19 @@ Desktop application for creating graphs and algorithms visualisation
 
 ## Screenshots
 
-![random3000](https://github.com/Todense/GraphBuilderFX/blob/master/src/main/resources/screenshots/screenshot_random3000.png)
+![random3000](https://github.com/Todense/OmniGraph/blob/master/src/main/resources/screenshots/screenshot_random3000.png)
 
-![maze](https://github.com/Todense/GraphBuilderFX/blob/master/src/main/resources/screenshots/screenshot_maze.png)
+![maze](https://github.com/Todense/OmniGraph/blob/master/src/main/resources/screenshots/screenshot_maze.png)
 
-![prim algorithm](https://github.com/Todense/GraphBuilderFX/blob/master/src/main/resources/screenshots/screenshot_prim.png)
+![prim algorithm](https://github.com/Todense/OmniGraph/blob/master/src/main/resources/screenshots/screenshot_prim.png)
 
-![random graph](https://github.com/Todense/GraphBuilderFX/blob/master/src/main/resources/screenshots/screenshot_random.png)
+![random graph](https://github.com/Todense/OmniGraph/blob/master/src/main/resources/screenshots/screenshot_random.png)
 
-![purple graph](https://github.com/Todense/GraphBuilderFX/blob/master/src/main/resources/screenshots/screenshot_purple.png)
+![purple graph](https://github.com/Todense/OmniGraph/blob/master/src/main/resources/screenshots/screenshot_purple.png)
 
-![colorful](https://github.com/Todense/GraphBuilderFX/blob/master/src/main/resources/screenshots/screenshot_colors.png)
+![colorful](https://github.com/Todense/OmniGraph/blob/master/src/main/resources/screenshots/screenshot_colors.png)
 
-![ant colony algorithm](https://github.com/Todense/GraphBuilderFX/blob/master/src/main/resources/screenshots/screenshot_ants.png)
+![ant colony algorithm](https://github.com/Todense/OmniGraph/blob/master/src/main/resources/screenshots/screenshot_ants.png)
 
 
 
