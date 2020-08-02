@@ -1,7 +1,7 @@
 # OmniGraph
 Desktop application for creating graphs and algorithms visualisation
 
-[Download jar](https://github.com/Todense/OmniGraph/releases/download/v0.0.2/OmniGraph.jar) (Requires Java 11+)
+[Download jar](https://github.com/Todense/OmniGraph/releases/download/v0.0.2/OmniGraph.0.0.2.jar) (Requires Java 11+)
 
 ![exapmple1](https://github.com/Todense/OmniGraph/blob/master/src/main/resources/screenshots/screenshot1.png)
 
