@@ -2,8 +2,8 @@ package com.todense.view;
 
 import com.todense.util.SpinnerDoubleConverter;
 import com.todense.viewmodel.RandomGeneratorViewModel;
-import com.todense.viewmodel.random.Generator;
-import com.todense.viewmodel.random.NodeArrangement;
+import com.todense.viewmodel.random.GeneratorModel;
+import com.todense.viewmodel.random.arrangement.NodeArrangement;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
@@ -13,16 +13,18 @@ import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.controlsfx.control.ToggleSwitch;
 
 public class RandomGeneratorView implements FxmlView<RandomGeneratorViewModel> {
 
     @FXML private ChoiceBox<NodeArrangement> arrangementChoiceBox;
-    @FXML private ChoiceBox<Generator> generatorChoiceBox;
-    @FXML private VBox nodePosVBox, paramVBox;
+    @FXML private ChoiceBox<GeneratorModel> generatorChoiceBox;
+    @FXML private VBox nodePosVBox, paramVBox, minDistVBox;
     @FXML private Spinner<Integer> nodeCountSpinner, integerParam1Spinner, integerParam2Spinner;
     @FXML private Spinner<Double> nodesMinDistSpinner, doubleParamSpinner;
-    @FXML private HBox nodeMinDistHBox, doubleParamHBox, integerParam1HBox, integerParam2HBox;
+    @FXML private HBox minDistHBox, doubleParamHBox, integerParam1HBox, integerParam2HBox;
     @FXML private Label doubleParamLabel, integerParam1Label, integerParam2Label;
+    @FXML private ToggleSwitch minDistToggleSwitch;
 
     @InjectViewModel
     RandomGeneratorViewModel viewModel;
@@ -32,9 +34,8 @@ public class RandomGeneratorView implements FxmlView<RandomGeneratorViewModel> {
         arrangementChoiceBox.getItems().addAll(NodeArrangement.values());
         arrangementChoiceBox.valueProperty().bindBidirectional(viewModel.nodeArrangementProperty());
 
-        generatorChoiceBox.getItems().addAll(Generator.values());
+        generatorChoiceBox.getItems().addAll(GeneratorModel.values());
         generatorChoiceBox.valueProperty().bindBidirectional(viewModel.generatorProperty());
-
 
         nodeCountSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100000, 50));
         nodeCountSpinner.getValueFactory().valueProperty().bindBidirectional(viewModel.nodeCountObjectProperty());
@@ -55,21 +56,24 @@ public class RandomGeneratorView implements FxmlView<RandomGeneratorViewModel> {
         integerParam2Spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100000, 2));
         integerParam2Spinner.getValueFactory().valueProperty().bindBidirectional(viewModel.intParameter2ObjectProperty());
 
-        nodePosVBox.getChildren().remove(nodeMinDistHBox);
+        minDistToggleSwitch.selectedProperty().bindBidirectional(viewModel.withMinDistProperty());
+
+        nodePosVBox.getChildren().remove(minDistVBox);
         arrangementChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> {
-            nodePosVBox.getChildren().remove(nodeMinDistHBox);
-            if(newVal == NodeArrangement.MIN_DIST){
-                nodePosVBox.getChildren().add(nodeMinDistHBox);
+            nodePosVBox.getChildren().remove(minDistVBox);
+            if(newVal != NodeArrangement.CIRCULAR){
+                nodePosVBox.getChildren().add(minDistVBox);
             }
         });
-        arrangementChoiceBox.valueProperty().setValue(NodeArrangement.MIN_DIST);
+        arrangementChoiceBox.valueProperty().setValue(NodeArrangement.RANDOM_CIRCLE);
 
+        minDistHBox.disableProperty().bind(minDistToggleSwitch.selectedProperty().not());
 
         paramVBox.getChildren().clear();
         generatorChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             paramVBox.getChildren().clear();
 
-            if(newVal == Generator.BARABASI_ALBERT){
+            if(newVal == GeneratorModel.BARABASI_ALBERT){
                 paramVBox.getChildren().add(integerParam1HBox);
                 paramVBox.getChildren().add(integerParam2HBox);
                 integerParam1Label.setText("Initial Nodes (m0)");
@@ -77,15 +81,15 @@ public class RandomGeneratorView implements FxmlView<RandomGeneratorViewModel> {
             }
             else{
                 paramVBox.getChildren().add(doubleParamHBox);
-                if(newVal == Generator.ERDOS_RENYI){
+                if(newVal == GeneratorModel.ERDOS_RENYI){
                     doubleParamLabel.setText("Probability");
                 }
-                else if(newVal == Generator.GEOMETRIC || newVal == Generator.GEOMETRIC_RANDOMIZED){
+                else if(newVal == GeneratorModel.GEOMETRIC || newVal == GeneratorModel.GEOMETRIC_RANDOMIZED){
                     doubleParamLabel.setText("Radius");
                 }
             }
         });
-        generatorChoiceBox.valueProperty().setValue(Generator.GEOMETRIC);
+        generatorChoiceBox.valueProperty().setValue(GeneratorModel.GEOMETRIC);
     }
 
     @FXML

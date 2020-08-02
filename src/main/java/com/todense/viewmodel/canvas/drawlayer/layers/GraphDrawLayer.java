@@ -1,4 +1,4 @@
-package com.todense.viewmodel.canvas.drawlayer;
+package com.todense.viewmodel.canvas.drawlayer.layers;
 
 import com.todense.model.EdgeWeightMode;
 import com.todense.model.NodeLabelMode;
@@ -7,6 +7,7 @@ import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.util.Util;
 import com.todense.viewmodel.canvas.DisplayMode;
+import com.todense.viewmodel.canvas.drawlayer.DrawLayer;
 import com.todense.viewmodel.scope.AntsScope;
 import com.todense.viewmodel.scope.BackgroundScope;
 import com.todense.viewmodel.scope.GraphScope;
@@ -91,7 +92,7 @@ public class GraphDrawLayer implements DrawLayer {
         double size = graphScope.getNodeSize();
 
         gc.setFill(graphScope.getNodeLabelColor());
-        gc.setFont(new Font("Computer Modern", graphScope.getNodeSize()*0.6));
+        gc.setFont(new Font("Computer Modern", graphScope.getNodeSize() * 0.6));
         gc.setTextAlign(TextAlignment.CENTER);
 
         String s = "";
@@ -111,15 +112,16 @@ public class GraphDrawLayer implements DrawLayer {
 
         double width = getEdgeWidth(edge, displayMode);
 
-        Point2D vec = p1.subtract(p2).normalize().multiply(width/2);
+        //makes line shorter when it is wider
+        Point2D correctionVector = p1.subtract(p2).normalize().multiply(width/2);
 
         if(edge.isMarked() && displayMode == DisplayMode.ANT_COLONY) {
             gc.setLineWidth(width + graphScope.getNodeSize() * 0.25);
             gc.setStroke(antsScope.getCycleColor());
-            gc.strokeLine(p1.getX() - vec.getX(),
-                    p1.getY() - vec.getY(),
-                    p2.getX() + vec.getX(),
-                    p2.getY() + vec.getY());
+            gc.strokeLine(p1.getX() - correctionVector.getX(),
+                    p1.getY() - correctionVector.getY(),
+                    p2.getX() + correctionVector.getX(),
+                    p2.getY() + correctionVector.getY());
         }
 
         if(displayMode == DisplayMode.ANT_COLONY && !antsScope.isShowingPheromones()) return;
@@ -127,10 +129,10 @@ public class GraphDrawLayer implements DrawLayer {
         gc.setLineWidth(width);
         gc.setStroke(getEdgeColor(edge, displayMode));
 
-        gc.strokeLine(p1.getX() - vec.getX(),
-                p1.getY() - vec.getY(),
-                p2.getX() + vec.getX(),
-                p2.getY() + vec.getY());
+        gc.strokeLine(p1.getX() - correctionVector.getX(),
+                p1.getY() - correctionVector.getY(),
+                p2.getX() + correctionVector.getX(),
+                p2.getY() + correctionVector.getY());
 
 
         if(graphScope.getEdgeWeightMode() != EdgeWeightMode.NONE){
@@ -165,7 +167,7 @@ public class GraphDrawLayer implements DrawLayer {
                 }
                 break;
             case ALGORITHMIC:
-                if(!node.isVisited()){
+                if(!node.isMarked()){
                     newColor = Util.getFaintColor(color, backgroundScope.getBackgroundColor());
                 }
                 break;
@@ -188,7 +190,7 @@ public class GraphDrawLayer implements DrawLayer {
             case DEFAULT: case ANT_COLONY:
                 break;
             case ALGORITHMIC:
-                if(node.isVisited()){
+                if(node.isMarked()){
                     size = size * 1.05;
                 }
                 break;

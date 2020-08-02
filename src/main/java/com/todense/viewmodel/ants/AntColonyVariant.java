@@ -1,6 +1,6 @@
 package com.todense.viewmodel.ants;
 
-public enum AntColonyAlgorithm {
+public enum AntColonyVariant {
 
     ACS("Ant colony system", true, false, true, true, false, false),
     AS("Ant system",false, false,false, false, false, false),
@@ -15,7 +15,7 @@ public enum AntColonyAlgorithm {
     private final boolean minMax;
     private final boolean initMaxPh;
 
-    AntColonyAlgorithm(String name, boolean gbAnt, boolean ranked, boolean withQ0, boolean localUpdate, boolean minMax, boolean initMaxPh){
+    AntColonyVariant(String name, boolean gbAnt, boolean ranked, boolean withQ0, boolean localUpdate, boolean minMax, boolean initMaxPh){
         this.name = name;
         this.gbAnt = gbAnt;
         this.ranked = ranked;

@@ -73,8 +73,8 @@ public class KruskalService extends WeightedAlgorithmService {
 
 			if(xSet != ySet){
 				e.setMarked(true);
-				n1.setVisited(true);
-				n2.setVisited(true);
+				n1.setMarked(true);
+				n2.setMarked(true);
 				painter.sleep();
 
 				weight += weightFunction.applyAsDouble(e);

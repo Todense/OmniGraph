@@ -8,25 +8,27 @@ import java.util.ArrayList;
 
 public class Node{
 
+    private final int ID;
+
     private int index;
-    private int id;
     private String labelText="";
-    private Graph g;
+    private Graph graph;
     private Point2D pos;
     private Color color;
 
-    private boolean visited = false;
-    private boolean selected = false;
-    private boolean highlighted = false;
+    private boolean marked = false; //flag changing visuals
+    private boolean visited = false; //flag not changing visuals
+    private boolean selected = false; //selected by user
+    private boolean highlighted = false; //highlighted by user
 
     private ArrayList<Node> neighbours = new ArrayList<>();
 
     public Node(Point2D pos, Graph g) {
         this.pos = pos;
-        this.g = g;
+        this.graph = g;
         this.color = Color.rgb(50,240,45);
         this.index = g.getNodes().size();
-        this.id = g.idCounter++;
+        this.ID = g.nextID();
     }
 
     public int getIndex() {
@@ -37,13 +39,13 @@ public class Node{
         return neighbours;
     }
 
-    public boolean isVisited(){return this.visited;}
+    public boolean isMarked(){return this.marked;}
 
     public boolean isHighlighted() {
         return highlighted;
     }
 
-    public void setVisited(boolean visited){this.visited = visited;}
+    public void setMarked(boolean marked){this.marked = marked;}
 
     public boolean isSelected() {
         return selected;
@@ -54,7 +56,7 @@ public class Node{
     }
 
     public Graph getGraph() {
-        return g;
+        return graph;
     }
 
     public void setLabelText(String labelText) {
@@ -75,8 +77,8 @@ public class Node{
         this.highlighted = highlighted;
     }
 
-    public int getId() {
-        return id;
+    public int getID() {
+        return ID;
     }
 
     public void setIndex(int i) {
@@ -93,5 +95,13 @@ public class Node{
 
     public String toString(){
         return String.valueOf(index+1);
+    }
+
+    public boolean isVisited() {
+        return visited;
+    }
+
+    public void setVisited(boolean visited) {
+        this.visited = visited;
     }
 }

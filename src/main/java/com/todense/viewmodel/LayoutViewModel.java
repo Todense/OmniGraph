@@ -46,16 +46,14 @@ public class LayoutViewModel implements ViewModel {
     }
 
     public void start(){
-        if(running) return;
+        AlgorithmService currentService = serviceScope.getService();
 
-        running = true;
+        if(currentService != null && currentService.isRunning()) return;
 
         service = new DynamicLayoutService(graphScope.getGraphManager().getGraph(),
                 this,new Point2D(canvasScope.getCanvasWidth()/2,
                 canvasScope.getCanvasHeight()/2));
-
         service.setPainter(canvasScope.getPainter());
-
         serviceScope.setService(service);
 
         EventHandler<WorkerStateEvent> handler = workerStateEvent -> {
@@ -63,14 +61,11 @@ public class LayoutViewModel implements ViewModel {
                     "Force-Directed Layout",
                     System.currentTimeMillis() - service.getStartTime(),
                     "");
-            running = false;
         };
 
         service.setOnSucceeded(handler);
         service.setOnCancelled(handler);
-
         notificationCenter.publish(MainViewModel.serviceStarted, "Force-Directed Layout");
-
         service.start();
     }
 

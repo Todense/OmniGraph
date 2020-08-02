@@ -47,7 +47,7 @@ public class PrimService extends WeightedAlgorithmService {
 
 		for(Node n : graph.getNodes()) {
 			setCost(n, Double.POSITIVE_INFINITY);
-			n.setVisited(false);
+			n.setMarked(false);
 		}
 		setCost(start, 0);
 
@@ -64,7 +64,7 @@ public class PrimService extends WeightedAlgorithmService {
 
 		while(!queue.isEmpty()) {
 			current = queue.poll();
-			current.setVisited(true);
+			current.setMarked(true);
 
 			if(getPrev(current) != null){
 				Edge e = graph.getEdge(current, getPrev(current));
@@ -77,7 +77,7 @@ public class PrimService extends WeightedAlgorithmService {
 
 
 			for(Node neighbour : current.getNeighbours()) {
-				if(!neighbour.isVisited()){
+				if(!neighbour.isMarked()){
 					Edge e = graph.getEdge(current, neighbour);
 					double weight = weightFunction.applyAsDouble(e);
 					if(weight < getCost(neighbour)){

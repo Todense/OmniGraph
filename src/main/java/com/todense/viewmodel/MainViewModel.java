@@ -132,7 +132,7 @@ public class MainViewModel implements ViewModel {
     public void openGraph() {
         Graph openedGraph = fileManager.openGraph();
         if(openedGraph != null){
-            graphScope.getGraphManager().setGraph(openedGraph);
+            notificationCenter.publish(GraphViewModel.newGraphRequest, openedGraph);
             notificationCenter.publish(CanvasViewModel.repaintRequest);
         }
     }

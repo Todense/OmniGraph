@@ -10,29 +10,31 @@ public class GraphAnalyzer {
 
     public static int getComponentCount(Graph g){
         int count = 0;
-        g.getNodes().forEach((node -> node.setVisited(false)));
+        boolean[] visited = new boolean[g.getNodes().size()];
         for(Node n: g.getNodes()) {
-            if (!n.isVisited()) {
+            if(Thread.currentThread().isInterrupted()){
+                return -2;
+            }
+            if (!visited[n.getIndex()]) {
                 count++;
-                ComponentDFS(n);
+                ComponentDFS(n,  visited);
             }
         }
-        g.getNodes().forEach((node -> node.setVisited(false)));
 
         return count;
     }
 
-    private static void ComponentDFS(Node n){
+    private static void ComponentDFS(Node n, boolean[] visited){
         Stack<Node> stack = new Stack<>();
         stack.push(n);
 
         while(!stack.isEmpty()){
             Node m = stack.pop();
-            if(m.isVisited())
+            if(visited[m.getIndex()])
                 continue;
-            m.setVisited(true);
+            visited[m.getIndex()] = true;
             for (Node k : m.getNeighbours()) {
-                if(!k.isVisited()){
+                if(!visited[k.getIndex()]){
                     stack.push(k);
                 }
             }
@@ -45,6 +47,9 @@ public class GraphAnalyzer {
         boolean[] visited;
         int[] eccentricities = new int[graph.getNodes().size()];
         for(Node n : graph.getNodes()){
+            if(Thread.currentThread().isInterrupted()){
+                return new int[]{-2, -2};
+            }
             dist = new int[graph.getNodes().size()];
             visited = new boolean[graph.getNodes().size()];
             LinkedList<Node> queue = new LinkedList<>();
@@ -93,6 +98,9 @@ public class GraphAnalyzer {
     public static int calculateMinDegree(Graph graph){
         int min = Integer.MAX_VALUE;
         for(Node n : graph.getNodes()){
+            if(Thread.currentThread().isInterrupted()){
+                return -2;
+            }
             if(n.getNeighbours().size() < min){
                 min = n.getNeighbours().size();
             }
@@ -104,6 +112,9 @@ public class GraphAnalyzer {
     public static int calculateMaxDegree(Graph graph){
         int max = 0;
         for(Node n : graph.getNodes()){
+            if(Thread.currentThread().isInterrupted()){
+                return -2;
+            }
             if(n.getNeighbours().size() > max){
                 max = n.getNeighbours().size();
             }
@@ -114,6 +125,9 @@ public class GraphAnalyzer {
     public static double calculateAvgDegree(Graph graph){
         int sum = 0;
         for(Node n : graph.getNodes()){
+            if(Thread.currentThread().isInterrupted()){
+                return -2;
+            }
             sum += n.getNeighbours().size();
         }
         return  (double) sum/graph.getNodes().size();

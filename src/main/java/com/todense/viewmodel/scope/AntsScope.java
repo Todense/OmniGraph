@@ -2,7 +2,7 @@ package com.todense.viewmodel.scope;
 
 import com.todense.model.graph.Edge;
 import com.todense.viewmodel.ants.Ant;
-import com.todense.viewmodel.ants.AntColonyAlgorithm;
+import com.todense.viewmodel.ants.AntColonyVariant;
 import de.saxsys.mvvmfx.Scope;
 import javafx.beans.property.*;
 import javafx.scene.paint.Color;
@@ -38,7 +38,7 @@ public class AntsScope implements Scope {
     private ObjectProperty<Color> antColorProperty = new SimpleObjectProperty<>(Color.rgb(200,0,0));
     private ObjectProperty<Color> cycleColorProperty = new SimpleObjectProperty<>(Color.rgb(210,210,30));
     private DoubleProperty antSize = new SimpleDoubleProperty(0.25);
-    private ObjectProperty<AntColonyAlgorithm> algorithmProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<AntColonyVariant> algorithmProperty = new SimpleObjectProperty<>();
 
 
     public double getPheromone(Edge e){
@@ -70,7 +70,7 @@ public class AntsScope implements Scope {
         return antSize.get();
     }
 
-    public ObjectProperty<AntColonyAlgorithm> algorithmProperty() {
+    public ObjectProperty<AntColonyVariant> algorithmProperty() {
         return algorithmProperty;
     }
 

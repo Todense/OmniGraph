@@ -60,6 +60,17 @@ public class EdgePopOverViewModel implements ViewModel {
         notificationCenter.publish("HIDE");
     }
 
+    public void contractEdges() {
+        notificationCenter.publish(MainViewModel.graphEditRequest, (Runnable)() ->{
+            for (Edge edge : edges) {
+                if(graphManager.getGraph().getEdge(edge.getN1(), edge.getN2()) != null){
+                    graphManager.contractEdge(edge);
+                }
+            }
+        });
+        notificationCenter.publish("HIDE");
+    }
+
     public ObjectProperty<Color> edgeColorProperty() {
         return edgeColorProperty;
     }
@@ -71,4 +82,6 @@ public class EdgePopOverViewModel implements ViewModel {
     public void setGraphManager(GraphManager graphManager) {
         this.graphManager = graphManager;
     }
+
+
 }

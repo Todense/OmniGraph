@@ -30,7 +30,7 @@ public class BFSService extends AlgorithmService {
 		ComponentBFS(startNode);
 
 		for(Node n: graph.getNodes()) {
-			if (!n.isVisited()) {
+			if (!n.isMarked()) {
 				ComponentBFS(n);
 			}
 		}
@@ -39,15 +39,15 @@ public class BFSService extends AlgorithmService {
 	public void ComponentBFS(Node n) throws InterruptedException{
 		LinkedList<Node> queue = new LinkedList<>();
 		queue.add(n);
-		n.setVisited(true);
+		n.setMarked(true);
 		painter.sleep();
 		while(!queue.isEmpty()) {
 			Node m = queue.poll();
 			for(Node k: m.getNeighbours()) {
-				if(!k.isVisited()) {
+				if(!k.isMarked()) {
 					graph.getEdge(k,m).setMarked(true);
 					queue.add(k);
-					k.setVisited(true);
+					k.setMarked(true);
 					painter.sleep();
 				}
 			}

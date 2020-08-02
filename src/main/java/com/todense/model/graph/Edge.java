@@ -4,12 +4,14 @@ import javafx.scene.paint.Color;
 
 public class Edge {
 
+    private final String ID;
+
     private Node n1;
     private Node n2;
 
     private Color color;
 
-    double weight = 0;
+    double weight = 1d;
     double length = 0;
 
     private boolean marked = false;
@@ -21,6 +23,9 @@ public class Edge {
         this.n1 = n1;
         this.n2 = n2;
         color = Color.rgb(50,130,200);
+        ID = n1.getID() < n2.getID() ?
+                n1.getID()+"-"+n2.getID() :
+                n2.getID()+"-"+n1.getID();
     }
 
     public void setWeight(double weight){
@@ -90,4 +95,9 @@ public class Edge {
     public String toString(){
         return n1.getIndex()+"-"+n2.getIndex();
     }
+
+    public String getID() {
+        return ID;
+    }
+
 }

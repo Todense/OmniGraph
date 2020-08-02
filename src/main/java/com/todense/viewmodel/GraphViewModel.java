@@ -6,7 +6,7 @@ import com.todense.model.graph.Edge;
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.canvas.DisplayMode;
-import com.todense.viewmodel.canvas.drawlayer.GraphDrawLayer;
+import com.todense.viewmodel.canvas.drawlayer.layers.GraphDrawLayer;
 import com.todense.viewmodel.graph.GraphManager;
 import com.todense.viewmodel.scope.AntsScope;
 import com.todense.viewmodel.scope.BackgroundScope;

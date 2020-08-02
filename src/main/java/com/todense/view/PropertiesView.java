@@ -36,5 +36,9 @@ public class PropertiesView implements FxmlView<PropertiesViewModel> {
         viewModel.start();
     }
 
+    @FXML
+    private void stopAction(){
+        viewModel.stop();
+    }
 
 }

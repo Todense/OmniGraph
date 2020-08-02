@@ -1,9 +1,9 @@
-package com.todense.viewmodel.random;
+package com.todense.viewmodel.random.arrangement;
 
 public enum NodeArrangement {
-    RANDOM("Random"),
-    CIRCLE("Circle"),
-    MIN_DIST("Minimum distance");
+    RANDOM_CIRCLE("Uniformly in Circle"),
+    RANDOM_SQUARE("Uniformly in Square"),
+    CIRCULAR("Circular");
 
     private final String name;
 

@@ -1,9 +1,10 @@
 package com.todense.viewmodel;
 
-import com.todense.viewmodel.ants.AntColonyAlgorithm;
+import com.todense.viewmodel.algorithm.AlgorithmService;
+import com.todense.viewmodel.ants.AntColonyVariant;
 import com.todense.viewmodel.ants.AntColonyService;
 import com.todense.viewmodel.canvas.DisplayMode;
-import com.todense.viewmodel.canvas.drawlayer.AntsDrawLayer;
+import com.todense.viewmodel.canvas.drawlayer.layers.AntsDrawLayer;
 import com.todense.viewmodel.scope.AntsScope;
 import com.todense.viewmodel.scope.CanvasScope;
 import com.todense.viewmodel.scope.GraphScope;
@@ -43,40 +44,33 @@ public class AntsViewModel implements ViewModel {
 
     private AntColonyService service;
 
+    DateFormat dateFormat = new SimpleDateFormat("mm:ss:SSS");
+
     private long startTime;
 
     public void initialize(){
-
         AntsDrawLayer antsDrawLayer = new AntsDrawLayer(antsScope, graphScope);
-
         Platform.runLater(() -> canvasScope.getPainter().addDrawLayer(antsDrawLayer));
-
     }
 
     public void startAlgorithm(){
+        AlgorithmService currentService = serviceScope.getService();
 
-        if(service != null && service.isRunning()) return;
+        if(currentService != null && currentService.isRunning()) return;
 
         graphScope.getGraphManager().createCompleteGraph();
 
-        DateFormat dateFormat = new SimpleDateFormat("mm:ss:SSS");
-
         startTime = System.currentTimeMillis();
-
         notificationCenter.publish(MainViewModel.serviceStarted, algorithmProperty().get().toString());
-
         graphScope.displayModeProperty().set(DisplayMode.ANT_COLONY);
 
         service = new AntColonyService(antsScope.algorithmProperty().get(), antsScope, graphScope.getGraphManager().getGraph());
-
-        serviceScope.setService(service);
-
         service.setPainter(canvasScope.getPainter());
-
         service.bgLengthProperty().addListener((obs, oldVal, newVal) ->
                 notificationCenter.publish("WRITE",
                         "Best Length: " + String.format("%.2f", newVal.doubleValue()) +
                                 " found in "+ dateFormat.format(System.currentTimeMillis()-startTime)));
+        serviceScope.setService(service);
 
         EventHandler<WorkerStateEvent> finishHandler = workerStateEvent -> notificationCenter.publish(MainViewModel.serviceFinished,
                 algorithmProperty().get().toString(),
@@ -85,7 +79,6 @@ public class AntsViewModel implements ViewModel {
 
         service.setOnSucceeded(finishHandler);
         service.setOnCancelled(finishHandler);
-
         service.start();
     }
 
@@ -97,7 +90,7 @@ public class AntsViewModel implements ViewModel {
     }
 
 
-    public ObjectProperty<AntColonyAlgorithm> algorithmProperty() {
+    public ObjectProperty<AntColonyVariant> algorithmProperty() {
         return antsScope.algorithmProperty();
     }
 

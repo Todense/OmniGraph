@@ -29,7 +29,7 @@ public class DFSService extends AlgorithmService {
 		ComponentDFS(startNode);
 
 		for(Node n: graph.getNodes()) {
-			if (!n.isVisited()) {
+			if (!n.isMarked()) {
 				ComponentDFS(n);
 			}
 		}
@@ -47,17 +47,17 @@ public class DFSService extends AlgorithmService {
 		while(!stack.isEmpty()){
 			Node m = stack.pop();
 
-			if(m.isVisited())
+			if(m.isMarked())
 				continue;
 
-			m.setVisited(true);
+			m.setMarked(true);
 			if(prev.get(m) != null){
 				graph.getEdge(m, prev.get(m)).setMarked(true);
 			}
 			painter.sleep();
 
 			for (Node k : m.getNeighbours()) {
-				if(!k.isVisited()){
+				if(!k.isMarked()){
 					stack.push(k);
 					prev.put(k, m);
 				}

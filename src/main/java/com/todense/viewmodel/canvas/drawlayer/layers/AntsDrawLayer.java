@@ -1,12 +1,13 @@
-package com.todense.viewmodel.canvas.drawlayer;
+package com.todense.viewmodel.canvas.drawlayer.layers;
 
 import com.todense.viewmodel.ants.Ant;
 import com.todense.viewmodel.canvas.DisplayMode;
+import com.todense.viewmodel.canvas.drawlayer.DrawLayer;
 import com.todense.viewmodel.scope.AntsScope;
 import com.todense.viewmodel.scope.GraphScope;
 import javafx.scene.canvas.GraphicsContext;
 
-public class AntsDrawLayer implements DrawLayer{
+public class AntsDrawLayer implements DrawLayer {
 
     private AntsScope antsScope;
     private GraphScope graphScope;

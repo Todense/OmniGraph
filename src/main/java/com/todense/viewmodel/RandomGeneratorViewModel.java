@@ -2,23 +2,28 @@ package com.todense.viewmodel;
 
 import com.todense.model.graph.Graph;
 import com.todense.viewmodel.random.Generator;
-import com.todense.viewmodel.random.NodeArrangement;
+import com.todense.viewmodel.random.GeneratorModel;
+import com.todense.viewmodel.random.RandomEdgeGenerator;
 import com.todense.viewmodel.random.RandomGraphGenerator;
+import com.todense.viewmodel.random.arrangement.generators.CircularPointGenerator;
+import com.todense.viewmodel.random.arrangement.generators.RandomCirclePointGenerator;
+import com.todense.viewmodel.random.arrangement.NodeArrangement;
+import com.todense.viewmodel.random.arrangement.generators.RandomSquarePointGenerator;
+import com.todense.viewmodel.random.generators.BarabasiAlbertGenerator;
+import com.todense.viewmodel.random.generators.ErdosRenyiGenerator;
+import com.todense.viewmodel.random.generators.GeometricGenerator;
 import com.todense.viewmodel.scope.CanvasScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Point2D;
 
 import javax.inject.Inject;
 
 public class RandomGeneratorViewModel implements ViewModel {
 
-    private ObjectProperty<Generator> generatorProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<GeneratorModel> generatorProperty = new SimpleObjectProperty<>();
     private ObjectProperty<NodeArrangement> nodeArrangementProperty = new SimpleObjectProperty<>();
 
     private ObjectProperty<Integer> nodeCountObjectProperty = new SimpleObjectProperty<>(50);
@@ -36,6 +41,8 @@ public class RandomGeneratorViewModel implements ViewModel {
 
     private ObjectProperty<Integer> intParameter2ObjectProperty = new SimpleObjectProperty<>(2);
     private IntegerProperty intParameter2Property = IntegerProperty.integerProperty(intParameter2ObjectProperty);
+
+    private BooleanProperty withMinDistProperty = new SimpleBooleanProperty(true);
     
     @Inject
     NotificationCenter notificationCenter;
@@ -51,72 +58,68 @@ public class RandomGeneratorViewModel implements ViewModel {
 
         double height = canvasScope.getCanvasHeight() * 0.9;
         Point2D canvasCenter = new Point2D(canvasScope.getCanvasWidth()/2, canvasScope.getCanvasHeight()/2);
+        double minDist = withMinDistProperty.get() && nodeArrangementProperty.get() != NodeArrangement.CIRCULAR
+                ? minNodeDistProperty.get() * height
+                : 0d;
 
-        Graph randomGraph = new Graph("RandomGraph0", false);
+        Graph randomGraph = new Graph("RandomGraph0");
+
+        Generator<Point2D> pointGenerator;
+        RandomEdgeGenerator edgeGenerator;
 
         switch (nodeArrangementProperty.get()){
-            case CIRCLE:
-                RandomGraphGenerator.generateNodesCircle(
-                        nodeCountProperty.get(),
-                        height/2,
-                        canvasCenter,
-                        randomGraph
-                );
+            case CIRCULAR:
+                pointGenerator = new CircularPointGenerator(nodeCountProperty.get(), height/2, canvasCenter);
                 break;
-            case MIN_DIST:
-                boolean minDistAccepted = RandomGraphGenerator.generateNodesMinDist(
-                        nodeCountProperty.get(),
-                        minNodeDistProperty.get(),
-                        height,
-                        canvasCenter,
-                        randomGraph
-                );
-                if(!minDistAccepted){
-                    notificationCenter.publish(MainViewModel.threadFinished, "Minimum node distance is too high!");
-                    return;
-                }
+            case RANDOM_SQUARE:
+                pointGenerator = new RandomSquarePointGenerator(height, canvasCenter);
                 break;
-            case RANDOM:
-                RandomGraphGenerator.generateNodesRandom(
-                        nodeCountProperty.get(),
-                        height,
-                        canvasCenter,
-                        randomGraph
-                );
+            case RANDOM_CIRCLE:
+                pointGenerator = new RandomCirclePointGenerator(height/2, canvasCenter);
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + nodeArrangementProperty.get());
+        }
+
+        boolean minDistAccepted = RandomGraphGenerator.generateNodes(nodeCountProperty.get(), randomGraph, pointGenerator, minDist);
+
+        if(!minDistAccepted){
+            notificationCenter.publish(MainViewModel.threadFinished, "Minimum node distance is too high!");
+            return;
         }
 
         switch (generatorProperty.get()){
             case GEOMETRIC:
-                RandomGraphGenerator.generateGeometric(
-                        doubleParameterProperty.get(),
-                        false,
-                        height,
-                        randomGraph
+                edgeGenerator = new GeometricGenerator(
+                        randomGraph.getNodes(),
+                        doubleParameterProperty.get() * height,
+                        false
                 );
                 break;
             case GEOMETRIC_RANDOMIZED:
-                RandomGraphGenerator.generateGeometric(
-                        doubleParameterProperty.get(),
-                        true,
-                        height,
-                        randomGraph
+                edgeGenerator = new GeometricGenerator(
+                        randomGraph.getNodes(),
+                        doubleParameterProperty.get() * height,
+                        true
                 );
                 break;
             case ERDOS_RENYI:
-                RandomGraphGenerator.generateErdosRenyi(
-                        doubleParameterProperty.get(),
-                        randomGraph
+                edgeGenerator = new ErdosRenyiGenerator(
+                        randomGraph.getNodes(),
+                        doubleParameterProperty.get()
                 );
                 break;
             case BARABASI_ALBERT:
-                RandomGraphGenerator.generateBarabasiAlbert(
+                edgeGenerator = new BarabasiAlbertGenerator(
+                        randomGraph.getNodes(),
                         intParameter1Property.get(),
-                        intParameter2Property.get(),
-                        randomGraph
-                );
+                        intParameter2Property.get());
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + generatorProperty.get());
         }
+
+        RandomGraphGenerator.generateEdges(randomGraph, edgeGenerator);
 
         notificationCenter.publish(GraphViewModel.newGraphRequest, randomGraph);
         notificationCenter.publish(MainViewModel.threadFinished, "Random graph generated");
@@ -128,7 +131,7 @@ public class RandomGeneratorViewModel implements ViewModel {
         thread.start();
     }
 
-    public ObjectProperty<Generator> generatorProperty() {
+    public ObjectProperty<GeneratorModel> generatorProperty() {
         return generatorProperty;
     }
 
@@ -156,4 +159,7 @@ public class RandomGeneratorViewModel implements ViewModel {
         return intParameter2ObjectProperty;
     }
 
+    public BooleanProperty withMinDistProperty() {
+        return withMinDistProperty;
+    }
 }

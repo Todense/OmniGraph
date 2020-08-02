@@ -13,6 +13,8 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
 
 import javax.inject.Inject;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class PresetCreatorViewModel implements ViewModel {
     
@@ -52,11 +54,13 @@ public class PresetCreatorViewModel implements ViewModel {
 
     public void createPreset() {
         notificationCenter.publish(MainViewModel.threadStarted, "Creating preset...");
+        ExecutorService executor = Executors.newSingleThreadExecutor();
         Thread thread = new Thread(() -> {
             create(presetProperty.get(), new Point2D(canvasScope.getCanvasWidth()/2, canvasScope.getCanvasHeight()/2));
             notificationCenter.publish(MainViewModel.threadFinished, presetProperty.get().toString() +" created");
         });
-        thread.start();
+        executor.execute(thread);
+        //thread.start();
     }
 
     public ObjectProperty<Preset> presetProperty() {

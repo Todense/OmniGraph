@@ -176,8 +176,8 @@
          </HBox>
          <Separator orientation="VERTICAL" prefWidth="6.0" />
          <HBox alignment="CENTER" prefWidth="600.0" spacing="3.0">
-            <TextField fx:id="infoTextField" alignment="CENTER" editable="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="204.0" />
             <ProgressIndicator fx:id="progressIndicator" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="22.0" prefWidth="22.0" progress="0.0" visible="false" />
+            <TextField fx:id="infoTextField" alignment="CENTER" editable="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="204.0" />
             <Button fx:id="stopButton" disable="true" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopAction" prefHeight="25.0" prefWidth="64.0" text="Stop">
                <font>
                   <Font name="Font Awesome 5 Free Regular" size="11.0" />

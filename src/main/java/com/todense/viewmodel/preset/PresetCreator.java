@@ -5,10 +5,7 @@ import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import javafx.geometry.Point2D;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.Stack;
+import java.util.*;
 
 
 public class PresetCreator {
@@ -16,7 +13,7 @@ public class PresetCreator {
 
     public static Graph createCycle(int n, double radius, Point2D center) {
 
-        Graph g = new Graph("CycleGraph", false);
+        Graph g = new Graph("CycleGraph");
 
         double dx;
         double dy;
@@ -38,10 +35,8 @@ public class PresetCreator {
         return g;
     }
 
-
-
     public static Graph createGrid(int columns, int rows, Point2D center){
-        Graph g = new Graph("GridGraph", false);
+        Graph g = new Graph("GridGraph");
 
         if(columns == 1 && rows == 1){
             g.addNode(center);
@@ -78,22 +73,21 @@ public class PresetCreator {
         return g;
     }
 
-
     public static Graph createMaze(int columns, int rows, Point2D center){
         Graph g = createGrid(columns, rows, center);
         g.getNodes().forEach(n -> Collections.shuffle(n.getNeighbours()));
         DFS(g.getNodes().get(new Random().nextInt(g.getNodes().size())), g);
-        g.getEdges().stream().filter(e -> !e.isMarked()).forEach(g::removeEdge);
+        g.getEdges().removeIf(e -> !e.isMarked());
+        g.getEdges().forEach(e -> e.setMarked(false));
         return g;
     }
 
     public static Graph createStar(int n, double radius, Point2D center){
-        Graph g = new Graph("StarGraph", false);
+        Graph g = new Graph("StarGraph");
 
         double dx;
         double dy;
 
-        //nodes
         Node centerNode = g.addNode(center);
 
         for (int k = 0; k < n-1; k++) {
@@ -103,13 +97,12 @@ public class PresetCreator {
             Node newNode = g.addNode(new Point2D(dx, dy));
             g.addEdge(centerNode, newNode);
         }
-
         return g;
     }
 
 
     public static Graph createCompleteBipartite(int n, int m, Point2D center){
-        Graph g = new Graph("CompleteBipartite", false);
+        Graph g = new Graph("CompleteBipartite");
         double gap;
 
         double h = center.getY() * 0.8;

@@ -43,7 +43,7 @@ public class HCSearchService extends AlgorithmService {
         cycle = new ArrayList<>();
         visitedDFS = new boolean[nodeCount];
         for (int i = 0; i < nodeCount; i++) {
-            graph.getNodes().get(i).setVisited(false);
+            graph.getNodes().get(i).setMarked(false);
         }
     }
 
@@ -71,12 +71,12 @@ public class HCSearchService extends AlgorithmService {
             Node n = nodeStack.pop();
 
             if(!cycle.contains(n)){
-                if(n.isVisited())
+                if(n.isMarked())
                     continue;
 
                 cycle.add(n);
 
-                n.setVisited(true);
+                n.setMarked(true);
                 if(cycle.size() > 1) {
                     graph.getEdge(cycle.get(cycle.size()-1), cycle.get(cycle.size()-2)).setMarked(true);
                 }
@@ -89,7 +89,7 @@ public class HCSearchService extends AlgorithmService {
                 }
 
                 for(Node m : n.getNeighbours()){
-                    if(!m.isVisited()){
+                    if(!m.isMarked()){
                         nodeStack.push(m);
                         nodeStack.push(m);
                     }
@@ -97,7 +97,7 @@ public class HCSearchService extends AlgorithmService {
             }
             else{
                 Node lastNode = cycle.get(cycle.size()-1);
-                lastNode.setVisited(false);
+                lastNode.setMarked(false);
                 if(cycle.size() > 1) {
                     graph.getEdge(lastNode, cycle.get(cycle.size() - 2)).setMarked(false);
                 }
@@ -113,7 +113,7 @@ public class HCSearchService extends AlgorithmService {
         Arrays.fill(visitedDFS, false);
         Node startNodeUnvisitedNeighbour = null;
         for(Node n : startNode.getNeighbours()){
-            if(!n.isVisited()){
+            if(!n.isMarked()){
                 startNodeUnvisitedNeighbour = n;
                 break;
             }
@@ -141,7 +141,7 @@ public class HCSearchService extends AlgorithmService {
             visitedDFS[m.getIndex()] = true;
 
             for (Node k : m.getNeighbours()) {
-                if(!visitedDFS[k.getIndex()] && !k.isVisited()){
+                if(!visitedDFS[k.getIndex()] && !k.isMarked()){
                     stack.push(k);
                 }
             }

@@ -30,7 +30,6 @@ public class PropertiesViewModel implements ViewModel {
     @InjectScope
     ServiceScope serviceScope;
 
-
     @Inject
     NotificationCenter notificationCenter;
 
@@ -48,12 +47,12 @@ public class PropertiesViewModel implements ViewModel {
         int[] eccentricityBounds = GraphAnalyzer.calculateEccentricities(graph);
 
         Platform.runLater(() -> {
-            sizeProperty.setValue(String.valueOf(size));
-            orderProperty.setValue(String.valueOf(order));
-            minDegreeProperty.setValue(String.valueOf(minDegree));
-            maxDegreeProperty.setValue(String.valueOf(maxDegree));
-            avgDegreeProperty.setValue(String.format("%.2f", avgDegree));
-            componentsProperty.setValue(String.valueOf(componentCount));
+            sizeProperty.setValue(validText(size));
+            orderProperty.setValue(validText(order));
+            minDegreeProperty.setValue(validText(minDegree));
+            maxDegreeProperty.setValue(validText(maxDegree));
+            avgDegreeProperty.setValue(validText(avgDegree));
+            componentsProperty.setValue(validText(componentCount));
             radiusProperty.setValue(validText(eccentricityBounds[0]));
             diameterProperty.setValue(validText(eccentricityBounds[1]));
         });
@@ -78,8 +77,14 @@ public class PropertiesViewModel implements ViewModel {
     }
 
     private String validText(int i){
-        if(i < 0) return "inf";
+        if(i == -1) return "inf";
+        else if (i == -2) return "";
         else return String.valueOf(i);
+    }
+
+    private String validText(double d){
+        if(d < 0) return "";
+        else return String.format("%.2f", d);
     }
 
     public StringProperty orderProperty() {

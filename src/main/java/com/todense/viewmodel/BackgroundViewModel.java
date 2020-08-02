@@ -1,6 +1,6 @@
 package com.todense.viewmodel;
 
-import com.todense.viewmodel.canvas.drawlayer.BackgroundDrawLayer;
+import com.todense.viewmodel.canvas.drawlayer.layers.BackgroundDrawLayer;
 import com.todense.viewmodel.scope.BackgroundScope;
 import com.todense.viewmodel.scope.CanvasScope;
 import de.saxsys.mvvmfx.InjectScope;

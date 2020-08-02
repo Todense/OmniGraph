@@ -6,14 +6,27 @@ import com.todense.model.graph.Node;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public abstract class ShortestPathAlgorithmService extends WeightedAlgorithmService {
 
     protected List<Node> path = new ArrayList<>();
     protected List<Node> previousNodes;
+    protected PriorityQueue<Node> openSet;
 
     protected double pathLength = 0;
     protected boolean pathFound = false;
+
+
+    @Override
+    protected void onFinished() {
+        if(pathFound){
+            setResultMessage("Path length: "+String.format("%.3f", pathLength));
+        }
+        else{
+            setResultMessage("Path does not exist!");
+        }
+    }
 
     public ShortestPathAlgorithmService(Graph graph, boolean customWeight) {
         super(graph, customWeight);
@@ -23,15 +36,40 @@ public abstract class ShortestPathAlgorithmService extends WeightedAlgorithmServ
         }
     }
 
+    protected abstract void init();
+
+    protected abstract void relaxation(Node nodeFrom, Node nodeTo) throws InterruptedException;
+
+    protected boolean findShortestPath(Node start, Node end) throws InterruptedException {
+        init();
+
+        while(!openSet.isEmpty()){
+            Node current = openSet.poll();
+            current.setMarked(true);
+            painter.sleep();
+
+            if (current == end){
+                reconstructPath(current, start);
+                showPath();
+                return true;
+            }
+
+            for(Node neighbour : current.getNeighbours()){
+                relaxation(current, neighbour);
+            }
+        }
+        return false;
+    }
+
     protected void showPath(){
         for(Node n : graph.getNodes()){
-            n.setVisited(false);
+            n.setMarked(false);
         }
         for(Edge e : graph.getEdges()){
             e.setMarked(false);
         }
         for(Node n : path){
-            n.setVisited(true);
+            n.setMarked(true);
         }
         for (int i = 0; i < path.size()-1; i++) {
             Edge e = graph.getEdge(path.get(i), path.get(i+1));
@@ -53,5 +91,9 @@ public abstract class ShortestPathAlgorithmService extends WeightedAlgorithmServ
 
     protected void setPrev(Node n, Node m){
         previousNodes.set(n.getIndex(), m);
+    }
+
+    protected Node getPrev(Node n){
+        return previousNodes.get(n.getIndex());
     }
 }

@@ -36,14 +36,14 @@ public class AntColonyService extends AlgorithmService {
 
     private Graph graph;
     private AntsScope antsScope;
-    private AntColonyAlgorithm algorithm;
+    private AntColonyVariant algorithm;
     
     private int nodeCount;
 
     private Random rnd = new Random();
     private final Object lock = new Object();
 
-    public AntColonyService(AntColonyAlgorithm algorithm, AntsScope antsScope, Graph graph){
+    public AntColonyService(AntColonyVariant algorithm, AntsScope antsScope, Graph graph){
         super(graph);
         this.graph = graph;
         this.nodeCount = graph.getNodes().size();
@@ -71,11 +71,12 @@ public class AntColonyService extends AlgorithmService {
         antsScope.getAnts().clear();
     }
 
-    private void antColonyOptimization(AntColonyAlgorithm algorithm) throws InterruptedException {
+    private void antColonyOptimization(AntColonyVariant algorithm) throws InterruptedException {
 
         init(algorithm.isInitMaxPh());
 
         int counter = 0;
+
 
         while(!super.isCancelled()) {
             counter++;
@@ -100,7 +101,7 @@ public class AntColonyService extends AlgorithmService {
         antsScope.getAnts().clear();
     }
     
-    private void checkIterationResults(AntColonyAlgorithm algorithm){
+    private void checkIterationResults(AntColonyVariant algorithm){
         Ant iterationBestAnt;
 
         if(algorithm.isRanked()){
@@ -116,11 +117,9 @@ public class AntColonyService extends AlgorithmService {
             bgLength.set(iterationBestAnt.getCycleLength());
             updateCycleMarkers();
         }
-
-
     }
     
-    private void updatePheromones(AntColonyAlgorithm algorithm, double evaporation){
+    private void updatePheromones(AntColonyVariant algorithm, double evaporation){
         evaporatePheromone(evaporation);
 
         if(algorithm.isGbAnt()){
@@ -182,7 +181,7 @@ public class AntColonyService extends AlgorithmService {
         }
     }
 
-    private void moveAnts(AntColonyAlgorithm algorithm) throws InterruptedException {
+    private void moveAnts(AntColonyVariant algorithm) throws InterruptedException {
         AtomicBoolean working = new AtomicBoolean(true);
 
         for (Ant ant : antsScope.getAnts()) {
@@ -210,7 +209,7 @@ public class AntColonyService extends AlgorithmService {
         }
     }
 
-    private void moveAntRandom(Ant ant, AntColonyAlgorithm algorithm){
+    private void moveAntRandom(Ant ant, AntColonyVariant algorithm){
         ant.getCycle().add(ant.getStart());
         ant.setVisited(ant.getStart());
 
@@ -451,7 +450,7 @@ public class AntColonyService extends AlgorithmService {
         antsScope.setPheromone(j, i, inPheromoneRange(ph + amount));
     }
 
-    double getPheromone(int i, int j){
+    private double getPheromone(int i, int j){
         return antsScope.getPheromone(i, j);
     }
 

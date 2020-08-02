@@ -1,12 +1,13 @@
-package com.todense.viewmodel.canvas.drawlayer;
+package com.todense.viewmodel.canvas.drawlayer.layers;
 
+import com.todense.viewmodel.canvas.drawlayer.DrawLayer;
 import com.todense.viewmodel.scope.GraphScope;
 import com.todense.viewmodel.scope.InputScope;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
-public class LowerDrawLayer implements DrawLayer{
+public class LowerDrawLayer implements DrawLayer {
 
     private InputScope inputScope;
     private GraphScope graphScope;

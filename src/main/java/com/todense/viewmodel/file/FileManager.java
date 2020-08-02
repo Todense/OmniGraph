@@ -69,7 +69,7 @@ public class FileManager {
     }
 
     public Graph readGraph(File file){
-        Graph graph = new Graph(file.getName(), false);
+        Graph graph = new Graph(file.getName());
         readNodes(file, graph);
         readEdges(file, graph);
         return graph;

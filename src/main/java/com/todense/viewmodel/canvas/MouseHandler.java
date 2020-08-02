@@ -240,7 +240,7 @@ public class MouseHandler {
                 }
                 else {
                     for (Node n : selectedNodes) {
-                        GM.updateNodePosition(n, delta.multiply(1/ camera.getZoom()));
+                        GM.updateNodePosition(n, delta.multiply(1/camera.getZoom()));
                     }
                 }
                 mousePt = new Point2D(e.getX(), e.getY());

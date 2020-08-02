@@ -74,7 +74,9 @@ public class AlgorithmViewModel implements ViewModel {
 
         Graph g = graphManager.getGraph();
 
-        if((service != null && service.isRunning()) || g.getNodes().size() == 0) return;
+        AlgorithmService currentService = serviceScope.getService();
+
+        if((currentService != null && currentService.isRunning()) || g.getNodes().size() == 0) return;
 
         graphScope.displayModeProperty().set(DisplayMode.ALGORITHMIC);
 
@@ -126,6 +128,7 @@ public class AlgorithmViewModel implements ViewModel {
             service.cancel();
         }
     }
+
 
     public Algorithm getAlgorithm() {
         return algorithmScope.getAlgorithm();

@@ -62,17 +62,13 @@ public class Painter {
         if(animationScope.isAnimated()){
             Thread.sleep(millis);
         }
-        checkIfPaused();
+        pauseCheck();
     }
 
-    public void singleRepaint(){
-        Platform.runLater(this::draw);
-    }
 
     public void sleep() throws InterruptedException {
         sleep(animationScope.getStepTime());
     }
-
 
     public void startAnimationTimer(){
         timerOn = true;
@@ -84,7 +80,7 @@ public class Painter {
         animationTimer.stop();
     }
 
-    public void checkIfPaused() throws InterruptedException {
+    public void pauseCheck() throws InterruptedException {
         if(!animationScope.isPaused()) return;
         synchronized (lock) {
             while (animationScope.isPaused() && !animationScope.isNextStep()) {

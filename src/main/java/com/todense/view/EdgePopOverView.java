@@ -30,4 +30,9 @@ public class EdgePopOverView implements FxmlView<EdgePopOverViewModel> {
         viewModel.subdivideEdges();
     }
 
+    @FXML
+    private void contractAction(){
+        viewModel.contractEdges();
+    }
+
 }

@@ -1,6 +1,7 @@
-package com.todense.viewmodel.canvas.drawlayer;
+package com.todense.viewmodel.canvas.drawlayer.layers;
 
 import com.todense.viewmodel.canvas.Camera;
+import com.todense.viewmodel.canvas.drawlayer.DrawLayer;
 import com.todense.viewmodel.scope.BackgroundScope;
 import com.todense.viewmodel.scope.CanvasScope;
 import javafx.geometry.Point2D;

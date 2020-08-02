@@ -8,13 +8,18 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="edgeVBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="108.0" prefWidth="95.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.EdgePopOverView">
+<VBox fx:id="edgeVBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="131.0" prefWidth="95.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.EdgePopOverView">
    <Button maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#deleteAction" prefHeight="21.0" prefWidth="88.0" text="Delete">
       <font>
          <Font size="10.0" />
       </font>
    </Button>
    <Button layoutX="14.0" layoutY="12.0" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#subdivideAction" prefHeight="21.0" prefWidth="88.0" text="Subdivide">
+      <font>
+         <Font size="10.0" />
+      </font>
+   </Button>
+   <Button layoutX="14.0" layoutY="38.0" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#contractAction" prefHeight="21.0" prefWidth="88.0" text="Contract">
       <font>
          <Font size="10.0" />
       </font>

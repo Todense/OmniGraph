@@ -22,7 +22,13 @@ public class Starter extends MvvmfxGuiceApplication {
         final Parent root = viewTuple.getView();
         Scene scene = new Scene(root);
         scene.setFill(Color.RED);
-        scene.getStylesheets().add(Objects.requireNonNull(getClass().getClassLoader().getResource("application.css")).toExternalForm());
+        scene.getStylesheets().add(
+                Objects.requireNonNull(getClass()
+                                .getClassLoader()
+                                .getResource(
+                                "application.css"))
+                        .toExternalForm()
+        );
         stage.setScene(scene);
         stage.getIcons().add(new Image(getClass().getResource("/icon.png").toExternalForm()));
         stage.setMaximized(true);

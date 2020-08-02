@@ -5,26 +5,26 @@ import com.todense.model.graph.Node;
 import com.todense.viewmodel.algorithm.ShortestPathAlgorithmService;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class DijkstraService extends ShortestPathAlgorithmService {
 
  	private List<Double> costList;
-	private List<Node> unvisitedSet;
 
 	private Node startNode;
 	private Node goalNode;
 
 	public DijkstraService(Node startNode, Node goalNode, boolean customWeight) {
 		super(startNode.getGraph(), customWeight);
-
 		this.startNode = startNode;
 		this.goalNode = goalNode;
 	}
 
 	@Override
 	protected void perform() throws InterruptedException {
-			super.pathFound = dijkstra(startNode, goalNode);
+		super.pathFound = super.findShortestPath(startNode, goalNode);
 	}
 
 	@Override
@@ -37,72 +37,35 @@ public class DijkstraService extends ShortestPathAlgorithmService {
 		}
 	}
 
-	private void init(Node start){
+	@Override
+	protected void init(){
 		costList = new ArrayList<>(graph.getNodes().size());
-		unvisitedSet = new ArrayList<>();
+		super.openSet = new PriorityQueue<>(1, Comparator.comparingDouble(this::getCost));
 
 		for (int i = 0; i < graph.getNodes().size(); i++) {
 			costList.add(Double.MAX_VALUE);
 		}
-
-		for(Node n: graph.getNodes()) {
-			unvisitedSet.add(n);
-			n.setVisited(false);
-		}
-		setCost(start, 0);
+		super.openSet.add(startNode);
+		setCost(startNode, 0);
 	}
 
-	public boolean dijkstra(Node start, Node end) throws InterruptedException {
-		init(start);
-
-		start.setVisited(true);
-		painter.sleep();
-
-		while(!unvisitedSet.isEmpty()) {
-			Node current = getMinCostNode();
-			if(costList.get(current.getIndex()) == Double.MAX_VALUE) return false;
-
-			//current.setVisited(true);
-			unvisitedSet.remove(current);
-			painter.sleep();
-
-			if(current == end){
-				super.reconstructPath(current, start);
-				super.showPath();
-				return true;
-			}
-
-			for(Node neighbour : current.getNeighbours()) {
-				if(!neighbour.isVisited()) {
-					relaxation(current, neighbour);
-				}
-			}
-		}
-		return false;
-	}
-
-	private void relaxation(Node u, Node v) throws InterruptedException {
-		Edge e =  graph.getEdge(u, v);
+	@Override
+	protected void relaxation(Node nodeFrom, Node nodeTo) throws InterruptedException {
+		Edge e =  graph.getEdge(nodeFrom, nodeTo);
 		double weight = weightFunction.applyAsDouble(e);
-		if(getCost(v) > getCost(u) + weight) {
-			setCost(v, getCost(u) + weight);
-			super.setPrev(v, u);
-			v.setVisited(true);
+		if(getCost(nodeTo) > getCost(nodeFrom) + weight) {
+			setCost(nodeTo, getCost(nodeFrom) + weight);
+			if(super.getPrev(nodeTo) != null){
+				graph.getEdge(nodeTo, super.getPrev(nodeTo)).setMarked(false);
+			}
 			e.setMarked(true);
+			super.setPrev(nodeTo, nodeFrom);
+			if(!nodeTo.isVisited()) {
+				nodeTo.setVisited(true);
+				super.openSet.offer(nodeTo);
+			}
 			painter.sleep();
 		}
-	}
-
-	private Node getMinCostNode(){
-		Node minNode = null;
-		double minCost = Double.POSITIVE_INFINITY;
-		for(Node n : unvisitedSet){
-			if(getCost(n) <= minCost){
-				minNode = n;
-				minCost = getCost(n);
-			}
-		}
-		return minNode;
 	}
 
 	private double getCost(Node n){

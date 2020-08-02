@@ -1,7 +1,7 @@
 package com.todense.view;
 
 import com.todense.viewmodel.AntsViewModel;
-import com.todense.viewmodel.ants.AntColonyAlgorithm;
+import com.todense.viewmodel.ants.AntColonyVariant;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
@@ -12,7 +12,7 @@ import org.controlsfx.control.ToggleSwitch;
 
 public class AntsView implements FxmlView<AntsViewModel> {
 
-    @FXML private ChoiceBox<AntColonyAlgorithm> algorithmChoiceBox;
+    @FXML private ChoiceBox<AntColonyVariant> algorithmChoiceBox;
     @FXML private ColorPicker antColorPicker, cycleColorPicker;
     @FXML private ToggleSwitch twoOptToggleSwitch, threeOptToggleSwitch, animationToggleSwitch, showPheromonesToggleSwitch;
     @FXML private Label alphaLabel, betaLabel, evaporationLabel, q0Label, ksiLabel,
@@ -36,7 +36,7 @@ public class AntsView implements FxmlView<AntsViewModel> {
         bindIntLabel(neighbourhoodLabel, neighbourhoodSlider);
         bindIntLabel(rankLabel, rankSlider);
 
-        algorithmChoiceBox.getItems().addAll(AntColonyAlgorithm.values());
+        algorithmChoiceBox.getItems().addAll(AntColonyVariant.values());
         algorithmChoiceBox.valueProperty().bindBidirectional(viewModel.algorithmProperty());
         algorithmChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> {
 
@@ -52,7 +52,7 @@ public class AntsView implements FxmlView<AntsViewModel> {
                 paramVBox.getChildren().add(rankVBox);
             }
         });
-        algorithmChoiceBox.setValue(AntColonyAlgorithm.AS);
+        algorithmChoiceBox.setValue(AntColonyVariant.AS);
 
         antColorPicker.valueProperty().bindBidirectional(viewModel.antColorProperty());
         cycleColorPicker.valueProperty().bindBidirectional(viewModel.cycleColorProperty());

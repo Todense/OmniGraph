@@ -1,6 +1,8 @@
-package com.todense.viewmodel.canvas.drawlayer;
+package com.todense.viewmodel.canvas.drawlayer.layers;
 
 import com.todense.model.graph.Node;
+import com.todense.viewmodel.canvas.DisplayMode;
+import com.todense.viewmodel.canvas.drawlayer.DrawLayer;
 import com.todense.viewmodel.scope.*;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
@@ -8,7 +10,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.transform.Affine;
 
-public class UpperDrawLayer implements DrawLayer{
+public class UpperDrawLayer implements DrawLayer {
 
     private GraphScope graphScope;
     private InputScope inputScope;
@@ -28,7 +30,7 @@ public class UpperDrawLayer implements DrawLayer{
     public void draw(GraphicsContext gc) {
 
         //endpoints
-        if(algorithmScope.isShowingEndpoints()) {
+        if(graphScope.getDisplayMode() != DisplayMode.ANT_COLONY && algorithmScope.isShowingEndpoints()) {
 
             double size = graphScope.getNodeSize() * 0.5;
             double triangleSize = size * 0.9;
