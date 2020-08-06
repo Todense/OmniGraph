@@ -11,16 +11,32 @@ public abstract class AlgorithmService extends Service<Void> {
     protected String resultMessage = "";
     protected Painter painter;
 
+    protected double result = 0;
+
     protected double startTime;
     private boolean cancelled = false;
+    private boolean connectedToUI = false;
 
     public AlgorithmService(Graph graph){
         this.graph = graph;
+        graph.reset();
     }
 
-    protected abstract void perform() throws InterruptedException;
+    public abstract void perform() throws InterruptedException;
 
     protected abstract void onFinished();
+
+    protected void repaint(){
+        if(connectedToUI){
+            painter.repaint();
+        }
+    }
+
+    protected void sleep() throws InterruptedException {
+        if(connectedToUI){
+            painter.sleep();
+        }
+    }
 
     @Override
     protected Task<Void> createTask() {
@@ -56,6 +72,7 @@ public abstract class AlgorithmService extends Service<Void> {
 
     public void setPainter(Painter painter){
         this.painter = painter;
+        connectedToUI = true;
     }
 
     public String getResultMessage() {
@@ -68,5 +85,13 @@ public abstract class AlgorithmService extends Service<Void> {
 
     public boolean isCancelled() {
         return cancelled;
+    }
+
+    public double getResult() {
+        return result;
+    }
+
+    public void setResult(double result) {
+        this.result = result;
     }
 }

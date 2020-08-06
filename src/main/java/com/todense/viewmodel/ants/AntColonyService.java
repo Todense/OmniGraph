@@ -62,7 +62,7 @@ public class AntColonyService extends AlgorithmService {
     }
 
     @Override
-    protected void perform() throws InterruptedException {
+    public void perform() {
         antColonyOptimization(this.algorithm);
     }
 
@@ -71,7 +71,7 @@ public class AntColonyService extends AlgorithmService {
         antsScope.getAnts().clear();
     }
 
-    private void antColonyOptimization(AntColonyVariant algorithm) throws InterruptedException {
+    private void antColonyOptimization(AntColonyVariant algorithm){
 
         init(algorithm.isInitMaxPh());
 
@@ -181,7 +181,7 @@ public class AntColonyService extends AlgorithmService {
         }
     }
 
-    private void moveAnts(AntColonyVariant algorithm) throws InterruptedException {
+    private void moveAnts(AntColonyVariant algorithm){
         AtomicBoolean working = new AtomicBoolean(true);
 
         for (Ant ant : antsScope.getAnts()) {
@@ -203,7 +203,11 @@ public class AntColonyService extends AlgorithmService {
             transition.play();
             while (working.get()) {
                 synchronized (lock){
-                    lock.wait();
+                    try {
+                        lock.wait();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

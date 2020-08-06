@@ -39,6 +39,8 @@ public class PresetCreatorViewModel implements ViewModel {
         switch (preset) {
             case GRID:
                 presetGraph = PresetCreator.createGrid(getParam1(), getParam2(), center); break;
+            case KING:
+                presetGraph = PresetCreator.createKingsGraph(getParam1(), getParam2(), center); break;
             case MAZE:
                 presetGraph = PresetCreator.createMaze(getParam1(), getParam2(), center); break;
             case CYCLE:
@@ -49,7 +51,7 @@ public class PresetCreatorViewModel implements ViewModel {
                 presetGraph = PresetCreator.createCompleteBipartite(getParam1(), getParam2(), center); break;
         }
 
-        notificationCenter.publish(GraphViewModel.newGraphRequest, presetGraph);
+        notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, presetGraph);
     }
 
     public void createPreset() {

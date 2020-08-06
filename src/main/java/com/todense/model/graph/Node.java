@@ -1,6 +1,5 @@
 package com.todense.model.graph;
 
-
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
@@ -12,9 +11,8 @@ public class Node{
 
     private int index;
     private String labelText="";
-    private Graph graph;
     private Point2D pos;
-    private Color color;
+    private Color color = Color.BLACK;
 
     private boolean marked = false; //flag changing visuals
     private boolean visited = false; //flag not changing visuals
@@ -23,12 +21,10 @@ public class Node{
 
     private ArrayList<Node> neighbours = new ArrayList<>();
 
-    public Node(Point2D pos, Graph g) {
+    protected Node(Point2D pos, int index, int id) {
         this.pos = pos;
-        this.graph = g;
-        this.color = Color.rgb(50,240,45);
-        this.index = g.getNodes().size();
-        this.ID = g.nextID();
+        this.index = index;
+        this.ID = id;
     }
 
     public int getIndex() {
@@ -55,10 +51,6 @@ public class Node{
         this.selected = selected;
     }
 
-    public Graph getGraph() {
-        return graph;
-    }
-
     public void setLabelText(String labelText) {
         this.labelText = labelText;
     }
@@ -73,7 +65,9 @@ public class Node{
 
     public void setPos(Point2D pos) {
         this.pos = pos;
-    }public void setHighlighted(boolean highlighted) {
+    }
+
+    public void setHighlighted(boolean highlighted) {
         this.highlighted = highlighted;
     }
 
@@ -81,7 +75,7 @@ public class Node{
         return ID;
     }
 
-    public void setIndex(int i) {
+    protected void setIndex(int i) {
         this.index = i;
     }
 

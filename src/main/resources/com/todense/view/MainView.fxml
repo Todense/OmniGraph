@@ -29,14 +29,14 @@
                   <HBox.margin>
                      <Insets />
                   </HBox.margin>
-                  <VBox fx:id="appearanceVBox" alignment="CENTER" fillWidth="false" prefHeight="489.0" prefWidth="188.0">
-                     <TitledPane animated="false" prefWidth="235.0" text="Graph">
+                  <VBox fx:id="appearanceVBox" alignment="TOP_CENTER" fillWidth="false" prefHeight="489.0" prefWidth="188.0">
+                     <TitledPane animated="false" expanded="false" prefWidth="235.0" text="Graph">
                         <fx:include fx:id="graph" source="GraphView.fxml" />
                         <VBox.margin>
                            <Insets />
                         </VBox.margin>
                      </TitledPane>
-                     <TitledPane animated="false" prefWidth="187.0" text="Background">
+                     <TitledPane animated="false" expanded="false" prefWidth="187.0" text="Background">
                         <fx:include fx:id="background" source="BackgroundView.fxml" />
                      </TitledPane>
                   </VBox>

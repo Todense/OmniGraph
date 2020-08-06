@@ -25,7 +25,6 @@ public class Painter {
 
     public Painter(AnimationScope animationScope) {
         this.animationScope = animationScope;
-
         this.animationScope.pausedProperty().addListener((obs, oldVal, newVal) -> {
             synchronized (lock) {
                 lock.notifyAll();
@@ -48,7 +47,9 @@ public class Painter {
     }
 
     private void draw(){
-        drawLayers.forEach((drawLayer -> drawLayer.draw(gc)));
+        if(gc != null) {
+            drawLayers.forEach((drawLayer -> drawLayer.draw(gc)));
+        }
     }
 
     public void repaint(){
@@ -80,11 +81,15 @@ public class Painter {
         animationTimer.stop();
     }
 
-    public void pauseCheck() throws InterruptedException {
+    public void pauseCheck() {
         if(!animationScope.isPaused()) return;
         synchronized (lock) {
             while (animationScope.isPaused() && !animationScope.isNextStep()) {
-                lock.wait();
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
             animationScope.nextStepProperty().setValue(false);
         }

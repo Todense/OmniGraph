@@ -33,7 +33,7 @@ public class DynamicLayoutService extends AlgorithmService {
 	}
 
 	@Override
-	protected void perform() throws InterruptedException {
+	public void perform() throws InterruptedException {
 		forceDirectedLayout();
 	}
 
@@ -125,7 +125,7 @@ public class DynamicLayoutService extends AlgorithmService {
 				stepSize = updateStepLength(energy, prevEnergy);
 			}
 		}
-		painter.repaint();
+		super.repaint();
 
 	}
 

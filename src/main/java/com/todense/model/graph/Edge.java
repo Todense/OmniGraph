@@ -9,7 +9,7 @@ public class Edge {
     private Node n1;
     private Node n2;
 
-    private Color color;
+    private Color color = Color.BLACK;
 
     double weight = 1d;
     double length = 0;
@@ -20,9 +20,9 @@ public class Edge {
     private boolean highlighted = false;
 
     public Edge(Node n1, Node n2) {
+        assert !n1.equals(n2) : "Cannot create loop";
         this.n1 = n1;
         this.n2 = n2;
-        color = Color.rgb(50,130,200);
         ID = n1.getID() < n2.getID() ?
                 n1.getID()+"-"+n2.getID() :
                 n2.getID()+"-"+n1.getID();
@@ -93,7 +93,7 @@ public class Edge {
     }
 
     public String toString(){
-        return n1.getIndex()+"-"+n2.getIndex();
+        return ID;
     }
 
     public String getID() {

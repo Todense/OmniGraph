@@ -20,35 +20,25 @@ public class GraphManager {
     private ObjectProperty<Node> startNodeProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Node> goalNodeProperty = new SimpleObjectProperty<>();
 
-    int nodeIndex = 0;
-
     private Graph graph;
 
     public GraphManager(){
-        setGraph(new Graph("graph0"));
+        setGraph(new Graph());
     }
 
     public void setGraph(Graph graph) {
         this.graph = graph;
     }
 
-    public Node addNode(Point2D p, Graph g) {
-        Node n = new Node(p, g);
+    public Node addNode(Point2D p) {
+        Node n = graph.addNode(p);
         n.setColor(defaultNodeColorProperty.get());
-        nodeIndex++;
-        g.addNode(n);
         return n;
     }
 
-    public Node addNode(Point2D p){
-        return addNode(p , this.graph);
-    }
 
     public void removeNode(Node n) {
         Graph g = getGraph();
-        for (int i = n.getIndex() + 1; i < g.getNodes().size(); i++) {
-            g.getNodes().get(i).setIndex( g.getNodes().get(i).getIndex() - 1) ;
-        }
         if(startNodeProperty.get() == n){
             startNodeProperty.set(null);
         }
@@ -59,9 +49,8 @@ public class GraphManager {
     }
 
     public void addEdge(Node n1, Node n2) {
-        Edge edge = new Edge(n1, n2);
-        edge.setColor(defaultEdgeColorProperty.get());
-        graph.addEdge(edge);
+        Edge newEdge = graph.addEdge(n1, n2);
+        newEdge.setColor(defaultEdgeColorProperty.get());
     }
 
     public void removeEdge(Node n1, Node n2) {
@@ -86,8 +75,7 @@ public class GraphManager {
     }
 
     public void clearGraph() {
-        graph = new Graph("graph0");
-        nodeIndex = 0;
+        graph = new Graph();
         startNodeProperty.set(null);
         goalNodeProperty.set(null);
     }
@@ -115,8 +103,8 @@ public class GraphManager {
     }
 
     public void createCompleteGraph(){
-        for(int i = 0; i< graph.getNodes().size()-1; i++) {
-            for(int j = i; j< graph.getNodes().size(); j++) {
+        for(int i = 0; i < graph.getNodes().size()-1; i++) {
+            for(int j = i + 1; j < graph.getNodes().size(); j++) {
                 Node n1 = graph.getNodes().get(i);
                 Node n2 = graph.getNodes().get(j);
                 if(noEdgeBetween(n1,n2)) {
@@ -180,7 +168,7 @@ public class GraphManager {
     }
 
     public boolean noEdgeBetween(Node n1, Node n2) {
-        return !n1.getNeighbours().contains(n2) && n1 != n2;
+        return !graph.getEdges().isEdgeBetween(n1, n2);
     }
 
     public void updateNodePosition(Node n, Point2D d){

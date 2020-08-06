@@ -19,7 +19,7 @@ import javax.inject.Inject;
 
 public class CanvasViewModel implements ViewModel {
 
-    public final static String repaintRequest = "REPAINT";
+    public final static String REPAINT_REQUEST = "REPAINT";
 
     @InjectScope
     GraphScope graphScope;
@@ -82,11 +82,11 @@ public class CanvasViewModel implements ViewModel {
             mouseHandler.clearSelection();
         });
 
-        notificationCenter.subscribe(repaintRequest,  (key, payload) -> painter.repaint());
+        notificationCenter.subscribe(REPAINT_REQUEST,  (key, payload) -> painter.repaint());
         notificationCenter.subscribe(MainViewModel.graphEditRequest,
                 (key, payload) -> painter.repaint());
 
-        notificationCenter.subscribe(GraphViewModel.newGraphRequest, (key, payload) -> {
+        notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_REQUEST, (key, payload) -> {
             graphScope.displayModeProperty().set(DisplayMode.DEFAULT);
             painter.repaint();
         });

@@ -17,7 +17,6 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 public class FileManager {
@@ -31,8 +30,8 @@ public class FileManager {
 
     private StringProperty errorTextProperty = new SimpleStringProperty();
 
-    public void saveGraph(Graph g){
-        TextInputDialog dialog = new TextInputDialog(g.getName());
+    public void saveGraphWithDirectoryChooser(Graph g){
+        TextInputDialog dialog = new TextInputDialog(g.toString());
 
         dialog.setTitle("Save Graph");
         dialog.setContentText("Name:");
@@ -44,18 +43,22 @@ public class FileManager {
             g.setName(result.get());
             File selectedDirectory = directoryChooser.showDialog(this.stage);
             if(selectedDirectory != null){
-                String path = selectedDirectory.getAbsolutePath()+"//"+result.get();
-                if(!Files.exists(Paths.get(path))){
-                    try {
-                        Files.createDirectory(Paths.get(path));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                writeGraph(g, Paths.get(path));
+                Path path = Path.of(selectedDirectory.getAbsolutePath()+"//"+result.get());
+                saveGraph(g, path);
                 directoryChooser.setInitialDirectory(selectedDirectory);
             }
         }
+    }
+
+    public void saveGraph(Graph g, Path path){
+        if(!Files.exists(path)){
+            try {
+                Files.createDirectory(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        writeGraph(g, path);
     }
 
     public Graph openGraph() {
@@ -191,8 +194,7 @@ public class FileManager {
                     for (CSVRecord record : records) {
                         Node node1 = graph.getNodes().get(Integer.parseInt(record.get("node1")));
                         Node node2 = graph.getNodes().get(Integer.parseInt(record.get("node2")));
-                        Edge e = new Edge(node1, node2);
-                        graph.addEdge(e);
+                        Edge e = graph.addEdge(node1, node2);
                         e.setWeight(Double.parseDouble(record.get("weight")));
                         e.setColor(Color.valueOf(record.get("color")));
                     }
@@ -227,8 +229,8 @@ public class FileManager {
         String color;
 
         public EdgeCSV(Edge e){
-            this.node1 = String.valueOf(e.getN1().getGraph().getNodes().indexOf(e.getN1()));
-            this.node2 = String.valueOf(e.getN2().getGraph().getNodes().indexOf(e.getN2()));
+            this.node1 = String.valueOf(e.getN1().getIndex());
+            this.node2 = String.valueOf(e.getN2().getIndex());
             this.weight = String.valueOf(e.getWeight());
             this.color = e.getColor().toString();
         }

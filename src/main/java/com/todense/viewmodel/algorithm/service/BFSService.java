@@ -1,5 +1,6 @@
 package com.todense.viewmodel.algorithm.service;
 
+import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.algorithm.AlgorithmService;
 
@@ -10,13 +11,13 @@ public class BFSService extends AlgorithmService {
 
 	private Node startNode;
 
-	public BFSService(Node startNode){
-		super(startNode.getGraph());
+	public BFSService(Node startNode, Graph graph){
+		super(graph);
 		this.startNode = startNode;
 	}
 
 	@Override
-	protected void perform() throws InterruptedException {
+	public void perform() throws InterruptedException {
 		BFS();
 	}
 
@@ -36,11 +37,11 @@ public class BFSService extends AlgorithmService {
 		}
 	}
 
-	public void ComponentBFS(Node n) throws InterruptedException{
+	public void ComponentBFS(Node n) throws InterruptedException {
 		LinkedList<Node> queue = new LinkedList<>();
 		queue.add(n);
 		n.setMarked(true);
-		painter.sleep();
+		super.sleep();
 		while(!queue.isEmpty()) {
 			Node m = queue.poll();
 			for(Node k: m.getNeighbours()) {
@@ -48,7 +49,7 @@ public class BFSService extends AlgorithmService {
 					graph.getEdge(k,m).setMarked(true);
 					queue.add(k);
 					k.setMarked(true);
-					painter.sleep();
+					super.sleep();
 				}
 			}
 		}

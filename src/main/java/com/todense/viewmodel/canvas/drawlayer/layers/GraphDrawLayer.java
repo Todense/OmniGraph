@@ -140,7 +140,12 @@ public class GraphDrawLayer implements DrawLayer {
                 drawEdgeWeight(edge, gc, String.valueOf((int)(edge.getN1().getPos().distance(edge.getN2().getPos()))), width * 3);
             }
             else if(graphScope.getEdgeWeightMode() == EdgeWeightMode.CUSTOM){
-                drawEdgeWeight(edge, gc, String.valueOf(edge.getWeight()), width * 3);
+                double weight = edge.getWeight();
+                if((weight % 1) == 0){
+                    drawEdgeWeight(edge, gc, String.valueOf((int)weight), width * 3);
+                }else {
+                    drawEdgeWeight(edge, gc, String.valueOf(weight), width * 3);
+                }
             }
         }
     }

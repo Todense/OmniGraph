@@ -6,15 +6,14 @@ import org.apache.commons.math3.distribution.EnumeratedDistribution;
 import org.apache.commons.math3.util.Pair;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BarabasiAlbertGenerator extends RandomEdgeGenerator {
 
     private final int m0;
     private final int m;
 
-    public BarabasiAlbertGenerator(List<Node> nodes, int m0, int m) {
-        super(nodes);
+    public BarabasiAlbertGenerator(int m0, int m) {
+        super();
         this.m0 = m0;
         this.m = m;
     }

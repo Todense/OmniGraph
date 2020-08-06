@@ -125,15 +125,15 @@ public class MainViewModel implements ViewModel {
     }
 
     public void saveGraph()  {
-        fileManager.saveGraph(graphScope.getGraphManager().getGraph());
+        fileManager.saveGraphWithDirectoryChooser(graphScope.getGraphManager().getGraph());
 
     }
 
     public void openGraph() {
         Graph openedGraph = fileManager.openGraph();
         if(openedGraph != null){
-            notificationCenter.publish(GraphViewModel.newGraphRequest, openedGraph);
-            notificationCenter.publish(CanvasViewModel.repaintRequest);
+            notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, openedGraph);
+            notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
         }
     }
 
@@ -194,7 +194,7 @@ public class MainViewModel implements ViewModel {
 
     public void adjustCameraToGraph() {
         notificationCenter.publish("ADJUST");
-        notificationCenter.publish(CanvasViewModel.repaintRequest);
+        notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
     }
 
     public ObjectProperty<String> textProperty() {

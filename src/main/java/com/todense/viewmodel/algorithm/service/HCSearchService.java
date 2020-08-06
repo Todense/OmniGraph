@@ -1,6 +1,7 @@
 package com.todense.viewmodel.algorithm.service;
 
 import com.todense.model.graph.Edge;
+import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.algorithm.AlgorithmService;
 
@@ -18,14 +19,14 @@ public class HCSearchService extends AlgorithmService {
     private Node startNode;
     private boolean checkingConnectivity;
 
-    public HCSearchService(Node startNode, boolean checkingConnectivity){
-        super(startNode.getGraph());
+    public HCSearchService(Node startNode, Graph graph, boolean checkingConnectivity){
+        super(graph);
         this.startNode = startNode;
         this.checkingConnectivity = checkingConnectivity;
     }
 
     @Override
-    protected void perform() throws InterruptedException {
+    public void perform() throws InterruptedException {
         cycleFound = HCSearch(startNode);
     }
 
@@ -48,7 +49,7 @@ public class HCSearchService extends AlgorithmService {
     }
 
 
-    boolean HCSearch(Node startNode) throws InterruptedException{
+    boolean HCSearch(Node startNode) throws InterruptedException {
 
         init();
 
@@ -63,7 +64,7 @@ public class HCSearchService extends AlgorithmService {
                 Edge edge = graph.getEdge(cycle.get(0), cycle.get(cycle.size()-1));
                 if (edge != null) {
                     edge.setMarked(true);
-                    painter.sleep();
+                    super.sleep();
                     return true;
                 }
             }
@@ -80,7 +81,7 @@ public class HCSearchService extends AlgorithmService {
                 if(cycle.size() > 1) {
                     graph.getEdge(cycle.get(cycle.size()-1), cycle.get(cycle.size()-2)).setMarked(true);
                 }
-                painter.sleep();
+                super.sleep();
 
                 if(checkingConnectivity){
                     if(!isStartNodeConnectedWithUnvisitedNodes()){
@@ -102,7 +103,7 @@ public class HCSearchService extends AlgorithmService {
                     graph.getEdge(lastNode, cycle.get(cycle.size() - 2)).setMarked(false);
                 }
                 cycle.remove(cycle.size()-1);
-                painter.sleep();
+                super.sleep();
             }
         }
         return false;

@@ -62,8 +62,6 @@ public class RandomGeneratorViewModel implements ViewModel {
                 ? minNodeDistProperty.get() * height
                 : 0d;
 
-        Graph randomGraph = new Graph("RandomGraph0");
-
         Generator<Point2D> pointGenerator;
         RandomEdgeGenerator edgeGenerator;
 
@@ -81,37 +79,26 @@ public class RandomGeneratorViewModel implements ViewModel {
                 throw new IllegalStateException("Unexpected value: " + nodeArrangementProperty.get());
         }
 
-        boolean minDistAccepted = RandomGraphGenerator.generateNodes(nodeCountProperty.get(), randomGraph, pointGenerator, minDist);
-
-        if(!minDistAccepted){
-            notificationCenter.publish(MainViewModel.threadFinished, "Minimum node distance is too high!");
-            return;
-        }
-
         switch (generatorProperty.get()){
             case GEOMETRIC:
                 edgeGenerator = new GeometricGenerator(
-                        randomGraph.getNodes(),
                         doubleParameterProperty.get() * height,
                         false
                 );
                 break;
             case GEOMETRIC_RANDOMIZED:
                 edgeGenerator = new GeometricGenerator(
-                        randomGraph.getNodes(),
                         doubleParameterProperty.get() * height,
                         true
                 );
                 break;
             case ERDOS_RENYI:
                 edgeGenerator = new ErdosRenyiGenerator(
-                        randomGraph.getNodes(),
                         doubleParameterProperty.get()
                 );
                 break;
             case BARABASI_ALBERT:
                 edgeGenerator = new BarabasiAlbertGenerator(
-                        randomGraph.getNodes(),
                         intParameter1Property.get(),
                         intParameter2Property.get());
                 break;
@@ -119,10 +106,14 @@ public class RandomGeneratorViewModel implements ViewModel {
                 throw new IllegalStateException("Unexpected value: " + generatorProperty.get());
         }
 
-        RandomGraphGenerator.generateEdges(randomGraph, edgeGenerator);
 
-        notificationCenter.publish(GraphViewModel.newGraphRequest, randomGraph);
-        notificationCenter.publish(MainViewModel.threadFinished, "Random graph generated");
+        try{
+            Graph randomGraph = RandomGraphGenerator.generateGraph(nodeCountProperty.get(), pointGenerator, edgeGenerator, minDist);
+            notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, randomGraph);
+            notificationCenter.publish(MainViewModel.threadFinished, "Random graph generated");
+        } catch (RuntimeException e){
+            notificationCenter.publish(MainViewModel.threadFinished, e.getMessage());
+        }
     }
 
     public void generate(){

@@ -1,6 +1,7 @@
 package com.todense.viewmodel.algorithm.service;
 
 import com.todense.model.graph.Edge;
+import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.algorithm.WeightedAlgorithmService;
 
@@ -18,16 +19,15 @@ public class PrimService extends WeightedAlgorithmService {
 	private int componentCount;
 	private Node startNode;
 
-	public PrimService(Node startNode, boolean customWeight) {
-		super(startNode.getGraph(), customWeight);
+	public PrimService(Node startNode, Graph graph, boolean customWeight) {
+		super(graph, customWeight);
 		this.startNode = startNode;
 	}
 
 
 	@Override
-	protected void perform() throws InterruptedException {
-
-		prim(startNode);
+	public void perform() throws InterruptedException {
+		result = prim(startNode);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class PrimService extends WeightedAlgorithmService {
 		}
 	}
 
-	public void prim (Node start)  throws InterruptedException {
+	public double prim (Node start) throws InterruptedException {
 		init(start);
 		Node current;
 
@@ -73,7 +73,7 @@ public class PrimService extends WeightedAlgorithmService {
 			}else{
 				componentCount++;
 			}
-			painter.sleep();
+			super.sleep();
 
 
 			for(Node neighbour : current.getNeighbours()) {
@@ -89,6 +89,7 @@ public class PrimService extends WeightedAlgorithmService {
 				}
 			}
 		}
+		return weight;
 	}
 
 	private double getCost(Node n){

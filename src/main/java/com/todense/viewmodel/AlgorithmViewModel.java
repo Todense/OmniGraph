@@ -63,7 +63,7 @@ public class AlgorithmViewModel implements ViewModel {
             goalNodeProperty().set(null);
         });
 
-        notificationCenter.subscribe(GraphViewModel.newGraphRequest, (key, payload) -> {
+        notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_REQUEST, (key, payload) -> {
             Platform.runLater(this::stop);
             startNodeProperty().set(null);
             goalNodeProperty().set(null);
@@ -96,13 +96,13 @@ public class AlgorithmViewModel implements ViewModel {
         boolean customWeight = graphScope.getEdgeWeightMode().equals(EdgeWeightMode.CUSTOM);
 
         switch (getAlgorithm()){
-            case BFS: service = new BFSService(startNode); break;
-            case DFS: service = new DFSService(startNode); break;
-            case PRIM: service = new PrimService(startNode, customWeight); break;
+            case BFS: service = new BFSService(startNode, g); break;
+            case DFS: service = new DFSService(startNode, g); break;
+            case PRIM: service = new PrimService(startNode, g, customWeight); break;
             case KRUSKAL: service = new KruskalService(g, customWeight); break;
-            case DIJKSTRA: service = new DijkstraService(startNode, goalNode, customWeight); break;
-            case HCSEARCH: service = new HCSearchService(startNode, connectivityChecksProperty.get()); break;
-            case ASTAR: service = new AStarService(startNode, goalNode, customWeight); break;
+            case DIJKSTRA: service = new DijkstraService(startNode, goalNode, g, customWeight); break;
+            case HCSEARCH: service = new HCSearchService(startNode, g, connectivityChecksProperty.get()); break;
+            case ASTAR: service = new AStarService(startNode, goalNode, g, customWeight); break;
         }
 
         serviceScope.setService(service);

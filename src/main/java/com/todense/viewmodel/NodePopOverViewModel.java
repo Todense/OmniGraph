@@ -26,11 +26,11 @@ public class NodePopOverViewModel implements ViewModel {
         this.nodes = nodes;
         this.nodeColorProperty.addListener((obs, oldVal, newVal) -> {
                 nodes.forEach((node -> node.setColor(nodeColorProperty.get())));
-                notificationCenter.publish(CanvasViewModel.repaintRequest);
+                notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
         });
         this.labelProperty.addListener((obs, oldVal, newVal) -> {
                 nodes.forEach(node -> node.setLabelText(labelProperty.get()));
-                notificationCenter.publish(CanvasViewModel.repaintRequest);
+                notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
         });
 
 
@@ -52,13 +52,13 @@ public class NodePopOverViewModel implements ViewModel {
     public void setStartNode() {
         notificationCenter.publish("SET_START", this.nodes.get(0));
         notificationCenter.publish("HIDE");
-        notificationCenter.publish(CanvasViewModel.repaintRequest);
+        notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
     }
 
     public void setGoalNode() {
         notificationCenter.publish("SET_GOAL", this.nodes.get(0));
         notificationCenter.publish("HIDE");
-        notificationCenter.publish(CanvasViewModel.repaintRequest);
+        notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
     }
 
     public ObjectProperty<Color> nodeColorProperty() {

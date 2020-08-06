@@ -23,7 +23,7 @@ public abstract class WeightedAlgorithmService extends AlgorithmService{
     }
 
     @Override
-    protected void perform() throws InterruptedException {
+    public void perform() throws InterruptedException {
     }
 
     @Override

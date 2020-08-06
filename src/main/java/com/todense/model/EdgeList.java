@@ -51,4 +51,11 @@ public class EdgeList extends ArrayList<Edge> {
         assert edgeMap.get(id) != null : "No edge with id: "+id;
         return edgeMap.get(id);
     }
+
+    public boolean isEdgeBetween(Node n, Node m){
+        String id = n.getID() < m.getID() ?
+                n.getID()+"-"+m.getID() :
+                m.getID()+"-"+n.getID();
+        return edgeMap.containsKey(id);
+    }
 }

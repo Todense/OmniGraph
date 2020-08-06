@@ -11,9 +11,7 @@ public abstract class RandomEdgeGenerator implements EdgeGenerator {
     protected List<Node> nodes;
     private boolean[][] adjacencyMatrix;
 
-    public RandomEdgeGenerator(List<Node> nodes){
-        this.nodes = nodes;
-        adjacencyMatrix = new boolean[nodes.size()][nodes.size()];
+    public RandomEdgeGenerator(){
     }
 
     public boolean[][] generateAdjacencyMatrix(){
@@ -30,5 +28,10 @@ public abstract class RandomEdgeGenerator implements EdgeGenerator {
         else{
             adjacencyMatrix[j][i] = true;
         }
+    }
+
+    public void setNodes(List<Node> nodes){
+        this.nodes = nodes;
+        adjacencyMatrix = new boolean[nodes.size()][nodes.size()];
     }
 }

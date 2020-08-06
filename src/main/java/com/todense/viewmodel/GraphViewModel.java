@@ -28,7 +28,7 @@ import javax.inject.Inject;
 
 public class GraphViewModel implements ViewModel {
 
-    public static final String newGraphRequest = "NEW_GRAPH";
+    public static final String NEW_GRAPH_REQUEST = "NEW_GRAPH";
 
     @InjectScope
     GraphScope graphScope;
@@ -58,13 +58,12 @@ public class GraphViewModel implements ViewModel {
         });
 
 
-        notificationCenter.subscribe(GraphViewModel.newGraphRequest, (key, payload) -> {
+        notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_REQUEST, (key, payload) -> {
             GM.setGraph((Graph) payload[0]);
             GM.applyColors();
         });
 
         notificationCenter.subscribe("RESET", (key, payload) -> graphScope.displayModeProperty().set(DisplayMode.DEFAULT));
-
 
         ChangeListener<Object> listener = (obs, oldVal, newVal) -> canvasScope.getPainter().repaint();
 
@@ -83,14 +82,14 @@ public class GraphViewModel implements ViewModel {
         for(Node node : GM.getGraph().getNodes()){
             node.setColor(graphScope.nodeColorProperty().get());
         }
-        notificationCenter.publish(CanvasViewModel.repaintRequest);
+        notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
     }
 
     public void applyColorToEdges() {
         for (Edge edge : GM.getGraph().getEdges()) {
             edge.setColor(edgeColorProperty().get());
         }
-        notificationCenter.publish(CanvasViewModel.repaintRequest);
+        notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
     }
 
     public IntegerProperty nodeSizeProperty() {

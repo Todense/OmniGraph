@@ -22,8 +22,8 @@ public class KruskalService extends WeightedAlgorithmService {
 	}
 
 	@Override
-	protected void perform() throws InterruptedException {
-		kruskal();
+	public void perform() throws InterruptedException {
+		result = kruskal();
 	}
 
 	@Override
@@ -54,7 +54,7 @@ public class KruskalService extends WeightedAlgorithmService {
 
 	}
 
-	public void kruskal() throws InterruptedException{
+	public double kruskal() throws InterruptedException {
 
 		init();
 		while(counter < graph.getNodes().size() - componentCount) {
@@ -75,13 +75,14 @@ public class KruskalService extends WeightedAlgorithmService {
 				e.setMarked(true);
 				n1.setMarked(true);
 				n2.setMarked(true);
-				painter.sleep();
+				super.sleep();
 
 				weight += weightFunction.applyAsDouble(e);
 				union(xSet, ySet);
 				counter++;
 			}
 		}
+		return weight;
 	}
 
 	public int find(int nodeIndex){

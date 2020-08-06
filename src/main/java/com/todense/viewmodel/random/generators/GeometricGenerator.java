@@ -3,15 +3,13 @@ package com.todense.viewmodel.random.generators;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.random.RandomEdgeGenerator;
 
-import java.util.List;
-
 public class GeometricGenerator extends RandomEdgeGenerator {
 
     private final double threshold;
     private final boolean randomized;
 
-    public GeometricGenerator(List<Node> nodes, double threshold, boolean randomized) {
-        super(nodes);
+    public GeometricGenerator(double threshold, boolean randomized) {
+        super();
         this.threshold = threshold;
         this.randomized = randomized;
     }

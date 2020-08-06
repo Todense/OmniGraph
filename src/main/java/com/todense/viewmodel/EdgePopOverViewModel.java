@@ -29,7 +29,7 @@ public class EdgePopOverViewModel implements ViewModel {
         this.edges = edges;
         edgeColorProperty.addListener((obs, oldVal, newVal) ->{
                 edges.forEach(edge -> edge.setColor(edgeColorProperty.get()));
-            notificationCenter.publish(CanvasViewModel.repaintRequest);
+            notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
         });
 
         edgeWeightProperty.addListener((obs, newVal, oldVal) ->{
@@ -37,7 +37,7 @@ public class EdgePopOverViewModel implements ViewModel {
                     if(Util.isDouble(edgeWeightProperty.get()))
                         edge.setWeight(Double.parseDouble(edgeWeightProperty.get()));
                 });
-                notificationCenter.publish(CanvasViewModel.repaintRequest);
+                notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
         });
 
     }

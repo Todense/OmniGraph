@@ -1,16 +1,13 @@
 package com.todense.viewmodel.random.generators;
 
-import com.todense.model.graph.Node;
 import com.todense.viewmodel.random.RandomEdgeGenerator;
-
-import java.util.List;
 
 public class ErdosRenyiGenerator extends RandomEdgeGenerator {
 
     private double probability;
 
-    public ErdosRenyiGenerator(List<Node> nodes, double probability){
-        super(nodes);
+    public ErdosRenyiGenerator(double probability){
+        super();
         this.probability = probability;
     }
 

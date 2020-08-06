@@ -1,6 +1,7 @@
 package com.todense.viewmodel.algorithm.service;
 
 import com.todense.model.graph.Edge;
+import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.algorithm.ShortestPathAlgorithmService;
 
@@ -16,15 +17,16 @@ public class DijkstraService extends ShortestPathAlgorithmService {
 	private Node startNode;
 	private Node goalNode;
 
-	public DijkstraService(Node startNode, Node goalNode, boolean customWeight) {
-		super(startNode.getGraph(), customWeight);
+	public DijkstraService(Node startNode, Node goalNode, Graph graph, boolean customWeight) {
+		super(graph, customWeight);
 		this.startNode = startNode;
 		this.goalNode = goalNode;
 	}
 
 	@Override
-	protected void perform() throws InterruptedException {
+	public void perform() throws InterruptedException {
 		super.pathFound = super.findShortestPath(startNode, goalNode);
+		super.result = pathLength;
 	}
 
 	@Override
@@ -60,11 +62,11 @@ public class DijkstraService extends ShortestPathAlgorithmService {
 			}
 			e.setMarked(true);
 			super.setPrev(nodeTo, nodeFrom);
-			if(!nodeTo.isVisited()) {
-				nodeTo.setVisited(true);
-				super.openSet.offer(nodeTo);
+			if(openSet.contains(nodeTo)){
+				super.openSet.remove(nodeTo);  //remove then add to maintain queue order
 			}
-			painter.sleep();
+			super.openSet.offer(nodeTo);
+			super.sleep();
 		}
 	}
 

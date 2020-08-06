@@ -17,7 +17,6 @@ public abstract class ShortestPathAlgorithmService extends WeightedAlgorithmServ
     protected double pathLength = 0;
     protected boolean pathFound = false;
 
-
     @Override
     protected void onFinished() {
         if(pathFound){
@@ -46,7 +45,7 @@ public abstract class ShortestPathAlgorithmService extends WeightedAlgorithmServ
         while(!openSet.isEmpty()){
             Node current = openSet.poll();
             current.setMarked(true);
-            painter.sleep();
+            super.sleep();
 
             if (current == end){
                 reconstructPath(current, start);
@@ -76,7 +75,7 @@ public abstract class ShortestPathAlgorithmService extends WeightedAlgorithmServ
             pathLength += weightFunction.applyAsDouble(e);
             e.setMarked(true);
         }
-        painter.repaint();
+        super.repaint();
     }
 
     protected void reconstructPath(Node nodeFrom, Node start){

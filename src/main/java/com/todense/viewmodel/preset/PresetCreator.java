@@ -5,7 +5,10 @@ import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import javafx.geometry.Point2D;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.Stack;
 
 
 public class PresetCreator {
@@ -73,11 +76,55 @@ public class PresetCreator {
         return g;
     }
 
+    public static Graph createKingsGraph(int columns, int rows, Point2D center){
+        Graph g = createGrid(columns, rows, center);
+        for (Node node : g.getNodes()) {
+            int i = node.getIndex();
+
+            if( i % rows != 0){ //top
+               if(i >= rows){ //left
+                   if(!g.getEdges().isEdgeBetween(node, g.getNodes().get(i-rows-1))){
+                       g.addEdge(node, g.getNodes().get(i-rows-1));
+                   }
+               }
+               if(i < rows * (columns-1)){ //right
+                   if(!g.getEdges().isEdgeBetween(node, g.getNodes().get(i+rows-1))){
+                       g.addEdge(g.getNodes().get(i), g.getNodes().get(i+rows-1));
+                   }
+                }
+            }
+
+            if( i % rows != rows-1){ //bottom
+                if(i >= rows){
+                    if(!g.getEdges().isEdgeBetween(node, g.getNodes().get(i-rows+1))){
+                        g.addEdge(node, g.getNodes().get(i-rows+1));
+                    }
+                }
+                if(i < rows * (columns-1)){
+                    if(!g.getEdges().isEdgeBetween(node, g.getNodes().get(i+rows+1))){
+                        g.addEdge(node, g.getNodes().get(i+rows+1));
+                    }
+
+                }
+            }
+        }
+        return g;
+    }
+
     public static Graph createMaze(int columns, int rows, Point2D center){
         Graph g = createGrid(columns, rows, center);
         g.getNodes().forEach(n -> Collections.shuffle(n.getNeighbours()));
         DFS(g.getNodes().get(new Random().nextInt(g.getNodes().size())), g);
-        g.getEdges().removeIf(e -> !e.isMarked());
+        for(Node n : g.getNodes()){
+            for (Node m : g.getNodes()){
+                if(g.getEdges().isEdgeBetween(n, m)){
+                    Edge e = g.getEdges().getEdge(n, m);
+                    if(!e.isMarked()){
+                        g.removeEdge(e);
+                    }
+                }
+            }
+        }
         g.getEdges().forEach(e -> e.setMarked(false));
         return g;
     }
@@ -108,7 +155,7 @@ public class PresetCreator {
         double h = center.getY() * 0.8;
 
         if(n == 1){
-            g.addNode(new Node(new Point2D(center.getX() - 300, center.getY()), g));
+            g.addNode(new Point2D(center.getX() - 300, center.getY()));
         }
         else {
             gap = 2*h/(n-1);
@@ -116,11 +163,11 @@ public class PresetCreator {
                 Point2D newPos = new Point2D(
                         center.getX() - 300,
                         (0.2 * center.getY()) + i * gap);
-                g.addNode(new Node(newPos, g));
+                g.addNode(newPos);
             }
         }
         if(m == 1){
-            g.addNode(new Node(new Point2D(center.getX() + 300, center.getY()), g));
+            g.addNode(new Point2D(center.getX() + 300, center.getY()));
         }
         else {
             gap = 2 * h / (m - 1);
@@ -128,13 +175,13 @@ public class PresetCreator {
                 Point2D newPos = new Point2D(
                         center.getX() + 300,
                         (0.2 * center.getY()) + i*gap);
-                g.addNode(new Node(newPos, g));
+                g.addNode(newPos);
             }
         }
 
         for (int i = 0; i < n; i++) {
             for (int j = n; j < n + m; j++) {
-                g.addEdge(new Edge(g.getNodes().get(i), g.getNodes().get(j)));
+                g.addEdge(g.getNodes().get(i), g.getNodes().get(j));
             }
         }
         return g;

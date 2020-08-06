@@ -1,25 +1,32 @@
 package com.todense.viewmodel.random;
 
-import com.todense.model.graph.Edge;
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import javafx.geometry.Point2D;
 
+
 public class RandomGraphGenerator {
 
-    public static boolean generateNodes(int n, Graph g, Generator<Point2D> pointGenerator, double minDist){
+    public static Graph generateGraph(int nodeCount, Generator<Point2D> pointGenerator, EdgeGenerator edgeGenerator, double minDist){
+        Graph graph = new Graph("RandomGraph");
+        generateNodes(nodeCount, graph, pointGenerator, minDist);
+        edgeGenerator.setNodes(graph.getNodes());
+        generateEdges(graph, edgeGenerator);
+        return graph;
+    }
+
+    public static void generateNodes(int n, Graph g, Generator<Point2D> pointGenerator, double minDist) {
         if(minDist == 0){
             for(int i = 0; i < n; i++) {
                 g.addNode(pointGenerator.next());
             }
-            return true;
         }
         else{
-            return generateNodesMinDist(n, minDist, g, pointGenerator);
+            generateNodesMinDist(n, minDist, g, pointGenerator);
         }
     }
 
-    public static boolean generateNodesMinDist(int n, double minDist, Graph g, Generator<Point2D> pointGenerator){
+    public static void generateNodesMinDist(int n, double minDist, Graph g, Generator<Point2D> pointGenerator) {
         int nodeCount = 0;
         int failCount = 0;
 
@@ -44,10 +51,9 @@ public class RandomGraphGenerator {
             }
 
             if(failCount > 1000){
-                return false;
+                throw new RuntimeException("Minimum node distance is too big");
             }
         }
-        return  true;
     }
 
     public static void generateEdges(Graph graph, EdgeGenerator generator){
@@ -55,7 +61,7 @@ public class RandomGraphGenerator {
         for (int i = 0; i < graph.getNodes().size(); i++) {
             for (int j = i + 1; j < graph.getNodes().size(); j++) {
                 if (adjacencyMatrix[i][j]){
-                    graph.addEdge(new Edge(graph.getNodes().get(i), graph.getNodes().get(j)));
+                    graph.addEdge(graph.getNodes().get(i), graph.getNodes().get(j));
                 }
             }
         }

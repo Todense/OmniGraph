@@ -1,5 +1,6 @@
 package com.todense.viewmodel.algorithm.service;
 
+import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.algorithm.AlgorithmService;
 
@@ -11,13 +12,13 @@ public class DFSService extends AlgorithmService {
 
 	private Node startNode;
 
-	public DFSService(Node startNode){
-		super(startNode.getGraph());
+	public DFSService(Node startNode, Graph graph){
+		super(graph);
 		this.startNode = startNode;
 	}
 
 	@Override
-	protected void perform() throws InterruptedException {
+	public void perform() throws InterruptedException {
 		DFS();
 	}
 
@@ -25,7 +26,7 @@ public class DFSService extends AlgorithmService {
 	protected void onFinished() {
 	}
 
-	public void DFS() throws InterruptedException{
+	public void DFS() throws InterruptedException {
 		ComponentDFS(startNode);
 
 		for(Node n: graph.getNodes()) {
@@ -54,7 +55,7 @@ public class DFSService extends AlgorithmService {
 			if(prev.get(m) != null){
 				graph.getEdge(m, prev.get(m)).setMarked(true);
 			}
-			painter.sleep();
+			super.sleep();
 
 			for (Node k : m.getNeighbours()) {
 				if(!k.isMarked()){

@@ -19,21 +19,26 @@ public class Graph {
         this.name=name;
     }
 
-    public Node addNode(Node n){
+    public Graph(){
+        this("UnnamedGraph");
+    }
+
+    public Node addNode(){
+       return addNode(new Point2D(0, 0));
+    }
+
+    public Node addNode(Point2D pt){
+        Node n = new Node(pt, nodes.size(), idCounter++);
         nodes.add(n);
         return n;
     }
 
-    public Node addNode(Point2D pt){
-        return addNode(new Node(pt, this));
-    }
-
-    public void addEdge(Edge edge){
-       edges.add(edge);
-    }
-
-    public void addEdge(Node n, Node m){
-        edges.add(new Edge(n, m));
+    public Edge addEdge(Node n, Node m){
+        assert !edges.isEdgeBetween(n, m):
+                "Edge "+edges.getEdge(n, m).toString()+" already exist!";
+        Edge e = new Edge(n, m);
+        edges.add(e);
+        return e;
     }
 
     public void removeEdge(Node n1, Node n2){
@@ -52,16 +57,29 @@ public class Graph {
     }
 
     public void removeNode(Node n){
+        //decrement indexes
+        for (int i = n.getIndex() + 1; i < nodes.size(); i++) {
+            nodes.get(i).setIndex( nodes.get(i).getIndex() - 1) ;
+        }
+
         nodes.remove(n);
         new ArrayList<>(n.getNeighbours()).forEach(m -> removeEdge(n, m));
     }
 
-    public Edge getEdge(Node n, Node m){
-        return edges.getEdge(n, m);
+    public void reset(){
+        for (Node n : nodes) {
+            n.setMarked(false);
+            n.setSelected(false);
+            n.setVisited(false);
+        }
+        for (Edge e : edges) {
+            e.setMarked(false);
+            e.setVisible(true);
+        }
     }
 
-    public int nextID() {
-        return idCounter++;
+    public Edge getEdge(Node n, Node m){
+        return edges.getEdge(n, m);
     }
 
     public Edge getEdge(int i, int j){
@@ -72,10 +90,6 @@ public class Graph {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public List<Node> getNodes() {
         return nodes;
     }
@@ -84,4 +98,7 @@ public class Graph {
         return edges;
     }
 
+    public String toString() {
+        return name;
+    }
 }
