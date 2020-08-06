@@ -173,6 +173,14 @@
                   <Tooltip text="Delete Graph" />
                </tooltip>
             </Button>
+            <Button layoutX="212.0" layoutY="24.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#openTSPAction" prefHeight="30.0" prefWidth="40.0" text="TSPab" textFill="#838383">
+               <font>
+                  <Font size="11.0" />
+               </font>
+               <tooltip>
+                  <Tooltip text="Open Graph" />
+               </tooltip>
+            </Button>
          </HBox>
          <Separator orientation="VERTICAL" prefWidth="6.0" />
          <HBox alignment="CENTER" prefWidth="600.0" spacing="3.0">

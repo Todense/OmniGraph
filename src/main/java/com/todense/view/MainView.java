@@ -91,6 +91,11 @@ public class MainView implements FxmlView<MainViewModel> {
     }
 
     @FXML
+    private void openTSPAction() {
+        viewModel.openTSPGraph();
+    }
+
+    @FXML
     private void resetAction() {
         viewModel.resetGraph();
     }

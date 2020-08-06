@@ -137,6 +137,14 @@ public class MainViewModel implements ViewModel {
         }
     }
 
+    public void openTSPGraph() {
+        Graph openedGraph = fileManager.openGraphTSP();
+        if(openedGraph != null){
+            notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, openedGraph);
+            notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
+        }
+    }
+
     public void stop() {
         serviceScope.stop();
     }

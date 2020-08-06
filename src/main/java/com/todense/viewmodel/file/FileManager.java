@@ -9,6 +9,7 @@ import javafx.geometry.Point2D;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.paint.Color;
 import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -18,10 +19,12 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.Scanner;
 
 public class FileManager {
 
-    private static DirectoryChooser directoryChooser = new DirectoryChooser();
+    private DirectoryChooser directoryChooser = new DirectoryChooser();
+    private FileChooser fileChooser = new FileChooser();
 
     final String[] NODE_HEADERS = { "number", "posX", "posY", "label", "color"};
     final String[] EDGE_HEADERS = { "node1", "node2", "weight", "color"};
@@ -69,6 +72,44 @@ public class FileManager {
             return readGraph(selectedDirectory);
         }
         return null;
+    }
+
+    public Graph openGraphTSP(){
+        File file = fileChooser.showOpenDialog(this.stage);
+
+        if(file != null){
+            return readGraphTSP(file);
+        }
+        return null;
+    }
+
+    public Graph readGraphTSP(File file){
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        assert scanner != null;
+
+        String name = scanner.nextLine().split(":")[1];
+        Graph graph = new Graph(name);
+        String line = "";
+        while(!line.equals("NODE_COORD_SECTION")){
+            line = scanner.nextLine();
+            if(line.startsWith("EDGE_WEIGHT_TYPE")){
+                if(!line.split(": ")[1].equals("EUC_2D")){
+                    throw new RuntimeException("Unsupported Edge Weight Type");
+                }
+            }
+        }
+        line = scanner.nextLine();
+        while(!line.equals("EOF")){
+            String[] lineData = line.split("\\s+");
+            graph.addNode(new Point2D(Double.parseDouble(lineData[1]), Double.parseDouble(lineData[2])));
+            line = scanner.nextLine();
+        }
+        return graph;
     }
 
     public Graph readGraph(File file){
