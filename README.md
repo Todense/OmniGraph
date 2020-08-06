@@ -1,7 +1,7 @@
 # OmniGraph
 Desktop application for creating graphs and algorithms visualisation
 
-[Download jar](https://github.com/Todense/OmniGraph/releases/download/0.0.1/OmniGraph.jar) (Requires Java 11+)
+[Download jar](https://github.com/Todense/OmniGraph/releases/download/v0.0.2/OmniGraph.0.0.2.jar) (Requires Java 11+)
 
 ![exapmple1](https://github.com/Todense/OmniGraph/blob/master/src/main/resources/screenshots/screenshot1.png)
 
@@ -10,10 +10,10 @@ Desktop application for creating graphs and algorithms visualisation
 
 * Create and edit interactive graphs
 * Visualize basic graph algorithms
-* Arrange your graphs with force-directed layout
+* Arrange your graphs with a force-directed layout
 * Generate random graphs using various models
 * Create build-in graph presets 
-* Visualize ant colony algorithms for solving travelling salesman problem
+* Visualize ant colony algorithms for solving the travelling salesman problem
 * Save & open graphs
 
 ## Screenshots
