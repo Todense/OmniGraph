@@ -23,9 +23,9 @@ public class LayoutViewModel implements ViewModel {
     private BooleanProperty coolingOnProperty = new SimpleBooleanProperty(true);
     private DoubleProperty coolingStrengthProperty = new SimpleDoubleProperty(0.02);
     private BooleanProperty pullingOnProperty = new SimpleBooleanProperty(true);
+    private BooleanProperty multilevelOnProperty = new SimpleBooleanProperty(true);
     private DoubleProperty pullingStrengthProperty = new SimpleDoubleProperty(3d);
 
-    private volatile boolean running = false;
 
     @InjectScope
     GraphScope graphScope;
@@ -50,7 +50,7 @@ public class LayoutViewModel implements ViewModel {
 
         if(currentService != null && currentService.isRunning()) return;
 
-        service = new DynamicLayoutService(graphScope.getGraphManager().getGraph(),
+        service = new DynamicLayoutService(graphScope.getGraphManager(),
                 this,new Point2D(canvasScope.getCanvasWidth()/2,
                 canvasScope.getCanvasHeight()/2));
         service.setPainter(canvasScope.getPainter());
@@ -74,6 +74,7 @@ public class LayoutViewModel implements ViewModel {
             service.cancel();
         }
     }
+
 
     public int getOptDist() {
         return optDistProperty.get();
@@ -131,4 +132,11 @@ public class LayoutViewModel implements ViewModel {
         return pullingStrengthProperty;
     }
 
+    public boolean isMultilevelOn() {
+        return multilevelOnProperty.get();
+    }
+
+    public BooleanProperty multilevelOnProperty() {
+        return multilevelOnProperty;
+    }
 }

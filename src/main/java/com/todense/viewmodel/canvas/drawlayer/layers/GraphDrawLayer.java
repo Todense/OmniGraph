@@ -49,7 +49,9 @@ public class GraphDrawLayer implements DrawLayer {
 
     private void drawNode(Node node, GraphicsContext gc, DisplayMode displayMode){
         double size = getNodeSize(node, displayMode);
-        Color color = getNodeColor(node.getColor(), node, displayMode);
+        Color color = node.getColor() != null
+                ? getNodeColor(node.getColor(), node, displayMode)
+                : getNodeColor(graphScope.getNodeColor(), node, displayMode);
 
         gc.setFill(color);
 
@@ -205,20 +207,20 @@ public class GraphDrawLayer implements DrawLayer {
     }
 
     private Color getEdgeColor(Edge edge, DisplayMode displayMode) {
-        Color color;
+        Color color = edge.getColor() != null
+                ? edge.getColor()
+                : graphScope.getEdgeColor();
         switch (displayMode){
             case DEFAULT: case ANT_COLONY:
                 if(edge.isHighlighted() || edge.isSelected()){
-                    color = edge.getColor().brighter().brighter();
-                }else{
-                    color = edge.getColor();
-                } break;
+                    color = color.brighter().brighter();
+                }
+                break;
             case ALGORITHMIC:
-                if(edge.isMarked()){
-                    color = edge.getColor();
-                }else{
-                    color = Util.getFaintColor(edge.getColor(), backgroundScope.getBackgroundColor());
-                } break;
+                if(!edge.isMarked()){
+                    color = Util.getFaintColor(color, backgroundScope.getBackgroundColor());
+                }
+                break;
             default: color = Color.PINK;
         }
         return color;

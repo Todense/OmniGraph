@@ -12,7 +12,7 @@ public class Node{
     private int index;
     private String labelText="";
     private Point2D pos;
-    private Color color = Color.BLACK;
+    private Color color;
 
     private boolean marked = false; //flag changing visuals
     private boolean visited = false; //flag not changing visuals

@@ -2,6 +2,7 @@ package com.todense.model.graph;
 
 import com.todense.model.EdgeList;
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,12 @@ public class Graph {
        return addNode(new Point2D(0, 0));
     }
 
+    public Node addNode(Point2D pt, Color color){
+        Node node =  addNode(pt);
+        node.setColor(color);
+        return node;
+    }
+
     public Node addNode(Point2D pt){
         Node n = new Node(pt, nodes.size(), idCounter++);
         nodes.add(n);
@@ -39,6 +46,12 @@ public class Graph {
         Edge e = new Edge(n, m);
         edges.add(e);
         return e;
+    }
+
+    public Edge addEdge(Node n, Node m, Color color){
+        Edge edge = addEdge(n, m);
+        edge.setColor(color);
+        return edge;
     }
 
     public void removeEdge(Node n1, Node n2){
@@ -76,6 +89,17 @@ public class Graph {
             e.setMarked(false);
             e.setVisible(true);
         }
+    }
+
+    public Graph copy(){
+        Graph copyGraph = new Graph(name+"-copy");
+        nodes.forEach(n -> copyGraph.addNode(n.getPos()));
+        for (Edge edge : edges) {
+            int i = edge.getN1().getIndex();
+            int j = edge.getN2().getIndex();
+            copyGraph.addEdge(copyGraph.getNodes().get(i), copyGraph.getNodes().get(j));
+        }
+        return copyGraph;
     }
 
     public Edge getEdge(Node n, Node m){

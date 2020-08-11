@@ -17,7 +17,7 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
     @FXML private TextField stepTextField, toleranceTextField, optDistTextField,
             pullStrengthTextField, coolingFactorTextField;
     @FXML private Slider toleranceSlider, stepSlider, optDistSlider, coolingFactorSlider, pullStrengthSlider;
-    @FXML private ToggleSwitch pullToggleSwitch, coolingToggleSwitch;
+    @FXML private ToggleSwitch pullToggleSwitch, coolingToggleSwitch, multilevelToggleSwitch;
     @FXML private Button startButton;
     @FXML private HBox coolingHBox, pullHBox;
 
@@ -33,6 +33,7 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
 
         pullToggleSwitch.selectedProperty().bindBidirectional(viewModel.pullingOnProperty());
         coolingToggleSwitch.selectedProperty().bindBidirectional(viewModel.coolingOnProperty());
+        multilevelToggleSwitch.selectedProperty().bindBidirectional(viewModel.multilevelOnProperty());
 
         stepTextField.textProperty().bind(createIntBinding(stepSlider.valueProperty()));
         toleranceTextField.textProperty().bind(createDoubleBinding(toleranceSlider.valueProperty()));
@@ -63,4 +64,5 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
     private void stopAlgorithmAction() {
         viewModel.stop();
     }
+
 }

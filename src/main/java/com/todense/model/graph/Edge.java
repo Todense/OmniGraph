@@ -9,7 +9,7 @@ public class Edge {
     private Node n1;
     private Node n2;
 
-    private Color color = Color.BLACK;
+    private Color color;
 
     double weight = 1d;
     double length = 0;
@@ -19,8 +19,10 @@ public class Edge {
     private boolean visible = true;
     private boolean highlighted = false;
 
-    public Edge(Node n1, Node n2) {
-        assert !n1.equals(n2) : "Cannot create loop";
+    protected Edge(Node n1, Node n2) {
+        if(n1.equals(n2)){
+            throw new IllegalArgumentException("Cannot create loop");
+        }
         this.n1 = n1;
         this.n2 = n2;
         ID = n1.getID() < n2.getID() ?
