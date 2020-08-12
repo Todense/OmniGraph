@@ -8,7 +8,6 @@ import de.saxsys.mvvmfx.guice.MvvmfxGuiceApplication;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.Objects;
@@ -21,7 +20,6 @@ public class Starter extends MvvmfxGuiceApplication {
         final ViewTuple<MainView, MainViewModel> viewTuple = FluentViewLoader.fxmlView(MainView.class).load();
         final Parent root = viewTuple.getView();
         Scene scene = new Scene(root);
-        scene.setFill(Color.RED);
         scene.getStylesheets().add(
                 Objects.requireNonNull(getClass()
                                 .getClassLoader()

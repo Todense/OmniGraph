@@ -60,7 +60,6 @@ public class GraphViewModel implements ViewModel {
 
         notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_REQUEST, (key, payload) -> {
             GM.setGraph((Graph) payload[0]);
-            GM.applyColors();
         });
 
         notificationCenter.subscribe("RESET", (key, payload) -> graphScope.displayModeProperty().set(DisplayMode.DEFAULT));

@@ -1,20 +1,25 @@
 package com.todense.view;
 
 import com.todense.viewmodel.MainViewModel;
-import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectViewModel;
+import com.todense.viewmodel.SaveViewModel;
+import de.saxsys.mvvmfx.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.io.File;
 import java.io.InputStream;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class MainView implements FxmlView<MainViewModel> {
@@ -31,6 +36,11 @@ public class MainView implements FxmlView<MainViewModel> {
 
     @InjectViewModel
     MainViewModel viewModel;
+
+    @InjectContext
+    private Context context;
+
+    private Stage saveStage;
 
     public void initialize(){
 
@@ -77,18 +87,48 @@ public class MainView implements FxmlView<MainViewModel> {
         leftScrollBar.visibleAmountProperty().bind(leftScrollPane.heightProperty().divide(appearanceVBox.heightProperty()));
         leftScrollPane.vvalueProperty().bindBidirectional(leftScrollBar.valueProperty());
 
-        Platform.runLater(() -> viewModel.setKeyInput(textArea.getScene()));
+        Platform.runLater(() -> {
+            viewModel.setKeyInput(textArea.getScene());
+            saveStage.initOwner(textArea.getScene().getWindow());
+        });
+
+        saveStage = new Stage();
+        final ViewTuple<SaveView, SaveViewModel> viewTuple = FluentViewLoader.fxmlView(SaveView.class).context(context).load();
+        final Parent root = viewTuple.getView();
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(
+                Objects.requireNonNull(getClass()
+                        .getClassLoader()
+                        .getResource(
+                                "application.css"))
+                        .toExternalForm()
+        );
+        saveStage.initStyle(StageStyle.UTILITY);
+        saveStage.setScene(scene);
+        saveStage.setTitle("Save Graph");
+        saveStage.setIconified(false);
+        saveStage.setResizable(false);
+        saveStage.initModality(Modality.WINDOW_MODAL);
     }
 
     @FXML
     private void saveAction() {
-        viewModel.saveGraph();
+        saveStage.show();
     }
 
     @FXML
     private void openAction() {
-        viewModel.openGraph();
+        FileChooser.ExtensionFilter fileExtensions =
+                new FileChooser.ExtensionFilter(
+                        "Graph Files", "*.ogr", "*.mtx", "*.tsp");
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(fileExtensions);
+        File file = fileChooser.showOpenDialog(textArea.getScene().getWindow());
+        if(file != null){
+            viewModel.openGraph(file);
+        }
     }
+    
 
     @FXML
     private void resetAction() {

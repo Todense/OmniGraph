@@ -1,7 +1,10 @@
 package com.todense.viewmodel;
 
 import com.todense.model.graph.Graph;
-import com.todense.viewmodel.file.FileManager;
+import com.todense.viewmodel.file.GraphReader;
+import com.todense.viewmodel.file.format.mtx.MtxGraphReader;
+import com.todense.viewmodel.file.format.ogr.OgrGraphReader;
+import com.todense.viewmodel.file.format.tsp.TspGraphReader;
 import com.todense.viewmodel.graph.GraphManager;
 import com.todense.viewmodel.scope.*;
 import de.saxsys.mvvmfx.InjectScope;
@@ -14,13 +17,17 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import javafx.stage.Stage;
+import org.apache.commons.io.FilenameUtils;
 
 import javax.inject.Inject;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Scanner;
 
 @ScopeProvider(scopes = {AlgorithmScope.class, GraphScope.class, BackgroundScope.class, CanvasScope.class, AnimationScope.class, KeysScope.class, AntsScope.class, ServiceScope.class, InputScope.class})
 public class MainViewModel implements ViewModel {
@@ -42,6 +49,7 @@ public class MainViewModel implements ViewModel {
     private DateFormat durationFormatter = new SimpleDateFormat("mm:ss:SSS");
     private DateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
 
+
     @Inject
     NotificationCenter notificationCenter;
 
@@ -57,14 +65,12 @@ public class MainViewModel implements ViewModel {
     @InjectScope
     InputScope inputScope;
 
-    private FileManager fileManager;
+    @InjectScope
+    CanvasScope canvasScope;
+
     private GraphManager graphManager;
 
     public void initialize(){
-
-        fileManager = new FileManager();
-        fileManager.errorTextProperty().addListener((obs, oldVal, newVal) -> write("Error: "+newVal));
-
         graphManager = graphScope.getGraphManager();
 
         notificationCenter.subscribe("WRITE", (key, payload) -> write((String) payload[0]));
@@ -124,18 +130,30 @@ public class MainViewModel implements ViewModel {
 
     }
 
-    public void saveGraph()  {
-        fileManager.saveGraphWithDirectoryChooser(graphScope.getGraphManager().getGraph());
-
-    }
-
-    public void openGraph() {
-        Graph openedGraph = fileManager.openGraph();
-        if(openedGraph != null){
-            notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, openedGraph);
-            notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
+    public void openGraph(File file) {
+        String extension = FilenameUtils.getExtension(file.getAbsolutePath());
+        GraphReader graphReader = null;
+        Graph openedGraph = null;
+        switch (extension){
+            case "ogr": graphReader = new OgrGraphReader(); break;
+            case "tsp": graphReader = new TspGraphReader(); break;
+            case "mtx": graphReader = new MtxGraphReader(
+                    new Point2D(canvasScope.getCanvasWidth()/2, canvasScope.getCanvasHeight()/2),
+                    canvasScope.getCanvasHeight() * 0.9); break;
+        }
+        try {
+            assert graphReader != null;
+            openedGraph = graphReader.readGraph(new Scanner(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } finally {
+            if(openedGraph != null){
+                notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, openedGraph);
+                notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
+            }
         }
     }
+
 
     public void stop() {
         serviceScope.stop();
@@ -164,8 +182,6 @@ public class MainViewModel implements ViewModel {
         });
 
         scene.setOnKeyReleased(keyEvent -> keysScope.getPressedKeys().remove(keyEvent.getCode()));
-
-        fileManager.setStage((Stage) scene.getWindow());
     }
 
     public void write(String s){
