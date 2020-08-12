@@ -1,5 +1,6 @@
 package com.todense.viewmodel.canvas.drawlayer.layers;
 
+import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.canvas.DisplayMode;
 import com.todense.viewmodel.canvas.drawlayer.DrawLayer;
@@ -18,12 +19,34 @@ public class UpperDrawLayer implements DrawLayer {
     private BackgroundScope backgroundScope;
     private AlgorithmScope algorithmScope;
 
+    int level = 8;
+
     public UpperDrawLayer(GraphScope graphScope, InputScope inputScope, CanvasScope canvasScope, BackgroundScope backgroundScope, AlgorithmScope algorithmScope){
         this.graphScope = graphScope;
         this.inputScope = inputScope;
         this.canvasScope = canvasScope;
         this.backgroundScope = backgroundScope;
         this.algorithmScope = algorithmScope;
+    }
+
+    public Rectangle2D getGraphBoundary(Graph graph){
+
+        double xMin = Double.MAX_VALUE;
+        double yMin = Double.MAX_VALUE;
+        double xMax = -Double.MAX_VALUE;
+        double yMax = -Double.MAX_VALUE;
+
+        for (Node node : graph.getNodes()) {
+            double x = node.getPos().getX();
+            if(x < xMin) xMin = x;
+            if(x > xMax) xMax = x;
+
+            double y = node.getPos().getY();
+            if(y < yMin) yMin = y;
+            if(y > yMax) yMax = y;
+        }
+        double squareLength = Math.max(xMax-xMin, yMax-yMin);
+        return new Rectangle2D(xMin, yMin, squareLength, squareLength);
     }
 
     @Override
@@ -57,8 +80,35 @@ public class UpperDrawLayer implements DrawLayer {
 
                 gc.fillPolygon(x, y, 3);
             }
-        }
 
+            Graph graph = graphScope.getGraphManager().getGraph();
+            if(graph.getNodes().size() == 0) return;
+            /*
+            Rectangle2D rect0 = getGraphBoundary(graphScope.getGraphManager().getGraph());
+            gc.setStroke(Color.RED);
+            gc.strokeRect(rect0.getMinX(), rect0.getMinY(), rect0.getWidth(), rect0.getHeight());
+            List<Rectangle2D> rectangles = new ArrayList<>();
+            rectangles.add(rect0);
+            for (int i = 0; i < level; i++) {
+                List<Rectangle2D> newRectangles = new ArrayList<>();
+                for(Rectangle2D rect : rectangles){
+                    double width = rect.getWidth()/2;
+                    double height = rect.getHeight()/2;
+                    Rectangle2D newRect = new Rectangle2D(rect.getMinX(), rect.getMinY(), width, height);
+                    if(containsNode(newRect, graph)) newRectangles.add(newRect);
+                    newRect = new Rectangle2D(rect.getMinX() + width, rect.getMinY(), width, height);
+                    if(containsNode(newRect, graph)) newRectangles.add(newRect);
+                    newRect = new Rectangle2D(rect.getMinX(), rect.getMinY() + height, width, height);
+                    if(containsNode(newRect, graph)) newRectangles.add(newRect);
+                    newRect = new Rectangle2D(rect.getMinX() + width, rect.getMinY() + height, width, height);
+                    if(containsNode(newRect, graph)) newRectangles.add(newRect);
+                }
+                newRectangles.forEach(rect -> gc.strokeRect(rect.getMinX(), rect.getMinY(), rect.getWidth(), rect.getHeight()));
+                rectangles = newRectangles;
+            }
+
+             */
+        }
 
         gc.setTransform(new Affine());
 
@@ -69,6 +119,18 @@ public class UpperDrawLayer implements DrawLayer {
 
         //border
         drawBorder(gc);
+    }
+
+    private boolean containsNode(Rectangle2D rect, Graph graph){
+        boolean good = false;
+        var nodes = graph.getNodes();
+        for(Node n : nodes){
+            if(rect.contains(n.getPos())){
+                good = true;
+                break;
+            }
+        }
+        return good;
     }
 
     private void drawMarker(GraphicsContext gc, Node node, double lineWidth) {
