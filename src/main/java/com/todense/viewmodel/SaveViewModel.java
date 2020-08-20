@@ -1,5 +1,6 @@
 package com.todense.viewmodel;
 
+import com.google.inject.Inject;
 import com.todense.model.graph.Graph;
 import com.todense.viewmodel.file.format.Format;
 import com.todense.viewmodel.file.GraphWriter;
@@ -9,6 +10,7 @@ import com.todense.viewmodel.file.format.tsp.TspGraphWriter;
 import com.todense.viewmodel.scope.GraphScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
+import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -18,6 +20,9 @@ public class SaveViewModel implements ViewModel {
 
     @InjectScope
     GraphScope graphScope;
+
+    @Inject
+    NotificationCenter notificationCenter;
 
     private File initialDirectory;
 
@@ -44,6 +49,7 @@ public class SaveViewModel implements ViewModel {
                         break;
                 }
                 graphWriter.writeGraph(graph, fileWriter);
+                notificationCenter.publish("WRITE", "Graph saved");
             }
         }
     }

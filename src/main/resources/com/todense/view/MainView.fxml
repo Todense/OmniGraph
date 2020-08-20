@@ -2,10 +2,10 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextArea?>
@@ -21,23 +21,26 @@
 
 <BorderPane prefHeight="515.0" prefWidth="1355.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.MainView">
    <left>
-      <TabPane prefHeight="424.0" prefWidth="203.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane prefHeight="466.0" prefWidth="237.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
          <Tab text="Appearance">
-            <HBox prefHeight="395.0" prefWidth="203.0">
+            <HBox prefHeight="395.0" prefWidth="181.0">
                <ScrollBar fx:id="leftScrollBar" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="395.0" prefWidth="13.0" visibleAmount="90.0" />
-               <ScrollPane fx:id="leftScrollPane" hbarPolicy="NEVER" prefHeight="395.0" prefWidth="203.0" vbarPolicy="NEVER">
+               <ScrollPane fx:id="leftScrollPane" hbarPolicy="NEVER" prefHeight="395.0" prefWidth="292.0" vbarPolicy="NEVER">
                   <HBox.margin>
                      <Insets />
                   </HBox.margin>
-                  <VBox fx:id="appearanceVBox" alignment="TOP_CENTER" fillWidth="false" prefHeight="489.0" prefWidth="188.0">
-                     <TitledPane animated="false" expanded="false" prefWidth="235.0" text="Graph">
-                        <fx:include fx:id="graph" source="GraphView.fxml" />
+                  <VBox fx:id="appearanceVBox" alignment="TOP_CENTER" fillWidth="false" prefHeight="340.0" prefWidth="25.0">
+                     <TitledPane animated="false" prefHeight="25.0" prefWidth="25.0" text="Graph">
+                        <fx:include source="GraphView.fxml" />
                         <VBox.margin>
                            <Insets />
                         </VBox.margin>
+                        <font>
+                           <Font size="30.0" />
+                        </font>
                      </TitledPane>
-                     <TitledPane animated="false" expanded="false" prefWidth="187.0" text="Background">
-                        <fx:include fx:id="background" source="BackgroundView.fxml" />
+                     <TitledPane animated="false" prefHeight="25.0" prefWidth="315.0" text="Background">
+                        <fx:include source="BackgroundView.fxml" />
                      </TitledPane>
                   </VBox>
                </ScrollPane>
@@ -56,47 +59,49 @@
    <top>
       <HBox alignment="CENTER" minWidth="-Infinity" BorderPane.alignment="CENTER">
          <BorderPane.margin>
-            <Insets bottom="3.0" top="3.0" />
+            <Insets />
          </BorderPane.margin>
-         <fx:include source="AnimationView.fxml" />
       </HBox>
    </top>
-   <center>
-      <fx:include source="CanvasView.fxml" />
-   </center>
    <right>
-      <TabPane prefWidth="202.0" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="2000.0">
+      <TabPane prefWidth="237.0" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="2000.0">
          <Tab text="Perform">
-            <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="190.0" vbarPolicy="ALWAYS">
-               <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="475.0" prefWidth="190.0">
-                  <TitledPane animated="false" expanded="false" prefHeight="26.0" prefWidth="190.0" text="Algorithms">
+            <ScrollPane fx:id="performTabScrollPane" hbarPolicy="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="237.0" vbarPolicy="ALWAYS">
+               <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="475.0" prefWidth="222.0">
+                  <TitledPane animated="false" expanded="false" prefHeight="26.0" prefWidth="240.0" text="Algorithms">
                      <fx:include source="AlgorithmView.fxml" />
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
                   </TitledPane>
-                  <TitledPane animated="false" expanded="false" layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="190.0" text="Layout">
+                  <TitledPane animated="false" layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="222.0" text="Layout">
                      <fx:include source="LayoutView.fxml" />
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
                   </TitledPane>
                </VBox>
             </ScrollPane>
          </Tab>
          <Tab text="Create &amp; Edit">
-            <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS">
-               <VBox prefWidth="190.0">
-                  <TitledPane animated="false" expanded="false" prefHeight="26.0" prefWidth="190.0" text="Random">
+            <ScrollPane fx:id="createTabScrollPane" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS">
+               <VBox prefHeight="25.0" prefWidth="222.0">
+                  <TitledPane animated="false" expanded="false" prefHeight="373.0" prefWidth="231.0" text="Random">
                      <fx:include source="RandomGeneratorView.fxml" />
                   </TitledPane>
                   <TitledPane animated="false" expanded="false" text="Preset">
                      <fx:include source="PresetCreatorView.fxml" />
                   </TitledPane>
-                  <TitledPane animated="false" expanded="false" text="Operations">
+                  <TitledPane animated="false" prefWidth="222.0" text="Operations">
                      <fx:include source="OperationsView.fxml" />
                   </TitledPane>
                </VBox>
             </ScrollPane>
          </Tab>
          <Tab text="Ants">
-            <ScrollPane hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS">
-               <VBox prefHeight="200.0" prefWidth="190.0">
-                  <TitledPane animated="false" expanded="false" prefHeight="26.0" prefWidth="190.0" text="TSP Ant Colony Optimization">
+            <ScrollPane fx:id="antsTabScrollPane" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS">
+               <VBox prefHeight="200.0" prefWidth="222.0">
+                  <TitledPane animated="false" prefHeight="27.0" prefWidth="220.0" text="TSP Ant Colony Optimization">
                      <fx:include source="AntsView.fxml" />
                   </TitledPane>
                </VBox>
@@ -106,87 +111,85 @@
    </right>
    <bottom>
       <HBox prefHeight="58.0" prefWidth="1355.0" BorderPane.alignment="CENTER">
-         <TextArea fx:id="textArea" editable="false" prefHeight="200.0" prefWidth="600.0" scrollLeft="10.0" scrollTop="10.0" wrapText="true">
-            <font>
-               <Font name="Constantia" size="11.0" />
-            </font>
+         <TextArea fx:id="textArea" editable="false" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="450.0" scrollLeft="10.0" scrollTop="10.0" wrapText="true">
             <opaqueInsets>
                <Insets />
             </opaqueInsets>
          </TextArea>
-         <HBox alignment="CENTER" prefHeight="46.0" prefWidth="719.0" spacing="3.0">
-            <padding>
-               <Insets left="5.0" right="5.0" />
-            </padding>
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveAction" prefHeight="30.0" prefWidth="40.0">
-               <font>
-                  <Font size="11.0" />
-               </font>
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="fas-save" iconSize="20" />
-               </graphic>
-               <tooltip>
-                  <Tooltip text="Save Graph" />
-               </tooltip>
-            </Button>
-            <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#openAction" prefHeight="30.0" prefWidth="40.0">
-               <font>
-                  <Font size="11.0" />
-               </font>
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="fas-folder-open" iconSize="20" />
-               </graphic>
-               <tooltip>
-                  <Tooltip text="Open Graph" />
-               </tooltip>
-            </Button>
-            <Button contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#resetAction" prefHeight="30.0" prefWidth="40.0" styleClass="warning" textAlignment="CENTER" wrapText="true">
-               <font>
-                  <Font size="11.0" />
-               </font>
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-loop2" iconSize="20" />
-               </graphic>
-               <tooltip>
-                  <Tooltip text="Reset Graph" />
-               </tooltip>
-            </Button>
-            <Button contentDisplay="CENTER" layoutX="307.0" layoutY="22.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#adjustAction" prefHeight="30.0" prefWidth="40.0" styleClass="primary" textAlignment="CENTER" wrapText="true">
-               <font>
-                  <Font size="11.0" />
-               </font>
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-enlarge" iconSize="20" />
-               </graphic>
-               <tooltip>
-                  <Tooltip text="Adjust camera to graph" />
-               </tooltip>
-            </Button>
-            <Button contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteAction" prefHeight="30.0" prefWidth="40.0" styleClass="primary" textAlignment="CENTER" wrapText="true">
-               <font>
-                  <Font size="11.0" />
-               </font>
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-bin" iconSize="20" />
-               </graphic>
-               <tooltip>
-                  <Tooltip text="Delete Graph" />
-               </tooltip>
-            </Button>
-         </HBox>
-         <Separator orientation="VERTICAL" prefWidth="6.0" />
-         <HBox alignment="CENTER" prefWidth="600.0" spacing="3.0">
+         <VBox alignment="CENTER" prefHeight="58.0" prefWidth="664.0">
+            <HBox alignment="CENTER" prefHeight="37.0" prefWidth="374.0" spacing="3.0">
+               <padding>
+                  <Insets left="5.0" right="5.0" />
+               </padding>
+               <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveAction" prefHeight="30.0" prefWidth="40.0">
+                  <font>
+                     <Font size="11.0" />
+                  </font>
+                  <graphic>
+                     <FontIcon iconColor="#d0d0d0" iconLiteral="fas-save" iconSize="20" />
+                  </graphic>
+                  <tooltip>
+                     <Tooltip showDelay="0.1s" text="Save Graph" />
+                  </tooltip>
+               </Button>
+               <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#openAction" prefHeight="30.0" prefWidth="40.0">
+                  <font>
+                     <Font size="11.0" />
+                  </font>
+                  <graphic>
+                     <FontIcon iconColor="#d0d0d0" iconLiteral="fas-folder-open" iconSize="20" />
+                  </graphic>
+                  <tooltip>
+                     <Tooltip showDelay="0.1s" text="Open Graph" />
+                  </tooltip>
+               </Button>
+               <Button contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#resetAction" prefHeight="30.0" prefWidth="40.0" styleClass="warning" textAlignment="CENTER" wrapText="true">
+                  <font>
+                     <Font size="11.0" />
+                  </font>
+                  <graphic>
+                     <FontIcon iconColor="#d0d0d0" iconLiteral="icm-loop2" iconSize="20" />
+                  </graphic>
+                  <tooltip>
+                     <Tooltip showDelay="0.1s" text="Reset Graph" />
+                  </tooltip>
+               </Button>
+               <Button contentDisplay="CENTER" layoutX="307.0" layoutY="22.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#adjustAction" prefHeight="30.0" prefWidth="40.0" styleClass="primary" textAlignment="CENTER" wrapText="true">
+                  <font>
+                     <Font size="11.0" />
+                  </font>
+                  <tooltip>
+                     <Tooltip showDelay="0.1s" text="Adjust camera to graph" />
+                  </tooltip>
+                  <graphic>
+                     <FontIcon iconLiteral="fa-crosshairs" iconSize="25" />
+                  </graphic>
+               </Button>
+               <Button contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteAction" prefHeight="30.0" prefWidth="40.0" styleClass="primary" textAlignment="CENTER" wrapText="true">
+                  <font>
+                     <Font size="11.0" />
+                  </font>
+                  <graphic>
+                     <FontIcon iconColor="#d0d0d0" iconLiteral="icm-bin" iconSize="20" />
+                  </graphic>
+                  <tooltip>
+                     <Tooltip showDelay="0.1s" text="Delete Graph" />
+                  </tooltip>
+               </Button>
+            </HBox>
+         </VBox>
+         <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="450.0" spacing="3.0">
             <ProgressIndicator fx:id="progressIndicator" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="22.0" prefWidth="22.0" progress="0.0" visible="false" />
-            <TextField fx:id="infoTextField" alignment="CENTER" editable="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="204.0" />
+            <TextField fx:id="infoTextField" alignment="CENTER" editable="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="250.0" />
             <Button fx:id="stopButton" disable="true" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopAction" prefHeight="25.0" prefWidth="64.0" text="Stop">
                <font>
                   <Font name="Font Awesome 5 Free Regular" size="11.0" />
                </font>
                <graphic>
-                  <FontIcon iconColor="#e14444" iconLiteral="fas-stop" iconSize="15" selectionStart="0" />
+                  <FontIcon iconColor="#e14444" iconLiteral="fas-stop" iconSize="15" selectionStart="0" styleClass="stop-icon" />
                </graphic>
                <tooltip>
-                  <Tooltip text="Stop all" />
+                  <Tooltip showDelay="0.1s" text="Stop all" />
                </tooltip>
             </Button>
             <ToggleButton fx:id="lockToggleButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="25.0">
@@ -194,24 +197,53 @@
                   <FontIcon fx:id="lockIcon" iconColor="#d0d0d0" iconLiteral="fa-unlock" iconSize="18" />
                </graphic>
                <tooltip>
-                  <Tooltip text="Lock graph edit" />
+                  <Tooltip showDelay="0.1s" text="Lock graph edit" />
                </tooltip>
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin>
             </ToggleButton>
+            <ColorPicker fx:id="appColorPicker" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="30.0">
+               <tooltip>
+                  <Tooltip showDelay="0.1s" text="Application Theme Color" />
+               </tooltip>
+            </ColorPicker>
+            <Button contentDisplay="CENTER" layoutX="400.0" layoutY="27.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#fullScreenAction" prefHeight="25.0" prefWidth="25.0" styleClass="primary" textAlignment="CENTER" wrapText="true">
+               <font>
+                  <Font size="11.0" />
+               </font>
+               <tooltip>
+                  <Tooltip showDelay="0.1s" text="Fullscreen" />
+               </tooltip>
+               <graphic>
+                  <FontIcon iconColor="#d0d0d0" iconLiteral="eli-fullscreen" iconSize="17" />
+               </graphic>
+            </Button>
             <Button contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#helpAction" prefHeight="25.0" prefWidth="25.0" styleClass="primary" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font size="11.0" />
                </font>
                <tooltip>
-                  <Tooltip text="Help" />
+                  <Tooltip showDelay="0.1s" text="Help" />
                </tooltip>
                <graphic>
-                  <FontIcon fx:id="lockIcon1" iconColor="#d0d0d0" iconLiteral="fa-question" iconSize="18" />
+                  <FontIcon iconColor="#d0d0d0" iconLiteral="fa-question" iconSize="18" />
                </graphic>
                <HBox.margin>
-                  <Insets left="40.0" />
+                  <Insets right="5.0" />
                </HBox.margin>
             </Button>
          </HBox>
       </HBox>
    </bottom>
+   <center>
+      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" prefWidth="200.0">
+            <fx:include source="AnimationView.fxml" />
+         </HBox>
+         <VBox prefHeight="2000.0" prefWidth="2000.0">
+            <fx:include source="CanvasView.fxml" />
+         </VBox>
+      </VBox>
+   </center>
 </BorderPane>

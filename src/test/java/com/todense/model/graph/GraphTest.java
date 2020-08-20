@@ -19,7 +19,7 @@ class GraphTest {
         assertEquals(graph.getEdges().size(), 1);
         assertEquals(graph.getEdges().getEdge(n1, n2), e);
         assertEquals(graph.getEdges().getEdge(n2, n1), e);
-        assertThrows(AssertionError.class, () -> graph.addEdge(n1, n1));
+        assertThrows(IllegalArgumentException.class, () -> graph.addEdge(n1, n1));
 
         Node n3 = graph.addNode();
         Node n4 = graph.addNode();

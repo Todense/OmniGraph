@@ -45,7 +45,7 @@ public class EdgePopOverViewModel implements ViewModel {
     public void deleteEdges() {
         notificationCenter.publish(MainViewModel.graphEditRequest, (Runnable)() ->{
             for (Edge edge : edges) {
-                graphManager.removeEdge(edge);
+                graphManager.getGraph().removeEdge(edge);
             }
         });
         notificationCenter.publish("HIDE");

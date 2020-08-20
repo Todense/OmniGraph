@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="571.0" prefWidth="1058.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.AnalysisView">
+   <HBox alignment="CENTER" prefHeight="52.0" prefWidth="1025.0">
+      <Label prefHeight="45.0" prefWidth="222.0" style="-fx-text-fill: #2dc259; -fx-font-size: 30;" text="Petersen Graph" />
+   </HBox>
+   <HBox alignment="CENTER" prefHeight="51.0" prefWidth="1058.0">
+      <Label prefHeight="54.0" prefWidth="112.0" style="-fx-font-size: 20;" text="Nodes: 120 |" />
+      <Label layoutX="10.0" layoutY="10.0" prefHeight="54.0" prefWidth="105.0" style="-fx-font-size: 20;" text="Edges: 356" />
+   </HBox>
+   <BarChart fx:id="barChart" animated="false" barGap="0.0" categoryGap="0.0" legendVisible="false" prefWidth="1058.0" title="Node Degree Distribution" verticalGridLinesVisible="false">
+      <xAxis>
+         <CategoryAxis animated="false" side="BOTTOM" />
+      </xAxis>
+      <yAxis>
+         <NumberAxis animated="false" minorTickVisible="false" side="LEFT" />
+      </yAxis>
+   </BarChart>
+   <HBox alignment="CENTER" fillHeight="false" prefHeight="101.0" prefWidth="1038.0" spacing="50.0" VBox.vgrow="NEVER">
+      <VBox.margin>
+         <Insets left="10.0" right="10.0" />
+      </VBox.margin>
+      <HBox alignment="CENTER_LEFT" fillHeight="false">
+         <children>
+            <Label prefHeight="21.0" prefWidth="70.0" style="-fx-font-size: 15; -fx-font-weight: normal;" stylesheets="@../../../bigLabel.css" text="Density" />
+            <Label fx:id="densityLabel" alignment="CENTER" prefHeight="21.0" prefWidth="50.0" style="-fx-text-fill: #25b862; -fx-font-size: 15;" stylesheets="@../../../bigLabel.css" text="300">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Label>
+            <ProgressBar fx:id="densityProgressBar" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" progress="0.37" />
+         </children>
+      </HBox>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <Label alignment="CENTER" prefHeight="17.0" prefWidth="380.0" styleClass="darkLabel" text="Eccentricity" textAlignment="RIGHT" />
+            <VBox alignment="CENTER" fillWidth="false" style="-fx-background-color: #2c2c2c;" >
+               <HBox alignment="CENTER_LEFT" fillHeight="false">
+                  <Label prefHeight="21.0" prefWidth="70.0" style="-fx-font-size: 15; -fx-font-weight: normal;" stylesheets="@../../../bigLabel.css" text="Radius" />
+                  <Label fx:id="radiusLabel" alignment="CENTER" prefHeight="21.0" prefWidth="50.0" style="-fx-text-fill: #25b862; -fx-font-size: 15;" stylesheets="@../../../bigLabel.css" text="300">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+                  <ProgressBar fx:id="radiusProgressBar" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" progress="0.37" />
+               </HBox>
+               <HBox alignment="CENTER_LEFT" fillHeight="false" minHeight="-Infinity" style="fx-padding: 5;">
+                  <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="70.0" style="-fx-font-size: 15; -fx-font-weight: normal;" stylesheets="@../../../bigLabel.css" text="Diameter" textAlignment="CENTER" />
+                  <Label fx:id="diameterLabel" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="50.0" style="-fx-font-size: 15; -fx-text-fill: #25b862;" stylesheets="@../../../bigLabel.css" text="300" />
+                  <ProgressBar fx:id="diameterProgressBar" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" progress="0.84" />
+               </HBox>
+            </VBox>
+         </children>
+      </VBox>
+      <VBox alignment="CENTER" fillWidth="false"  HBox.hgrow="NEVER">
+         <HBox alignment="CENTER">
+            <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15; -fx-font-weight: normal;" stylesheets="@../../../bigLabel.css" text="Min Degree" />
+            <Label fx:id="minDegreeLabel" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="60.0" style="-fx-text-fill: #25b862; -fx-font-size: 15;" stylesheets="@../../../bigLabel.css" text="300" />
+            <ProgressBar fx:id="minDegreeProgressBar" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" progress="0.65" />
+         </HBox>
+         <HBox alignment="CENTER">
+            <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15; -fx-font-weight: normal;" stylesheets="@../../../bigLabel.css" text="Max Degree" />
+            <Label fx:id="maxDegreeLabel" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="60.0" style="-fx-text-fill: #25b862; -fx-font-size: 15;" stylesheets="@../../../bigLabel.css" text="300" />
+            <ProgressBar fx:id="maxDegreeProgressBar" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" progress="0.93" />
+         </HBox>
+         <HBox alignment="CENTER">
+            <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15; -fx-font-weight: normal;" stylesheets="@../../../bigLabel.css" text="Avg Degree" />
+            <Label fx:id="avgDegreeLabel" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="60.0" style="-fx-text-fill: #25b862; -fx-font-size: 15;" stylesheets="@../../../bigLabel.css" text="300" />
+            <ProgressBar fx:id="avgDegreeProgressBar" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" progress="0.3" />
+         </HBox>
+      </VBox>
+   </HBox>
+</VBox>

@@ -3,6 +3,6 @@
 <?import javafx.scene.canvas.Canvas?>
 <?import javafx.scene.layout.Pane?>
 
-<Pane fx:id="canvasPane" minHeight="50.0" minWidth="50.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.CanvasView">
+<Pane fx:id="canvasPane" minHeight="10.0" minWidth="10.0" prefHeight="2000.0" prefWidth="2000.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.CanvasView">
    <Canvas fx:id="canvas" height="7.0" width="5.0" />
 </Pane>

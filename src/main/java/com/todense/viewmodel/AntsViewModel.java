@@ -1,8 +1,9 @@
 package com.todense.viewmodel;
 
+import com.todense.model.graph.Graph;
 import com.todense.viewmodel.algorithm.AlgorithmService;
-import com.todense.viewmodel.ants.AntColonyVariant;
 import com.todense.viewmodel.ants.AntColonyService;
+import com.todense.viewmodel.ants.AntColonyVariant;
 import com.todense.viewmodel.canvas.DisplayMode;
 import com.todense.viewmodel.canvas.drawlayer.layers.AntsDrawLayer;
 import com.todense.viewmodel.scope.AntsScope;
@@ -58,13 +59,16 @@ public class AntsViewModel implements ViewModel {
 
         if(currentService != null && currentService.isRunning()) return;
 
-        graphScope.getGraphManager().createCompleteGraph();
+        Graph graph = graphScope.getGraphManager().getGraph();
 
+        if(graph.getNodes().size() < 3) return;
+
+        graphScope.getGraphManager().createCompleteGraph();
         startTime = System.currentTimeMillis();
         notificationCenter.publish(MainViewModel.serviceStarted, algorithmProperty().get().toString());
         graphScope.displayModeProperty().set(DisplayMode.ANT_COLONY);
 
-        service = new AntColonyService(antsScope.algorithmProperty().get(), antsScope, graphScope.getGraphManager().getGraph());
+        service = new AntColonyService(antsScope.algorithmProperty().get(), antsScope, graph);
         service.setPainter(canvasScope.getPainter());
         service.bgLengthProperty().addListener((obs, oldVal, newVal) ->
                 notificationCenter.publish("WRITE",
@@ -72,7 +76,8 @@ public class AntsViewModel implements ViewModel {
                                 " found in "+ dateFormat.format(System.currentTimeMillis()-startTime)));
         serviceScope.setService(service);
 
-        EventHandler<WorkerStateEvent> finishHandler = workerStateEvent -> notificationCenter.publish(MainViewModel.serviceFinished,
+        EventHandler<WorkerStateEvent> finishHandler = workerStateEvent ->
+                notificationCenter.publish(MainViewModel.serviceFinished,
                 algorithmProperty().get().toString(),
                 System.currentTimeMillis() - service.getStartTime(),
                 "");
@@ -81,7 +86,6 @@ public class AntsViewModel implements ViewModel {
         service.setOnCancelled(finishHandler);
         service.start();
     }
-
 
     public void stopAlgorithm(){
         if(service != null && service.isRunning()){

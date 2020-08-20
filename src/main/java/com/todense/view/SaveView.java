@@ -26,7 +26,7 @@ public class SaveView implements FxmlView<SaveViewModel> {
     public void initialize(){
         nameTextField.setText(viewModel.getGraphName());
         formatChoiceBox.getItems().addAll(Format.values());
-        formatChoiceBox.setStyle("-fx-font: 17px \"System\";");
+        formatChoiceBox.setStyle("-fx-font-size: 16px");
         formatChoiceBox.setValue(Format.OGR);
     }
 

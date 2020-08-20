@@ -11,10 +11,27 @@ import com.todense.viewmodel.random.generators.ErdosRenyiGenerator;
 import javafx.geometry.Point2D;
 import org.junit.jupiter.api.RepeatedTest;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class AlgorithmServiceTest {
+
+    @RepeatedTest(100)
+    void hamiltonianCycleTest() {
+        int nodeCount = 20;
+        Generator<Point2D> point2DGenerator = new RandomCirclePointGenerator(1, new Point2D(0,0));
+        EdgeGenerator edgeGenerator = new ErdosRenyiGenerator( 0.1);
+        Graph graph = RandomGraphGenerator.generateGraph(nodeCount, point2DGenerator, edgeGenerator, 0);
+        for (int i = 0; i < nodeCount; i++) {
+            Node n = graph.getNodes().get(i);
+            Node m = graph.getNodes().get((i+1)%nodeCount);
+            if(!graph.getEdges().isEdgeBetween(n, m)){
+                graph.addEdge(n, m);
+            }
+        }
+        HCSearchService hcService = new HCSearchService(graph.getNodes().get(0),graph, true);
+        assertDoesNotThrow(hcService::perform, () -> "HC Service should not throw exceptions");
+        assertTrue(hcService.isCycleFound(), () -> "Hamiltonian Cycle should be found");
+    }
 
     @RepeatedTest(100)
     void basicAlgorithmsTest() {

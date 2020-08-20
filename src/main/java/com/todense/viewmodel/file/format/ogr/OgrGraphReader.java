@@ -21,7 +21,7 @@ public class OgrGraphReader implements GraphReader {
         assert nodeCountLine[0].equals("NODES:");
         int nodeCount = Integer.parseInt(nodeCountLine[1]);
         String[] edgeCountLine = scanner.nextLine().split(" ");
-        assert nodeCountLine[0].equals("EDGES:");
+        assert edgeCountLine[0].equals("EDGES:");
         int edgeCount = Integer.parseInt(edgeCountLine[1]);
 
         Graph graph = new Graph(name);
@@ -30,12 +30,19 @@ public class OgrGraphReader implements GraphReader {
             Point2D pos = new Point2D(Double.parseDouble(scanner.next()), Double.parseDouble(scanner.next()));
             Node newNode = graph.addNode(pos);
             newNode.setLabelText(scanner.next().replace("\"",""));
-            newNode.setColor(Color.valueOf(scanner.next()));
+            String colorText = scanner.next().replace("\"","");
+            if(!colorText.isEmpty()){
+                newNode.setColor(Color.valueOf(colorText));
+            }
+
         }
         for (int i = 0; i < edgeCount; i++) {
-            Edge e = graph.addEdge(graph.getNodes().get(scanner.nextInt()), graph.getNodes().get(scanner.nextInt()));
-            e.setWeight(Double.parseDouble(scanner.next()));
-            e.setColor(Color.valueOf(scanner.next()));
+            Edge newEdge = graph.addEdge(graph.getNodes().get(scanner.nextInt()), graph.getNodes().get(scanner.nextInt()));
+            newEdge.setWeight(Double.parseDouble(scanner.next()));
+            String colorText = scanner.next().replace("\"","");
+            if(!colorText.isEmpty()){
+                newEdge.setColor(Color.valueOf(colorText));
+            }
         }
         return graph;
     }

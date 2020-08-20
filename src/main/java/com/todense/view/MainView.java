@@ -1,5 +1,6 @@
 package com.todense.view;
 
+import com.todense.viewmodel.AnalysisViewModel;
 import com.todense.viewmodel.MainViewModel;
 import com.todense.viewmodel.SaveViewModel;
 import de.saxsys.mvvmfx.*;
@@ -10,11 +11,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.stage.*;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.io.File;
@@ -27,12 +26,13 @@ public class MainView implements FxmlView<MainViewModel> {
     @FXML private TextArea textArea;
     @FXML private ProgressIndicator progressIndicator;
     @FXML private ScrollBar leftScrollBar;
-    @FXML private ScrollPane leftScrollPane;
+    @FXML private ScrollPane leftScrollPane, antsTabScrollPane, performTabScrollPane, createTabScrollPane;
     @FXML private VBox appearanceVBox;
     @FXML private TextField infoTextField;
     @FXML private FontIcon lockIcon;
     @FXML private ToggleButton lockToggleButton;
     @FXML private Button stopButton;
+    @FXML private ColorPicker appColorPicker;
 
     @InjectViewModel
     MainViewModel viewModel;
@@ -40,14 +40,14 @@ public class MainView implements FxmlView<MainViewModel> {
     @InjectContext
     private Context context;
 
+    private Stage mainStage;
     private Stage saveStage;
+    private Stage analysisStage;
 
     public void initialize(){
 
         textArea.textProperty().bindBidirectional(viewModel.textProperty());
         infoTextField.textProperty().bindBidirectional(viewModel.infoTextProperty());
-
-        textArea.styleProperty().set("-fx-font-size: 13; -fx-font-family: Didact Gothic; -fx-text-fill: #CFCFCF;");
 
         //fixes not scrolling down bug
         viewModel.textProperty().addListener((observableValue, s, t1) -> {
@@ -82,19 +82,48 @@ public class MainView implements FxmlView<MainViewModel> {
             }
         });
 
+        double scrollSpeed = 0.005;
+        setScrollSpeed(scrollSpeed, leftScrollPane);
+        setScrollSpeed(scrollSpeed, antsTabScrollPane);
+        setScrollSpeed(scrollSpeed, createTabScrollPane);
+        setScrollSpeed(scrollSpeed, performTabScrollPane);
+
         leftScrollBar.minProperty().bind(leftScrollPane.vminProperty());
         leftScrollBar.maxProperty().bind(leftScrollPane.vmaxProperty());
-        leftScrollBar.visibleAmountProperty().bind(leftScrollPane.heightProperty().divide(appearanceVBox.heightProperty()));
+        leftScrollBar.visibleAmountProperty().bind(leftScrollPane.heightProperty()
+                .divide(appearanceVBox.heightProperty()));
         leftScrollPane.vvalueProperty().bindBidirectional(leftScrollBar.valueProperty());
 
+
         Platform.runLater(() -> {
-            viewModel.setKeyInput(textArea.getScene());
-            saveStage.initOwner(textArea.getScene().getWindow());
+            viewModel.setKeyInput(mainStage.getScene());
+            saveStage.initOwner(mainStage.getOwner());
+
+            appColorPicker.valueProperty().addListener((obs, oldVal, newVal)->{
+                String colorText = toRGBCode(newVal);
+                mainStage.getScene().getRoot().setStyle("fx-theme: "+colorText+";");
+            });
+            appColorPicker.valueProperty().bindBidirectional(viewModel.appColorProperty());
         });
 
+        initSaveStage();
+        initAnalysisStage();
+    }
+
+
+    //speeds up scrolling (default is too slow)
+    private void setScrollSpeed(double speed, ScrollPane scrollPane){
+        scrollPane.getContent().setOnScroll(scrollEvent -> {
+            double deltaY = scrollEvent.getDeltaY() * speed;
+            scrollPane.setVvalue(scrollPane.getVvalue() - deltaY);
+        });
+    }
+
+    private void initSaveStage(){
         saveStage = new Stage();
-        final ViewTuple<SaveView, SaveViewModel> viewTuple = FluentViewLoader.fxmlView(SaveView.class).context(context).load();
-        final Parent root = viewTuple.getView();
+        final ViewTuple<SaveView, SaveViewModel> saveViewTuple =
+                FluentViewLoader.fxmlView(SaveView.class).context(context).load();
+        final Parent root = saveViewTuple.getView();
         Scene scene = new Scene(root);
         scene.getStylesheets().add(
                 Objects.requireNonNull(getClass()
@@ -105,14 +134,32 @@ public class MainView implements FxmlView<MainViewModel> {
         );
         saveStage.initStyle(StageStyle.UTILITY);
         saveStage.setScene(scene);
+        saveStage.initOwner(mainStage);
         saveStage.setTitle("Save Graph");
         saveStage.setIconified(false);
         saveStage.setResizable(false);
         saveStage.initModality(Modality.WINDOW_MODAL);
     }
 
+    private void initAnalysisStage(){
+        analysisStage = new Stage();
+        final ViewTuple<AnalysisView, AnalysisViewModel> viewTuple =
+                FluentViewLoader.fxmlView(AnalysisView.class).context(context).load();
+        final Parent root = viewTuple.getView();
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(
+                Objects.requireNonNull(getClass()
+                        .getClassLoader()
+                        .getResource("application.css"))
+                        .toExternalForm()
+        );
+        analysisStage.setScene(scene);
+        analysisStage.setTitle("Graph Analysis");
+    }
+
     @FXML
     private void saveAction() {
+        initSaveStage();
         saveStage.show();
     }
 
@@ -123,12 +170,11 @@ public class MainView implements FxmlView<MainViewModel> {
                         "Graph Files", "*.ogr", "*.mtx", "*.tsp");
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(fileExtensions);
-        File file = fileChooser.showOpenDialog(textArea.getScene().getWindow());
+        File file = fileChooser.showOpenDialog(mainStage);
         if(file != null){
             viewModel.openGraph(file);
         }
     }
-    
 
     @FXML
     private void resetAction() {
@@ -142,6 +188,8 @@ public class MainView implements FxmlView<MainViewModel> {
 
     @FXML
     private void adjustAction() {
+        //initAnalysisStage();
+        //analysisStage.show();
         viewModel.adjustCameraToGraph();
     }
 
@@ -177,4 +225,19 @@ public class MainView implements FxmlView<MainViewModel> {
         stage.show();
     }
 
+    @FXML
+    private void fullScreenAction(){
+        mainStage.setFullScreen(true);
+    }
+
+    private String toRGBCode(Color color) {
+        return String.format( "#%02X%02X%02X",
+                (int)( color.getRed() * 255 ),
+                (int)( color.getGreen() * 255 ),
+                (int)( color.getBlue() * 255 ) );
+    }
+
+    public void setMainStage(Stage mainStage) {
+        this.mainStage = mainStage;
+    }
 }

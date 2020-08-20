@@ -26,6 +26,8 @@ public class Camera {
 
     public void adjustToGraph(Graph graph,  double canvasWidth, double canvasHeight, double nodeSize){
 
+        if(graph.getNodes().size() == 0) return;
+
         double xMin = Double.MAX_VALUE;
         double yMin = Double.MAX_VALUE;
         double xMax = -Double.MAX_VALUE;

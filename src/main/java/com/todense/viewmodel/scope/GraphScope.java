@@ -10,10 +10,10 @@ import javafx.scene.paint.Color;
 
 public class GraphScope implements Scope {
 
-    private final Color INITIAL_NODE_COLOR = Color.rgb(60,100,230);
-    private final Color INITIAL_EDGE_COLOR = Color.rgb(50,190,180);
+    private final Color INITIAL_NODE_COLOR = Color.rgb(50,90,170);
+    private final Color INITIAL_EDGE_COLOR = Color.rgb(120,160,200);
 
-    private IntegerProperty nodeSizeProperty = new SimpleIntegerProperty(30);
+    private DoubleProperty nodeSizeProperty = new SimpleDoubleProperty(30d);
     private DoubleProperty edgeWidthProperty = new SimpleDoubleProperty(0.15);
     private BooleanProperty nodeBorderProperty = new SimpleBooleanProperty(false);
     private ObjectProperty<Color> nodeColorProperty = new SimpleObjectProperty<>(INITIAL_NODE_COLOR);
@@ -27,11 +27,11 @@ public class GraphScope implements Scope {
 
     private GraphManager graphManager = new GraphManager();
 
-    public int getNodeSize() {
+    public double getNodeSize() {
         return nodeSizeProperty.get();
     }
 
-    public IntegerProperty nodeSizeProperty() {
+    public DoubleProperty nodeSizeProperty() {
         return nodeSizeProperty;
     }
 

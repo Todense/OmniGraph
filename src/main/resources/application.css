@@ -1,34 +1,48 @@
+
 *{
-    fx-light: #515151;
+    fx-light: #363636;
     fx-lighter: derive(fx-light, 30%);
     fx-medium: derive(-fx-base, 10%);
-    fx-dark: #3D3D3D;
-    fx-hover: #797A78;
-    fx-text-dark: #CFCFCF;
+    fx-dark: #252525;
+    fx-darker: derive(fx-theme, -50%);
+    fx-text-dark: rgb(187, 187, 187);
 }
 
-.root{
+
+.root *{
+    -font-family: sans-serif;
+    -fx-font-size: 12px;
+    -fx-text-fill: fx-text-dark;
+}
+
+
+.root {
+    fx-theme: #447885;
     -fx-base: fx-dark;
     -fx-control-inner-background: fx-medium;
-
     -fx-background-color: fx-dark;
     -fx-box-border: transparent;
-    -fx-font: 11px "Didact Gothic";
-
-    -fx-accent: #2E2E2E;
+    -fx-accent: derive(fx-dark, 20%);
     -fx-focus-color: transparent ;
 }
+
+.subsection {
+    -fx-border-color:  #595959;
+    -fx-border-radius: 5;
+    -fx-padding: 3 3 3 3;
+    -fx-border-width: 1;
+    -fx-background-color: derive(#292828, 1%);
+}
+
 
 .button{
      -fx-text-fill: fx-text-dark;
      -fx-background-color: fx-light;
 }
 
-
-
 .button:hover{
     -fx-text-fill: -fx-text-base-color;
-    -fx-background-color: fx-hover;
+    -fx-background-color: derive(fx-theme, -10%);
 }
 
 .toggle-button {
@@ -38,40 +52,40 @@
 }
 .toggle-button:hover{
      -fx-text-fill: -fx-text-base-color;
-     -fx-background-color: fx-hover;
+     -fx-background-color: derive(fx-theme, -10%);
 }
 
 .toggle-button:selected{
      -fx-text-fill: -fx-text-base-color;
-     -fx-background-color: fx-lighter;
+     -fx-background-color: fx-theme;
 }
 
 .color-picker{
-    -fx-color-label-visible: false;
+    -fx-color-label-visible: true;
     -fx-background-color: fx-light;
 }
 
 .color-picker:hover{
-    -fx-background-color: fx-hover;
+    -fx-background-color: fx-theme;
 }
 
 .color-picker > .arrow-button > .arrow {
-    -fx-background-color: fx-text-dark;
+    -fx-background-color: transparent;
 }
-
-.color-picker:hover > .arrow-button > .arrow {
-    -fx-background-color: -fx-text-base-color;
-}
-
 
 .choice-box{
     -fx-text-fill: fx-text-dark;
     -fx-background-color: fx-light;
+    -fx-alignment: center;
+}
+
+.choice-box > .list-cell{
+    -fx-alignment: center;
 }
 
 .choice-box:hover{
     -fx-text-fill: -fx-text-base-color;
-    -fx-background-color: fx-hover;
+    -fx-background-color: fx-theme;
 }
 
 .choice-box > .open-button > .arrow {
@@ -82,79 +96,63 @@
     -fx-background-color: -fx-text-base-color;
 }
 
-
-//.text-field{
-//    -fx-background-color: #CFCFCF;
-//    -fx-background-insets: 0, 0 0 1 0 ;
-//    -fx-background-radius: 0 ;
-//}
-
-.titled-pane{
-    -fx-text-fill: fx-text-dark;
-}
-
-.titled-pane > .title {
-     -fx-background-color: -fx-text-box-border, -fx-control-inner-background;
-}
-
-SplitPane{
-    -fx-background-color: #3D3D3D;
-     -fx-padding: 1;
-     -fx-border-width: 2 2 2 2;
-     -fx-border-color: #515151;
-}
-
 .titled-pane > .title:hover{
-    -fx-background-color: #545454;
+    -fx-background-color: fx-theme;
 }
 
 .titled-pane > .title{
-    -fx-background-color: fx-medium;
+    -fx-background-color: derive(fx-dark, -30%);
     -fx-border-color: derive(fx-medium, 20%);
-     -fx-border-width: 1 1 1 1;
-}
+    -fx-border-width: 1 1 1 1;
+    -fx-font-weight: bold;
+}  
 
 .titled-pane > .content{
+    -fx-background-color: fx-dark;
     -fx-border-color: derive(fx-medium, 20%);
-     -fx-border-width: 1 1 1 1;
+    -fx-border-width: 1 1 1 1;
 }
 
 .titled-pane > .title > .arrow-button > .arrow{
     -fx-background-color: fx-text-dark
 }
 
-.titled-pane > .content
-{
-    -fx-background-color: transparent;
-    //-fx-padding: 0 -1 -1 -1 ; // this padding setting will help you to ignore the U border when you try to set the background color for the content of titledpane. if you don't do this, because the default css of titledpane, it will appear the U border like I said before.
-    //-fx-background-insets: 0 0 0 0; // well you can add this line or not, depend on you
-}
-
-
-.toggle-switch > .label{
-    -fx-font-size: 5;
-    -fx-text-fill: red;
-}
-
 
 .toggle-switch > .thumb{
-    -fx-background-color: #797A78;
+    -fx-background-color: derive(fx-text-dark, -20%);
+}
+
+.toggle-switch:selected > .thumb{
+    -fx-background-color: fx-text-dark;
 }
 
 .toggle-switch > .thumb-area{
-    -fx-background-color: #515151;
+    -fx-background-color: fx-light;
 }
 
 .toggle-switch:selected > .thumb-area{
-    -fx-background-color: #2D5BAC;
+    -fx-background-color: fx-theme;
 }
 
 .toggle-switch  .label{
-    -fx-font-size: 10;
     -fx-text-fill: fx-text-dark;
 }
 
+.jfx-toggle-node:selected{
+    -fx-background-color:fx-theme;
+}
 
+.ikonli-font-icon{
+    -fx-icon-color: fx-text-dark;
+}
+
+.start-icon{
+    -fx-icon-color: rgb(13, 179, 54);
+}
+
+.stop-icon{
+    -fx-icon-color: rgb(224, 44, 44);
+}
 
 .spinner{
     -fx-background-color: -fx-text-box-border, -fx-control-inner-background;
@@ -176,17 +174,34 @@ SplitPane{
     -fx-background-color: fx-text-dark;
 }
 
-.slider .track{
-    -fx-background-color: #515151;
-    -fx-pref-height:2;
+.slider .track {
+    -fx-background-color: fx-light;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 0.083333em; /* 1 */
+    -fx-pref-height:3;
+}
+
+.slider .fill {
+    -fx-padding: 0.083333em; /* 1 */
 }
 
 .slider .thumb{
-    -fx-background-color: #797A78;
+    -fx-background-color: fx-theme;
 }
 
+
 .label{
-     -fx-text-fill: #CFCFCF;
+     -fx-text-fill: fx-text-dark;
+}
+
+.bigLabel{
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+}
+
+.darkLabel{
+    -fx-text-fill: derive(fx-text-dark, -20%);
 }
 
 .canvas{
@@ -207,7 +222,7 @@ SplitPane{
 }
 
 .tab{
-    -fx-background-color: derive(fx-dark, -10%);
+    -fx-background-color: derive(fx-dark, -40%);
     -fx-background-radius: 0;
     -fx-border-color: derive(fx-dark, 20%);
     -fx-border-width: 0 0 3 0;
@@ -215,33 +230,30 @@ SplitPane{
 }
 
 .tab:selected{
-    -fx-background-color: fx-medium;
-    -fx-border-color: derive(fx-dark, 40%);
+    -fx-background-color: derive(fx-theme, -20%);
+    -fx-border-color: fx-theme;
      -fx-border-width: 0 0 3 0;
      fx-text-fill: fx-text-dark;
 }
 
 .tab-label {
     -fx-text-fill: fx-text-dark ;
+    -fx-font-weight: bold;
 }
 
 .tab {
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
+    -fx-pref-height: 35
+}
+
+.tab:hover{
+    -fx-background-color: derive(fx-theme, -30%);
+    -fx-text-fill: -fx-text-base-color;
 }
 
 .tab-pane > .tab-header-area > .tab-header-background{
        -fx-background-color: -fx-base;
-}
-
-
-.tab:hover{
-    -fx-background-color: #545454;
-    -fx-text-fill: -fx-text-base-color;
-}
-
-.scroll-pane {
-
 }
 
 .scroll-pane:focused {
@@ -260,6 +272,12 @@ SplitPane{
     -fx-background-color: -fx-text-box-border, -fx-control-inner-background;
 }
 
+.scroll-bar:vertical {
+    -fx-unit-increment: 10 ;
+    -fx-block-increment: 50 ;
+}
+
+
 .text-area .scroll-bar:vertical {
     -fx-pref-width: 1;
     -fx-opacity: 0;
@@ -267,27 +285,47 @@ SplitPane{
 
 
 .text-area {
-    text-area-background: -fx-text-box-border, -fx-control-inner-background ;
+    text-area-background: derive(fx-dark, 7%), -fx-control-inner-background;
     -fx-background-color: transparent;
     -fx-border-color:derive(-fx-base, 20%);
     -fx-border-width: 1 1 1 1;
     -fx-background-insets: 0;
+    -fx-font-size: 14px;
 }
 
 .text-area .content {
     -fx-background-color: text-area-background ;
 }
 
+.text-field {
+    -fx-background-color: derive(fx-dark, 7%);
+}
+
 .separator:horizontal *.line {
     -fx-border-style: solid;
-    -fx-border-width: 0 0 1 0; /* its make really one-pixel-border */
+    -fx-border-width: 0 0 1 0;
     -fx-border-color: #5D5D5D;
+}
+
+.jfx-slider > .colored-track {
+    -fx-background-color : fx-theme;
+}
+
+
+.jfx-slider > .animated-thumb {
+    -fx-background-color: transparent;
+}
+
+
+.jfx-slider .slider-value {
+    -fx-fill: transparent;
+    -fx-stroke: transparent;
 }
 
 
 .progress-indicator:indeterminate{
 
-    -fx-progress-color: #3B75DA;
+    -fx-progress-color: fx-theme
 }
 
 .progress-indicator:indeterminate > .spinner{
@@ -295,13 +333,19 @@ SplitPane{
 }
 
 .progress-bar{
-    -fx-accent: #3B75DA ;
+    -fx-accent: #25b862 ;
 }
 
 .progress-bar > .track {
-     -fx-background-color: #C8C8C8;
+     -fx-background-color: #2a5c3a;
 }
 
+.progress-bar .bar { 
+    -fx-padding: 8px; 
+    -fx-background-insets: 0; 
+}
+
+.default-color0.chart-bar { -fx-bar-fill: #25b862; }
 
 .popover > .border  {
     -fx-border-style: none;

@@ -2,6 +2,7 @@ package com.todense.viewmodel;
 
 import com.todense.viewmodel.algorithm.AlgorithmService;
 import com.todense.viewmodel.algorithm.service.DynamicLayoutService;
+import com.todense.viewmodel.layout.LongRangeForce;
 import com.todense.viewmodel.scope.CanvasScope;
 import com.todense.viewmodel.scope.GraphScope;
 import com.todense.viewmodel.scope.ServiceScope;
@@ -19,13 +20,14 @@ public class LayoutViewModel implements ViewModel {
 
     private IntegerProperty optDistProperty = new SimpleIntegerProperty(50);
     private DoubleProperty stepProperty = new SimpleDoubleProperty(3d);
-    private DoubleProperty toleranceProperty = new SimpleDoubleProperty(0.1);
+    private DoubleProperty toleranceProperty = new SimpleDoubleProperty(0.01);
     private BooleanProperty coolingOnProperty = new SimpleBooleanProperty(true);
+    private BooleanProperty barnesHutOnProperty = new SimpleBooleanProperty(true);
     private DoubleProperty coolingStrengthProperty = new SimpleDoubleProperty(0.02);
     private BooleanProperty pullingOnProperty = new SimpleBooleanProperty(true);
     private BooleanProperty multilevelOnProperty = new SimpleBooleanProperty(true);
     private DoubleProperty pullingStrengthProperty = new SimpleDoubleProperty(3d);
-
+    private ObjectProperty<LongRangeForce> longRangeForceProperty = new SimpleObjectProperty<>();
 
     @InjectScope
     GraphScope graphScope;
@@ -138,5 +140,21 @@ public class LayoutViewModel implements ViewModel {
 
     public BooleanProperty multilevelOnProperty() {
         return multilevelOnProperty;
+    }
+
+    public boolean isBarnesHutOn() {
+        return barnesHutOnProperty.get();
+    }
+
+    public BooleanProperty barnesHutOnProperty() {
+        return barnesHutOnProperty;
+    }
+
+    public LongRangeForce getLongRangeForce() {
+        return longRangeForceProperty.get();
+    }
+
+    public ObjectProperty<LongRangeForce> longRangeForceProperty() {
+        return longRangeForceProperty;
     }
 }

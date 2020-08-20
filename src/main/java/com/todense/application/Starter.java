@@ -19,10 +19,13 @@ public class Starter extends MvvmfxGuiceApplication {
         stage.setTitle("OmniGraph");
         final ViewTuple<MainView, MainViewModel> viewTuple = FluentViewLoader.fxmlView(MainView.class).load();
         final Parent root = viewTuple.getView();
+        MainView mainView = viewTuple.getCodeBehind();
+        mainView.setMainStage(stage);
         Scene scene = new Scene(root);
         scene.getStylesheets().add(
                 Objects.requireNonNull(getClass()
                                 .getClassLoader()
+
                                 .getResource(
                                 "application.css"))
                         .toExternalForm()
@@ -32,7 +35,6 @@ public class Starter extends MvvmfxGuiceApplication {
         stage.setMaximized(true);
         stage.show();
     }
-
 
     public static void main(String... args) {
         launch(args);

@@ -8,36 +8,36 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="edgeVBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="131.0" prefWidth="95.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.EdgePopOverView">
-   <Button maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#deleteAction" prefHeight="21.0" prefWidth="88.0" text="Delete">
+<VBox fx:id="edgeVBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="142.0" prefWidth="130.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.EdgePopOverView">
+   <Button maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#deleteAction" prefHeight="25.0" prefWidth="120.0" text="Delete">
       <font>
          <Font size="10.0" />
       </font>
    </Button>
-   <Button layoutX="14.0" layoutY="12.0" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#subdivideAction" prefHeight="21.0" prefWidth="88.0" text="Subdivide">
+   <Button layoutX="14.0" layoutY="12.0" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#subdivideAction" prefHeight="25.0" prefWidth="120.0" text="Subdivide">
       <font>
          <Font size="10.0" />
       </font>
    </Button>
-   <Button layoutX="14.0" layoutY="38.0" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#contractAction" prefHeight="21.0" prefWidth="88.0" text="Contract">
+   <Button layoutX="14.0" layoutY="38.0" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#contractAction" prefHeight="25.0" prefWidth="120.0" text="Contract">
       <font>
          <Font size="10.0" />
       </font>
    </Button>
-   <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="73.0" spacing="3.0">
-      <Label maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="44.0" text="Color">
+   <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="120.0" spacing="3.0">
+      <Label maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="31.0" text="Color">
          <font>
             <Font size="9.0" />
          </font>
       </Label>
-      <ColorPicker fx:id="colorPicker" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="40.0" />
+      <ColorPicker fx:id="colorPicker" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="91.0" />
    </HBox>
-   <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="73.0" spacing="3.0">
-      <Label fx:id="textLabel1" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="42.0" text="Weight">
+   <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="120.0" spacing="3.0">
+      <Label fx:id="textLabel1" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="39.0" text="Weight">
          <font>
             <Font size="9.0" />
          </font>
       </Label>
-      <TextField fx:id="textField" prefHeight="25.0" prefWidth="40.0" />
+      <TextField fx:id="textField" prefHeight="25.0" prefWidth="82.0" />
    </HBox>
 </VBox>

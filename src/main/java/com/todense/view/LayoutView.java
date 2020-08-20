@@ -1,25 +1,33 @@
 package com.todense.view;
 
+import com.jfoenix.controls.JFXSlider;
 import com.todense.viewmodel.LayoutViewModel;
+import com.todense.viewmodel.layout.LongRangeForce;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import javafx.util.StringConverter;
+import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.ToggleSwitch;
 
 public class LayoutView implements FxmlView<LayoutViewModel> {
     @FXML private TextField stepTextField, toleranceTextField, optDistTextField,
             pullStrengthTextField, coolingFactorTextField;
-    @FXML private Slider toleranceSlider, stepSlider, optDistSlider, coolingFactorSlider, pullStrengthSlider;
-    @FXML private ToggleSwitch pullToggleSwitch, coolingToggleSwitch, multilevelToggleSwitch;
+    @FXML private Slider toleranceSlider, stepSlider,  coolingFactorSlider, pullStrengthSlider;
+    @FXML private JFXSlider optDistSlider;
+    @FXML private ToggleSwitch pullToggleSwitch, coolingToggleSwitch, multilevelToggleSwitch, barnesHutToggleSwitch;
     @FXML private Button startButton;
     @FXML private HBox coolingHBox, pullHBox;
+    @FXML private ChoiceBox<LongRangeForce> longRangeChoiceBox;
 
     @InjectViewModel
     LayoutViewModel viewModel;
@@ -34,15 +42,27 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
         pullToggleSwitch.selectedProperty().bindBidirectional(viewModel.pullingOnProperty());
         coolingToggleSwitch.selectedProperty().bindBidirectional(viewModel.coolingOnProperty());
         multilevelToggleSwitch.selectedProperty().bindBidirectional(viewModel.multilevelOnProperty());
+        barnesHutToggleSwitch.selectedProperty().bindBidirectional(viewModel.barnesHutOnProperty());
 
-        stepTextField.textProperty().bind(createIntBinding(stepSlider.valueProperty()));
-        toleranceTextField.textProperty().bind(createDoubleBinding(toleranceSlider.valueProperty()));
-        optDistTextField.textProperty().bind(createIntBinding(optDistSlider.valueProperty()));
-        coolingFactorTextField.textProperty().bind(createDoubleBinding(coolingFactorSlider.valueProperty()));
-        pullStrengthTextField.textProperty().bind(createIntBinding(pullStrengthSlider.valueProperty()));
+        bindSliderAndTextField(optDistSlider, optDistTextField);
+        bindSliderAndTextField(stepSlider, stepTextField);
+        bindSliderAndTextField(toleranceSlider, toleranceTextField);
+        bindSliderAndTextField(coolingFactorSlider, coolingFactorTextField);
+        bindSliderAndTextField(pullStrengthSlider, pullStrengthTextField);
 
         pullHBox.disableProperty().bind(pullToggleSwitch.selectedProperty().not());
         coolingHBox.disableProperty().bind(coolingToggleSwitch.selectedProperty().not());
+
+        longRangeChoiceBox.valueProperty().bindBidirectional(viewModel.longRangeForceProperty());
+        longRangeChoiceBox.getItems().addAll(LongRangeForce.values());
+        longRangeChoiceBox.setValue(LongRangeForce.NORMAL);
+    }
+
+    private void bindSliderAndTextField(Slider slider, TextField textField){
+        StringProperty sp = textField.textProperty();
+        DoubleProperty dp = slider.valueProperty();
+        StringConverter<Number> converter = new NumberStringConverter("####.##");
+        Bindings.bindBidirectional(sp, dp, converter);
     }
 
     private StringBinding createDoubleBinding(DoubleProperty property){

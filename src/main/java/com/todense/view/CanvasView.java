@@ -5,6 +5,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
 
@@ -17,6 +18,13 @@ public class CanvasView implements FxmlView<CanvasViewModel> {
     CanvasViewModel viewModel;
 
     public void initialize(){
+
+        viewModel.editLockedProperty().addListener((obs, oldVal, newVal)->{
+            if(newVal)
+                canvas.setCursor(Cursor.OPEN_HAND);
+            else
+                canvas.setCursor(Cursor.DEFAULT);
+        });
 
         canvas.widthProperty().bind(canvasPane.widthProperty());
         canvas.heightProperty().bind(canvasPane.heightProperty());

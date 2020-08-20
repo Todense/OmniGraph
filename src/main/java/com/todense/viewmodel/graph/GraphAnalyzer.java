@@ -42,6 +42,7 @@ public class GraphAnalyzer {
     }
 
     public static int[] calculateEccentricities(Graph graph){
+        if(graph.getNodes().size() == 0) return new int[]{0,0};
         int maxDist;
         int[] dist;
         boolean[] visited;
@@ -96,6 +97,7 @@ public class GraphAnalyzer {
     }
 
     public static int calculateMinDegree(Graph graph){
+        if(graph.getNodes().size() == 0) return 0;
         int min = Integer.MAX_VALUE;
         for(Node n : graph.getNodes()){
             if(Thread.currentThread().isInterrupted()){
@@ -110,6 +112,7 @@ public class GraphAnalyzer {
     }
 
     public static int calculateMaxDegree(Graph graph){
+        if(graph.getNodes().size() == 0) return 0;
         int max = 0;
         for(Node n : graph.getNodes()){
             if(Thread.currentThread().isInterrupted()){
@@ -123,6 +126,7 @@ public class GraphAnalyzer {
     }
 
     public static double calculateAvgDegree(Graph graph){
+        if(graph.getNodes().size() == 0) return 0;
         int sum = 0;
         for(Node n : graph.getNodes()){
             if(Thread.currentThread().isInterrupted()){
@@ -133,4 +137,9 @@ public class GraphAnalyzer {
         return  (double) sum/graph.getNodes().size();
     }
 
+    public static double getDensity(Graph graph) {
+        if(graph.getNodes().size() == 0) return 0;
+        int nodeCount = graph.getNodes().size();
+        return  2 * (double)graph.getEdges().size()/((nodeCount-1) * nodeCount);
+    }
 }

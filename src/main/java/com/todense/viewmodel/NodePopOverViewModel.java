@@ -43,7 +43,7 @@ public class NodePopOverViewModel implements ViewModel {
     public void deleteNodes(){
         notificationCenter.publish(MainViewModel.graphEditRequest, (Runnable)() ->{
             for (Node node : nodes) {
-                graphManager.removeNode(node);
+                graphManager.getGraph().removeNode(node);
             }
         });
         notificationCenter.publish("HIDE");

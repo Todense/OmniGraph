@@ -23,7 +23,7 @@ public class OgrGraphWriter implements GraphWriter {
                         +node.getPos().getX()+" "
                         +node.getPos().getY()+" "
                         +"\""+node.getLabelText()+"\" "
-                        +node.getColor().toString()
+                        +"\""+(node.getColor() == null? "" : node.getColor().toString())+"\" "
                         +"\n"
                 );
             }
@@ -32,7 +32,7 @@ public class OgrGraphWriter implements GraphWriter {
                 fileWriter.write(edge.getN1().getIndex()+" "
                         +edge.getN2().getIndex()+" "
                         +edge.getWeight()+" "
-                        +edge.getColor().toString()
+                        +"\""+(edge.getColor() == null? "" : edge.getColor().toString())+"\" "
                         +"\n"
                 );
             }

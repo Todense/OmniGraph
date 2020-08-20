@@ -9,37 +9,37 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="nodeVBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="95.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.NodePopOverView">
-    <Button maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#deleteNodeAction" prefHeight="21.0" prefWidth="88.0" text="Delete">
+<VBox fx:id="nodeVBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="130.0" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.NodePopOverView">
+    <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteNodeAction" prefHeight="25.0" prefWidth="120.0" text="Delete">
         <font>
             <Font size="10.0" />
         </font>
     </Button>
-    <Button fx:id="startNodeButton" layoutX="43.0" layoutY="15.0" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#setStartNodeAction" prefHeight="21.0" text="Set as start node">
+    <Button fx:id="startNodeButton" layoutX="43.0" layoutY="15.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setStartNodeAction" prefHeight="25.0" prefWidth="120.0" text="Set as start node">
         <font>
             <Font size="10.0" />
         </font>
     </Button>
-    <Button fx:id="goalNodeButton" layoutX="23.0" layoutY="54.0" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" onAction="#setGoalNodeAction" prefHeight="21.0" text="Set as goal node">
+    <Button fx:id="goalNodeButton" layoutX="23.0" layoutY="54.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setGoalNodeAction" prefHeight="25.0" prefWidth="120.0" text="Set as goal node">
         <font>
             <Font size="10.0" />
         </font>
     </Button>
-    <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="131.0" spacing="3.0">
-        <Label maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="44.0" text="Color">
+    <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="120.0" spacing="3.0">
+        <Label maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="33.0" text="Color">
             <font>
                 <Font size="9.0" />
             </font>
         </Label>
-        <ColorPicker fx:id="editNodeColorPicker" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="40.0" />
+        <ColorPicker fx:id="editNodeColorPicker" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="83.0" />
     </HBox>
-    <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="166.0" spacing="3.0">
-        <Label fx:id="textLabel" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="42.0" text="Label">
+    <HBox alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="120.0" spacing="3.0">
+        <Label fx:id="textLabel" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="33.0" text="Label">
             <font>
                 <Font size="9.0" />
             </font>
         </Label>
-        <TextField fx:id="nodeLabelTextField" prefHeight="18.0" prefWidth="40.0" />
+        <TextField fx:id="nodeLabelTextField" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="83.0" />
     </HBox>
     <padding>
         <Insets bottom="5.0" top="5.0" />

@@ -3,10 +3,7 @@ package com.todense.viewmodel.graph;
 import com.todense.model.graph.Edge;
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
-import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -14,70 +11,14 @@ import java.util.List;
 
 public class GraphManager {
 
-    private ObjectProperty<Color> defaultNodeColorProperty = new SimpleObjectProperty<>(Color.RED);
-    private ObjectProperty<Color> defaultEdgeColorProperty = new SimpleObjectProperty<>();
-
-    private ObjectProperty<Node> startNodeProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<Node> goalNodeProperty = new SimpleObjectProperty<>();
-
     private Graph graph;
 
     public GraphManager(){
         setGraph(new Graph());
     }
 
-    public void setGraph(Graph graph) {
-        this.graph = graph;
-    }
-
-    public Node addNode(Point2D p) {
-        Node n = graph.addNode(p);
-        n.setColor(defaultNodeColorProperty.get());
-        return n;
-    }
-
-
-    public void removeNode(Node n) {
-        Graph g = getGraph();
-        if(startNodeProperty.get() == n){
-            startNodeProperty.set(null);
-        }
-        if(goalNodeProperty.get() == n){
-            goalNodeProperty.set(null);
-        }
-        g.removeNode(n);
-    }
-
-    public void addEdge(Node n1, Node n2) {
-        Edge newEdge = graph.addEdge(n1, n2);
-        newEdge.setColor(defaultEdgeColorProperty.get());
-    }
-
-    public void removeEdge(Node n1, Node n2) {
-        graph.removeEdge(n1, n2);
-    }
-
-    public void removeEdge(Edge edge){
-        graph.removeEdge(edge.getN1(), edge.getN2());
-    }
-
-    public void applyColors(){
-        for (Node node : graph.getNodes()) {
-            node.setColor(defaultNodeColorProperty.get());
-        }
-        for (Edge edge : graph.getEdges()) {
-            edge.setColor(defaultEdgeColorProperty.get());
-        }
-    }
-
-    public Graph getGraph() {
-        return graph;
-    }
-
     public void clearGraph() {
         graph = new Graph();
-        startNodeProperty.set(null);
-        goalNodeProperty.set(null);
     }
 
     public void resetGraph() {
@@ -97,7 +38,7 @@ public class GraphManager {
             Node n1 = graph.getNodes().get(i);
             Node n2 = graph.getNodes().get(i+1);
             if(noEdgeBetween(n1,n2)) {
-                addEdge(n1, n2);
+                graph.addEdge(n1, n2);
             }
         }
     }
@@ -108,7 +49,7 @@ public class GraphManager {
                 Node n1 = graph.getNodes().get(i);
                 Node n2 = graph.getNodes().get(j);
                 if(noEdgeBetween(n1,n2)) {
-                    addEdge(n1, n2);
+                    graph.addEdge(n1, n2);
                 }
             }
         }
@@ -120,10 +61,10 @@ public class GraphManager {
             for (int j = i+1; j < graph.getNodes().size(); j++) {
                 Node m = graph.getNodes().get(j);
                 if(noEdgeBetween(n, m)){
-                    addEdge(n, m);
+                    graph.addEdge(n, m);
                 }
                 else{
-                    removeEdge(n, m);
+                    graph.removeEdge(n, m);
                 }
             }
         }
@@ -134,9 +75,9 @@ public class GraphManager {
         Node n = e.getN1();
         Node m = e.getN2();
         Point2D midpoint = n.getPos().midpoint(m.getPos());
-        Node k = addNode(midpoint);
-        addEdge(n, k);
-        addEdge(m, k);
+        Node k = graph.addNode(midpoint);
+        graph.addEdge(n, k);
+        graph.addEdge(m, k);
     }
 
     public void subdivideEdges() {
@@ -147,20 +88,20 @@ public class GraphManager {
             Node n = edge.getN1();
             Node m = edge.getN2();
             Point2D midpoint = n.getPos().midpoint(m.getPos());
-            Node k = addNode(midpoint);
-            addEdge(n, k);
-            addEdge(m, k);
+            Node k = graph.addNode(midpoint);
+            graph.addEdge(n, k);
+            graph.addEdge(m, k);
         }
     }
 
     public void contractEdge(Edge e) {
         for (Node m : e.getN1().getNeighbours()) {
             if(noEdgeBetween(m, e.getN2())){
-                addEdge(m, e.getN2());
+                graph.addEdge(m, e.getN2());
             }
         }
-        removeEdge(e);
-        removeNode(e.getN1());
+        graph.removeEdge(e);
+        graph.removeNode(e.getN1());
     }
 
     public void deleteEdges() {
@@ -185,22 +126,11 @@ public class GraphManager {
         return  selectedNodes;
     }
 
-    public ObjectProperty<Color> nodeColorProperty() {
-        return defaultNodeColorProperty;
+    public void setGraph(Graph graph) {
+        this.graph = graph;
     }
 
-    public ObjectProperty<Color> edgeColorProperty() {
-        return defaultEdgeColorProperty;
+    public Graph getGraph() {
+        return graph;
     }
-
-    public ObjectProperty<Node> startNodeProperty() {
-        return startNodeProperty;
-    }
-
-    public ObjectProperty<Node> goalNodeProperty() {
-        return goalNodeProperty;
-    }
-
-
-
 }

@@ -94,7 +94,7 @@ public class GraphDrawLayer implements DrawLayer {
         double size = graphScope.getNodeSize();
 
         gc.setFill(graphScope.getNodeLabelColor());
-        gc.setFont(new Font("Computer Modern", graphScope.getNodeSize() * 0.6));
+        gc.setFont(new Font("Sans Serif", graphScope.getNodeSize() * 0.6));
         gc.setTextAlign(TextAlignment.CENTER);
 
         String s = "";
@@ -154,7 +154,7 @@ public class GraphDrawLayer implements DrawLayer {
 
     private void drawEdgeWeight(Edge e, GraphicsContext gc, String weight, double fontSize) {
         Point2D midPoint = e.getN1().getPos().midpoint(e.getN2().getPos());
-        gc.setFont(new Font("Computer Modern", fontSize));
+        gc.setFont(new Font("Sans Serif", fontSize));
         gc.setFill(graphScope.getEdgeWeightColor());
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText(weight, midPoint.getX(), midPoint.getY() + fontSize/3);
@@ -244,12 +244,14 @@ public class GraphDrawLayer implements DrawLayer {
                 break;
             case ANT_COLONY:
                 if(antsScope.isShowingPheromones()){
-                    width = Math.min(antsScope.getPheromone(edge) * antsScope.getScale() * antsScope.getScale(), graphScope.getNodeSize() * 0.75);
+                    width = Math.min(
+                            antsScope.getPheromone(edge) * antsScope.getScale() * antsScope.getScale(),
+                            graphScope.getNodeSize() * 0.75);
                 }else{
                     width = 0;
                 }
                 break;
         }
-        return width;
+        return Math.min(width, graphScope.getNodeSize());
     }
 }

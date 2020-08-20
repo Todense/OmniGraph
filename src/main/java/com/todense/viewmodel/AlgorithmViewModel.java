@@ -49,10 +49,9 @@ public class AlgorithmViewModel implements ViewModel {
 
         graphManager = graphScope.getGraphManager();
 
-        graphManager.startNodeProperty().bindBidirectional(algorithmScope.startNodeProperty());
-        graphManager.goalNodeProperty().bindBidirectional(algorithmScope.goalNodeProperty());
-
-        algorithmProperty().addListener((obs, oldVal, newVal) -> canvasScope.getPainter().repaint());
+        Platform.runLater(() ->
+                algorithmProperty().addListener((obs, oldVal, newVal) -> canvasScope.getPainter().repaint())
+        );
         showingEndpointsProperty().addListener((obs, oldVal, newVal) -> canvasScope.getPainter().repaint());
 
         notificationCenter.subscribe("SET_START", (key, payload) -> startNodeProperty().set((Node) payload[0]));

@@ -1,5 +1,6 @@
 package com.todense.view;
 
+import com.jfoenix.controls.JFXSlider;
 import com.todense.model.EdgeWeightMode;
 import com.todense.model.NodeLabelMode;
 import com.todense.viewmodel.GraphViewModel;
@@ -10,13 +11,12 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
-import javafx.scene.control.Slider;
 import org.controlsfx.control.ToggleSwitch;
 
 public class GraphView implements FxmlView<GraphViewModel> {
     
     @FXML private Label nodeSizeLabel, edgeWidthLabel;
-    @FXML private Slider nodeSizeSlider, edgeWidthSlider;
+    @FXML private JFXSlider nodeSizeSlider, edgeWidthSlider;
     @FXML private ColorPicker nodeColorPicker, edgeColorPicker, labelColorPicker, weightColorPicker;
     @FXML private ChoiceBox<NodeLabelMode> nodeLabelChoiceBox;
     @FXML private ChoiceBox<EdgeWeightMode> edgeWeightChoiceBox;
@@ -38,7 +38,7 @@ public class GraphView implements FxmlView<GraphViewModel> {
         nodeBorderToggleSwitch.selectedProperty().bindBidirectional(viewModel.nodeBorderProperty());
 
         nodeSizeLabel.textProperty().bind(Bindings.createStringBinding(() ->
-                String.valueOf(nodeSizeSlider.valueProperty().intValue()), nodeSizeSlider.valueProperty()));
+                String.format("%.1f",  nodeSizeSlider.getValue()), nodeSizeSlider.valueProperty()));
 
 
         edgeWidthLabel.textProperty().bind(Bindings.createStringBinding(()->

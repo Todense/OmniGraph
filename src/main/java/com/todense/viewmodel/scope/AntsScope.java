@@ -42,7 +42,10 @@ public class AntsScope implements Scope {
 
 
     public double getPheromone(Edge e){
-        if(pheromones == null) return  0;
+        if(pheromones == null
+                || e.getN1().getIndex() >= pheromones.length
+                || e.getN2().getIndex() >= pheromones.length)
+            return 0;
         return pheromones[e.getN1().getIndex()][e.getN2().getIndex()];
     }
 

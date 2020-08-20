@@ -14,6 +14,7 @@ public class HCSearchService extends AlgorithmService {
 
     ArrayList<Node> cycle;
     boolean[] visitedDFS;
+
     boolean cycleFound;
     
     private Node startNode;
@@ -147,5 +148,9 @@ public class HCSearchService extends AlgorithmService {
                 }
             }
         }
+    }
+
+    public boolean isCycleFound() {
+        return cycleFound;
     }
 }

@@ -75,7 +75,7 @@ public class MouseHandler {
         if(e.getButton() == MouseButton.PRIMARY) {  // LEFT MOUSE BUTTON
             if(!pressedKeys.contains(KeyCode.SHIFT)){
                 if(clickedNode == null && clickedEdge == null){  // click on background
-                    GM.addNode(camera.inverse(mousePt));
+                    GM.getGraph().addNode(camera.inverse(mousePt));
                 }
                 else if(pressedKeys.contains(KeyCode.CONTROL)){
                     if(clickedNode != null){
@@ -104,10 +104,10 @@ public class MouseHandler {
 
         if(e.getButton() == MouseButton.MIDDLE) {   // MIDDLE MOUSE BUTTON
             if(clickedNode != null){
-                GM.removeNode(clickedNode);
+                GM.getGraph().removeNode(clickedNode);
             }
             else if(clickedEdge != null){
-                GM.removeEdge(clickedEdge);
+                GM.getGraph().removeEdge(clickedEdge);
             }
         }
         painter.repaint();
@@ -126,9 +126,9 @@ public class MouseHandler {
             if(inputScope.isConnecting()){
                 if (releaseNode != null) {             // add/remove edge
                     if (GM.noEdgeBetween(releaseNode, edgeStartNode)) {
-                        GM.addEdge(releaseNode, edgeStartNode);
+                        GM.getGraph().addEdge(releaseNode, edgeStartNode);
                     } else {
-                        GM.removeEdge(releaseNode, edgeStartNode);
+                        GM.getGraph().removeEdge(releaseNode, edgeStartNode);
                     }
                     releaseNode.setHighlighted(false);
                     edgeStartNode.setHighlighted(false);

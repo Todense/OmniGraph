@@ -20,6 +20,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.paint.Color;
 import org.apache.commons.io.FilenameUtils;
 
 import javax.inject.Inject;
@@ -29,7 +30,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
-@ScopeProvider(scopes = {AlgorithmScope.class, GraphScope.class, BackgroundScope.class, CanvasScope.class, AnimationScope.class, KeysScope.class, AntsScope.class, ServiceScope.class, InputScope.class})
+@ScopeProvider(scopes = {AlgorithmScope.class, GraphScope.class,
+        BackgroundScope.class, CanvasScope.class,
+        AnimationScope.class, KeysScope.class,
+        AntsScope.class, ServiceScope.class, InputScope.class})
 public class MainViewModel implements ViewModel {
 
     public final static String serviceStarted = "SERVICE_STARTED";
@@ -41,6 +45,7 @@ public class MainViewModel implements ViewModel {
 
     private ObjectProperty<String> textProperty = new SimpleObjectProperty<>("");
     private ObjectProperty<String> infoTextProperty = new SimpleObjectProperty<>();
+    private ObjectProperty<Color> appColorProperty = new SimpleObjectProperty<>(Color.rgb(55,85,125));
     private BooleanProperty workingProperty = new SimpleBooleanProperty(false);
     private BooleanProperty serviceRunningProperty = new SimpleBooleanProperty(false);
     private BooleanProperty editManuallyLockedProperty = new SimpleBooleanProperty(false);
@@ -88,6 +93,7 @@ public class MainViewModel implements ViewModel {
             writeInfo("Running: "+ payload[0]);
             workingProperty.set(true);
             serviceRunningProperty.set(true);
+            graphManager.resetGraph();
         });
 
         notificationCenter.subscribe(serviceFinished, (key, payload) -> { //payload = name, duration, result
@@ -127,7 +133,9 @@ public class MainViewModel implements ViewModel {
         ));
 
         inputScope.editLockedProperty().bind(editLockedProperty);
+        canvasScope.borderColorProperty().bind(appColorProperty);
 
+        appColorProperty.addListener((obs, oldVal, newVel) -> canvasScope.getPainter().repaint());
     }
 
     public void openGraph(File file) {
@@ -150,6 +158,7 @@ public class MainViewModel implements ViewModel {
             if(openedGraph != null){
                 notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, openedGraph);
                 notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
+                write("Graph opened");
             }
         }
     }
@@ -239,5 +248,13 @@ public class MainViewModel implements ViewModel {
 
     public BooleanProperty serviceRunningProperty() {
         return serviceRunningProperty;
+    }
+
+    public Color getAppColor() {
+        return appColorProperty.get();
+    }
+
+    public ObjectProperty<Color> appColorProperty() {
+        return appColorProperty;
     }
 }

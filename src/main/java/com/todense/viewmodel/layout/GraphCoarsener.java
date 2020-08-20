@@ -3,51 +3,49 @@ package com.todense.viewmodel.layout;
 import com.todense.model.graph.Edge;
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
-import com.todense.viewmodel.canvas.Painter;
 import com.todense.viewmodel.graph.GraphManager;
+import javafx.geometry.Point2D;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
 
-public class GraphCoarser {
+public class GraphCoarsener {
 
     private GraphManager graphManager;
-    private Painter painter;
-    private Stack<Graph> graphList = new Stack<>();
+    private Stack<Graph> graphSequence = new Stack<>();
     private Stack<HashMap<Node, Node>> nodeMaps = new Stack<>();
     private HashMap<Node, Integer> nodeWeights = new HashMap<>();
 
-    public GraphCoarser(GraphManager graphManager){
+    private double reductionRate = 0;
+
+    public GraphCoarsener(GraphManager graphManager){
         this.graphManager = graphManager;
     }
 
-    public void coarserDown() {
-        Graph currentGraph  = graphList.pop();
-        Graph previousGraph = graphList.peek();
+    public void reconstruct(double variation) {
+        graphSequence.pop();
+        Graph previousGraph = graphSequence.peek();
         var mapping = nodeMaps.pop();
-        previousGraph.getNodes().forEach(node -> node.setPos(mapping.get(node).getPos().add(Math.random() - 0.5, Math.random() - 0.5)));
+        previousGraph.getNodes().forEach(node ->{
+                double angle = Math.random() * 2 * Math.PI;
+                node.setPos(mapping.get(node).getPos().add(new Point2D(
+                                Math.cos(angle),
+                                Math.sin(angle))
+                        .multiply(variation))
+                );
+    });
         graphManager.setGraph(previousGraph);
-        try {
-            painter.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
     }
 
-    public void createList() {
-        graphList.add(graphManager.getGraph());
-        nodeWeights = new HashMap<>();
-        graphList.peek().getNodes().forEach(node -> nodeWeights.put(node, 1));
-
-        while(graphList.peek().getEdges().size() > 1){
-            coarserGraph();
-        }
+    public void initGraphSequence() {
+        graphSequence.add(graphManager.getGraph());
+        graphSequence.peek().getNodes().forEach(node -> nodeWeights.put(node, 1));
     }
 
-    private void coarserGraph(){
-        Graph graph = graphList.peek();
+    public void coarsen(){
+        Graph graph = graphSequence.peek();
         Graph copyGraph = graph.copy();
         HashMap<Node, Node> nodeMap = new HashMap<>();
         HashMap<Node, Node> isomorphismMap = new HashMap<>();
@@ -83,15 +81,10 @@ public class GraphCoarser {
             );
             nodeMap.put(isomorphismMap.get(edge.getN1()), edge.getN2());
         }
-
+        reductionRate = (double)copyGraph.getNodes().size()/graph.getNodes().size();
         nodeMaps.push(nodeMap);
         graphManager.setGraph(copyGraph);
-        graphList.push(copyGraph);
-        try {
-            painter.sleep(100);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        graphSequence.push(copyGraph);
     }
 
     public void contractEdge(Graph g, Edge e) {
@@ -105,15 +98,11 @@ public class GraphCoarser {
         g.removeNode(e.getN1());
     }
 
-    public Stack<Graph> getGraphList() {
-        return graphList;
+    public Stack<Graph> getGraphSequence() {
+        return graphSequence;
     }
 
-    public Stack<HashMap<Node, Node>> getNodeMaps() {
-        return nodeMaps;
-    }
-
-    public void setPainter(Painter painter) {
-        this.painter = painter;
+    public boolean maxLevelReached() {
+         return (graphSequence.peek().getEdges().size() <= 1 || reductionRate > 0.75);
     }
 }

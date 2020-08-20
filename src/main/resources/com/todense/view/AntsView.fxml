@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXSlider?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -14,356 +13,341 @@
 <?import org.controlsfx.control.ToggleSwitch?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox alignment="CENTER" fillWidth="false" prefHeight="607.0" prefWidth="170.0" spacing="2.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.AntsView">
-   <Label alignment="CENTER_RIGHT" prefHeight="13.0" prefWidth="160.0" stylesheets="@../../../darkLabel.css" text="Algorithm" textFill="#2c2c2c">
+<VBox alignment="CENTER" fillWidth="false" prefHeight="641.0" prefWidth="200.0" spacing="2.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.AntsView">
+   <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Algorithm" textFill="#2c2c2c">
       <font>
          <Font size="9.0" />
       </font>
    </Label>
-   <ChoiceBox fx:id="algorithmChoiceBox" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="160.0" />
-   <Separator layoutX="30.0" layoutY="103.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="190.0">
-      <VBox.margin>
-         <Insets bottom="3.0" top="3.0" />
-      </VBox.margin>
-   </Separator>
-   <VBox alignment="CENTER" prefHeight="9.0" prefWidth="200.0" spacing="2.0">
-      <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
-         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="53.0" text="Ants">
-            <font>
-               <Font size="10.0" />
-            </font>
-         </Label>
-         <Label fx:id="antCountLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="15.0" prefWidth="31.0" text="5" textAlignment="CENTER">
-            <font>
-               <Font size="10.0" />
-            </font>
-         </Label>
-      </HBox>
-      <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="190.0" spacing="2.0">
-         <Button layoutX="143.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#antCountDecrementAction" prefHeight="15.0" prefWidth="15.0">
-            <graphic>
-               <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
-            </graphic>
-         </Button>
-         <Slider fx:id="antCountSlider" blockIncrement="1.0" majorTickUnit="1.0" max="20.0" min="1.0" minorTickCount="1" prefHeight="15.0" prefWidth="125.0" value="5.0" />
-         <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#antCountIncrementAction" prefHeight="15.0" prefWidth="15.0">
-            <graphic>
-               <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
-            </graphic>
-         </Button>
-      </HBox>
-   </VBox>
-   <VBox alignment="CENTER" layoutX="10.0" layoutY="65.0" prefHeight="9.0" prefWidth="200.0" spacing="2.0">
-      <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
-         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="99.0" text="Neighbourhoods size">
-            <font>
-               <Font size="10.0" />
-            </font>
-         </Label>
-         <Label fx:id="neighbourhoodLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="15.0" prefWidth="31.0" text="5" textAlignment="CENTER">
-            <font>
-               <Font size="10.0" />
-            </font>
-         </Label>
-      </HBox>
-      <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="190.0" spacing="2.0">
-         <Button layoutX="143.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#neighbourhoodDecrementAction" prefHeight="15.0" prefWidth="15.0">
-            <graphic>
-               <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
-            </graphic>
-         </Button>
-         <Slider fx:id="neighbourhoodSlider" blockIncrement="1.0" majorTickUnit="1.0" min="3.0" minorTickCount="1" prefHeight="15.0" prefWidth="125.0" value="1.0" />
-         <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#neighbourhoodIncrementAction" prefHeight="15.0" prefWidth="15.0">
-            <graphic>
-               <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
-            </graphic>
-         </Button>
-      </HBox>
-   </VBox>
-   <Separator layoutX="30.0" layoutY="143.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="190.0">
-      <VBox.margin>
-         <Insets bottom="2.0" top="2.0" />
-      </VBox.margin>
-   </Separator>
-   <Label alignment="CENTER" layoutX="30.0" layoutY="177.0" prefHeight="13.0" prefWidth="160.0" stylesheets="@../../../darkLabel.css" text="Local Search" textFill="#2c2c2c">
+   <ChoiceBox fx:id="algorithmChoiceBox" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="190.0" />
+   <Label alignment="CENTER" layoutX="30.0" layoutY="177.0" prefHeight="13.0" prefWidth="160.0" styleClass="darkLabel" text="Local Search" textFill="#2c2c2c">
       <font>
          <Font size="10.0" />
       </font>
+      <VBox.margin>
+         <Insets top="5.0" />
+      </VBox.margin>
    </Label>
-   <HBox alignment="CENTER" prefHeight="22.0" prefWidth="200.0" spacing="10.0">
-      <ToggleSwitch fx:id="twoOptToggleSwitch" prefHeight="15.0" prefWidth="60.0" text="2-opt">
+   <HBox alignment="CENTER" prefHeight="22.0" prefWidth="200.0" spacing="40.0" styleClass="subsection">
+      <ToggleSwitch fx:id="twoOptToggleSwitch" prefHeight="18.0" prefWidth="76.0" text="2-opt">
          <font>
             <Font size="10.0" />
          </font>
       </ToggleSwitch>
-      <Separator orientation="VERTICAL" prefHeight="59.0" prefWidth="2.0" />
-      <ToggleSwitch fx:id="threeOptToggleSwitch" prefHeight="15.0" prefWidth="60.0" text="3-opt">
+      <ToggleSwitch fx:id="threeOptToggleSwitch" prefHeight="15.0" prefWidth="76.0" text="3-opt">
          <font>
             <Font size="10.0" />
          </font>
       </ToggleSwitch>
    </HBox>
-   <Separator layoutX="30.0" layoutY="145.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="190.0">
-      <VBox.margin>
-         <Insets bottom="3.0" top="3.0" />
-      </VBox.margin>
-   </Separator>
-   <Label alignment="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="13.0" prefWidth="160.0" stylesheets="@../../../darkLabel.css" text="Parameters" textFill="#2c2c2c">
+   <Label alignment="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="13.0" prefWidth="160.0" styleClass="darkLabel" text="Parameters" textFill="#2c2c2c">
       <font>
          <Font size="10.0" />
       </font>
-   </Label>
-   <VBox alignment="CENTER" prefHeight="0.0" prefWidth="200.0" spacing="4.0">
-      <VBox alignment="CENTER" prefHeight="9.0" prefWidth="200.0" spacing="2.0">
-         <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="130.0" text="Pheromone influence">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <Label fx:id="alphaLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="15.0" prefWidth="31.0" text="0.1" textAlignment="CENTER">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-         </HBox>
-         <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="190.0" spacing="2.0">
-            <Button layoutX="143.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#alphaDecrementAction" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
-               </graphic>
-            </Button>
-            <Slider fx:id="alphaSlider" blockIncrement="0.01" majorTickUnit="1.0" max="10.0" minorTickCount="1" prefHeight="15.0" prefWidth="125.0" value="1.0" />
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#alphaIncrementAction" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
-               </graphic>
-            </Button>
-         </HBox>
-      </VBox>
-      <VBox alignment="CENTER" prefHeight="0.0" prefWidth="200.0">
-         <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="126.0" text="Distance influence">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <Label fx:id="betaLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-         </HBox>
-         <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#betaDecrementAction" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
-               </graphic>
-            </Button>
-            <Slider fx:id="betaSlider" blockIncrement="0.01" majorTickUnit="0.01" max="10.0" minorTickCount="0" prefHeight="15.0" prefWidth="125.0" value="1.0" />
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#betaIncrementAction" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
-               </graphic>
-            </Button>
-         </HBox>
-      </VBox>
-      <VBox alignment="CENTER" prefHeight="0.0" prefWidth="200.0">
-         <HBox alignment="CENTER" prefHeight="11.0" prefWidth="190.0">
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="142.0" text="Evaporation">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <Label fx:id="evaporationLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-         </HBox>
-         <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#evaporationDecrementAction" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
-               </graphic>
-            </Button>
-            <Slider fx:id="evaporationSlider" blockIncrement="0.01" majorTickUnit="0.01" max="1.0" min="0.01" minorTickCount="0" prefHeight="15.0" prefWidth="125.0" value="0.1" />
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#evaporationIncrementAction" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
-               </graphic>
-            </Button>
-         </HBox>
-      </VBox>
-   </VBox>
-   <VBox fx:id="paramVBox" alignment="CENTER" prefHeight="14.0" prefWidth="200.0" spacing="4.0">
-      <VBox fx:id="q0VBox" alignment="CENTER" prefHeight="0.0" prefWidth="200.0" spacing="2.0">
-         <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="143.0" text="Exploitation strength">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <Label fx:id="q0Label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-         </HBox>
-         <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#q0DecrementAction" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
-               </graphic>
-            </Button>
-            <Slider fx:id="q0Slider" blockIncrement="0.01" majorTickUnit="0.01" max="1.0" minorTickCount="0" prefHeight="15.0" prefWidth="125.0" value="0.9" />
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#q0IncrementAction" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
-               </graphic>
-            </Button>
-         </HBox>
-      </VBox>
-      <VBox fx:id="ksiVBox" alignment="CENTER" prefHeight="48.0" prefWidth="200.0">
-         <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="115.0" text="Local Evaporation">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <Label fx:id="ksiLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-         </HBox>
-         <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#ksiDecrementAction" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
-               </graphic>
-            </Button>
-            <Slider fx:id="ksiSlider" blockIncrement="0.01" majorTickUnit="0.01" max="1.0" min="0.01" minorTickCount="0" prefHeight="15.0" prefWidth="125.0" value="0.1" />
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#ksiIncrementAction" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
-               </graphic>
-            </Button>
-         </HBox>
-      </VBox>
-      <VBox fx:id="rankVBox" alignment="CENTER" layoutX="10.0" layoutY="80.0" prefHeight="48.0" prefWidth="200.0">
-         <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="115.0" text="Rank Size">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <Label fx:id="rankLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-         </HBox>
-         <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#rankDecrementAction" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
-               </graphic>
-            </Button>
-            <Slider fx:id="rankSlider" blockIncrement="1.0" majorTickUnit="0.01" max="20.0" min="1.0" minorTickCount="0" prefHeight="15.0" prefWidth="125.0" value="5.0" />
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#rankIncrementAction" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
-               </graphic>
-            </Button>
-         </HBox>
-      </VBox>
-   </VBox>
-   <Separator maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="190.0">
       <VBox.margin>
-         <Insets bottom="3.0" top="3.0" />
+         <Insets top="5.0" />
       </VBox.margin>
-   </Separator>
-   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="13.0" prefWidth="160.0" stylesheets="@../../../darkLabel.css" text="Visuals" textFill="#2c2c2c">
+   </Label>
+   <VBox prefHeight="200.0" prefWidth="200.0" styleClass="subsection">
+      <children>
+         <VBox alignment="CENTER" prefHeight="9.0" prefWidth="190.0" spacing="2.0">
+            <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="11.0" prefWidth="190.0">
+               <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="53.0" text="Ants">
+                  <font>
+                     <Font size="10.0" />
+                  </font>
+               </Label>
+               <Label fx:id="antCountLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="15.0" prefWidth="31.0" text="5" textAlignment="CENTER">
+                  <font>
+                     <Font size="10.0" />
+                  </font>
+               </Label>
+            </HBox>
+            <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="190.0" spacing="2.0">
+               <Button layoutX="143.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#antCountDecrementAction" prefHeight="15.0" prefWidth="15.0">
+                  <graphic>
+                     <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
+                  </graphic>
+               </Button>
+               <JFXSlider fx:id="antCountSlider" blockIncrement="1.0" majorTickUnit="1.0" max="20.0" min="1.0" minorTickCount="1" prefHeight="15.0" prefWidth="160.0" value="5.0" />
+               <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#antCountIncrementAction" prefHeight="15.0" prefWidth="15.0">
+                  <graphic>
+                     <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
+                  </graphic>
+               </Button>
+            </HBox>
+         </VBox>
+         <VBox alignment="CENTER" prefHeight="9.0" prefWidth="190.0" spacing="2.0">
+            <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
+               <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="124.0" text="Neighbourhoods size">
+                  <font>
+                     <Font size="10.0" />
+                  </font>
+               </Label>
+               <Label fx:id="neighbourhoodLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="15.0" prefWidth="31.0" text="5" textAlignment="CENTER">
+                  <font>
+                     <Font size="10.0" />
+                  </font>
+               </Label>
+            </HBox>
+            <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="190.0" spacing="2.0">
+               <Button layoutX="143.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#neighbourhoodDecrementAction" prefHeight="15.0" prefWidth="15.0">
+                  <graphic>
+                     <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
+                  </graphic>
+               </Button>
+               <JFXSlider fx:id="neighbourhoodSlider" blockIncrement="1.0" majorTickUnit="1.0" min="3.0" minorTickCount="1" prefHeight="15.0" prefWidth="160.0" value="1.0" />
+               <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#neighbourhoodIncrementAction" prefHeight="15.0" prefWidth="15.0">
+                  <graphic>
+                     <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
+                  </graphic>
+               </Button>
+            </HBox>
+         </VBox>
+         <VBox alignment="CENTER" prefHeight="0.0" prefWidth="190.0" spacing="4.0">
+            <VBox alignment="CENTER" prefHeight="9.0" prefWidth="200.0" spacing="2.0">
+               <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="130.0" text="Pheromone influence">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="alphaLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="15.0" prefWidth="31.0" text="0.1" textAlignment="CENTER">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+               </HBox>
+               <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="190.0" spacing="2.0">
+                  <Button layoutX="143.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#alphaDecrementAction" prefHeight="15.0" prefWidth="15.0">
+                     <graphic>
+                        <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
+                     </graphic>
+                  </Button>
+                  <JFXSlider fx:id="alphaSlider" blockIncrement="0.01" majorTickUnit="1.0" max="10.0" minorTickCount="1" prefHeight="15.0" prefWidth="160.0" value="1.0" />
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#alphaIncrementAction" prefHeight="15.0" prefWidth="15.0">
+                     <graphic>
+                        <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
+                     </graphic>
+                  </Button>
+               </HBox>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="0.0" prefWidth="200.0">
+               <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="126.0" text="Distance influence">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="betaLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+               </HBox>
+               <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#betaDecrementAction" prefHeight="15.0" prefWidth="15.0">
+                     <graphic>
+                        <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
+                     </graphic>
+                  </Button>
+                  <JFXSlider fx:id="betaSlider" blockIncrement="0.01" majorTickUnit="0.01" max="10.0" minorTickCount="0" prefHeight="15.0" prefWidth="160.0" value="1.0" />
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#betaIncrementAction" prefHeight="15.0" prefWidth="15.0">
+                     <graphic>
+                        <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
+                     </graphic>
+                  </Button>
+               </HBox>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="0.0" prefWidth="200.0">
+               <HBox alignment="CENTER" prefHeight="11.0" prefWidth="190.0">
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="142.0" text="Evaporation">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="evaporationLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+               </HBox>
+               <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#evaporationDecrementAction" prefHeight="15.0" prefWidth="15.0">
+                     <graphic>
+                        <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
+                     </graphic>
+                  </Button>
+                  <JFXSlider fx:id="evaporationSlider" blockIncrement="0.01" majorTickUnit="0.01" max="1.0" min="0.01" minorTickCount="0" prefHeight="15.0" prefWidth="160.0" value="0.1" />
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#evaporationIncrementAction" prefHeight="15.0" prefWidth="15.0">
+                     <graphic>
+                        <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
+                     </graphic>
+                  </Button>
+               </HBox>
+            </VBox>
+         </VBox>
+         <VBox fx:id="paramVBox" alignment="CENTER" prefHeight="14.0" prefWidth="190.0" spacing="4.0">
+            <VBox fx:id="q0VBox" alignment="CENTER" prefHeight="0.0" prefWidth="200.0" spacing="2.0">
+               <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="143.0" text="Exploitation strength">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="q0Label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+               </HBox>
+               <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#q0DecrementAction" prefHeight="15.0" prefWidth="15.0">
+                     <graphic>
+                        <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
+                     </graphic>
+                  </Button>
+                  <JFXSlider fx:id="q0Slider" blockIncrement="0.01" majorTickUnit="0.01" max="1.0" minorTickCount="0" prefHeight="15.0" prefWidth="160.0" value="0.9" />
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#q0IncrementAction" prefHeight="15.0" prefWidth="15.0">
+                     <graphic>
+                        <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
+                     </graphic>
+                  </Button>
+               </HBox>
+            </VBox>
+            <VBox fx:id="ksiVBox" alignment="CENTER" prefHeight="48.0" prefWidth="200.0">
+               <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="115.0" text="Local Evaporation">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="ksiLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+               </HBox>
+               <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#ksiDecrementAction" prefHeight="15.0" prefWidth="15.0">
+                     <graphic>
+                        <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
+                     </graphic>
+                  </Button>
+                  <JFXSlider fx:id="ksiSlider" blockIncrement="0.01" majorTickUnit="0.01" max="1.0" min="0.01" minorTickCount="0" prefHeight="15.0" prefWidth="160.0" value="0.1" />
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#ksiIncrementAction" prefHeight="15.0" prefWidth="15.0">
+                     <graphic>
+                        <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
+                     </graphic>
+                  </Button>
+               </HBox>
+            </VBox>
+            <VBox fx:id="rankVBox" alignment="CENTER" layoutX="10.0" layoutY="80.0" prefHeight="48.0" prefWidth="200.0">
+               <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="115.0" text="Rank Size">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="rankLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Label>
+               </HBox>
+               <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#rankDecrementAction" prefHeight="15.0" prefWidth="15.0">
+                     <graphic>
+                        <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
+                     </graphic>
+                  </Button>
+                  <JFXSlider fx:id="rankSlider" blockIncrement="1.0" majorTickUnit="0.01" max="20.0" min="1.0" minorTickCount="0" prefHeight="15.0" prefWidth="160.0" value="5.0" />
+                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#rankIncrementAction" prefHeight="15.0" prefWidth="15.0">
+                     <graphic>
+                        <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
+                     </graphic>
+                  </Button>
+               </HBox>
+            </VBox>
+         </VBox>
+      </children>
+   </VBox>
+   <Label alignment="CENTER" contentDisplay="CENTER" layoutX="20.0" layoutY="20.0" prefHeight="13.0" prefWidth="160.0" styleClass="darkLabel" text="Visuals" textFill="#2c2c2c">
       <font>
          <Font size="10.0" />
       </font>
-   </Label>
-   <HBox alignment="CENTER" minHeight="-Infinity" prefHeight="25.0" prefWidth="160.0">
-      <Label prefHeight="16.0" prefWidth="83.0" text="Cycle color">
-         <font>
-            <Font size="10.0" />
-         </font>
-      </Label>
-      <ColorPicker fx:id="cycleColorPicker" prefHeight="25.0" prefWidth="42.0" />
-   </HBox>
-   <HBox alignment="CENTER" layoutX="10.0" layoutY="409.0" minHeight="-Infinity" prefHeight="25.0" prefWidth="160.0">
-      <Label prefHeight="16.0" prefWidth="83.0" text="Ant color">
-         <font>
-            <Font size="10.0" />
-         </font>
-         <padding>
-            <Insets left="2.0" />
-         </padding>
-      </Label>
-      <ColorPicker fx:id="antColorPicker" prefHeight="25.0" prefWidth="42.0" />
-   </HBox>
-   <Separator layoutX="40.0" layoutY="389.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="13.0" prefWidth="141.0">
       <VBox.margin>
-         <Insets />
+         <Insets top="5.0" />
       </VBox.margin>
-   </Separator>
-   <VBox alignment="CENTER" prefHeight="38.0" prefWidth="200.0">
-      <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
-         <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="8.0" prefWidth="115.0" text="Pheromone scale">
+   </Label>
+   <VBox alignment="CENTER" prefHeight="129.0" prefWidth="200.0" spacing="5.0" styleClass="subsection">
+      <children>
+         <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="8.0" prefWidth="115.0" text="Pheromone scale">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
+            <Label fx:id="scaleLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
+         </HBox>
+         <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
+            <children>
+               <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#scaleDecrementAction" prefHeight="15.0" prefWidth="15.0">
+                  <graphic>
+                     <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
+                  </graphic>
+               </Button>
+               <JFXSlider fx:id="scaleSlider" blockIncrement="1.0" majorTickUnit="0.01" max="200.0" min="1.0" minorTickCount="0" prefHeight="15.0" prefWidth="160.0" value="100.0" />
+               <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#scaleIncrementAction" prefHeight="15.0" prefWidth="15.0">
+                  <graphic>
+                     <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
+                  </graphic>
+               </Button>
+            </children>
+         </HBox>
+         <HBox alignment="CENTER" minHeight="-Infinity" prefHeight="25.0" prefWidth="190.0">
+            <children>
+               <Label prefHeight="17.0" prefWidth="145.0" text="Cycle color">
+                  <font>
+                     <Font size="10.0" />
+                  </font>
+               </Label>
+               <ColorPicker fx:id="cycleColorPicker" prefHeight="25.0" prefWidth="42.0" />
+            </children>
+         </HBox>
+         <HBox alignment="CENTER" minHeight="-Infinity" prefHeight="25.0" prefWidth="190.0">
+            <children>
+               <Label prefHeight="16.0" prefWidth="145.0" text="Ant color">
+                  <font>
+                     <Font size="10.0" />
+                  </font>
+                  <padding>
+                     <Insets left="2.0" />
+                  </padding>
+               </Label>
+               <ColorPicker fx:id="antColorPicker" prefHeight="25.0" prefWidth="42.0" />
+            </children>
+         </HBox>
+         <ToggleSwitch fx:id="animationToggleSwitch" prefHeight="18.0" prefWidth="190.0" text="Ants animation">
             <font>
                <Font size="10.0" />
             </font>
-         </Label>
-         <Label fx:id="scaleLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
+         </ToggleSwitch>
+         <ToggleSwitch fx:id="showPheromonesToggleSwitch" prefHeight="18.0" prefWidth="190.0" text="Show pheromone levels">
             <font>
                <Font size="10.0" />
             </font>
-         </Label>
-      </HBox>
-      <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="160.0" spacing="2.0">
-         <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#scaleDecrementAction" prefHeight="15.0" prefWidth="15.0">
-            <graphic>
-               <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
-            </graphic>
-         </Button>
-         <Slider fx:id="scaleSlider" blockIncrement="1.0" majorTickUnit="0.01" max="200.0" min="1.0" minorTickCount="0" prefHeight="15.0" prefWidth="125.0" value="100.0" />
-         <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#scaleIncrementAction" prefHeight="15.0" prefWidth="15.0">
-            <graphic>
-               <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
-            </graphic>
-         </Button>
-      </HBox>
+         </ToggleSwitch>
+      </children>
    </VBox>
-   <Separator layoutX="40.0" layoutY="471.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="7.0" prefWidth="141.0">
-      <padding>
-         <Insets bottom="3.0" top="3.0" />
-      </padding>
-   </Separator>
-   <ToggleSwitch fx:id="animationToggleSwitch" layoutX="21.0" layoutY="134.0" prefHeight="18.0" prefWidth="159.0" text="Ants animation">
-      <font>
-         <Font size="10.0" />
-      </font>
-   </ToggleSwitch>
-   <ToggleSwitch fx:id="showPheromonesToggleSwitch" layoutX="21.0" layoutY="425.0" prefHeight="18.0" prefWidth="159.0" text="Show pheromone levels">
-      <font>
-         <Font size="10.0" />
-      </font>
-   </ToggleSwitch>
-   <Separator layoutX="30.0" layoutY="419.0" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="190.0">
-      <VBox.margin>
-         <Insets bottom="3.0" top="3.0" />
-      </VBox.margin>
-   </Separator>
-   <HBox alignment="CENTER" prefHeight="30.0" prefWidth="200.0" spacing="5.0">
-      <Button fx:id="startButton" alignment="CENTER" mnemonicParsing="false" onAction="#startAction" prefHeight="25.0" prefWidth="79.0" styleClass="danger" text="Start">
+   <HBox alignment="CENTER" prefHeight="30.0" prefWidth="190.0" spacing="5.0">
+      <Button fx:id="startButton" alignment="CENTER" mnemonicParsing="false" onAction="#startAction" prefHeight="25.0" prefWidth="140.0" styleClass="danger" text="Start">
          <graphic>
-            <FontIcon iconColor="#08ae34" iconLiteral="fas-play" />
+            <FontIcon iconColor="#08ae34" iconLiteral="fas-play" styleClass="start-icon" />
          </graphic>
          <font>
             <Font size="11.0" />
@@ -374,10 +358,10 @@
             <Font size="11.0" />
          </font>
          <graphic>
-            <FontIcon iconColor="#e14444" iconLiteral="fas-stop" iconSize="15" selectionStart="0" />
+            <FontIcon iconColor="#e14444" iconLiteral="fas-stop" iconSize="15" selectionStart="0" styleClass="stop-icon" />
          </graphic>
          <tooltip>
-            <Tooltip text="Stop all" />
+            <Tooltip showDelay="0.1s" text="Stop" />
          </tooltip>
       </Button>
    </HBox>

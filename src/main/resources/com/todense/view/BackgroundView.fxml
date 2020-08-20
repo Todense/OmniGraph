@@ -10,9 +10,9 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.ToggleSwitch?>
 
-<VBox alignment="TOP_CENTER" prefHeight="143.0" prefWidth="170.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.BackgroundView">
-   <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="170.0">
-      <Label prefHeight="21.0" prefWidth="125.0" text="Background color">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" prefHeight="25.0" prefWidth="220.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.BackgroundView">
+   <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="200.0">
+      <Label prefHeight="21.0" prefWidth="161.0" text="Background color">
          <font>
             <Font size="10.0" />
          </font>
@@ -25,42 +25,42 @@
       </VBox.margin>
    </Separator>
    <HBox alignment="CENTER" minHeight="-Infinity" prefHeight="25.0" prefWidth="170.0">
-      <ToggleSwitch fx:id="gridToggleSwitch" contentDisplay="TOP" graphicTextGap="0.0" prefHeight="15.0" prefWidth="140.0" text="Show Grid" textAlignment="CENTER" viewOrder="1.0">
+      <ToggleSwitch fx:id="gridToggleSwitch" contentDisplay="TOP" graphicTextGap="0.0" prefHeight="15.0" prefWidth="200.0" text="Show Grid" textAlignment="CENTER" viewOrder="1.0">
          <font>
             <Font size="10.0" />
          </font>
       </ToggleSwitch>
    </HBox>
-   <VBox fx:id="gridVBox" prefHeight="200.0" prefWidth="170.0">
-      <HBox alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="170.0" spacing="3.0">
+   <VBox fx:id="gridVBox" alignment="CENTER" prefHeight="25.0" prefWidth="170.0">
+      <HBox alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" spacing="3.0">
          <Label prefHeight="18.0" prefWidth="103.0" text="Grid Gap">
             <font>
                <Font size="10.0" />
             </font>
             <HBox.margin>
-               <Insets left="3.0" />
+               <Insets />
             </HBox.margin>
          </Label>
          <Slider fx:id="gridGapSlider" blockIncrement="1.0" max="500.0" min="1.0" prefHeight="14.0" prefWidth="130.0" value="50.0" />
       </HBox>
-      <HBox alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="170.0">
+      <HBox alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0">
          <Label prefHeight="18.0" prefWidth="103.0" text="Grid Width">
             <font>
                <Font size="10.0" />
             </font>
             <HBox.margin>
-               <Insets left="3.0" />
+               <Insets />
             </HBox.margin>
          </Label>
          <Slider fx:id="gridWidthSlider" blockIncrement="0.0" max="10.0" min="1.0E-4" prefHeight="14.0" prefWidth="130.0" value="1.0" />
       </HBox>
-      <HBox alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="170.0">
+      <HBox alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0">
          <Label prefHeight="18.0" prefWidth="103.0" text="Grid Brightness">
             <font>
                <Font size="10.0" />
             </font>
             <HBox.margin>
-               <Insets left="3.0" />
+               <Insets />
             </HBox.margin>
          </Label>
          <Slider fx:id="gridBrightnessSlider" blockIncrement="1.0" max="255.0" prefHeight="14.0" prefWidth="130.0" value="50.0" />

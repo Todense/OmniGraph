@@ -18,7 +18,6 @@ import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.paint.Color;
@@ -49,20 +48,18 @@ public class GraphViewModel implements ViewModel {
 
     public void initialize(){
         GM = graphScope.getGraphManager();
-        GM.nodeColorProperty().bindBidirectional(nodeColorProperty());
-        GM.edgeColorProperty().bindBidirectional(edgeColorProperty());
 
         Platform.runLater(() -> {
             GraphDrawLayer graphDrawLayer = new GraphDrawLayer(graphScope, backgroundScope, antsScope);
             canvasScope.getPainter().addDrawLayer(graphDrawLayer);
         });
 
-
         notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_REQUEST, (key, payload) -> {
             GM.setGraph((Graph) payload[0]);
         });
 
-        notificationCenter.subscribe("RESET", (key, payload) -> graphScope.displayModeProperty().set(DisplayMode.DEFAULT));
+        notificationCenter.subscribe("RESET", (key, payload) ->
+                graphScope.displayModeProperty().set(DisplayMode.DEFAULT));
 
         ChangeListener<Object> listener = (obs, oldVal, newVal) -> canvasScope.getPainter().repaint();
 
@@ -91,7 +88,7 @@ public class GraphViewModel implements ViewModel {
         notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
     }
 
-    public IntegerProperty nodeSizeProperty() {
+    public DoubleProperty nodeSizeProperty() {
         return graphScope.nodeSizeProperty();
     }
 

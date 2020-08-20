@@ -11,6 +11,7 @@ import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
@@ -44,7 +45,6 @@ public class CanvasViewModel implements ViewModel {
 
     @Inject
     NotificationCenter notificationCenter;
-
 
     private MouseHandler mouseHandler;
 
@@ -119,5 +119,9 @@ public class CanvasViewModel implements ViewModel {
 
     public void setCanvasNode(Node canvasNode){
         popOverManager.setOwner(canvasNode);
+    }
+
+    public BooleanProperty editLockedProperty(){
+        return inputScope.editLockedProperty();
     }
 }

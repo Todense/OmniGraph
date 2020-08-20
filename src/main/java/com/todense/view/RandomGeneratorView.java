@@ -19,10 +19,10 @@ public class RandomGeneratorView implements FxmlView<RandomGeneratorViewModel> {
 
     @FXML private ChoiceBox<NodeArrangement> arrangementChoiceBox;
     @FXML private ChoiceBox<GeneratorModel> generatorChoiceBox;
-    @FXML private VBox nodePosVBox, paramVBox, minDistVBox;
+    @FXML private VBox nodePosVBox, paramVBox;
     @FXML private Spinner<Integer> nodeCountSpinner, integerParam1Spinner, integerParam2Spinner;
     @FXML private Spinner<Double> nodesMinDistSpinner, doubleParamSpinner;
-    @FXML private HBox minDistHBox, doubleParamHBox, integerParam1HBox, integerParam2HBox;
+    @FXML private HBox  doubleParamHBox, integerParam1HBox, integerParam2HBox, minDistHBox, nodeCountHBox;
     @FXML private Label doubleParamLabel, integerParam1Label, integerParam2Label;
     @FXML private ToggleSwitch minDistToggleSwitch;
 
@@ -58,21 +58,18 @@ public class RandomGeneratorView implements FxmlView<RandomGeneratorViewModel> {
 
         minDistToggleSwitch.selectedProperty().bindBidirectional(viewModel.withMinDistProperty());
 
-        nodePosVBox.getChildren().remove(minDistVBox);
-        arrangementChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> {
-            nodePosVBox.getChildren().remove(minDistVBox);
-            if(newVal != NodeArrangement.CIRCULAR){
-                nodePosVBox.getChildren().add(minDistVBox);
-            }
+        arrangementChoiceBox.valueProperty().addListener((obs, oldVal, newVal)->{
+            minDistHBox.setDisable(newVal == NodeArrangement.CIRCULAR);
         });
+
         arrangementChoiceBox.valueProperty().setValue(NodeArrangement.RANDOM_CIRCLE);
 
-        minDistHBox.disableProperty().bind(minDistToggleSwitch.selectedProperty().not());
+        nodesMinDistSpinner.disableProperty().bind(minDistToggleSwitch.selectedProperty().not());
 
         paramVBox.getChildren().clear();
         generatorChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             paramVBox.getChildren().clear();
-
+            paramVBox.getChildren().add(nodeCountHBox);
             if(newVal == GeneratorModel.BARABASI_ALBERT){
                 paramVBox.getChildren().add(integerParam1HBox);
                 paramVBox.getChildren().add(integerParam2HBox);
