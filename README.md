@@ -15,7 +15,8 @@ Desktop application for creating graphs and algorithms visualisation build in Ja
 * Save & open graphs
 
 ## How To Run
-To run OmniGraph you will need Java 11+.
+To run OmniGraph you will need Java 11+
+
 Download jar file from [latest release](https://github.com/Todense/OmniGraph/releases), or run with maven:
 ```
 git clone https://github.com/Todense/OmniGraph.git
