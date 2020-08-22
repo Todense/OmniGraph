@@ -32,8 +32,8 @@
       </VBox.margin>
       <HBox alignment="CENTER_LEFT" fillHeight="false">
          <children>
-            <Label prefHeight="21.0" prefWidth="70.0" style="-fx-font-size: 15; -fx-font-weight: normal;" stylesheets="@../../../bigLabel.css" text="Density" />
-            <Label fx:id="densityLabel" alignment="CENTER" prefHeight="21.0" prefWidth="50.0" style="-fx-text-fill: #25b862; -fx-font-size: 15;" stylesheets="@../../../bigLabel.css" text="300">
+            <Label prefHeight="21.0" prefWidth="70.0" style="-fx-font-size: 15; -fx-font-weight: normal;" text="Density" />
+            <Label fx:id="densityLabel" alignment="CENTER" prefHeight="21.0" prefWidth="50.0" style="-fx-text-fill: #25b862; -fx-font-size: 15;" text="300">
                <font>
                   <Font size="24.0" />
                </font>
@@ -44,10 +44,10 @@
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
          <children>
             <Label alignment="CENTER" prefHeight="17.0" prefWidth="380.0" styleClass="darkLabel" text="Eccentricity" textAlignment="RIGHT" />
-            <VBox alignment="CENTER" fillWidth="false" style="-fx-background-color: #2c2c2c;" >
+            <VBox alignment="CENTER" fillWidth="false" style="-fx-background-color: #2c2c2c;">
                <HBox alignment="CENTER_LEFT" fillHeight="false">
-                  <Label prefHeight="21.0" prefWidth="70.0" style="-fx-font-size: 15; -fx-font-weight: normal;" stylesheets="@../../../bigLabel.css" text="Radius" />
-                  <Label fx:id="radiusLabel" alignment="CENTER" prefHeight="21.0" prefWidth="50.0" style="-fx-text-fill: #25b862; -fx-font-size: 15;" stylesheets="@../../../bigLabel.css" text="300">
+                  <Label prefHeight="21.0" prefWidth="70.0" style="-fx-font-size: 15; -fx-font-weight: normal;" text="Radius" />
+                  <Label fx:id="radiusLabel" alignment="CENTER" prefHeight="21.0" prefWidth="50.0" style="-fx-text-fill: #25b862; -fx-font-size: 15;" text="300">
                      <font>
                         <Font size="24.0" />
                      </font>
@@ -55,27 +55,27 @@
                   <ProgressBar fx:id="radiusProgressBar" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" progress="0.37" />
                </HBox>
                <HBox alignment="CENTER_LEFT" fillHeight="false" minHeight="-Infinity" style="fx-padding: 5;">
-                  <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="70.0" style="-fx-font-size: 15; -fx-font-weight: normal;" stylesheets="@../../../bigLabel.css" text="Diameter" textAlignment="CENTER" />
-                  <Label fx:id="diameterLabel" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="50.0" style="-fx-font-size: 15; -fx-text-fill: #25b862;" stylesheets="@../../../bigLabel.css" text="300" />
+                  <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="70.0" style="-fx-font-size: 15; -fx-font-weight: normal;" text="Diameter" textAlignment="CENTER" />
+                  <Label fx:id="diameterLabel" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="50.0" style="-fx-font-size: 15; -fx-text-fill: #25b862;" text="300" />
                   <ProgressBar fx:id="diameterProgressBar" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" progress="0.84" />
                </HBox>
             </VBox>
          </children>
       </VBox>
-      <VBox alignment="CENTER" fillWidth="false"  HBox.hgrow="NEVER">
+      <VBox alignment="CENTER" fillWidth="false" HBox.hgrow="NEVER">
          <HBox alignment="CENTER">
-            <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15; -fx-font-weight: normal;" stylesheets="@../../../bigLabel.css" text="Min Degree" />
-            <Label fx:id="minDegreeLabel" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="60.0" style="-fx-text-fill: #25b862; -fx-font-size: 15;" stylesheets="@../../../bigLabel.css" text="300" />
+            <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15; -fx-font-weight: normal;" text="Min Degree" />
+            <Label fx:id="minDegreeLabel" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="60.0" style="-fx-text-fill: #25b862; -fx-font-size: 15;" text="300" />
             <ProgressBar fx:id="minDegreeProgressBar" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" progress="0.65" />
          </HBox>
          <HBox alignment="CENTER">
-            <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15; -fx-font-weight: normal;" stylesheets="@../../../bigLabel.css" text="Max Degree" />
-            <Label fx:id="maxDegreeLabel" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="60.0" style="-fx-text-fill: #25b862; -fx-font-size: 15;" stylesheets="@../../../bigLabel.css" text="300" />
+            <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15; -fx-font-weight: normal;" text="Max Degree" />
+            <Label fx:id="maxDegreeLabel" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="60.0" style="-fx-text-fill: #25b862; -fx-font-size: 15;" text="300" />
             <ProgressBar fx:id="maxDegreeProgressBar" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" progress="0.93" />
          </HBox>
          <HBox alignment="CENTER">
-            <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15; -fx-font-weight: normal;" stylesheets="@../../../bigLabel.css" text="Avg Degree" />
-            <Label fx:id="avgDegreeLabel" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="60.0" style="-fx-text-fill: #25b862; -fx-font-size: 15;" stylesheets="@../../../bigLabel.css" text="300" />
+            <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="90.0" style="-fx-font-size: 15; -fx-font-weight: normal;" text="Avg Degree" />
+            <Label fx:id="avgDegreeLabel" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="21.0" prefWidth="60.0" style="-fx-text-fill: #25b862; -fx-font-size: 15;" text="300" />
             <ProgressBar fx:id="avgDegreeProgressBar" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="150.0" progress="0.3" />
          </HBox>
       </VBox>

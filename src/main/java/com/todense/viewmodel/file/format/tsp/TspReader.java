@@ -4,12 +4,20 @@ import com.todense.model.graph.Graph;
 import com.todense.viewmodel.file.GraphReader;
 import javafx.geometry.Point2D;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class TspGraphReader implements GraphReader {
+public class TspReader implements GraphReader {
 
     @Override
-    public Graph readGraph(Scanner scanner) {
+    public Graph readGraph(File file) {
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         String name = scanner.nextLine().split(":")[1];
         Graph graph = new Graph(name);
         String line = "";

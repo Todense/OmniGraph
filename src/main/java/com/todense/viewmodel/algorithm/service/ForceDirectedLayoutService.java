@@ -13,9 +13,10 @@ import com.todense.viewmodel.layout.barnesHut.QuadTree;
 import javafx.geometry.Point2D;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Stack;
 
-public class DynamicLayoutService extends AlgorithmService {
+public class ForceDirectedLayoutService extends AlgorithmService {
 
 	private GraphManager graphManager;
 	private LayoutViewModel layoutVM;
@@ -30,13 +31,16 @@ public class DynamicLayoutService extends AlgorithmService {
 	private double[][] attractiveForces;
 	private double[][] distances;
 
+	private HashMap<Node, Point2D> nodeForceMap = new HashMap<>();
+
 	private double stepSize;
 
 	private double optDist;
 	private double initStep;
 	private double tolerance;
+	private double repulsiveStrength;
 
-	private final double repulsiveness = 0.2d;
+	private final double repulsiveness = 1d;
 
 	private QuadTree quadTree;
 
@@ -44,7 +48,7 @@ public class DynamicLayoutService extends AlgorithmService {
 	private LongRangeForce longRangeForce;
 	private Point2D center;
 
-	public DynamicLayoutService(GraphManager graphManager, LayoutViewModel layoutVM, Point2D center){
+	public ForceDirectedLayoutService(GraphManager graphManager, LayoutViewModel layoutVM, Point2D center){
     	super(graphManager.getGraph());
 		this.graphManager = graphManager;
 		this.layoutVM = layoutVM;
@@ -54,6 +58,7 @@ public class DynamicLayoutService extends AlgorithmService {
     	this.stepSize = initStep;
     	this.tolerance = layoutVM.getTolerance();
     	this.longRangeForce = layoutVM.getLongRangeForce();
+    	this.repulsiveStrength = getRepulsiveStrength(repulsiveness, optDist, longRangeForce.getExponent() + 1);
 	}
 
 	@Override
@@ -117,14 +122,13 @@ public class DynamicLayoutService extends AlgorithmService {
 
 			//calculate repulsive forces
 			if(!layoutVM.isBarnesHutOn()) {
-				double CK = -repulsiveness * Math.pow(optDist, longRangeForce.getExponent() + 1);
 				graph.getNodes().forEach(n -> {
 					for (Node m : graph.getNodes()) {
 						if (n.getIndex() < m.getIndex()) {
 							double dist = getDistance(n, m);
 							//if(dist > 0 && dist < 2 * (coarserLevel + 1) * optDist) {
 							if (dist > 0) {
-								double rf = CK / Math.pow(dist, longRangeForce.getExponent());
+								double rf = repulsiveStrength / Math.pow(dist, longRangeForce.getExponent());
 								repulsiveForces[n.getIndex()][m.getIndex()] = rf;
 								repulsiveForces[m.getIndex()][n.getIndex()] = rf;
 							}
@@ -143,13 +147,15 @@ public class DynamicLayoutService extends AlgorithmService {
 			double prevEnergy = energy;
 			energy = 0;
 
+			nodeForceMap = new HashMap<>();
+
 			//apply forces to every node
 			graph.getNodes().forEach(n ->{
 				Point2D force = new Point2D(0, 0);
 
 				//apply repulsive force to node n
 				if(layoutVM.isBarnesHutOn()){
-					force = force.add(calcBarnesHutRepulsiveForce(n, quadTree));
+					force = force.add(calcBarnesHutRepulsiveForce(n, repulsiveStrength, quadTree));
 				}else{
 					for (Node m : graph.getNodes()) {
 						double dist = getDistance(n, m);
@@ -172,16 +178,16 @@ public class DynamicLayoutService extends AlgorithmService {
 				}
 
 				//apply center pull
-				if(layoutVM.isPullingOn()) {
-					force = force.subtract(n.getPos().subtract(center).multiply(layoutVM.getPullStrength() / optDist));
+				if(layoutVM.isCenterPull()) {
+					force = force.subtract(n.getPos().subtract(center).multiply(layoutVM.getCenterPullStrength() / optDist));
 				}
 
 				nodeEnergies[n.getIndex()] = Math.pow(force.getX(), 2) + Math.pow(force.getY(), 2);
 
-				if(!Double.isNaN(force.getX())){
-					n.setPos(n.getPos().add(force.normalize().multiply(stepSize)));
-				}
+				nodeForceMap.put(n, force.normalize().multiply(stepSize));
 			});
+
+			nodeForceMap.forEach((node, force) -> node.setPos(node.getPos().add(force)));
 
 			Arrays.stream(nodeEnergies).forEach(e -> energy += e);
 
@@ -194,7 +200,7 @@ public class DynamicLayoutService extends AlgorithmService {
 		super.repaint();
 	}
 
-	private Point2D calcBarnesHutRepulsiveForce(Node node, QuadTree quadTree){
+	private Point2D calcBarnesHutRepulsiveForce(Node node, double strength ,QuadTree quadTree){
 		Point2D repulsiveForce = new Point2D(0, 0);
 		Stack<Cell> cellStack = new Stack<>();
 		cellStack.add(quadTree.getRoot());
@@ -202,24 +208,30 @@ public class DynamicLayoutService extends AlgorithmService {
 			Cell cell = cellStack.pop();
 			if(cell == null || cell.getNodes().size() == 0) continue;
 			Point2D centerOfMass = cell.getCenterOfMass();
-			double dist = centerOfMass.distance(node.getPos());
-			if(cell.getWidth() / dist < 1.2) {
-				double rf = -repulsiveness * cell.getNodes().size() * Math.pow(optDist, longRangeForce.getExponent() + 1) / Math.pow(dist, longRangeForce.getExponent());
-				repulsiveForce = repulsiveForce.add((centerOfMass.subtract(node.getPos())).multiply(rf / dist));
+			double centerDist = centerOfMass.distance(node.getPos());
+			if(cell.getWidth() / centerDist < 1.2) {
+				double rf = cell.getNodes().size() * strength / Math.pow(centerDist, longRangeForce.getExponent());
+				repulsiveForce = repulsiveForce.add((centerOfMass.subtract(node.getPos())).multiply(rf / centerDist));
 			}else{
 				if(cell.getChildren()[0] != null)
 					cellStack.addAll(Arrays.asList(cell.getChildren()));
 				else{
-					//if node is too close to be considered by "dist < 1.2" restriction, calculate its repulsive force in the standard way
+					//if a node is too close to be considered by "cell.getWidth() / dist < 1.2" restriction, calculate its repulsive force in the standard way
 					for(Node m : cell.getNodes()){
-						if(m.equals(node)) continue;
-						double rf = -repulsiveness * Math.pow(optDist, longRangeForce.getExponent() + 1) / Math.pow(dist, longRangeForce.getExponent());
+						if(m.equals(node))
+							continue;
+						double dist = getDistance(node, m);
+						double rf = strength / Math.pow(dist, longRangeForce.getExponent());
 						repulsiveForce = repulsiveForce.add((m.getPos().subtract(node.getPos())).multiply(rf / dist));
 					}
 				}
 			}
 		}
 		return repulsiveForce;
+	}
+
+	private double getRepulsiveStrength(double repulsiveness, double optDist, double exponent){
+		return -repulsiveness * Math.pow(optDist, exponent);
 	}
 
 	private double getDistance(Node n, Node m) {

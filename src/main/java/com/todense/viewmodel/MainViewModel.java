@@ -2,9 +2,10 @@ package com.todense.viewmodel;
 
 import com.todense.model.graph.Graph;
 import com.todense.viewmodel.file.GraphReader;
-import com.todense.viewmodel.file.format.mtx.MtxGraphReader;
-import com.todense.viewmodel.file.format.ogr.OgrGraphReader;
-import com.todense.viewmodel.file.format.tsp.TspGraphReader;
+import com.todense.viewmodel.file.format.graphml.GraphMLReader;
+import com.todense.viewmodel.file.format.mtx.MtxReader;
+import com.todense.viewmodel.file.format.ogr.OgrReader;
+import com.todense.viewmodel.file.format.tsp.TspReader;
 import com.todense.viewmodel.graph.GraphManager;
 import com.todense.viewmodel.scope.*;
 import de.saxsys.mvvmfx.InjectScope;
@@ -25,10 +26,8 @@ import org.apache.commons.io.FilenameUtils;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Scanner;
 
 @ScopeProvider(scopes = {AlgorithmScope.class, GraphScope.class,
         BackgroundScope.class, CanvasScope.class,
@@ -141,25 +140,22 @@ public class MainViewModel implements ViewModel {
     public void openGraph(File file) {
         String extension = FilenameUtils.getExtension(file.getAbsolutePath());
         GraphReader graphReader = null;
-        Graph openedGraph = null;
+
         switch (extension){
-            case "ogr": graphReader = new OgrGraphReader(); break;
-            case "tsp": graphReader = new TspGraphReader(); break;
-            case "mtx": graphReader = new MtxGraphReader(
+            case "ogr": graphReader = new OgrReader(); break;
+            case "tsp": graphReader = new TspReader(); break;
+            case "graphml" : graphReader = new GraphMLReader(); break;
+            case "mtx": graphReader = new MtxReader(
                     new Point2D(canvasScope.getCanvasWidth()/2, canvasScope.getCanvasHeight()/2),
                     canvasScope.getCanvasHeight() * 0.9); break;
         }
-        try {
-            assert graphReader != null;
-            openedGraph = graphReader.readGraph(new Scanner(file));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } finally {
-            if(openedGraph != null){
-                notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, openedGraph);
-                notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
-                write("Graph opened");
-            }
+        assert graphReader != null;
+        Graph openedGraph = graphReader.readGraph(file);
+
+        if(openedGraph != null){
+            notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, openedGraph);
+            notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
+            write("Graph opened");
         }
     }
 

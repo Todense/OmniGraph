@@ -23,6 +23,8 @@ public class PropertiesViewModel implements ViewModel {
     private StringProperty avgDegreeProperty = new SimpleStringProperty();
     private StringProperty diameterProperty = new SimpleStringProperty();
     private StringProperty radiusProperty = new SimpleStringProperty();
+    private StringProperty clusterCoeffProperty = new SimpleStringProperty();
+    private StringProperty densityProperty = new SimpleStringProperty();
 
     @InjectScope
     GraphScope graphScope;
@@ -35,7 +37,6 @@ public class PropertiesViewModel implements ViewModel {
 
     private Thread propertiesThread = new Thread();
 
-
     private void calculate() {
         Graph graph = graphScope.getGraphManager().getGraph();
         int size = graph.getNodes().size();
@@ -44,15 +45,19 @@ public class PropertiesViewModel implements ViewModel {
         int maxDegree = GraphAnalyzer.calculateMaxDegree(graph);
         double avgDegree = GraphAnalyzer.calculateAvgDegree(graph);
         int componentCount = GraphAnalyzer.getComponentCount(graph);
+        double clusterCoeff = GraphAnalyzer.calculateClusteringCoefficient(graph);
+        double density = GraphAnalyzer.getDensity(graph);
         int[] eccentricityBounds = GraphAnalyzer.calculateEccentricities(graph);
 
         Platform.runLater(() -> {
             sizeProperty.setValue(validText(size));
             orderProperty.setValue(validText(order));
+            componentsProperty.setValue(validText(componentCount));
+            densityProperty.setValue(validText(density));
+            clusterCoeffProperty.setValue(validText(clusterCoeff));
             minDegreeProperty.setValue(validText(minDegree));
             maxDegreeProperty.setValue(validText(maxDegree));
             avgDegreeProperty.setValue(validText(avgDegree));
-            componentsProperty.setValue(validText(componentCount));
             radiusProperty.setValue(validText(eccentricityBounds[0]));
             diameterProperty.setValue(validText(eccentricityBounds[1]));
         });
@@ -84,7 +89,7 @@ public class PropertiesViewModel implements ViewModel {
 
     private String validText(double d){
         if(d < 0) return "";
-        else return String.format("%.2f", d);
+        else return String.format("%.3f", d);
     }
 
     public StringProperty orderProperty() {
@@ -117,5 +122,13 @@ public class PropertiesViewModel implements ViewModel {
 
     public StringProperty radiusProperty() {
         return radiusProperty;
+    }
+
+    public StringProperty clusterCoeffProperty() {
+        return clusterCoeffProperty;
+    }
+
+    public StringProperty densityProperty() {
+        return densityProperty;
     }
 }

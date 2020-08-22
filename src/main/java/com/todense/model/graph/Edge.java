@@ -50,8 +50,9 @@ public class Edge {
         return color;
     }
 
-    public void setLength() {
+    public double calcLength() {
         this.length = n1.getPos().distance(n2.getPos());
+        return this.length;
     }
 
     public Node getN1() {

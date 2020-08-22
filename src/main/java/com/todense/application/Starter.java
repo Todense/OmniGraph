@@ -25,7 +25,6 @@ public class Starter extends MvvmfxGuiceApplication {
         scene.getStylesheets().add(
                 Objects.requireNonNull(getClass()
                                 .getClassLoader()
-
                                 .getResource(
                                 "application.css"))
                         .toExternalForm()

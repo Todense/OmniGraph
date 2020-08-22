@@ -15,7 +15,7 @@
          <Font size="13.0" />
       </font>
    </Label>
-   <ChoiceBox fx:id="formatChoiceBox" prefHeight="40.0" prefWidth="280.0" />
+   <ChoiceBox fx:id="formatChoiceBox" prefHeight="30.0" prefWidth="215.0" />
    <Label alignment="CENTER" prefHeight="14.0" prefWidth="58.0" styleClass="darkLabel" text="Name">
       <font>
          <Font size="15.0" />
@@ -52,7 +52,7 @@
    </HBox>
    <HBox alignment="CENTER" prefHeight="46.0" prefWidth="294.0" spacing="40.0">
       <children>
-         <Button fx:id="saveButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveAction" prefHeight="30.0" prefWidth="100.0" style="-fx-font-size: 15;" text="Save">
+         <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveAction" prefHeight="30.0" prefWidth="100.0" style="-fx-font-size: 15;" text="Save">
             <font>
                <Font size="18.0" />
             </font>

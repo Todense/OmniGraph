@@ -7,13 +7,21 @@ import com.todense.viewmodel.file.GraphReader;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class OgrGraphReader implements GraphReader {
+public class OgrReader implements GraphReader {
 
 
     @Override
-    public Graph readGraph(Scanner scanner) {
+    public Graph readGraph(File file) {
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         String[] nameLine = scanner.nextLine().split(" ");
         assert nameLine[0].equals("NAME:");
         String name = nameLine[1];

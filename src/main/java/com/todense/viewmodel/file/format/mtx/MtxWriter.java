@@ -4,14 +4,17 @@ import com.todense.model.graph.Edge;
 import com.todense.model.graph.Graph;
 import com.todense.viewmodel.file.GraphWriter;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class MtxGraphWriter implements GraphWriter {
+public class MtxWriter implements GraphWriter {
 
     @Override
-    public void writeGraph(Graph graph, FileWriter fileWriter) {
+    public void writeGraph(Graph graph, File file) {
+        FileWriter fileWriter;
         try {
+            fileWriter = new FileWriter(file);
             fileWriter.write("%%MatrixMarket matrix coordinate pattern symmetric\n");
             fileWriter.write(graph.getNodes().size()+" "+graph.getNodes().size()+" "+graph.getEdges().size()+"\n");
             for(Edge edge : graph.getEdges()){

@@ -1,4 +1,5 @@
 
+
 *{
     fx-light: #363636;
     fx-lighter: derive(fx-light, 30%);
@@ -7,7 +8,6 @@
     fx-darker: derive(fx-theme, -50%);
     fx-text-dark: rgb(187, 187, 187);
 }
-
 
 .root *{
     -font-family: sans-serif;
@@ -22,7 +22,7 @@
     -fx-control-inner-background: fx-medium;
     -fx-background-color: fx-dark;
     -fx-box-border: transparent;
-    -fx-accent: derive(fx-dark, 20%);
+    -fx-accent: derive(fx-dark, 30%);
     -fx-focus-color: transparent ;
 }
 
@@ -31,7 +31,7 @@
     -fx-border-radius: 5;
     -fx-padding: 3 3 3 3;
     -fx-border-width: 1;
-    -fx-background-color: derive(#292828, 1%);
+    -fx-background-color: derive(fx-dark, 5%);
 }
 
 
@@ -298,7 +298,7 @@
 }
 
 .text-field {
-    -fx-background-color: derive(fx-dark, 7%);
+    -fx-background-color: derive(fx-dark, 10%);
 }
 
 .separator:horizontal *.line {

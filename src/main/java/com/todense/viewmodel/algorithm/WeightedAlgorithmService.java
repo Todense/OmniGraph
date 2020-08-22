@@ -16,7 +16,7 @@ public abstract class WeightedAlgorithmService extends AlgorithmService{
         }
         else{
             for(Edge e: graph.getEdges()){
-                e.setLength();
+                e.calcLength();
             }
             weightFunction = Edge::getLength;
         }

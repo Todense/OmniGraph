@@ -1,7 +1,7 @@
 package com.todense.viewmodel;
 
 import com.todense.viewmodel.algorithm.AlgorithmService;
-import com.todense.viewmodel.algorithm.service.DynamicLayoutService;
+import com.todense.viewmodel.algorithm.service.ForceDirectedLayoutService;
 import com.todense.viewmodel.layout.LongRangeForce;
 import com.todense.viewmodel.scope.CanvasScope;
 import com.todense.viewmodel.scope.GraphScope;
@@ -18,15 +18,15 @@ import javax.inject.Inject;
 
 public class LayoutViewModel implements ViewModel {
 
-    private IntegerProperty optDistProperty = new SimpleIntegerProperty(50);
-    private DoubleProperty stepProperty = new SimpleDoubleProperty(3d);
+    private IntegerProperty optDistProperty = new SimpleIntegerProperty(30);
+    private DoubleProperty stepProperty = new SimpleDoubleProperty(5d);
     private DoubleProperty toleranceProperty = new SimpleDoubleProperty(0.01);
     private BooleanProperty coolingOnProperty = new SimpleBooleanProperty(true);
     private BooleanProperty barnesHutOnProperty = new SimpleBooleanProperty(true);
     private DoubleProperty coolingStrengthProperty = new SimpleDoubleProperty(0.02);
-    private BooleanProperty pullingOnProperty = new SimpleBooleanProperty(true);
-    private BooleanProperty multilevelOnProperty = new SimpleBooleanProperty(true);
-    private DoubleProperty pullingStrengthProperty = new SimpleDoubleProperty(3d);
+    private BooleanProperty centerPullOnProperty = new SimpleBooleanProperty(true);
+    private BooleanProperty multilevelOnProperty = new SimpleBooleanProperty(false);
+    private DoubleProperty centerPullStrengthProperty = new SimpleDoubleProperty(0.1d);
     private ObjectProperty<LongRangeForce> longRangeForceProperty = new SimpleObjectProperty<>();
 
     @InjectScope
@@ -52,7 +52,7 @@ public class LayoutViewModel implements ViewModel {
 
         if(currentService != null && currentService.isRunning()) return;
 
-        service = new DynamicLayoutService(graphScope.getGraphManager(),
+        service = new ForceDirectedLayoutService(graphScope.getGraphManager(),
                 this,new Point2D(canvasScope.getCanvasWidth()/2,
                 canvasScope.getCanvasHeight()/2));
         service.setPainter(canvasScope.getPainter());
@@ -118,20 +118,20 @@ public class LayoutViewModel implements ViewModel {
         return coolingStrengthProperty;
     }
 
-    public boolean isPullingOn() {
-        return pullingOnProperty.get();
+    public boolean isCenterPull() {
+        return centerPullOnProperty.get();
     }
 
-    public BooleanProperty pullingOnProperty() {
-        return pullingOnProperty;
+    public BooleanProperty centerPullOnProperty() {
+        return centerPullOnProperty;
     }
 
-    public double getPullStrength() {
-        return pullingStrengthProperty.get();
+    public double getCenterPullStrength() {
+        return centerPullStrengthProperty.get();
     }
 
-    public DoubleProperty pullingStrengthProperty() {
-        return pullingStrengthProperty;
+    public DoubleProperty centerPullStrengthProperty() {
+        return centerPullStrengthProperty;
     }
 
     public boolean isMultilevelOn() {

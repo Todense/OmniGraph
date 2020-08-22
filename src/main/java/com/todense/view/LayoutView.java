@@ -14,7 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
 import org.controlsfx.control.ToggleSwitch;
@@ -26,7 +26,7 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
     @FXML private JFXSlider optDistSlider;
     @FXML private ToggleSwitch pullToggleSwitch, coolingToggleSwitch, multilevelToggleSwitch, barnesHutToggleSwitch;
     @FXML private Button startButton;
-    @FXML private HBox coolingHBox, pullHBox;
+    @FXML private VBox coolingVBox, pullVBox;
     @FXML private ChoiceBox<LongRangeForce> longRangeChoiceBox;
 
     @InjectViewModel
@@ -37,9 +37,9 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
         stepSlider.valueProperty().bindBidirectional(viewModel.stepProperty());
         optDistSlider.valueProperty().bindBidirectional(viewModel.optDistProperty());
         coolingFactorSlider.valueProperty().bindBidirectional(viewModel.coolingStrengthProperty());
-        pullStrengthSlider.valueProperty().bindBidirectional(viewModel.pullingStrengthProperty());
+        pullStrengthSlider.valueProperty().bindBidirectional(viewModel.centerPullStrengthProperty());
 
-        pullToggleSwitch.selectedProperty().bindBidirectional(viewModel.pullingOnProperty());
+        pullToggleSwitch.selectedProperty().bindBidirectional(viewModel.centerPullOnProperty());
         coolingToggleSwitch.selectedProperty().bindBidirectional(viewModel.coolingOnProperty());
         multilevelToggleSwitch.selectedProperty().bindBidirectional(viewModel.multilevelOnProperty());
         barnesHutToggleSwitch.selectedProperty().bindBidirectional(viewModel.barnesHutOnProperty());
@@ -50,8 +50,8 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
         bindSliderAndTextField(coolingFactorSlider, coolingFactorTextField);
         bindSliderAndTextField(pullStrengthSlider, pullStrengthTextField);
 
-        pullHBox.disableProperty().bind(pullToggleSwitch.selectedProperty().not());
-        coolingHBox.disableProperty().bind(coolingToggleSwitch.selectedProperty().not());
+        pullVBox.disableProperty().bind(pullToggleSwitch.selectedProperty().not());
+        coolingVBox.disableProperty().bind(coolingToggleSwitch.selectedProperty().not());
 
         longRangeChoiceBox.valueProperty().bindBidirectional(viewModel.longRangeForceProperty());
         longRangeChoiceBox.getItems().addAll(LongRangeForce.values());

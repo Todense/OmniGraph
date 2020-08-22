@@ -167,7 +167,7 @@ public class MainView implements FxmlView<MainViewModel> {
     private void openAction() {
         FileChooser.ExtensionFilter fileExtensions =
                 new FileChooser.ExtensionFilter(
-                        "Graph Files", "*.ogr", "*.mtx", "*.tsp");
+                        "Graph Files", "*.ogr", "*.mtx", "*.tsp", "*.graphml");
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(fileExtensions);
         File file = fileChooser.showOpenDialog(mainStage);

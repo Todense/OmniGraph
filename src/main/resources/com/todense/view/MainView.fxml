@@ -30,7 +30,7 @@
                      <Insets />
                   </HBox.margin>
                   <VBox fx:id="appearanceVBox" alignment="TOP_CENTER" fillWidth="false" prefHeight="340.0" prefWidth="25.0">
-                     <TitledPane animated="false" prefHeight="25.0" prefWidth="25.0" text="Graph">
+                     <TitledPane animated="false" text="Graph">
                         <fx:include source="GraphView.fxml" />
                         <VBox.margin>
                            <Insets />
@@ -39,7 +39,7 @@
                            <Font size="30.0" />
                         </font>
                      </TitledPane>
-                     <TitledPane animated="false" prefHeight="25.0" prefWidth="315.0" text="Background">
+                     <TitledPane animated="false" text="Background">
                         <fx:include source="BackgroundView.fxml" />
                      </TitledPane>
                   </VBox>
@@ -65,16 +65,25 @@
    </top>
    <right>
       <TabPane prefWidth="237.0" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="2000.0">
-         <Tab text="Perform">
-            <ScrollPane fx:id="performTabScrollPane" hbarPolicy="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="237.0" vbarPolicy="ALWAYS">
-               <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="475.0" prefWidth="222.0">
-                  <TitledPane animated="false" expanded="false" prefHeight="26.0" prefWidth="240.0" text="Algorithms">
+         <Tab text="Algorithms">
+            <ScrollPane fx:id="antsTabScrollPane" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS">
+               <VBox prefHeight="200.0" prefWidth="222.0">
+                  <TitledPane animated="false" expanded="false" prefHeight="26.0" prefWidth="240.0" text="Basic Algorithms">
                      <fx:include source="AlgorithmView.fxml" />
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                   </TitledPane>
-                  <TitledPane animated="false" layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="222.0" text="Layout">
+                  <TitledPane animated="false" expanded="false" prefHeight="27.0" prefWidth="220.0" text="TSP Ant Colony Optimization">
+                     <fx:include source="AntsView.fxml" />
+                  </TitledPane>
+               </VBox>
+            </ScrollPane>
+         </Tab>
+         <Tab text="Layout">
+            <ScrollPane fx:id="performTabScrollPane" hbarPolicy="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="237.0" vbarPolicy="ALWAYS">
+               <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="475.0" prefWidth="222.0">
+                  <TitledPane animated="false" expanded="false" layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="222.0" text="Force-Directed Layout">
                      <fx:include source="LayoutView.fxml" />
                      <VBox.margin>
                         <Insets />
@@ -92,17 +101,8 @@
                   <TitledPane animated="false" expanded="false" text="Preset">
                      <fx:include source="PresetCreatorView.fxml" />
                   </TitledPane>
-                  <TitledPane animated="false" prefWidth="222.0" text="Operations">
+                  <TitledPane animated="false" expanded="false" prefWidth="222.0" text="Operations">
                      <fx:include source="OperationsView.fxml" />
-                  </TitledPane>
-               </VBox>
-            </ScrollPane>
-         </Tab>
-         <Tab text="Ants">
-            <ScrollPane fx:id="antsTabScrollPane" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS">
-               <VBox prefHeight="200.0" prefWidth="222.0">
-                  <TitledPane animated="false" prefHeight="27.0" prefWidth="220.0" text="TSP Ant Colony Optimization">
-                     <fx:include source="AntsView.fxml" />
                   </TitledPane>
                </VBox>
             </ScrollPane>

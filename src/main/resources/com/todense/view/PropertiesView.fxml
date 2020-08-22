@@ -56,6 +56,34 @@
                </font>
             </TextField>
          </HBox>
+         <HBox alignment="CENTER" layoutX="14.0" layoutY="60.0" prefHeight="20.0" prefWidth="201.0">
+            <children>
+               <Label prefHeight="15.0" prefWidth="165.0" text="Density">
+                  <font>
+                     <Font size="10.0" />
+                  </font>
+               </Label>
+               <TextField fx:id="densityTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity" prefHeight="18.0" prefWidth="50.0" promptText="?" style="-fx-opacity: 1;" text="?">
+                  <font>
+                     <Font size="11.0" />
+                  </font>
+               </TextField>
+            </children>
+         </HBox>
+         <HBox alignment="CENTER" layoutX="14.0" layoutY="80.0" prefHeight="20.0" prefWidth="201.0">
+            <children>
+               <Label prefHeight="15.0" prefWidth="165.0" text="Clustering Coefficient">
+                  <font>
+                     <Font size="10.0" />
+                  </font>
+               </Label>
+               <TextField fx:id="clusterCoeffTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity" prefHeight="18.0" prefWidth="50.0" promptText="?" style="-fx-opacity: 1;" text="?">
+                  <font>
+                     <Font size="11.0" />
+                  </font>
+               </TextField>
+            </children>
+         </HBox>
       </children>
    </VBox>
    <Label alignment="CENTER" prefHeight="17.0" prefWidth="263.0" styleClass="darkLabel" text="Node Degrees">

@@ -28,7 +28,7 @@ public class AntsScope implements Scope {
     private DoubleProperty localEvaporationProperty = new SimpleDoubleProperty(0.1);
 
     //LOCAL SEARCH
-    private BooleanProperty with2OptProperty = new SimpleBooleanProperty(false);
+    private BooleanProperty with2OptProperty = new SimpleBooleanProperty(true);
     private BooleanProperty with3OptProperty = new SimpleBooleanProperty(false);
 
     //VISUALS

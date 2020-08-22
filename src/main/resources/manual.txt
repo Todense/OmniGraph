@@ -25,7 +25,7 @@ CTRL + K - add all edges
 
 3. Algorithms
 
-Default start and goal nodes are the first and the last node of a graph. User can select node as start or goal in node context menu.
+Default start and goal nodes are the first and the last node of a graph. Start and goal nodes can be set in node context menu.
 
 There are two weight function options for algorithms with weighted edges:
 a) length - weight of an edge is set to its length (used when edge weight option in graph appearance menu is set to 'None' or 'Distance')

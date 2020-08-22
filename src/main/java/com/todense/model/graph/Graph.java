@@ -35,7 +35,11 @@ public class Graph {
     }
 
     public Node addNode(Point2D pt){
-        Node n = new Node(pt, nodes.size(), idCounter++);
+        return addNode(pt, idCounter++);
+    }
+
+    public Node addNode(Point2D pt, int id){
+        Node n = new Node(pt, nodes.size(), id);
         nodes.add(n);
         return n;
     }
@@ -110,6 +114,14 @@ public class Graph {
         return getEdge(nodes.get(i), nodes.get(j));
     }
 
+    public Node getNodeById(int id){
+        for(Node node : nodes){
+            if(node.getID() == id)
+                return node;
+        }
+        return null;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -120,6 +132,14 @@ public class Graph {
 
     public EdgeList getEdges() {
         return edges;
+    }
+
+    public int getOrder(){
+        return nodes.size();
+    }
+
+    public int getSize(){
+        return edges.size();
     }
 
     public String toString() {

@@ -75,6 +75,10 @@ public class Node{
         return ID;
     }
 
+    public int getDegree(){
+        return neighbours.size();
+    }
+
     protected void setIndex(int i) {
         this.index = i;
     }
@@ -88,7 +92,7 @@ public class Node{
     }
 
     public String toString(){
-        return String.valueOf(index+1);
+        return "n"+ (index + 1);
     }
 
     public boolean isVisited() {

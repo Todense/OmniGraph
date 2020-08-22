@@ -6,20 +6,28 @@ import com.todense.viewmodel.file.GraphReader;
 import com.todense.viewmodel.random.arrangement.generators.RandomSquarePointGenerator;
 import javafx.geometry.Point2D;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
-public class MtxGraphReader implements GraphReader {
+public class MtxReader implements GraphReader {
 
     private Point2D center;
     private double areaSize;
 
-    public MtxGraphReader(Point2D center, double areaSize){
+    public MtxReader(Point2D center, double areaSize){
         this.center = center;
         this.areaSize = areaSize;
     }
 
     @Override
-    public Graph readGraph(Scanner scanner) {
+    public Graph readGraph(File file) {
+        Scanner scanner = null;
+        try {
+            scanner = new Scanner(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         Graph graph = new Graph("graph0");
         String currentLine = scanner.nextLine();
         while (currentLine.startsWith("%")){

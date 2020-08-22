@@ -75,7 +75,6 @@ public class PrimService extends WeightedAlgorithmService {
 			}
 			super.sleep();
 
-
 			for(Node neighbour : current.getNeighbours()) {
 				if(!neighbour.isMarked()){
 					Edge e = graph.getEdge(current, neighbour);
@@ -91,6 +90,7 @@ public class PrimService extends WeightedAlgorithmService {
 		}
 		return weight;
 	}
+
 
 	private double getCost(Node n){
 		return cost[n.getIndex()];

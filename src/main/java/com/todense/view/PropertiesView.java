@@ -16,6 +16,8 @@ public class PropertiesView implements FxmlView<PropertiesViewModel> {
     @FXML private TextField avgDegreeTextField;
     @FXML private TextField diameterTextField;
     @FXML private TextField radiusTextField;
+    @FXML private TextField clusterCoeffTextField;
+    @FXML private TextField densityTextField;
 
     @InjectViewModel
     PropertiesViewModel viewModel;
@@ -29,6 +31,8 @@ public class PropertiesView implements FxmlView<PropertiesViewModel> {
         avgDegreeTextField.textProperty().bindBidirectional(viewModel.avgDegreeProperty());
         diameterTextField.textProperty().bindBidirectional(viewModel.diameterProperty());
         radiusTextField.textProperty().bindBidirectional(viewModel.radiusProperty());
+        clusterCoeffTextField.textProperty().bindBidirectional(viewModel.clusterCoeffProperty());
+        densityTextField.textProperty().bindBidirectional(viewModel.densityProperty());
     }
 
     @FXML

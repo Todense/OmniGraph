@@ -7,6 +7,7 @@ import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.canvas.DisplayMode;
 import com.todense.viewmodel.canvas.drawlayer.layers.GraphDrawLayer;
+import com.todense.viewmodel.graph.GraphAnalyzer;
 import com.todense.viewmodel.graph.GraphManager;
 import com.todense.viewmodel.scope.AntsScope;
 import com.todense.viewmodel.scope.BackgroundScope;
@@ -55,7 +56,16 @@ public class GraphViewModel implements ViewModel {
         });
 
         notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_REQUEST, (key, payload) -> {
-            GM.setGraph((Graph) payload[0]);
+            Graph newGraph = (Graph) payload[0];
+            GM.setGraph(newGraph);
+
+            //auto node size
+            Platform.runLater(() ->
+                    graphScope.nodeSizeProperty().set((
+                            0.3 * GraphAnalyzer.getNearestNeighbourSpanningTreeLength(newGraph)/(newGraph.getOrder()-1)
+                    ))
+            );
+
         });
 
         notificationCenter.subscribe("RESET", (key, payload) ->

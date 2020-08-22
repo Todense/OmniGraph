@@ -1,5 +1,6 @@
 package com.todense.viewmodel.graph;
 
+import com.todense.model.graph.Edge;
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 
@@ -137,9 +138,78 @@ public class GraphAnalyzer {
         return  (double) sum/graph.getNodes().size();
     }
 
+    public static double calculateClusteringCoefficient(Graph graph){
+        double sumOfCoefficients = 0;
+        for(Node node : graph.getNodes()){
+            int degree = node.getDegree();
+            if(degree < 2)
+                continue;
+            int connectedNeighboursCounter = 0;
+            for (int i = 0; i < degree; i++) {
+                Node neighbour1 = node.getNeighbours().get(i);
+                for (int j = i+1; j < degree; j++) {
+                    Node neighbour2 = node.getNeighbours().get(j);
+                    if(graph.getEdges().isEdgeBetween(neighbour1, neighbour2)){
+                        connectedNeighboursCounter++;
+                    }
+                }
+            }
+            sumOfCoefficients += (double) 2 * connectedNeighboursCounter / (degree * (degree - 1));
+        }
+        return sumOfCoefficients / graph.getNodes().size();
+    }
+
     public static double getDensity(Graph graph) {
         if(graph.getNodes().size() == 0) return 0;
         int nodeCount = graph.getNodes().size();
         return  2 * (double)graph.getEdges().size()/((nodeCount-1) * nodeCount);
+    }
+
+    public static double calculateAvgEdgeLength(Graph graph){
+        double sum = 0;
+        for(Edge edge : graph.getEdges()){
+            sum += edge.calcLength();
+        }
+        return sum / graph.getEdges().size();
+    }
+
+    public static double calculateAvgNodeDist(Graph graph){
+        int order = graph.getOrder();
+        double sum = 0;
+        for (int i = 0; i < order; i++) {
+            Node n = graph.getNodes().get(i);
+            for (int j = i+1; j < order; j++) {
+                Node m = graph.getNodes().get(j);
+                sum += n.getPos().distance(m.getPos());
+            }
+        }
+        return sum / (double)(order * (order-1)/4);
+    }
+
+    public static double getNearestNeighbourSpanningTreeLength(Graph graph){
+        double length = 0;
+        Node currentNode = graph.getNodes().get(0);
+        currentNode.setVisited(true);
+        for (int i = 0; i < graph.getOrder()-1; i++) {
+            double minDist = Double.POSITIVE_INFINITY;
+            Node bestNode = null;
+            for(Node node : graph.getNodes()){
+                if(node.isVisited())
+                    continue;
+                double dist = node.getPos().distance(currentNode.getPos());
+                if(dist < minDist){
+                    minDist = dist;
+                    bestNode = node;
+                }
+            }
+            assert bestNode != null;
+            bestNode.setVisited(true);
+            length += minDist;
+            currentNode = bestNode;
+        }
+        for (Node node : graph.getNodes()){
+            node.setVisited(false);
+        }
+        return length;
     }
 }
