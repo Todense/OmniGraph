@@ -1,16 +1,16 @@
-package com.todense.viewmodel.algorithm.service;
+package com.todense.viewmodel.algorithm.task;
 
 import com.todense.model.graph.Edge;
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
-import com.todense.viewmodel.algorithm.ShortestPathAlgorithmService;
+import com.todense.viewmodel.algorithm.ShortestPathAlgorithmTask;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class AStarService extends ShortestPathAlgorithmService {
+public class AStarTask extends ShortestPathAlgorithmTask {
 
     private Node startNode;
     private Node goalNode;
@@ -19,7 +19,7 @@ public class AStarService extends ShortestPathAlgorithmService {
     private List<Double> gScores;  //gScore(i) = the cost of the cheapest path from start to i currently known
     private List<Double> fScores;  //fScore(i) = gScore(i) + goalDist(i)
 
-    public AStarService(Node startNode, Node goalNode, Graph graph, boolean customWeight) {
+    public AStarTask(Node startNode, Node goalNode, Graph graph, boolean customWeight) {
         super(graph, customWeight);
         this.startNode = startNode;
         this.goalNode = goalNode;

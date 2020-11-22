@@ -37,7 +37,7 @@ public class SaveViewModel implements ViewModel {
             case GRAPHML: graphWriter = new GraphMLWriter(); break;
         }
         graphWriter.writeGraph(graph, file);
-        notificationCenter.publish("WRITE", "Graph saved");
+        notificationCenter.publish(MainViewModel.WRITE, "Graph saved");
     }
 
     public File getInitialDirectory() {

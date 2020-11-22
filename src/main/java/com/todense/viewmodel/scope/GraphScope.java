@@ -16,13 +16,13 @@ public class GraphScope implements Scope {
     private DoubleProperty nodeSizeProperty = new SimpleDoubleProperty(30d);
     private DoubleProperty edgeWidthProperty = new SimpleDoubleProperty(0.15);
     private BooleanProperty nodeBorderProperty = new SimpleBooleanProperty(false);
+    private BooleanProperty edgeVisibilityProperty = new SimpleBooleanProperty(true);
     private ObjectProperty<Color> nodeColorProperty = new SimpleObjectProperty<>(INITIAL_NODE_COLOR);
     private ObjectProperty<Color> edgeColorProperty = new SimpleObjectProperty<>(INITIAL_EDGE_COLOR);
     private ObjectProperty<Color> nodeLabelColorProperty = new SimpleObjectProperty<>(Color.WHITE);
     private ObjectProperty<Color> edgeWeightColorProperty = new SimpleObjectProperty<>(Color.WHITE);
     private ObjectProperty<NodeLabelMode> nodeLabelModeProperty = new SimpleObjectProperty<>(NodeLabelMode.NONE);
     private ObjectProperty<EdgeWeightMode> edgeWeightModeProperty = new SimpleObjectProperty<>(EdgeWeightMode.NONE);
-
     private ObjectProperty<DisplayMode> displayModeProperty = new SimpleObjectProperty<>(DisplayMode.DEFAULT);
 
     private GraphManager graphManager = new GraphManager();
@@ -109,5 +109,13 @@ public class GraphScope implements Scope {
 
     public BooleanProperty nodeBorderProperty() {
         return nodeBorderProperty;
+    }
+
+    public boolean areEdgesVisibile() {
+        return edgeVisibilityProperty.get();
+    }
+
+    public BooleanProperty edgeVisibilityProperty() {
+        return edgeVisibilityProperty;
     }
 }

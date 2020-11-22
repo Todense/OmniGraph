@@ -1,18 +1,18 @@
-package com.todense.viewmodel.algorithm.service;
+package com.todense.viewmodel.algorithm.task;
 
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
-import com.todense.viewmodel.algorithm.AlgorithmService;
+import com.todense.viewmodel.algorithm.AlgorithmTask;
 
 import java.util.HashMap;
 import java.util.Stack;
 
 
-public class DFSService extends AlgorithmService {
+public class DFSTask extends AlgorithmTask {
 
 	private Node startNode;
 
-	public DFSService(Node startNode, Graph graph){
+	public DFSTask(Node startNode, Graph graph){
 		super(graph);
 		this.startNode = startNode;
 	}

@@ -20,7 +20,7 @@ public class GraphView implements FxmlView<GraphViewModel> {
     @FXML private ColorPicker nodeColorPicker, edgeColorPicker, labelColorPicker, weightColorPicker;
     @FXML private ChoiceBox<NodeLabelMode> nodeLabelChoiceBox;
     @FXML private ChoiceBox<EdgeWeightMode> edgeWeightChoiceBox;
-    @FXML private ToggleSwitch nodeBorderToggleSwitch;
+    @FXML private ToggleSwitch nodeBorderToggleSwitch, edgeVisibilityToggleSwitch;
 
     @InjectViewModel
     GraphViewModel viewModel;
@@ -36,6 +36,7 @@ public class GraphView implements FxmlView<GraphViewModel> {
         nodeSizeSlider.valueProperty().bindBidirectional(viewModel.nodeSizeProperty());
         edgeWidthSlider.valueProperty().bindBidirectional(viewModel.edgeWidthProperty());
         nodeBorderToggleSwitch.selectedProperty().bindBidirectional(viewModel.nodeBorderProperty());
+        edgeVisibilityToggleSwitch.selectedProperty().bindBidirectional(viewModel.edgeVisibilityProperty());
 
         nodeSizeLabel.textProperty().bind(Bindings.createStringBinding(() ->
                 String.format("%.1f",  nodeSizeSlider.getValue()), nodeSizeSlider.valueProperty()));

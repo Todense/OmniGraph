@@ -15,6 +15,11 @@
             <Font size="10.0" />
         </font>
     </Button>
+   <Button layoutX="15.0" layoutY="15.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#copyAction" prefHeight="25.0" prefWidth="120.0" text="Copy Subgraph">
+      <font>
+         <Font size="10.0" />
+      </font>
+   </Button>
     <Button fx:id="startNodeButton" layoutX="43.0" layoutY="15.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#setStartNodeAction" prefHeight="25.0" prefWidth="120.0" text="Set as start node">
         <font>
             <Font size="10.0" />

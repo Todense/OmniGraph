@@ -1,7 +1,9 @@
 package com.todense.view;
 
 import com.todense.viewmodel.CanvasViewModel;
+import de.saxsys.mvvmfx.Context;
 import de.saxsys.mvvmfx.FxmlView;
+import de.saxsys.mvvmfx.InjectContext;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -16,6 +18,9 @@ public class CanvasView implements FxmlView<CanvasViewModel> {
 
     @InjectViewModel
     CanvasViewModel viewModel;
+
+    @InjectContext
+    Context context;
 
     public void initialize(){
 
@@ -37,13 +42,17 @@ public class CanvasView implements FxmlView<CanvasViewModel> {
         viewModel.canvasHeightProperty().bind(canvas.heightProperty());
 
         canvas.setOnMousePressed(viewModel.getMouseHandler()::onMousePressed);
+        canvas.setOnMouseClicked(viewModel.getMouseHandler()::onMouseClicked);
         canvas.setOnMouseDragged(viewModel.getMouseHandler()::onMouseDragged);
         canvas.setOnMouseReleased(viewModel.getMouseHandler()::onMouseReleased);
         canvas.setOnMouseMoved(viewModel.getMouseHandler()::onMouseMoved);
         canvas.setOnScroll(viewModel.getMouseHandler()::onMouseScroll);
         canvas.setOnMouseExited(viewModel.getMouseHandler()::onMouseExited);
 
-        Platform.runLater(() -> viewModel.setCanvasNode(canvas));
+        Platform.runLater(() -> {
+                viewModel.setCanvasNode(canvas);
+                viewModel.getPopOverManager().setContext(context);
+        });
     }
 
 }

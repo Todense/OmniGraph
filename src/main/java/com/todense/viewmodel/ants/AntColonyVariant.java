@@ -4,7 +4,7 @@ public enum AntColonyVariant {
 
     ACS("Ant colony system", true, false, true, true, false, false),
     AS("Ant system",false, false,false, false, false, false),
-    MMAS("Min-max ant system", true, false,false, false, true, true),
+    MMAS("Max-min ant system", true, false,false, false, true, true),
     RANK_AS("Ranked ant system", true, true,false, false, false, false);
 
     private final String name;

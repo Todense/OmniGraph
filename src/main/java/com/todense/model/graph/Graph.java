@@ -29,7 +29,7 @@ public class Graph {
     }
 
     public Node addNode(Point2D pt, Color color){
-        Node node =  addNode(pt);
+        Node node = addNode(pt);
         node.setColor(color);
         return node;
     }
@@ -43,6 +43,7 @@ public class Graph {
         nodes.add(n);
         return n;
     }
+
 
     public Edge addEdge(Node n, Node m){
         assert !edges.isEdgeBetween(n, m):
@@ -82,6 +83,7 @@ public class Graph {
         nodes.remove(n);
         new ArrayList<>(n.getNeighbours()).forEach(m -> removeEdge(n, m));
     }
+
 
     public void reset(){
         for (Node n : nodes) {

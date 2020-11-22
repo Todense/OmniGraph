@@ -19,7 +19,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<BorderPane prefHeight="515.0" prefWidth="1355.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.MainView">
+<BorderPane prefHeight="515.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.MainView">
    <left>
       <TabPane prefHeight="466.0" prefWidth="237.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
          <Tab text="Appearance">
@@ -39,7 +39,7 @@
                            <Font size="30.0" />
                         </font>
                      </TitledPane>
-                     <TitledPane animated="false" text="Background">
+                     <TitledPane animated="false" expanded="false" text="Background">
                         <fx:include source="BackgroundView.fxml" />
                      </TitledPane>
                   </VBox>
@@ -110,13 +110,13 @@
       </TabPane>
    </right>
    <bottom>
-      <HBox prefHeight="58.0" prefWidth="1355.0" BorderPane.alignment="CENTER">
-         <TextArea fx:id="textArea" editable="false" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="450.0" scrollLeft="10.0" scrollTop="10.0" wrapText="true">
+      <HBox alignment="CENTER" prefHeight="58.0" prefWidth="1355.0" BorderPane.alignment="CENTER">
+         <TextArea fx:id="textArea" editable="false" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="550.0" scrollLeft="10.0" scrollTop="10.0" wrapText="true">
             <opaqueInsets>
                <Insets />
             </opaqueInsets>
          </TextArea>
-         <VBox alignment="CENTER" prefHeight="58.0" prefWidth="664.0">
+         <VBox alignment="CENTER" prefHeight="58.0" prefWidth="664.0" HBox.hgrow="ALWAYS">
             <HBox alignment="CENTER" prefHeight="37.0" prefWidth="374.0" spacing="3.0">
                <padding>
                   <Insets left="5.0" right="5.0" />
@@ -178,7 +178,7 @@
                </Button>
             </HBox>
          </VBox>
-         <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="450.0" spacing="3.0">
+         <HBox alignment="CENTER_RIGHT" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="58.0" prefWidth="550.0" spacing="3.0">
             <ProgressIndicator fx:id="progressIndicator" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="22.0" prefWidth="22.0" progress="0.0" visible="false" />
             <TextField fx:id="infoTextField" alignment="CENTER" editable="false" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="250.0" />
             <Button fx:id="stopButton" disable="true" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopAction" prefHeight="25.0" prefWidth="64.0" text="Stop">

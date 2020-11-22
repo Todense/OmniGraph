@@ -5,11 +5,11 @@ import com.todense.model.graph.Graph;
 
 import java.util.function.ToDoubleFunction;
 
-public abstract class WeightedAlgorithmService extends AlgorithmService{
+public abstract class WeightedAlgorithmTask extends AlgorithmTask {
 
     protected ToDoubleFunction<Edge> weightFunction;
 
-    public WeightedAlgorithmService(Graph graph, boolean customWeight) {
+    public WeightedAlgorithmTask(Graph graph, boolean customWeight) {
         super(graph);
         if(customWeight){
             weightFunction = Edge::getWeight;

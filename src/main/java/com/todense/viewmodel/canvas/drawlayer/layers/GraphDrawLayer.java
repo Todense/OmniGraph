@@ -11,6 +11,7 @@ import com.todense.viewmodel.canvas.drawlayer.DrawLayer;
 import com.todense.viewmodel.scope.AntsScope;
 import com.todense.viewmodel.scope.BackgroundScope;
 import com.todense.viewmodel.scope.GraphScope;
+import com.todense.viewmodel.scope.InputScope;
 import javafx.geometry.Point2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -22,24 +23,35 @@ public class GraphDrawLayer implements DrawLayer {
     private GraphScope graphScope;
     private BackgroundScope backgroundScope;
     private AntsScope antsScope;
+    private InputScope inputScope;
 
-    public GraphDrawLayer(GraphScope graphScope, BackgroundScope backgroundScope, AntsScope antsScope){
+    public GraphDrawLayer(GraphScope graphScope, BackgroundScope backgroundScope,
+                          AntsScope antsScope, InputScope inputScope){
         this.graphScope = graphScope;
         this.backgroundScope = backgroundScope;
         this.antsScope = antsScope;
+        this.inputScope = inputScope;
     }
 
     @Override
     public void draw(GraphicsContext gc) {
         Graph graph = graphScope.getGraphManager().getGraph();
         DisplayMode displayMode = graphScope.getDisplayMode();
-
-        graph.getEdges().stream().filter(e -> !e.isMarked() && !e.isHighlighted() && e.isVisible()).forEach(e ->
-                drawEdge(e, gc, displayMode));
-        graph.getEdges().stream().filter(e -> e.isMarked() || e.isHighlighted()).forEach(e ->
-                drawEdge(e, gc, displayMode));
+        double defaultEdgeWidth = graphScope.getEdgeWidth() * graphScope.getNodeSize();
+        double defaultNodeSize = graphScope.getNodeSize();
+        boolean selecting = graphScope.getGraphManager().getSelectedNodes().size() > 0 || inputScope.isSelecting();
+        if(graphScope.areEdgesVisibile()){
+            graph.getEdges().stream().filter(e -> !isEdgePrimary(e) && e.isVisible()).forEach(e ->
+                    drawEdge(e, gc, defaultEdgeWidth, displayMode, selecting));
+            graph.getEdges().stream().filter(this::isEdgePrimary).forEach(e ->
+                    drawEdge(e, gc, defaultEdgeWidth, displayMode, selecting));
+        }
         graph.getNodes().forEach(n ->
-                drawNode(n, gc, displayMode));
+                drawNode(n, gc, defaultNodeSize, displayMode, selecting));
+    }
+
+    private boolean isEdgePrimary(Edge e){
+        return e.isSelected() || e.isMarked() || e.isHighlighted();
     }
 
     @Override
@@ -47,11 +59,11 @@ public class GraphDrawLayer implements DrawLayer {
         return 3;
     }
 
-    private void drawNode(Node node, GraphicsContext gc, DisplayMode displayMode){
-        double size = getNodeSize(node, displayMode);
+    private void drawNode(Node node, GraphicsContext gc, double defaultSize ,DisplayMode displayMode, boolean selecting){
+        double size = getNodeSize(node, defaultSize, displayMode);
         Color color = node.getColor() != null
-                ? getNodeColor(node.getColor(), node, displayMode)
-                : getNodeColor(graphScope.getNodeColor(), node, displayMode);
+                ? getNodeDisplayColor(node.getColor(), node, displayMode, selecting)
+                : getNodeDisplayColor(graphScope.getNodeColor(), node, displayMode, selecting);
 
         gc.setFill(color);
 
@@ -70,7 +82,7 @@ public class GraphDrawLayer implements DrawLayer {
         if(graphScope.showingNodeBorder()) {
             double width = graphScope.getEdgeWidth() * graphScope.getNodeSize();
             gc.setLineWidth(width);
-            gc.setStroke(getNodeColor(graphScope.getEdgeColor(), node, displayMode));
+            gc.setStroke(getNodeDisplayColor(graphScope.getEdgeColor(), node, displayMode, selecting));
             gc.strokeOval(
                     node.getPos().getX() - (size-width)/2,
                     node.getPos().getY() - (size-width)/2,
@@ -78,16 +90,9 @@ public class GraphDrawLayer implements DrawLayer {
                     size - width
             );
         }
-
-        if(node.isSelected()){
-            gc.setStroke(backgroundScope.getBackgroundColor().invert());
-            gc.setLineWidth(graphScope.getNodeSize() * 0.05);
-            double circleSize = graphScope.getNodeSize() * 1.5;
-            gc.strokeOval(node.getPos().getX() - circleSize/2, node.getPos().getY() - circleSize/2, circleSize, circleSize);
+        if(!graphScope.nodeLabelModeProperty().get().equals(NodeLabelMode.NONE)){
+            drawNodeLabel(node, gc);
         }
-
-        drawNodeLabel(node, gc);
-
     }
 
     private void drawNodeLabel(Node node, GraphicsContext gc) {
@@ -108,11 +113,11 @@ public class GraphDrawLayer implements DrawLayer {
         gc.fillText(s, node.getPos().getX(), node.getPos().getY()+size/5, size*2);
     }
 
-    private void drawEdge(Edge edge, GraphicsContext gc, DisplayMode displayMode){
+    private void drawEdge(Edge edge, GraphicsContext gc, double defaultWidth, DisplayMode displayMode, boolean selecting){
         Point2D p1 = edge.getN1().getPos();
         Point2D p2 = edge.getN2().getPos();
 
-        double width = getEdgeWidth(edge, displayMode);
+        double width = getEdgeWidth(edge, defaultWidth, displayMode);
 
         //makes line shorter when it is wider
         Point2D correctionVector = p1.subtract(p2).normalize().multiply(width/2);
@@ -129,7 +134,7 @@ public class GraphDrawLayer implements DrawLayer {
         if(displayMode == DisplayMode.ANT_COLONY && !antsScope.isShowingPheromones()) return;
 
         gc.setLineWidth(width);
-        gc.setStroke(getEdgeColor(edge, displayMode));
+        gc.setStroke(getEdgeDisplayColor(edge, displayMode, selecting));
 
         gc.strokeLine(p1.getX() - correctionVector.getX(),
                 p1.getY() - correctionVector.getY(),
@@ -139,7 +144,7 @@ public class GraphDrawLayer implements DrawLayer {
 
         if(graphScope.getEdgeWeightMode() != EdgeWeightMode.NONE){
             if(graphScope.getEdgeWeightMode() == EdgeWeightMode.LENGTH){
-                drawEdgeWeight(edge, gc, String.valueOf((int)(edge.getN1().getPos().distance(edge.getN2().getPos()))), width * 3);
+                drawEdgeWeight(edge, gc, String.valueOf((int)(edge.calcLength())), width * 3);
             }
             else if(graphScope.getEdgeWeightMode() == EdgeWeightMode.CUSTOM){
                 double weight = edge.getWeight();
@@ -160,37 +165,41 @@ public class GraphDrawLayer implements DrawLayer {
         gc.fillText(weight, midPoint.getX(), midPoint.getY() + fontSize/3);
     }
 
-    private Color getNodeColor(Color color, Node node, DisplayMode displayMode) {
-        Color newColor = color;
-
-        if(node.isSelected()){
-            newColor = newColor.brighter().brighter();
-        }
+    private Color getNodeDisplayColor(Color color, Node node, DisplayMode displayMode, boolean selecting) {
+        Color displayColor = color;
 
         switch (displayMode){
-            case DEFAULT: case ANT_COLONY:
+            case DEFAULT:
+                if(selecting){
+                    if(!node.isSelected()){
+                        displayColor = Util.getFaintColor(color, backgroundScope.getBackgroundColor());
+                    }
+                } else if(node.isHighlighted()){
+                    displayColor = displayColor.brighter().brighter();
+                }
+                break;
+            case ANT_COLONY:
                 if(node.isHighlighted()){
-                    newColor = newColor.brighter().brighter();
+                    displayColor = displayColor.brighter().brighter();
                 }
                 break;
             case ALGORITHMIC:
                 if(!node.isMarked()){
-                    newColor = Util.getFaintColor(color, backgroundScope.getBackgroundColor());
+                    displayColor = Util.getFaintColor(color, backgroundScope.getBackgroundColor());
                 }
                 break;
-            default: newColor = Color.PINK;
+            default: displayColor = Color.PINK;
         }
-        return newColor;
+        return displayColor;
     }
 
-    private double getNodeSize(Node node, DisplayMode displayMode) {
-        double size = graphScope.getNodeSize();
+    private double getNodeSize(Node node, double defaultSize ,DisplayMode displayMode) {
 
         if(node.isHighlighted()) {
-            size = size * 1.05;
+            defaultSize = defaultSize * 1.05;
         }
         if(node.isSelected()){
-            size = size * 1.1;
+            defaultSize = defaultSize * 1.1;
         }
 
         switch (displayMode){
@@ -198,60 +207,65 @@ public class GraphDrawLayer implements DrawLayer {
                 break;
             case ALGORITHMIC:
                 if(node.isMarked()){
-                    size = size * 1.05;
+                    defaultSize = defaultSize * 1.05;
                 }
                 break;
-            default: size = 0;
+            default: defaultSize = 0;
         }
-        return size;
+        return defaultSize;
     }
 
-    private Color getEdgeColor(Edge edge, DisplayMode displayMode) {
-        Color color = edge.getColor() != null
+    private Color getEdgeDisplayColor(Edge edge, DisplayMode displayMode, boolean selecting) {
+        Color displayColor = edge.getColor() != null
                 ? edge.getColor()
                 : graphScope.getEdgeColor();
+
         switch (displayMode){
             case DEFAULT: case ANT_COLONY:
-                if(edge.isHighlighted() || edge.isSelected()){
-                    color = color.brighter().brighter();
+                if(selecting){
+                    if(!edge.isMarked()){
+                        displayColor = Util.getFaintColor(displayColor, backgroundScope.getBackgroundColor());
+                    }
+                }
+                else if(edge.isHighlighted() || edge.isSelected() || edge.isMarked()){
+                    displayColor = displayColor.brighter().brighter();
                 }
                 break;
             case ALGORITHMIC:
                 if(!edge.isMarked()){
-                    color = Util.getFaintColor(color, backgroundScope.getBackgroundColor());
+                    displayColor = Util.getFaintColor(displayColor, backgroundScope.getBackgroundColor());
                 }
                 break;
-            default: color = Color.PINK;
+            default: displayColor = Color.PINK;
         }
-        return color;
+        return displayColor;
     }
 
-    private double getEdgeWidth(Edge edge, DisplayMode displayMode) {
-        double width = graphScope.getEdgeWidth() * graphScope.getNodeSize();
+    private double getEdgeWidth(Edge edge, double defaultWidth, DisplayMode displayMode) {
         switch (displayMode){
             case DEFAULT:
                 if(edge.isHighlighted()){
-                    width = width * 1.5;
+                    defaultWidth = defaultWidth * 1.5;
                 }
                 if(edge.isSelected()){
-                    width = width * 1.5;
+                    defaultWidth = defaultWidth * 1.5;
                 }
                 break;
             case ALGORITHMIC:
                 if(edge.isMarked()){
-                    width = width * 2;
+                    defaultWidth = defaultWidth * 2;
                 }
                 break;
             case ANT_COLONY:
                 if(antsScope.isShowingPheromones()){
-                    width = Math.min(
+                    defaultWidth = Math.min(
                             antsScope.getPheromone(edge) * antsScope.getScale() * antsScope.getScale(),
                             graphScope.getNodeSize() * 0.75);
                 }else{
-                    width = 0;
+                    defaultWidth = 0;
                 }
                 break;
         }
-        return Math.min(width, graphScope.getNodeSize());
+        return Math.min(defaultWidth, graphScope.getNodeSize());
     }
 }

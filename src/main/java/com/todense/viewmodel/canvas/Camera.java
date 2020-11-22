@@ -1,8 +1,9 @@
 package com.todense.viewmodel.canvas;
 
 import com.todense.model.graph.Graph;
-import com.todense.model.graph.Node;
+import com.todense.viewmodel.graph.GraphAnalyzer;
 import javafx.geometry.Point2D;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.transform.Affine;
 import javafx.scene.transform.NonInvertibleTransformException;
 
@@ -28,24 +29,13 @@ public class Camera {
 
         if(graph.getNodes().size() == 0) return;
 
-        double xMin = Double.MAX_VALUE;
-        double yMin = Double.MAX_VALUE;
-        double xMax = -Double.MAX_VALUE;
-        double yMax = -Double.MAX_VALUE;
+        Rectangle2D graphBounds = GraphAnalyzer.getGraphBounds(graph);
 
-        for (Node node : graph.getNodes()) {
-            double x = node.getPos().getX();
-            if(x < xMin) xMin = x;
-            if(x > xMax) xMax = x;
+        Point2D center = new Point2D(graphBounds.getMinX()+graphBounds.getWidth()/2,
+                graphBounds.getMinY()+graphBounds.getHeight()/2);
 
-            double y = node.getPos().getY();
-            if(y < yMin) yMin = y;
-            if(y > yMax) yMax = y;
-        }
-
-        Point2D center = new Point2D((xMax+xMin)/2, (yMax+yMin)/2);
-
-        double d = Math.max((xMax-xMin+nodeSize)/(0.9 * canvasWidth), (yMax-yMin+nodeSize)/(0.9 * canvasHeight));
+        double d = Math.max((graphBounds.getMaxX()-graphBounds.getMinX()+nodeSize)/(0.9 * canvasWidth),
+                (graphBounds.getMaxY()-graphBounds.getMinY()+nodeSize)/(0.9 * canvasHeight));
 
         affine = new Affine();
 

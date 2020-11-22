@@ -1,11 +1,11 @@
 package com.todense.viewmodel;
 
-import com.todense.viewmodel.algorithm.AlgorithmService;
-import com.todense.viewmodel.algorithm.service.ForceDirectedLayoutService;
+import com.todense.viewmodel.algorithm.AlgorithmTask;
+import com.todense.viewmodel.algorithm.task.ForceDirectedLayoutTask;
 import com.todense.viewmodel.layout.LongRangeForce;
 import com.todense.viewmodel.scope.CanvasScope;
 import com.todense.viewmodel.scope.GraphScope;
-import com.todense.viewmodel.scope.ServiceScope;
+import com.todense.viewmodel.scope.TaskScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
@@ -36,44 +36,44 @@ public class LayoutViewModel implements ViewModel {
     CanvasScope canvasScope;
 
     @InjectScope
-    ServiceScope serviceScope;
+    TaskScope taskScope;
 
     @Inject
     NotificationCenter notificationCenter;
 
-    private AlgorithmService service;
+    private AlgorithmTask task;
 
     public void initialize(){
         notificationCenter.subscribe("LAYOUT", (key, payload) -> start());
     }
 
     public void start(){
-        AlgorithmService currentService = serviceScope.getService();
+        AlgorithmTask currentTask = taskScope.getTask();
 
-        if(currentService != null && currentService.isRunning()) return;
+        if(currentTask != null && currentTask.isRunning()) return;
 
-        service = new ForceDirectedLayoutService(graphScope.getGraphManager(),
+        task = new ForceDirectedLayoutTask(graphScope.getGraphManager(),
                 this,new Point2D(canvasScope.getCanvasWidth()/2,
                 canvasScope.getCanvasHeight()/2));
-        service.setPainter(canvasScope.getPainter());
-        serviceScope.setService(service);
+        task.setPainter(canvasScope.getPainter());
+        taskScope.setTask(task);
 
         EventHandler<WorkerStateEvent> handler = workerStateEvent -> {
-            notificationCenter.publish(MainViewModel.serviceFinished,
+            notificationCenter.publish(MainViewModel.TASK_FINISHED,
                     "Force-Directed Layout",
-                    System.currentTimeMillis() - service.getStartTime(),
+                    System.currentTimeMillis() - task.getStartTime(),
                     "");
         };
 
-        service.setOnSucceeded(handler);
-        service.setOnCancelled(handler);
-        notificationCenter.publish(MainViewModel.serviceStarted, "Force-Directed Layout");
-        service.start();
+        task.setOnSucceeded(handler);
+        task.setOnCancelled(handler);
+        notificationCenter.publish(MainViewModel.TASK_STARTED, "Force-Directed Layout");
+        new Thread(task).start();
     }
 
     public void stop(){
-        if(service != null && service.isRunning()){
-            service.cancel();
+        if(task != null && task.isRunning()){
+            task.cancel();
         }
     }
 

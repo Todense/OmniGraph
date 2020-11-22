@@ -29,7 +29,8 @@ public class MouseHandler {
     PopOverManager popOverManager;
     PopOver popOver;
 
-    private Point2D mousePt;
+    private Point2D mousePressPt;
+    private Point2D currentMousePt;
 
     private Node edgeStartNode;
     private Node edgeEndNode;
@@ -40,14 +41,16 @@ public class MouseHandler {
     private Node hoverNode; //node under mouse
     private Edge hoverEdge; //edge under mouse
 
+    private boolean dragging = false;
+    private boolean draggingNode = false;
 
-    private final ArrayList<Node> selectedNodes = new ArrayList<>();
     private final ArrayList<Edge> selectedEdges = new ArrayList<>();
 
     private Set<KeyCode> pressedKeys;
 
-
-    public MouseHandler(Camera camera, InputScope inputScope, Painter painter, GraphScope graphScope, PopOverManager popOverManager, Set<KeyCode> pressedKeys){
+    public MouseHandler(Camera camera, InputScope inputScope,
+                        Painter painter, GraphScope graphScope,
+                        PopOverManager popOverManager, Set<KeyCode> pressedKeys){
         this.camera = camera;
         this.inputScope = inputScope;
         this.painter = painter;
@@ -61,48 +64,45 @@ public class MouseHandler {
     //-------------------- MOUSE EVENTS -------------------
     //-----------------------------------------------------
 
-    public void onMousePressed(MouseEvent e){
+    public void onMousePressed(MouseEvent event){
 
-        mousePt = new Point2D(e.getX(), e.getY());
+        mousePressPt = new Point2D(event.getX(), event.getY());
 
         if(inputScope.isEditLocked()) return;
 
         hidePopOver();
 
-        this.clickedNode = getNodeFromPoint(mousePt);
-        this.clickedEdge = getEdgeFromPoint(mousePt);
+        dragging = false;
 
-        if(e.getButton() == MouseButton.PRIMARY) {  // LEFT MOUSE BUTTON
-            if(!pressedKeys.contains(KeyCode.SHIFT)){
-                if(clickedNode == null && clickedEdge == null){  // click on background
-                    GM.getGraph().addNode(camera.inverse(mousePt));
-                }
-                else if(pressedKeys.contains(KeyCode.CONTROL)){
-                    if(clickedNode != null){
-                        reverseSelection(clickedNode);
-                    }
-                    else{
-                        reverseSelection(clickedEdge);
-                    }
-                }
+        this.clickedNode = getNodeFromPoint(mousePressPt);
+        this.clickedEdge = getEdgeFromPoint(mousePressPt);
+
+
+        if(event.getButton() == MouseButton.PRIMARY){
+            if(clickedNode != null){
+                draggingNode = true;
             }
         }
 
-        if(e.getButton() == MouseButton.SECONDARY) {   //RIGHT MOUSE BUTTON
+        if(event.getButton() == MouseButton.SECONDARY) {   //RIGHT MOUSE BUTTON
             inputScope.setSelecting(false);
             if (clickedNode == null && clickedEdge == null) {  //start selection rectangle
                 clearSelection();
-                inputScope.setRectStartX(mousePt.getX());
-                inputScope.setRectStartY(mousePt.getY());
+                inputScope.setRectStartX(mousePressPt.getX());
+                inputScope.setRectStartY(mousePressPt.getY());
             }
-            else if (clickedNode != null){           //start dummy edge
+            else if (clickedNode != null){      //start dummy edge
                 edgeStartNode = clickedNode;
-                inputScope.setDummyEdgeStart(edgeStartNode.getPos());
+                if(clickedNode.isSelected()){
+                    inputScope.getDummyEdgeStartNodes().addAll(GM.getSelectedNodes());
+                }else {
+                    inputScope.getDummyEdgeStartNodes().add(clickedNode);
+                }
                 inputScope.setDummyEdgeEnd(edgeStartNode.getPos());
             }
         }
 
-        if(e.getButton() == MouseButton.MIDDLE) {   // MIDDLE MOUSE BUTTON
+        if(event.getButton() == MouseButton.MIDDLE) {   // MIDDLE MOUSE BUTTON
             if(clickedNode != null){
                 GM.getGraph().removeNode(clickedNode);
             }
@@ -113,26 +113,61 @@ public class MouseHandler {
         painter.repaint();
     }
 
-    public void onMouseReleased(MouseEvent e){
+    public void onMouseClicked(MouseEvent event) {
+        if(event.getButton() == MouseButton.PRIMARY && !dragging) {  // LEFT MOUSE BUTTON
+            if(!pressedKeys.contains(KeyCode.SHIFT)){
+                if(clickedNode == null && clickedEdge == null){  // click on background
+                    if(pressedKeys.contains(KeyCode.CONTROL) && pressedKeys.contains(KeyCode.V)){
+                        Point2D transPt = camera.inverse(new Point2D(event.getX(), event.getY()));
+                        GM.addSubgraph(transPt);
+                    }
+                    else{
+                        GM.getGraph().addNode(camera.inverse(mousePressPt));
+                    }
+
+                }
+                else if(pressedKeys.contains(KeyCode.CONTROL)){
+                    if(pressedKeys.contains(KeyCode.C)){
+                        graphScope.getGraphManager().copySelectedSubgraph();
+                    }
+                    if(clickedNode != null){
+                        reverseSelection(clickedNode);
+                    }
+                    else{
+                        reverseSelection(clickedEdge);
+                    }
+                }
+            }
+        }
+    }
+
+    public void onMouseReleased(MouseEvent event){
 
         if(inputScope.isEditLocked()) return;
 
-        Point2D releasePt = new Point2D(e.getX(), e.getY());
+        draggingNode = false;
+
+        Point2D releasePt = new Point2D(event.getX(), event.getY());
 
         Node releaseNode = getNodeFromPoint(releasePt);
         Edge releaseEdge = getEdgeFromPoint(releasePt);
 
-        if(e.getButton() == MouseButton.SECONDARY) {
+        if(event.getButton() == MouseButton.SECONDARY) {
             if(inputScope.isConnecting()){
-                if (releaseNode != null) {             // add/remove edge
-                    if (GM.noEdgeBetween(releaseNode, edgeStartNode)) {
-                        GM.getGraph().addEdge(releaseNode, edgeStartNode);
-                    } else {
-                        GM.getGraph().removeEdge(releaseNode, edgeStartNode);
+                if (releaseNode != null) {
+                    for(Node n : inputScope.getDummyEdgeStartNodes()){ // add/remove edge
+                        if(n.equals(releaseNode))
+                            continue;
+                        if (!GM.isEdgeBetween(releaseNode, n)) {
+                            GM.getGraph().addEdge(releaseNode, n);
+                        } else {
+                            GM.getGraph().removeEdge(releaseNode, n);
+                        }
+                        n.setHighlighted(false);
                     }
                     releaseNode.setHighlighted(false);
-                    edgeStartNode.setHighlighted(false);
                 }
+                inputScope.getDummyEdgeStartNodes().clear();
             }
 
             else if(!inputScope.isSelecting()){
@@ -140,16 +175,21 @@ public class MouseHandler {
                     if (!releaseNode.isSelected()) {
                         clearSelection();
                         releaseNode.setSelected(true);
-                        selectedNodes.add(releaseNode);
+                        GM.getSelectedNodes().add(releaseNode);
                     }
-                    popOver = popOverManager.createNodePopOver(graphScope.getGraphManager(), selectedNodes, e.getScreenX(), e.getScreenY());
+                    popOver = popOverManager.createNodePopOver(graphScope.getGraphManager(),
+                            GM.getSelectedNodes(), event.getScreenX(), event.getScreenY());
                 } else if (releaseEdge != null) {  //edge popover
                     if (!releaseEdge.isSelected()) {
                         clearSelection();
                         releaseEdge.setSelected(true);
                         selectedEdges.add(releaseEdge);
                     }
-                    popOver = popOverManager.createEdgePopOver(graphScope.getGraphManager(), selectedEdges, e.getScreenX(), e.getScreenY());
+                    popOver = popOverManager.createEdgePopOver(graphScope.getGraphManager(),
+                            selectedEdges, event.getScreenX(), event.getScreenY());
+                } else{
+                    Point2D transPt = camera.inverse(new Point2D(event.getX(), event.getY()));
+                    popOver = popOverManager.createBackgroundPopOver(event.getScreenX(), event.getScreenY(), transPt);
                 }
             }
 
@@ -157,20 +197,24 @@ public class MouseHandler {
 
             if(inputScope.isSelecting()){
                 inputScope.setSelecting(false);
-                selectedNodes.addAll(GM.getSelectedNodes());
+                GM.createSelectedNodesList();
+
+                for(Edge edge : GM.getGraph().getEdges()){
+                    edge.setMarked(edge.getN1().isSelected() && edge.getN2().isSelected());
+                }
             }
             edgeStartNode = null;
         }
-
         painter.repaint();
     }
 
 
-    public void onMouseMoved(MouseEvent e){
+    public void onMouseMoved(MouseEvent event){
 
         if(inputScope.isEditLocked()) return;
 
-        Point2D movePt = new Point2D(e.getX(), e.getY());
+        Point2D movePt = new Point2D(event.getX(), event.getY());
+        currentMousePt = movePt;
 
         Node prevNode = hoverNode;
         hoverNode = getNodeFromPoint(movePt);
@@ -209,55 +253,60 @@ public class MouseHandler {
         }
     }
     
-    public void onMouseDragged(MouseEvent e) {
+    public void onMouseDragged(MouseEvent event) {
 
-        Point2D delta = new Point2D( e.getX() - mousePt.getX(), e.getY() - mousePt.getY());
+        Point2D delta = new Point2D( event.getX() - currentMousePt.getX(), event.getY() - currentMousePt.getY());
+        Point2D mouseDragPt = new Point2D(event.getX(), event.getY());
+        currentMousePt = mouseDragPt;
 
         if(inputScope.isEditLocked()){
             camera.translate(delta);
-            mousePt = new Point2D(e.getX(),e.getY());
+            currentMousePt = new Point2D(event.getX(),event.getY());
             painter.repaint();
             return;
         }
 
-        Point2D mouseDragPoint = new Point2D(e.getX(), e.getY());
+        if(mouseDragPt.distance(mousePressPt) > 10)
+            dragging = true;
 
         if(!inputScope.isConnecting()) {
-            if (edgeStartNode != null && getNodeFromPoint(mouseDragPoint) != edgeStartNode){
+            if (edgeStartNode != null && getNodeFromPoint(mouseDragPt) != edgeStartNode){
                 inputScope.setConnecting(true);
             }
         }
 
-        if(e.getButton() == MouseButton.PRIMARY){
+        if(event.getButton() == MouseButton.PRIMARY){
 
-            if(pressedKeys.contains(KeyCode.SHIFT)){
+            if((pressedKeys.contains(KeyCode.SHIFT) || dragging) && !draggingNode){
                 camera.translate(delta);
-                mousePt = new Point2D(e.getX(),e.getY());
+                currentMousePt = new Point2D(event.getX(),event.getY());
             }
             else if(clickedNode != null) {
                 if (!clickedNode.isSelected()) {
                     GM.updateNodePosition(clickedNode, delta.multiply(1/ camera.getZoom()));
                 }
                 else {
-                    for (Node n : selectedNodes) {
+                    for (Node n : GM.getSelectedNodes()) {
                         GM.updateNodePosition(n, delta.multiply(1/camera.getZoom()));
                     }
                 }
-                mousePt = new Point2D(e.getX(), e.getY());
+                currentMousePt = new Point2D(event.getX(), event.getY());
             }
         }
-        else if (e.getButton() == MouseButton.SECONDARY) {
+        else if (event.getButton() == MouseButton.SECONDARY) {
             if(clickedNode == null && clickedEdge == null) {   // select in rectangle
-                inputScope.setSelecting(true);
-                mousePt = new Point2D(e.getX(), e.getY());
-                Rectangle2D selectRect = setSelectRectangle(mousePt);
-                inputScope.setSelectRect(selectRect);
-                selectNodesInRect(selectRect);
+                if(mouseDragPt.distance(mousePressPt) > 10){
+                    inputScope.setSelecting(true);
+                    currentMousePt = new Point2D(event.getX(), event.getY());
+                    Rectangle2D selectRect = setSelectRectangle(currentMousePt);
+                    inputScope.setSelectRect(selectRect);
+                    selectNodesInRect(selectRect);
+                }
             }
             else{ //dummy edge
                 if(inputScope.isConnecting()) {
-                    inputScope.setDummyEdgeEnd(camera.inverse(new Point2D((int) e.getX(), (int) e.getY())));
-                    Point2D mousePoint  = new Point2D((int) e.getX(), (int) e.getY());
+                    inputScope.setDummyEdgeEnd(camera.inverse(new Point2D((int) event.getX(), (int) event.getY())));
+                    Point2D mousePoint  = new Point2D((int) event.getX(), (int) event.getY());
                     if (getNodeFromPoint(mousePoint) != null) {
                         if(edgeEndNode != null){
                             edgeEndNode.setHighlighted(false);
@@ -341,15 +390,13 @@ public class MouseHandler {
         }
     }
 
-
-
     private void reverseSelection(Node n){
         if(n.isSelected()){
             n.setSelected(false);
-            selectedNodes.remove(n);
+            GM.getSelectedNodes().remove(n);
         }else{
             n.setSelected(true);
-            selectedNodes.add(n);
+            GM.getSelectedNodes().add(n);
         }
     }
 
@@ -374,10 +421,10 @@ public class MouseHandler {
             edge.setSelected(false);
         }
         selectedEdges.clear();
-        for(Node node : selectedNodes){
+        for(Node node : GM.getSelectedNodes()){
             node.setSelected(false);
         }
-        selectedNodes.clear();
+        GM.getSelectedNodes().clear();
         selectedEdges.clear();
     }
 
@@ -426,4 +473,6 @@ public class MouseHandler {
         double y2 = Math.max(n.getPos().getY(), m.getPos().getY());
         return p.getX() >= x1 - tol && p.getX() <= x2 + tol && p.getY() >= y1 - tol && p.getY() <= y2 + tol;
     }
+
+
 }

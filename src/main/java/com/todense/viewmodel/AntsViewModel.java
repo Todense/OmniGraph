@@ -1,23 +1,19 @@
 package com.todense.viewmodel;
 
 import com.todense.model.graph.Graph;
-import com.todense.viewmodel.algorithm.AlgorithmService;
-import com.todense.viewmodel.ants.AntColonyService;
-import com.todense.viewmodel.ants.AntColonyVariant;
+import com.todense.viewmodel.algorithm.AlgorithmTask;
+import com.todense.viewmodel.ants.*;
 import com.todense.viewmodel.canvas.DisplayMode;
 import com.todense.viewmodel.canvas.drawlayer.layers.AntsDrawLayer;
 import com.todense.viewmodel.scope.AntsScope;
 import com.todense.viewmodel.scope.CanvasScope;
 import com.todense.viewmodel.scope.GraphScope;
-import com.todense.viewmodel.scope.ServiceScope;
+import com.todense.viewmodel.scope.TaskScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.*;
 import javafx.concurrent.WorkerStateEvent;
 import javafx.event.EventHandler;
 import javafx.scene.paint.Color;
@@ -38,12 +34,12 @@ public class AntsViewModel implements ViewModel {
     GraphScope graphScope;
 
     @InjectScope
-    ServiceScope serviceScope;
+    TaskScope taskScope;
 
     @Inject
     NotificationCenter notificationCenter;
 
-    private AntColonyService service;
+    private AntColonyAlgorithmTask algorithmTask;
 
     DateFormat dateFormat = new SimpleDateFormat("mm:ss:SSS");
 
@@ -55,9 +51,9 @@ public class AntsViewModel implements ViewModel {
     }
 
     public void startAlgorithm(){
-        AlgorithmService currentService = serviceScope.getService();
+        AlgorithmTask currentTask = taskScope.getTask();
 
-        if(currentService != null && currentService.isRunning()) return;
+        if(currentTask != null && currentTask.isRunning()) return;
 
         Graph graph = graphScope.getGraphManager().getGraph();
 
@@ -65,31 +61,45 @@ public class AntsViewModel implements ViewModel {
 
         graphScope.getGraphManager().createCompleteGraph();
         startTime = System.currentTimeMillis();
-        notificationCenter.publish(MainViewModel.serviceStarted, algorithmProperty().get().toString());
+        notificationCenter.publish(MainViewModel.TASK_STARTED, algorithmProperty().get().toString());
         graphScope.displayModeProperty().set(DisplayMode.ANT_COLONY);
 
-        service = new AntColonyService(antsScope.algorithmProperty().get(), antsScope, graph);
-        service.setPainter(canvasScope.getPainter());
-        service.bgLengthProperty().addListener((obs, oldVal, newVal) ->
-                notificationCenter.publish("WRITE",
+        switch (antsScope.algorithmProperty().get()){
+            case ACS:
+                algorithmTask = new AntColonySystemTask(graph, antsScope);
+                break;
+            case AS:
+                algorithmTask = new AntSystemTask(graph, antsScope);
+                break;
+            case MMAS:
+                algorithmTask = new MaxMinAntSystemTask(graph, antsScope);
+                break;
+            case RANK_AS:
+                algorithmTask = new RankedAntSystem(graph, antsScope);
+                break;
+        }
+        this.algorithmTask.setPainter(canvasScope.getPainter());
+        this.algorithmTask.bestSolutionLengthProperty().addListener((obs, oldVal, newVal) ->
+                notificationCenter.publish(MainViewModel.WRITE,
                         "Best Length: " + String.format("%.2f", newVal.doubleValue()) +
-                                " found in "+ dateFormat.format(System.currentTimeMillis()-startTime)));
-        serviceScope.setService(service);
+                                " found in "+ dateFormat.format(System.currentTimeMillis()-startTime)+
+                                " after "+ algorithmTask.getIterationCounter()+ " iterations"));
+        taskScope.setTask(this.algorithmTask);
 
         EventHandler<WorkerStateEvent> finishHandler = workerStateEvent ->
-                notificationCenter.publish(MainViewModel.serviceFinished,
+                notificationCenter.publish(MainViewModel.TASK_FINISHED,
                 algorithmProperty().get().toString(),
-                System.currentTimeMillis() - service.getStartTime(),
+                System.currentTimeMillis() - this.algorithmTask.getStartTime(),
                 "");
 
-        service.setOnSucceeded(finishHandler);
-        service.setOnCancelled(finishHandler);
-        service.start();
+        this.algorithmTask.setOnSucceeded(finishHandler);
+        this.algorithmTask.setOnCancelled(finishHandler);
+        this.algorithmTask.run();
     }
 
     public void stopAlgorithm(){
-        if(service != null && service.isRunning()){
-            service.cancel();
+        if(algorithmTask != null && algorithmTask.isRunning()){
+            algorithmTask.cancel();
         }
     }
 

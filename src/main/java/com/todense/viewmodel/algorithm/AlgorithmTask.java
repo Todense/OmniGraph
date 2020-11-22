@@ -2,10 +2,9 @@ package com.todense.viewmodel.algorithm;
 
 import com.todense.model.graph.Graph;
 import com.todense.viewmodel.canvas.Painter;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 
-public abstract class AlgorithmService extends Service<Void> {
+public abstract class AlgorithmTask extends Task<Void>{
 
     protected Graph graph;
     protected String resultMessage = "";
@@ -17,7 +16,7 @@ public abstract class AlgorithmService extends Service<Void> {
     private boolean cancelled = false;
     private boolean connectedToUI = false;
 
-    public AlgorithmService(Graph graph){
+    public AlgorithmTask(Graph graph){
         this.graph = graph;
         graph.reset();
     }
@@ -25,6 +24,16 @@ public abstract class AlgorithmService extends Service<Void> {
     public abstract void perform() throws InterruptedException;
 
     protected abstract void onFinished();
+
+    @Override
+    protected Void call() throws Exception {
+        startTime = System.currentTimeMillis();
+        painter.startAnimationTimer();
+        painter.sleep();
+        perform();
+        onFinished();
+        return null;
+    }
 
     protected void repaint(){
         if(connectedToUI){
@@ -39,32 +48,18 @@ public abstract class AlgorithmService extends Service<Void> {
     }
 
     @Override
-    protected Task<Void> createTask() {
-        return new Task<>() {
-            @Override
-            protected Void call() throws InterruptedException {
-                startTime = System.currentTimeMillis();
-                painter.startAnimationTimer();
-                painter.sleep();
-                perform();
-                onFinished();
-                return null;
-            }
-
-            @Override
-            protected void succeeded() {
-                painter.stopAnimationTimer();
-                painter.repaint();
-            }
-
-            @Override
-            protected void cancelled() {
-                cancelled = true;
-                painter.stopAnimationTimer();
-                painter.repaint();
-            }
-        };
+    protected void succeeded() {
+        painter.stopAnimationTimer();
+        painter.repaint();
     }
+
+    @Override
+    protected void cancelled() {
+        cancelled = true;
+        painter.stopAnimationTimer();
+        painter.repaint();
+    }
+
 
     public double getStartTime() {
         return startTime;
@@ -74,6 +69,8 @@ public abstract class AlgorithmService extends Service<Void> {
         this.painter = painter;
         connectedToUI = true;
     }
+
+
 
     public String getResultMessage() {
         return resultMessage;
@@ -85,6 +82,10 @@ public abstract class AlgorithmService extends Service<Void> {
 
     public boolean isCancelled() {
         return cancelled;
+    }
+
+    public boolean isConnectedToUI() {
+        return connectedToUI;
     }
 
     public double getResult() {

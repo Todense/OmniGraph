@@ -2,7 +2,7 @@ package com.todense.viewmodel;
 
 import com.todense.viewmodel.graph.GraphManager;
 import com.todense.viewmodel.scope.GraphScope;
-import com.todense.viewmodel.scope.ServiceScope;
+import com.todense.viewmodel.scope.TaskScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
@@ -15,7 +15,7 @@ public class OperationsViewModel implements ViewModel {
     GraphScope graphScope;
 
     @InjectScope
-    ServiceScope serviceScope;
+    TaskScope taskScope;
 
     @Inject
     NotificationCenter notificationCenter;
@@ -27,25 +27,25 @@ public class OperationsViewModel implements ViewModel {
     }
 
     public void createPath() {
-        notificationCenter.publish(MainViewModel.graphEditRequest, (Runnable) () -> graphManager.createPath());
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable) () -> graphManager.createPath());
 
     }
 
     public void createCompleteGraph() {
-        notificationCenter.publish(MainViewModel.graphEditRequest, (Runnable) () -> graphManager.createCompleteGraph());
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable) () -> graphManager.createCompleteGraph());
 
     }
 
     public void createComplementGraph() {
-        notificationCenter.publish(MainViewModel.graphEditRequest, (Runnable) () -> graphManager.createComplementGraph());
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable) () -> graphManager.createComplementGraph());
 
     }
 
     public void subdivideEdges() {
-        notificationCenter.publish(MainViewModel.graphEditRequest, (Runnable) () -> graphManager.subdivideEdges());
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable) () -> graphManager.subdivideEdges());
     }
 
     public void deleteEdges() {
-        notificationCenter.publish(MainViewModel.graphEditRequest, (Runnable) () -> graphManager.deleteEdges());
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable) () -> graphManager.deleteEdges());
     }
 }

@@ -43,7 +43,7 @@ public class EdgePopOverViewModel implements ViewModel {
     }
 
     public void deleteEdges() {
-        notificationCenter.publish(MainViewModel.graphEditRequest, (Runnable)() ->{
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable)() ->{
             for (Edge edge : edges) {
                 graphManager.getGraph().removeEdge(edge);
             }
@@ -52,7 +52,7 @@ public class EdgePopOverViewModel implements ViewModel {
     }
 
     public void subdivideEdges(){
-        notificationCenter.publish(MainViewModel.graphEditRequest, (Runnable)() ->{
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable)() ->{
             for (Edge edge : edges) {
                 graphManager.subdivideEdge(edge);
             }
@@ -61,7 +61,7 @@ public class EdgePopOverViewModel implements ViewModel {
     }
 
     public void contractEdges() {
-        notificationCenter.publish(MainViewModel.graphEditRequest, (Runnable)() ->{
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable)() ->{
             for (Edge edge : edges) {
                 if(graphManager.getGraph().getEdge(edge.getN1(), edge.getN2()) != null){
                     graphManager.contractEdge(edge);

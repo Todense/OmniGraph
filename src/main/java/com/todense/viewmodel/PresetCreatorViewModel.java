@@ -32,7 +32,11 @@ public class PresetCreatorViewModel implements ViewModel {
     @Inject
     NotificationCenter notificationCenter;
 
-    private void create(Preset preset, Point2D center) {
+    public void initialize(){
+        notificationCenter.subscribe("PRESET", (key, payload) -> createPreset());
+    }
+
+    private Graph create(Preset preset, Point2D center) {
 
         Graph presetGraph = null;
 
@@ -50,19 +54,18 @@ public class PresetCreatorViewModel implements ViewModel {
             case COMPLETE_BIPARTITE:
                 presetGraph = PresetCreator.createCompleteBipartite(getParam1(), getParam2(), center); break;
         }
-
-        notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, presetGraph);
+        return presetGraph;
     }
 
     public void createPreset() {
-        notificationCenter.publish(MainViewModel.threadStarted, "Creating preset...");
+        notificationCenter.publish(MainViewModel.THREAD_STARTED, "Creating preset...");
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Thread thread = new Thread(() -> {
-            create(presetProperty.get(), new Point2D(canvasScope.getCanvasWidth()/2, canvasScope.getCanvasHeight()/2));
-            notificationCenter.publish(MainViewModel.threadFinished, presetProperty.get().toString() +" created");
+            Graph presetGraph = create(presetProperty.get(), new Point2D(canvasScope.getCanvasWidth()/2, canvasScope.getCanvasHeight()/2));
+            notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, presetGraph);
+            notificationCenter.publish(MainViewModel.THREAD_FINISHED, presetProperty.get().toString() +" created");
         });
         executor.execute(thread);
-        //thread.start();
     }
 
     public ObjectProperty<Preset> presetProperty() {

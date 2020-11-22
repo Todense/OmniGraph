@@ -19,11 +19,12 @@ public class Ant{
     private int goal;
     private int previous;
 
+
     private DoubleProperty x  = new SimpleDoubleProperty();
     private DoubleProperty y  = new SimpleDoubleProperty();
 
-    public Ant(int n){
-        start = n;
+    public Ant(int start){
+        this.start = start;
     }
 
     public ArrayList<Integer> getCycle() {

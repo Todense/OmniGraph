@@ -83,7 +83,7 @@ public class CanvasViewModel implements ViewModel {
         });
 
         notificationCenter.subscribe(REPAINT_REQUEST,  (key, payload) -> painter.repaint());
-        notificationCenter.subscribe(MainViewModel.graphEditRequest,
+        notificationCenter.subscribe(MainViewModel.GRAPH_EDIT_REQUEST,
                 (key, payload) -> painter.repaint());
 
         notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_REQUEST, (key, payload) -> {
@@ -119,6 +119,10 @@ public class CanvasViewModel implements ViewModel {
 
     public void setCanvasNode(Node canvasNode){
         popOverManager.setOwner(canvasNode);
+    }
+
+    public PopOverManager getPopOverManager() {
+        return popOverManager;
     }
 
     public BooleanProperty editLockedProperty(){

@@ -1,5 +1,6 @@
 package com.todense.view;
 
+import com.todense.util.Util;
 import com.todense.viewmodel.AntsViewModel;
 import com.todense.viewmodel.ants.AntColonyVariant;
 import de.saxsys.mvvmfx.FxmlView;
@@ -15,8 +16,8 @@ public class AntsView implements FxmlView<AntsViewModel> {
     @FXML private ChoiceBox<AntColonyVariant> algorithmChoiceBox;
     @FXML private ColorPicker antColorPicker, cycleColorPicker;
     @FXML private ToggleSwitch twoOptToggleSwitch, threeOptToggleSwitch, animationToggleSwitch, showPheromonesToggleSwitch;
-    @FXML private Label alphaLabel, betaLabel, evaporationLabel, q0Label, ksiLabel,
-            scaleLabel, antCountLabel, neighbourhoodLabel, rankLabel;
+    @FXML private TextField alphaTextField, betaTextField, evaporationTextField, q0TextField, ksiTextField,
+            scaleTextField, antCountTextField, neighbourhoodTextField, rankTextField;
     @FXML private Slider alphaSlider, betaSlider, evaporationSlider, q0Slider, scaleSlider,
             ksiSlider, antCountSlider, neighbourhoodSlider, rankSlider;
     @FXML private Button startButton;
@@ -26,15 +27,15 @@ public class AntsView implements FxmlView<AntsViewModel> {
     AntsViewModel viewModel;
 
     public void initialize(){
-        bindLabel(alphaLabel, alphaSlider);
-        bindLabel(betaLabel, betaSlider);
-        bindLabel(evaporationLabel, evaporationSlider);
-        bindLabel(q0Label, q0Slider);
-        bindLabel(ksiLabel, ksiSlider);
-        bindIntLabel(scaleLabel, scaleSlider);
-        bindIntLabel(antCountLabel, antCountSlider);
-        bindIntLabel(neighbourhoodLabel, neighbourhoodSlider);
-        bindIntLabel(rankLabel, rankSlider);
+        Util.bindSliderAndTextField(alphaSlider, alphaTextField, "###.##");
+        Util.bindSliderAndTextField(betaSlider, betaTextField, "###.##");
+        Util.bindSliderAndTextField(evaporationSlider, evaporationTextField, "###.##");
+        Util.bindSliderAndTextField(q0Slider, q0TextField, "###.##");
+        Util.bindSliderAndTextField(ksiSlider, ksiTextField, "###.##");
+        Util.bindSliderAndTextField(scaleSlider, scaleTextField, "###.##");
+        Util.bindSliderAndTextField(antCountSlider, antCountTextField, "##");
+        Util.bindSliderAndTextField(neighbourhoodSlider, neighbourhoodTextField, "###");
+        Util.bindSliderAndTextField(rankSlider, rankTextField, "###");
 
         algorithmChoiceBox.getItems().addAll(AntColonyVariant.values());
         algorithmChoiceBox.valueProperty().bindBidirectional(viewModel.algorithmProperty());
@@ -84,11 +85,13 @@ public class AntsView implements FxmlView<AntsViewModel> {
     }
 
     private void bindLabel(Label label, Slider slider){
-        label.textProperty().bind(Bindings.createStringBinding(() -> String.format("%.2f", slider.valueProperty().get()), slider.valueProperty()));
+        label.textProperty().bind(Bindings.createStringBinding(() ->
+                String.format("%.2f", slider.valueProperty().get()), slider.valueProperty()));
     }
 
     private void bindIntLabel(Label label, Slider slider){
-        label.textProperty().bind(Bindings.createStringBinding(() -> String.valueOf(slider.valueProperty().intValue()), slider.valueProperty()));
+        label.textProperty().bind(Bindings.createStringBinding(() ->
+                String.valueOf(slider.valueProperty().intValue()), slider.valueProperty()));
     }
 
     @FXML
@@ -170,8 +173,6 @@ public class AntsView implements FxmlView<AntsViewModel> {
     private void antCountIncrementAction(){
         antCountSlider.increment();
     }
-
-
 
     @FXML
     private void scaleDecrementAction() {

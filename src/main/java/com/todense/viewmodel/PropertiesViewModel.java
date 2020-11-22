@@ -3,7 +3,7 @@ package com.todense.viewmodel;
 import com.todense.model.graph.Graph;
 import com.todense.viewmodel.graph.GraphAnalyzer;
 import com.todense.viewmodel.scope.GraphScope;
-import com.todense.viewmodel.scope.ServiceScope;
+import com.todense.viewmodel.scope.TaskScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
@@ -30,7 +30,7 @@ public class PropertiesViewModel implements ViewModel {
     GraphScope graphScope;
 
     @InjectScope
-    ServiceScope serviceScope;
+    TaskScope taskScope;
 
     @Inject
     NotificationCenter notificationCenter;
@@ -64,13 +64,15 @@ public class PropertiesViewModel implements ViewModel {
     }
 
     public void start(){
+        if(taskScope.getTask() != null && taskScope.getTask().isRunning())
+            return;
         if(!propertiesThread.isAlive()){
-            notificationCenter.publish(MainViewModel.threadStarted, "Calculating graph properties...");
+            notificationCenter.publish(MainViewModel.THREAD_STARTED, "Calculating graph properties...");
             propertiesThread = new Thread(() -> {
                 calculate();
-                notificationCenter.publish(MainViewModel.threadFinished, "Calculated Properties");
+                notificationCenter.publish(MainViewModel.THREAD_FINISHED, "Calculated Properties");
             });
-            serviceScope.setThread(propertiesThread);
+            taskScope.setThread(propertiesThread);
             propertiesThread.start();
         }
     }

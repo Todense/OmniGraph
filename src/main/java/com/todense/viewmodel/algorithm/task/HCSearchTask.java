@@ -1,16 +1,16 @@
-package com.todense.viewmodel.algorithm.service;
+package com.todense.viewmodel.algorithm.task;
 
 import com.todense.model.graph.Edge;
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
-import com.todense.viewmodel.algorithm.AlgorithmService;
+import com.todense.viewmodel.algorithm.AlgorithmTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Stack;
 
 
-public class HCSearchService extends AlgorithmService {
+public class HCSearchTask extends AlgorithmTask {
 
     ArrayList<Node> cycle;
     boolean[] visitedDFS;
@@ -20,7 +20,7 @@ public class HCSearchService extends AlgorithmService {
     private Node startNode;
     private boolean checkingConnectivity;
 
-    public HCSearchService(Node startNode, Graph graph, boolean checkingConnectivity){
+    public HCSearchTask(Node startNode, Graph graph, boolean checkingConnectivity){
         super(graph);
         this.startNode = startNode;
         this.checkingConnectivity = checkingConnectivity;

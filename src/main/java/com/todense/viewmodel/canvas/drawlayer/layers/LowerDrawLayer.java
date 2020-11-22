@@ -1,5 +1,6 @@
 package com.todense.viewmodel.canvas.drawlayer.layers;
 
+import com.todense.model.graph.Node;
 import com.todense.viewmodel.canvas.drawlayer.DrawLayer;
 import com.todense.viewmodel.scope.GraphScope;
 import com.todense.viewmodel.scope.InputScope;
@@ -32,10 +33,11 @@ public class LowerDrawLayer implements DrawLayer {
 
 
         double circleSize = graphScope.getNodeSize() * 0.5;
-        Point2D startPoint = inputScope.getDummyEdgeStart();
         Point2D endPoint = inputScope.getDummyEdgeEnd();
-
-        gc.strokeLine(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
+        for(Node node : inputScope.getDummyEdgeStartNodes()){
+            Point2D startPoint = node.getPos();
+            gc.strokeLine(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
+        }
         gc.fillOval(endPoint.getX()-circleSize/2, endPoint.getY()-circleSize/2, circleSize,circleSize);
     }
 

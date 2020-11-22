@@ -3,6 +3,8 @@ package com.todense.viewmodel.graph;
 import com.todense.model.graph.Edge;
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
+import javafx.geometry.Point2D;
+import javafx.geometry.Rectangle2D;
 
 import java.util.LinkedList;
 import java.util.Stack;
@@ -186,11 +188,16 @@ public class GraphAnalyzer {
         return sum / (double)(order * (order-1)/4);
     }
 
-    public static double getNearestNeighbourSpanningTreeLength(Graph graph){
+    public static double getNearestNeighbourSpanningTreeLength(Graph graph) {
+        return getNearestNeighbourSpanningTreeLength(graph, graph.getOrder()-1);
+    }
+
+    public static double getNearestNeighbourSpanningTreeLength(Graph graph, int limit){
         double length = 0;
         Node currentNode = graph.getNodes().get(0);
         currentNode.setVisited(true);
-        for (int i = 0; i < graph.getOrder()-1; i++) {
+        int iterCount = limit < graph.getOrder()? limit : graph.getOrder()-1;
+        for (int i = 0; i < iterCount; i++) {
             double minDist = Double.POSITIVE_INFINITY;
             Node bestNode = null;
             for(Node node : graph.getNodes()){
@@ -211,5 +218,42 @@ public class GraphAnalyzer {
             node.setVisited(false);
         }
         return length;
+    }
+
+    public static Point2D getGraphCenter(Graph graph){
+        double xMin = Double.MAX_VALUE;
+        double yMin = Double.MAX_VALUE;
+        double xMax = -Double.MAX_VALUE;
+        double yMax = -Double.MAX_VALUE;
+
+        for (Node node : graph.getNodes()) {
+            double x = node.getPos().getX();
+            if(x < xMin) xMin = x;
+            if(x > xMax) xMax = x;
+
+            double y = node.getPos().getY();
+            if(y < yMin) yMin = y;
+            if(y > yMax) yMax = y;
+        }
+
+        return new Point2D((xMax+xMin)/2, (yMax+yMin)/2);
+    }
+
+    public static Rectangle2D getGraphBounds(Graph graph){
+        double xMin = Double.MAX_VALUE;
+        double yMin = Double.MAX_VALUE;
+        double xMax = -Double.MAX_VALUE;
+        double yMax = -Double.MAX_VALUE;
+
+        for (Node node : graph.getNodes()) {
+            double x = node.getPos().getX();
+            if(x < xMin) xMin = x;
+            if(x > xMax) xMax = x;
+
+            double y = node.getPos().getY();
+            if(y < yMin) yMin = y;
+            if(y > yMax) yMax = y;
+        }
+        return new Rectangle2D(xMin, yMin, xMax-xMin, yMax-yMin);
     }
 }

@@ -110,14 +110,14 @@ public class RandomGeneratorViewModel implements ViewModel {
         try{
             Graph randomGraph = RandomGraphGenerator.generateGraph(nodeCountProperty.get(), pointGenerator, edgeGenerator, minDist);
             notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, randomGraph);
-            notificationCenter.publish(MainViewModel.threadFinished, "Random graph generated");
+            notificationCenter.publish(MainViewModel.THREAD_FINISHED, "Random graph generated");
         } catch (RuntimeException e){
-            notificationCenter.publish(MainViewModel.threadFinished, e.getMessage());
+            notificationCenter.publish(MainViewModel.THREAD_FINISHED, e.getMessage());
         }
     }
 
     public void generate(){
-        notificationCenter.publish(MainViewModel.threadStarted, "Generating random graph...");
+        notificationCenter.publish(MainViewModel.THREAD_STARTED, "Generating random graph...");
         Thread thread = new Thread(this::generateGraph);
         thread.start();
     }

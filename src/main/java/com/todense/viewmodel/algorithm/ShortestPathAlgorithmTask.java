@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public abstract class ShortestPathAlgorithmService extends WeightedAlgorithmService {
+public abstract class ShortestPathAlgorithmTask extends WeightedAlgorithmTask {
 
     protected List<Node> path = new ArrayList<>();
     protected List<Node> previousNodes;
@@ -27,7 +27,7 @@ public abstract class ShortestPathAlgorithmService extends WeightedAlgorithmServ
         }
     }
 
-    public ShortestPathAlgorithmService(Graph graph, boolean customWeight) {
+    public ShortestPathAlgorithmTask(Graph graph, boolean customWeight) {
         super(graph, customWeight);
         previousNodes = new ArrayList<>(graph.getNodes().size());
         for (int i = 0; i < graph.getNodes().size(); i++) {

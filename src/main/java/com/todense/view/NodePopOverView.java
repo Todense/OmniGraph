@@ -47,5 +47,8 @@ public class NodePopOverView implements FxmlView<NodePopOverViewModel> {
         viewModel.setGoalNode();
     }
 
+    @FXML
+    public void copyAction(){viewModel.copySubgraph();}
+
 
 }

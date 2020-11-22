@@ -1,17 +1,17 @@
-package com.todense.viewmodel.algorithm.service;
+package com.todense.viewmodel.algorithm.task;
 
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
-import com.todense.viewmodel.algorithm.AlgorithmService;
+import com.todense.viewmodel.algorithm.AlgorithmTask;
 
 import java.util.LinkedList;
 
 
-public class BFSService extends AlgorithmService {
+public class BFSTask extends AlgorithmTask {
 
 	private Node startNode;
 
-	public BFSService(Node startNode, Graph graph){
+	public BFSTask(Node startNode, Graph graph){
 		super(graph);
 		this.startNode = startNode;
 	}

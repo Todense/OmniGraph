@@ -2,7 +2,7 @@ package com.todense.viewmodel.algorithm;
 
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
-import com.todense.viewmodel.algorithm.service.*;
+import com.todense.viewmodel.algorithm.task.*;
 import com.todense.viewmodel.random.EdgeGenerator;
 import com.todense.viewmodel.random.Generator;
 import com.todense.viewmodel.random.RandomGraphGenerator;
@@ -13,7 +13,7 @@ import org.junit.jupiter.api.RepeatedTest;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AlgorithmServiceTest {
+class AlgorithmTaskTest {
 
     @RepeatedTest(100)
     void hamiltonianCycleTest() {
@@ -28,7 +28,7 @@ class AlgorithmServiceTest {
                 graph.addEdge(n, m);
             }
         }
-        HCSearchService hcService = new HCSearchService(graph.getNodes().get(0),graph, true);
+        HCSearchTask hcService = new HCSearchTask(graph.getNodes().get(0),graph, true);
         assertDoesNotThrow(hcService::perform, () -> "HC Service should not throw exceptions");
         assertTrue(hcService.isCycleFound(), () -> "Hamiltonian Cycle should be found");
     }
@@ -41,12 +41,12 @@ class AlgorithmServiceTest {
         Node startNode = graph.getNodes().get(0);
         Node endNode = graph.getNodes().get(graph.getNodes().size()-1);
 
-        DFSService dfsService = new DFSService(startNode, graph);
-        BFSService bfsService = new BFSService(startNode, graph);
-        AStarService aStarService = new AStarService(startNode, endNode, graph, false);
-        DijkstraService dijkstraService = new DijkstraService(startNode, endNode, graph, false);
-        PrimService primService = new PrimService(graph.getNodes().get(0), graph, false);
-        KruskalService kruskalService = new KruskalService(graph, false);
+        DFSTask dfsService = new DFSTask(startNode, graph);
+        BFSTask bfsService = new BFSTask(startNode, graph);
+        AStarTask aStarService = new AStarTask(startNode, endNode, graph, false);
+        DijkstraTask dijkstraService = new DijkstraTask(startNode, endNode, graph, false);
+        PrimTask primService = new PrimTask(graph.getNodes().get(0), graph, false);
+        KruskalTask kruskalService = new KruskalTask(graph, false);
 
         assertDoesNotThrow(dfsService::perform, () -> "DFS should not throw exceptions");
         assertDoesNotThrow(bfsService::perform, () -> "BFS should not throw exceptions");

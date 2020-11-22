@@ -1,15 +1,15 @@
-package com.todense.viewmodel.algorithm.service;
+package com.todense.viewmodel.algorithm.task;
 
 import com.todense.model.graph.Edge;
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
-import com.todense.viewmodel.algorithm.WeightedAlgorithmService;
+import com.todense.viewmodel.algorithm.WeightedAlgorithmTask;
 import com.todense.viewmodel.graph.GraphAnalyzer;
 
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
-public class KruskalService extends WeightedAlgorithmService {
+public class KruskalTask extends WeightedAlgorithmTask {
 
 	double weight;
 	int counter;
@@ -17,7 +17,7 @@ public class KruskalService extends WeightedAlgorithmService {
 	int[] parent;
 	int componentCount;
 
-	public KruskalService(Graph graph, boolean customWeight) {
+	public KruskalTask(Graph graph, boolean customWeight) {
 		super(graph, customWeight);
 	}
 

@@ -16,7 +16,7 @@
 
 <VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="220.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.GraphView">
    <Label alignment="CENTER" prefHeight="1.0" prefWidth="208.0" styleClass="darkLabel" text="Node Options" />
-   <VBox alignment="CENTER" prefHeight="149.0" prefWidth="220.0" spacing="5.0" styleClass="subsection" >
+   <VBox alignment="CENTER" prefHeight="149.0" prefWidth="220.0" spacing="5.0" styleClass="subsection">
       <children>
          <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="9.0" prefWidth="146.0">
             <Label contentDisplay="CENTER" prefHeight="15.0" prefWidth="77.0" text="Size">
@@ -63,7 +63,7 @@
                   <FontIcon iconColor="#d0d0d0" iconLiteral="fa-paint-brush" iconSize="15" />
                </graphic>
                <tooltip>
-                  <Tooltip text="Apply to all nodes" showDelay="0.1s"  />
+                  <Tooltip showDelay="0.1s" text="Apply to all nodes" />
                </tooltip>
             </Button>
             <VBox.margin>
@@ -93,7 +93,7 @@
       </VBox.margin>
    </VBox>
    <Label alignment="CENTER" layoutX="16.0" layoutY="10.0" prefHeight="7.0" prefWidth="208.0" styleClass="darkLabel" text="Edge Options" />
-   <VBox alignment="CENTER" prefHeight="123.0" prefWidth="220.0" spacing="5.0" styleClass="subsection" >
+   <VBox alignment="CENTER" prefHeight="123.0" prefWidth="220.0" spacing="5.0" styleClass="subsection">
       <children>
          <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="11.0" prefWidth="146.0">
             <Label contentDisplay="CENTER" prefHeight="15.0" prefWidth="98.0" text="Width">
@@ -146,7 +146,7 @@
                   <FontIcon iconColor="#d0d0d0" iconLiteral="fa-paint-brush" iconSize="15" />
                </graphic>
                <tooltip>
-                  <Tooltip text="Apply to all edges" showDelay="0.1s"  />
+                  <Tooltip showDelay="0.1s" text="Apply to all edges" />
                </tooltip>
             </Button>
          </HBox>
@@ -162,6 +162,11 @@
                <Insets bottom="5.0" />
             </VBox.margin>
          </HBox>
+         <ToggleSwitch fx:id="edgeVisibilityToggleSwitch" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="190.0" selected="true" text="Visible">
+            <font>
+               <Font size="16.0" />
+            </font>
+         </ToggleSwitch>
       </children>
    </VBox>
 </VBox>

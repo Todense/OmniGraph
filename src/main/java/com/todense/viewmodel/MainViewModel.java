@@ -32,21 +32,22 @@ import java.text.SimpleDateFormat;
 @ScopeProvider(scopes = {AlgorithmScope.class, GraphScope.class,
         BackgroundScope.class, CanvasScope.class,
         AnimationScope.class, KeysScope.class,
-        AntsScope.class, ServiceScope.class, InputScope.class})
+        AntsScope.class, TaskScope.class, InputScope.class})
 public class MainViewModel implements ViewModel {
 
-    public final static String serviceStarted = "SERVICE_STARTED";
-    public final static String serviceFinished = "SERVICE_FINISHED";
-    public final static String serviceCancelled = "SERVICE_CANCELLED";
-    public final static String threadStarted = "THREAD_STARTED";
-    public final static String threadFinished = "THREAD_FINISHED";
-    public final static String graphEditRequest = "EDIT";
+    public final static String TASK_STARTED = "TASK_STARTED";
+    public final static String TASK_FINISHED = "TASK_FINISHED";
+    public final static String TASK_CANCELLED = "TASK_CANCELLED";
+    public final static String THREAD_STARTED = "THREAD_STARTED";
+    public final static String THREAD_FINISHED = "THREAD_FINISHED";
+    public final static String GRAPH_EDIT_REQUEST = "GRAPH_EDIT_REQUEST";
+    public final static String WRITE = "WRITE";
 
     private ObjectProperty<String> textProperty = new SimpleObjectProperty<>("");
     private ObjectProperty<String> infoTextProperty = new SimpleObjectProperty<>();
     private ObjectProperty<Color> appColorProperty = new SimpleObjectProperty<>(Color.rgb(55,85,125));
     private BooleanProperty workingProperty = new SimpleBooleanProperty(false);
-    private BooleanProperty serviceRunningProperty = new SimpleBooleanProperty(false);
+    private BooleanProperty taskRunningProperty = new SimpleBooleanProperty(false);
     private BooleanProperty editManuallyLockedProperty = new SimpleBooleanProperty(false);
     private BooleanProperty editLockedProperty = new SimpleBooleanProperty(false);
 
@@ -64,7 +65,7 @@ public class MainViewModel implements ViewModel {
     GraphScope graphScope;
 
     @InjectScope
-    ServiceScope serviceScope;
+    TaskScope taskScope;
 
     @InjectScope
     InputScope inputScope;
@@ -77,47 +78,47 @@ public class MainViewModel implements ViewModel {
     public void initialize(){
         graphManager = graphScope.getGraphManager();
 
-        notificationCenter.subscribe("WRITE", (key, payload) -> write((String) payload[0]));
+        notificationCenter.subscribe(MainViewModel.WRITE, (key, payload) -> write((String) payload[0]));
 
-        notificationCenter.subscribe(serviceCancelled, (key, payload) ->{
+        notificationCenter.subscribe(TASK_CANCELLED, (key, payload) ->{
             writeInfo("");
             write(payload[0]+ " cancelled");
             workingProperty.set(false);
-            serviceRunningProperty.set(false);
+            taskRunningProperty.set(false);
         });
 
-        notificationCenter.subscribe(serviceStarted, (key, payload) -> {
-            String serviceName = (String) payload[0];
-            write(serviceName + " started");
+        notificationCenter.subscribe(TASK_STARTED, (key, payload) -> {
+            String taskName = (String) payload[0];
+            write(taskName + " started");
             writeInfo("Running: "+ payload[0]);
             workingProperty.set(true);
-            serviceRunningProperty.set(true);
+            taskRunningProperty.set(true);
             graphManager.resetGraph();
         });
 
-        notificationCenter.subscribe(serviceFinished, (key, payload) -> { //payload = name, duration, result
+        notificationCenter.subscribe(TASK_FINISHED, (key, payload) -> { //payload = name, duration, result
             write(payload[0] + " finished in "+ durationFormatter.format(payload[1]));
             if(!((String) payload[2]).isEmpty()){
                 write((String) payload[2]); // result message
             }
             writeInfo("");
             workingProperty.set(false);
-            serviceRunningProperty.set(false);
+            taskRunningProperty.set(false);
         });
 
-        notificationCenter.subscribe(threadStarted, (key, payload) -> {
+        notificationCenter.subscribe(THREAD_STARTED, (key, payload) -> {
             stop();
             writeInfo((String) payload[0]);
             workingProperty.set(true);
         });
 
-        notificationCenter.subscribe(threadFinished, (key, payload) -> {
+        notificationCenter.subscribe(THREAD_FINISHED, (key, payload) -> {
             write((String) payload[0]);
             writeInfo("");
             workingProperty.set(false);
         });
 
-        notificationCenter.subscribe(graphEditRequest, (key, payload) -> {
+        notificationCenter.subscribe(GRAPH_EDIT_REQUEST, (key, payload) -> {
             if(!workingProperty.get()) {
                 Runnable runnable = (Runnable) payload[0];
                 runnable.run();
@@ -138,6 +139,10 @@ public class MainViewModel implements ViewModel {
     }
 
     public void openGraph(File file) {
+
+        if(taskScope.getTask() != null && taskScope.getTask().isRunning())
+            return;
+
         String extension = FilenameUtils.getExtension(file.getAbsolutePath());
         GraphReader graphReader = null;
 
@@ -161,7 +166,7 @@ public class MainViewModel implements ViewModel {
 
 
     public void stop() {
-        serviceScope.stop();
+        taskScope.stop();
     }
 
     public void setKeyInput(Scene scene){
@@ -175,13 +180,15 @@ public class MainViewModel implements ViewModel {
                 } else if (keyEvent.getCode() == KeyCode.DELETE) {
                     deleteGraph();
                 } else if (keyEvent.getCode() == KeyCode.P) {
-                    notificationCenter.publish(graphEditRequest, (Runnable)() -> graphManager.createPath());
+                    notificationCenter.publish(GRAPH_EDIT_REQUEST, (Runnable)() -> graphManager.createPath());
                 } else if (keyEvent.getCode() == KeyCode.K) {
-                    notificationCenter.publish(graphEditRequest, (Runnable)() -> graphManager.createCompleteGraph());
+                    notificationCenter.publish(GRAPH_EDIT_REQUEST, (Runnable)() -> graphManager.createCompleteGraph());
                 } else if(keyEvent.getCode() == KeyCode.L){
                     notificationCenter.publish("LAYOUT");
                 } else if(keyEvent.getCode() == KeyCode.Q){
                     adjustCameraToGraph();
+                }  else if(keyEvent.getCode() == KeyCode.E){
+                    notificationCenter.publish("PRESET");
                 }
             }
         });
@@ -190,9 +197,12 @@ public class MainViewModel implements ViewModel {
     }
 
     public void write(String s){
-        Platform.runLater(() ->
-                textProperty.setValue(textProperty.get()
-                        + "\n"+"["+timeFormatter.format(System.currentTimeMillis())+"]"+" "+s));
+        Platform.runLater(() -> {
+            String text = textProperty.get()
+                    + "\n"+"["+timeFormatter.format(System.currentTimeMillis())+"]"+" "+s;
+            textProperty.setValue(text);
+            System.out.println(text);
+        });
     }
 
     public void writeInfo(String s){
@@ -200,14 +210,14 @@ public class MainViewModel implements ViewModel {
     }
 
     public void deleteGraph() {
-        notificationCenter.publish(graphEditRequest, (Runnable)() -> {
+        notificationCenter.publish(GRAPH_EDIT_REQUEST, (Runnable)() -> {
             graphManager.clearGraph();
             notificationCenter.publish("RESET");
         });
     }
 
     public void resetGraph(){
-        notificationCenter.publish(graphEditRequest, (Runnable)() -> {
+        notificationCenter.publish(GRAPH_EDIT_REQUEST, (Runnable)() -> {
             graphManager.resetGraph();
             notificationCenter.publish("RESET");
         });
@@ -242,8 +252,8 @@ public class MainViewModel implements ViewModel {
         return editLockedProperty;
     }
 
-    public BooleanProperty serviceRunningProperty() {
-        return serviceRunningProperty;
+    public BooleanProperty taskRunningProperty() {
+        return taskRunningProperty;
     }
 
     public Color getAppColor() {

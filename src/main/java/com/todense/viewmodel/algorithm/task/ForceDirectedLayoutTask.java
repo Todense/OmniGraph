@@ -1,9 +1,9 @@
-package com.todense.viewmodel.algorithm.service;
+package com.todense.viewmodel.algorithm.task;
 
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.LayoutViewModel;
-import com.todense.viewmodel.algorithm.AlgorithmService;
+import com.todense.viewmodel.algorithm.AlgorithmTask;
 import com.todense.viewmodel.canvas.Painter;
 import com.todense.viewmodel.graph.GraphManager;
 import com.todense.viewmodel.layout.GraphCoarsener;
@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Stack;
 
-public class ForceDirectedLayoutService extends AlgorithmService {
+public class ForceDirectedLayoutTask extends AlgorithmTask {
 
 	private GraphManager graphManager;
 	private LayoutViewModel layoutVM;
@@ -48,7 +48,7 @@ public class ForceDirectedLayoutService extends AlgorithmService {
 	private LongRangeForce longRangeForce;
 	private Point2D center;
 
-	public ForceDirectedLayoutService(GraphManager graphManager, LayoutViewModel layoutVM, Point2D center){
+	public ForceDirectedLayoutTask(GraphManager graphManager, LayoutViewModel layoutVM, Point2D center){
     	super(graphManager.getGraph());
 		this.graphManager = graphManager;
 		this.layoutVM = layoutVM;

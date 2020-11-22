@@ -55,7 +55,7 @@ public class MainView implements FxmlView<MainViewModel> {
             textArea.deselect();
         });
 
-        stopButton.disableProperty().bind(viewModel.serviceRunningProperty().not());
+        stopButton.disableProperty().bind(viewModel.taskRunningProperty().not());
 
         viewModel.workingProperty().addListener((obs, oldVal, newVal) -> Platform.runLater(()->{
             if(newVal) {

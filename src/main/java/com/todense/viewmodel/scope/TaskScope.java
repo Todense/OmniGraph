@@ -1,23 +1,23 @@
 package com.todense.viewmodel.scope;
 
-import com.todense.viewmodel.algorithm.AlgorithmService;
+import com.todense.viewmodel.algorithm.AlgorithmTask;
 import de.saxsys.mvvmfx.Scope;
 
-public class ServiceScope implements Scope {
+public class TaskScope implements Scope {
 
-    private AlgorithmService service;
+    private AlgorithmTask task;
 
     private Thread thread;
 
-    public AlgorithmService getService() {
-        return service;
+    public AlgorithmTask getTask() {
+        return task;
     }
 
-    public void setService(AlgorithmService service) {
-        if(service != null && service.isRunning()){
-            service.cancel();
+    public void setTask(AlgorithmTask task) {
+        if(task != null && task.isRunning()){
+            task.cancel();
         }
-        this.service = service;
+        this.task = task;
     }
 
     public void setThread(Thread thread){
@@ -27,9 +27,9 @@ public class ServiceScope implements Scope {
         this.thread = thread;
     }
 
-    public void stopService(){
-        if(service != null && service.isRunning()){
-            service.cancel();
+    public void stopTask(){
+        if(task != null && task.isRunning()){
+            task.cancel();
         }
     }
 
@@ -41,7 +41,7 @@ public class ServiceScope implements Scope {
     }
 
     public void stop(){
-        stopService();
+        stopTask();
         stopThread();
     }
 

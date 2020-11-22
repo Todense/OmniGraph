@@ -4,14 +4,14 @@ import com.todense.model.EdgeWeightMode;
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.algorithm.Algorithm;
-import com.todense.viewmodel.algorithm.AlgorithmService;
-import com.todense.viewmodel.algorithm.service.*;
+import com.todense.viewmodel.algorithm.AlgorithmTask;
+import com.todense.viewmodel.algorithm.task.*;
 import com.todense.viewmodel.canvas.DisplayMode;
 import com.todense.viewmodel.graph.GraphManager;
 import com.todense.viewmodel.scope.AlgorithmScope;
 import com.todense.viewmodel.scope.CanvasScope;
 import com.todense.viewmodel.scope.GraphScope;
-import com.todense.viewmodel.scope.ServiceScope;
+import com.todense.viewmodel.scope.TaskScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
@@ -37,12 +37,12 @@ public class AlgorithmViewModel implements ViewModel {
     CanvasScope canvasScope;
 
     @InjectScope
-    ServiceScope serviceScope;
+    TaskScope taskScope;
 
     private GraphManager graphManager;
     private BooleanProperty connectivityChecksProperty = new SimpleBooleanProperty(true);
 
-    private AlgorithmService service;
+    private AlgorithmTask task;
     private double startTime;
 
     public void initialize(){
@@ -73,9 +73,9 @@ public class AlgorithmViewModel implements ViewModel {
 
         Graph g = graphManager.getGraph();
 
-        AlgorithmService currentService = serviceScope.getService();
+        AlgorithmTask currentTask = taskScope.getTask();
 
-        if((currentService != null && currentService.isRunning()) || g.getNodes().size() == 0) return;
+        if((currentTask != null && currentTask.isRunning()) || g.getNodes().size() == 0) return;
 
         graphScope.displayModeProperty().set(DisplayMode.ALGORITHMIC);
 
@@ -95,36 +95,37 @@ public class AlgorithmViewModel implements ViewModel {
         boolean customWeight = graphScope.getEdgeWeightMode().equals(EdgeWeightMode.CUSTOM);
 
         switch (getAlgorithm()){
-            case BFS: service = new BFSService(startNode, g); break;
-            case DFS: service = new DFSService(startNode, g); break;
-            case PRIM: service = new PrimService(startNode, g, customWeight); break;
-            case KRUSKAL: service = new KruskalService(g, customWeight); break;
-            case DIJKSTRA: service = new DijkstraService(startNode, goalNode, g, customWeight); break;
-            case HCSEARCH: service = new HCSearchService(startNode, g, connectivityChecksProperty.get()); break;
-            case ASTAR: service = new AStarService(startNode, goalNode, g, customWeight); break;
+            case BFS: task = new BFSTask(startNode, g); break;
+            case DFS: task = new DFSTask(startNode, g); break;
+            case PRIM: task = new PrimTask(startNode, g, customWeight); break;
+            case KRUSKAL: task = new KruskalTask(g, customWeight); break;
+            case DIJKSTRA: task = new DijkstraTask(startNode, goalNode, g, customWeight); break;
+            case HCSEARCH: task = new HCSearchTask(startNode, g, connectivityChecksProperty.get()); break;
+            case ASTAR: task = new AStarTask(startNode, goalNode, g, customWeight); break;
         }
 
-        serviceScope.setService(service);
+        taskScope.setTask(task);
 
-        service.setOnSucceeded(workerStateEvent -> notificationCenter.publish(MainViewModel.serviceFinished,
+        task.setOnSucceeded(workerStateEvent -> notificationCenter.publish(MainViewModel.TASK_FINISHED,
                 getAlgorithm(),
                 System.currentTimeMillis()- startTime,
-                service.getResultMessage()));
+                task.getResultMessage()));
 
-        service.setOnCancelled(workerStateEvent ->
-                notificationCenter.publish(MainViewModel.serviceCancelled, getAlgorithm()));
+        task.setOnCancelled(workerStateEvent ->
+                notificationCenter.publish(MainViewModel.TASK_CANCELLED, getAlgorithm()));
 
-        service.setPainter(canvasScope.getPainter());
+        task.setPainter(canvasScope.getPainter());
 
-        notificationCenter.publish(MainViewModel.serviceStarted, getAlgorithm().toString());
+        notificationCenter.publish(MainViewModel.TASK_STARTED, getAlgorithm().toString());
 
         startTime = System.currentTimeMillis();
-        service.start();
+        Thread thread = new Thread(task);
+        thread.start();
     }
 
     public void stop(){
-        if(service != null){
-            service.cancel();
+        if(task != null){
+            task.cancel();
         }
     }
 

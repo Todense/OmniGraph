@@ -1,23 +1,23 @@
-package com.todense.viewmodel.algorithm.service;
+package com.todense.viewmodel.algorithm.task;
 
 import com.todense.model.graph.Edge;
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
-import com.todense.viewmodel.algorithm.ShortestPathAlgorithmService;
+import com.todense.viewmodel.algorithm.ShortestPathAlgorithmTask;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class DijkstraService extends ShortestPathAlgorithmService {
+public class DijkstraTask extends ShortestPathAlgorithmTask {
 
  	private List<Double> costList;
 
 	private Node startNode;
 	private Node goalNode;
 
-	public DijkstraService(Node startNode, Node goalNode, Graph graph, boolean customWeight) {
+	public DijkstraTask(Node startNode, Node goalNode, Graph graph, boolean customWeight) {
 		super(graph, customWeight);
 		this.startNode = startNode;
 		this.goalNode = goalNode;

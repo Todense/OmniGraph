@@ -77,7 +77,7 @@ public class Cell {
                     .filter(c -> c.getNodes().size() > 0)
                     .collect(Collectors.toList());
 
-            Arrays.stream(children).forEach(Cell::calcCenterOfMassFromChildren);
+            Arrays.stream(children).parallel().forEach(Cell::calcCenterOfMassFromChildren);
             double x = nonemptyChildren.stream().mapToDouble(c -> c.getCenterOfMass().getX()).sum()/nonemptyChildren.size();
             double y = nonemptyChildren.stream().mapToDouble(c -> c.getCenterOfMass().getY()).sum()/nonemptyChildren.size();
             centerOfMass = new Point2D(x, y);

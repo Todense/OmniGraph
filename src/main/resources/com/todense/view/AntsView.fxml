@@ -6,6 +6,7 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -48,20 +49,16 @@
          <Insets top="5.0" />
       </VBox.margin>
    </Label>
-   <VBox prefHeight="200.0" prefWidth="200.0" styleClass="subsection">
+   <VBox prefHeight="200.0" prefWidth="200.0" spacing="5.0" styleClass="subsection">
       <children>
          <VBox alignment="CENTER" prefHeight="9.0" prefWidth="190.0" spacing="2.0">
-            <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="11.0" prefWidth="190.0">
-               <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="53.0" text="Ants">
+            <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="11.0" prefWidth="190.0" VBox.vgrow="ALWAYS">
+               <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="17.0" prefWidth="130.0" text="Ants" HBox.hgrow="ALWAYS">
                   <font>
                      <Font size="10.0" />
                   </font>
                </Label>
-               <Label fx:id="antCountLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="15.0" prefWidth="31.0" text="5" textAlignment="CENTER">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
+               <TextField fx:id="antCountTextField" alignment="CENTER" prefHeight="25.0" prefWidth="59.0" />
             </HBox>
             <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="190.0" spacing="2.0">
                <Button layoutX="143.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#antCountDecrementAction" prefHeight="15.0" prefWidth="15.0">
@@ -69,7 +66,7 @@
                      <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
                   </graphic>
                </Button>
-               <JFXSlider fx:id="antCountSlider" blockIncrement="1.0" majorTickUnit="1.0" max="20.0" min="1.0" minorTickCount="1" prefHeight="15.0" prefWidth="160.0" value="5.0" />
+               <JFXSlider fx:id="antCountSlider" blockIncrement="1.0" majorTickUnit="1.0" min="1.0" minorTickCount="1" prefHeight="15.0" prefWidth="160.0" value="10.0" />
                <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#antCountIncrementAction" prefHeight="15.0" prefWidth="15.0">
                   <graphic>
                      <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
@@ -79,16 +76,12 @@
          </VBox>
          <VBox alignment="CENTER" prefHeight="9.0" prefWidth="190.0" spacing="2.0">
             <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
-               <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="17.0" prefWidth="124.0" text="Neighbourhoods size">
+               <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="17.0" prefWidth="130.0" text="Neighbourhoods size">
                   <font>
                      <Font size="10.0" />
                   </font>
                </Label>
-               <Label fx:id="neighbourhoodLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="15.0" prefWidth="31.0" text="5" textAlignment="CENTER">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
+               <TextField fx:id="neighbourhoodTextField" alignment="CENTER" prefHeight="25.0" prefWidth="59.0" />
             </HBox>
             <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="190.0" spacing="2.0">
                <Button layoutX="143.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#neighbourhoodDecrementAction" prefHeight="15.0" prefWidth="15.0">
@@ -96,7 +89,7 @@
                      <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
                   </graphic>
                </Button>
-               <JFXSlider fx:id="neighbourhoodSlider" blockIncrement="1.0" majorTickUnit="1.0" min="3.0" minorTickCount="1" prefHeight="15.0" prefWidth="160.0" value="1.0" />
+               <JFXSlider fx:id="neighbourhoodSlider" blockIncrement="1.0" majorTickUnit="1.0" max="300.0" min="3.0" minorTickCount="1" prefHeight="15.0" prefWidth="160.0" value="1.0" />
                <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#neighbourhoodIncrementAction" prefHeight="15.0" prefWidth="15.0">
                   <graphic>
                      <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
@@ -107,16 +100,12 @@
          <VBox alignment="CENTER" prefHeight="0.0" prefWidth="190.0" spacing="4.0">
             <VBox alignment="CENTER" prefHeight="9.0" prefWidth="200.0" spacing="2.0">
                <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="130.0" text="Pheromone influence">
+                  <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="15.0" prefWidth="130.0" text="Pheromone influence">
                      <font>
                         <Font size="10.0" />
                      </font>
                   </Label>
-                  <Label fx:id="alphaLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="15.0" prefWidth="31.0" text="0.1" textAlignment="CENTER">
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Label>
+                  <TextField fx:id="alphaTextField" alignment="CENTER" prefHeight="25.0" prefWidth="59.0" />
                </HBox>
                <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="190.0" spacing="2.0">
                   <Button layoutX="143.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#alphaDecrementAction" prefHeight="15.0" prefWidth="15.0">
@@ -124,7 +113,7 @@
                         <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
                      </graphic>
                   </Button>
-                  <JFXSlider fx:id="alphaSlider" blockIncrement="0.01" majorTickUnit="1.0" max="10.0" minorTickCount="1" prefHeight="15.0" prefWidth="160.0" value="1.0" />
+                  <JFXSlider fx:id="alphaSlider" blockIncrement="0.01" majorTickUnit="1.0" max="20.0" minorTickCount="1" prefHeight="15.0" prefWidth="160.0" value="1.0" />
                   <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#alphaIncrementAction" prefHeight="15.0" prefWidth="15.0">
                      <graphic>
                         <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
@@ -132,18 +121,14 @@
                   </Button>
                </HBox>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="0.0" prefWidth="200.0">
+            <VBox alignment="CENTER" prefHeight="0.0" prefWidth="200.0" spacing="2.0">
                <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="126.0" text="Distance influence">
+                  <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="15.0" prefWidth="130.0" text="Distance influence">
                      <font>
                         <Font size="10.0" />
                      </font>
                   </Label>
-                  <Label fx:id="betaLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Label>
+                  <TextField fx:id="betaTextField" alignment="CENTER" prefHeight="25.0" prefWidth="59.0" />
                </HBox>
                <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
                   <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#betaDecrementAction" prefHeight="15.0" prefWidth="15.0">
@@ -151,7 +136,7 @@
                         <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
                      </graphic>
                   </Button>
-                  <JFXSlider fx:id="betaSlider" blockIncrement="0.01" majorTickUnit="0.01" max="10.0" minorTickCount="0" prefHeight="15.0" prefWidth="160.0" value="1.0" />
+                  <JFXSlider fx:id="betaSlider" blockIncrement="0.01" majorTickUnit="0.01" max="20.0" minorTickCount="0" prefHeight="15.0" prefWidth="160.0" value="1.0" />
                   <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#betaIncrementAction" prefHeight="15.0" prefWidth="15.0">
                      <graphic>
                         <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
@@ -159,18 +144,14 @@
                   </Button>
                </HBox>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="0.0" prefWidth="200.0">
+            <VBox alignment="CENTER" prefHeight="0.0" prefWidth="200.0" spacing="2.0">
                <HBox alignment="CENTER" prefHeight="11.0" prefWidth="190.0">
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="142.0" text="Evaporation">
+                  <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="15.0" prefWidth="130.0" text="Evaporation">
                      <font>
                         <Font size="10.0" />
                      </font>
                   </Label>
-                  <Label fx:id="evaporationLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Label>
+                  <TextField fx:id="evaporationTextField" alignment="CENTER" prefHeight="25.0" prefWidth="59.0" />
                </HBox>
                <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
                   <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#evaporationDecrementAction" prefHeight="15.0" prefWidth="15.0">
@@ -190,16 +171,12 @@
          <VBox fx:id="paramVBox" alignment="CENTER" prefHeight="14.0" prefWidth="190.0" spacing="4.0">
             <VBox fx:id="q0VBox" alignment="CENTER" prefHeight="0.0" prefWidth="200.0" spacing="2.0">
                <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="143.0" text="Exploitation strength">
+                  <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="15.0" prefWidth="130.0" text="Exploitation strength">
                      <font>
                         <Font size="10.0" />
                      </font>
                   </Label>
-                  <Label fx:id="q0Label" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Label>
+                  <TextField fx:id="q0TextField" alignment="CENTER" prefHeight="25.0" prefWidth="59.0" />
                </HBox>
                <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
                   <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#q0DecrementAction" prefHeight="15.0" prefWidth="15.0">
@@ -215,18 +192,14 @@
                   </Button>
                </HBox>
             </VBox>
-            <VBox fx:id="ksiVBox" alignment="CENTER" prefHeight="48.0" prefWidth="200.0">
+            <VBox fx:id="ksiVBox" alignment="CENTER" prefHeight="48.0" prefWidth="200.0" spacing="2.0">
                <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="115.0" text="Local Evaporation">
+                  <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="15.0" prefWidth="130.0" text="Local Evaporation">
                      <font>
                         <Font size="10.0" />
                      </font>
                   </Label>
-                  <Label fx:id="ksiLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Label>
+                  <TextField fx:id="ksiTextField" alignment="CENTER" prefWidth="59.0" />
                </HBox>
                <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
                   <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#ksiDecrementAction" prefHeight="15.0" prefWidth="15.0">
@@ -242,18 +215,14 @@
                   </Button>
                </HBox>
             </VBox>
-            <VBox fx:id="rankVBox" alignment="CENTER" layoutX="10.0" layoutY="80.0" prefHeight="48.0" prefWidth="200.0">
+            <VBox fx:id="rankVBox" alignment="CENTER" layoutX="10.0" layoutY="80.0" prefHeight="48.0" prefWidth="200.0" spacing="2.0">
                <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="15.0" prefWidth="115.0" text="Rank Size">
+                  <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="15.0" prefWidth="130.0" text="Rank Size">
                      <font>
                         <Font size="10.0" />
                      </font>
                   </Label>
-                  <Label fx:id="rankLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Label>
+                  <TextField fx:id="rankTextField" alignment="CENTER" prefWidth="59.0" />
                </HBox>
                <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
                   <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#rankDecrementAction" prefHeight="15.0" prefWidth="15.0">
@@ -283,16 +252,12 @@
    <VBox alignment="CENTER" prefHeight="129.0" prefWidth="200.0" spacing="5.0" styleClass="subsection">
       <children>
          <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="8.0" prefWidth="115.0" text="Pheromone scale">
+            <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="8.0" prefWidth="130.0" text="Pheromone scale">
                <font>
                   <Font size="10.0" />
                </font>
             </Label>
-            <Label fx:id="scaleLabel" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
+            <TextField fx:id="scaleTextField" alignment="CENTER" prefHeight="25.0" prefWidth="59.0" />
          </HBox>
          <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
             <children>
@@ -301,7 +266,7 @@
                      <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
                   </graphic>
                </Button>
-               <JFXSlider fx:id="scaleSlider" blockIncrement="1.0" majorTickUnit="0.01" max="200.0" min="1.0" minorTickCount="0" prefHeight="15.0" prefWidth="160.0" value="100.0" />
+               <JFXSlider fx:id="scaleSlider" blockIncrement="1.0" majorTickUnit="0.01" max="300.0" min="0.01" minorTickCount="0" prefHeight="15.0" prefWidth="160.0" value="100.0" />
                <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#scaleIncrementAction" prefHeight="15.0" prefWidth="15.0">
                   <graphic>
                      <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />

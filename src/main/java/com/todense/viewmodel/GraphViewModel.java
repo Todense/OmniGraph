@@ -9,10 +9,7 @@ import com.todense.viewmodel.canvas.DisplayMode;
 import com.todense.viewmodel.canvas.drawlayer.layers.GraphDrawLayer;
 import com.todense.viewmodel.graph.GraphAnalyzer;
 import com.todense.viewmodel.graph.GraphManager;
-import com.todense.viewmodel.scope.AntsScope;
-import com.todense.viewmodel.scope.BackgroundScope;
-import com.todense.viewmodel.scope.CanvasScope;
-import com.todense.viewmodel.scope.GraphScope;
+import com.todense.viewmodel.scope.*;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
@@ -42,6 +39,9 @@ public class GraphViewModel implements ViewModel {
     @InjectScope
     AntsScope antsScope;
 
+    @InjectScope
+    InputScope inputScope;
+
     @Inject
     NotificationCenter notificationCenter;
 
@@ -51,7 +51,7 @@ public class GraphViewModel implements ViewModel {
         GM = graphScope.getGraphManager();
 
         Platform.runLater(() -> {
-            GraphDrawLayer graphDrawLayer = new GraphDrawLayer(graphScope, backgroundScope, antsScope);
+            GraphDrawLayer graphDrawLayer = new GraphDrawLayer(graphScope, backgroundScope, antsScope, inputScope);
             canvasScope.getPainter().addDrawLayer(graphDrawLayer);
         });
 
@@ -60,9 +60,10 @@ public class GraphViewModel implements ViewModel {
             GM.setGraph(newGraph);
 
             //auto node size
+            int sampleSize = Math.min(newGraph.getOrder() - 1, 100);
             Platform.runLater(() ->
                     graphScope.nodeSizeProperty().set((
-                            0.3 * GraphAnalyzer.getNearestNeighbourSpanningTreeLength(newGraph)/(newGraph.getOrder()-1)
+                            0.3 * GraphAnalyzer.getNearestNeighbourSpanningTreeLength(newGraph, sampleSize)/(sampleSize)
                     ))
             );
 
@@ -82,6 +83,7 @@ public class GraphViewModel implements ViewModel {
         nodeLabelModeProperty().addListener(listener);
         edgeWeightModeProperty().addListener(listener);
         nodeBorderProperty().addListener(listener);
+        edgeVisibilityProperty().addListener(listener);
     }
 
     public void applyColorToNodes() {
@@ -132,5 +134,9 @@ public class GraphViewModel implements ViewModel {
 
     public BooleanProperty nodeBorderProperty() {
         return graphScope.nodeBorderProperty();
+    }
+
+    public BooleanProperty edgeVisibilityProperty() {
+        return graphScope.edgeVisibilityProperty();
     }
 }
