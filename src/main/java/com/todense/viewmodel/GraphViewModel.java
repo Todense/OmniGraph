@@ -84,6 +84,10 @@ public class GraphViewModel implements ViewModel {
         edgeWeightModeProperty().addListener(listener);
         nodeBorderProperty().addListener(listener);
         edgeVisibilityProperty().addListener(listener);
+        edgeWidthDecayProperty().addListener(listener);
+        edgeOpacityDecayProperty().addListener(listener);
+        edgeWidthDecayOnProperty().addListener(listener);
+        edgeOpacityDecayOnProperty().addListener(listener);
     }
 
     public void applyColorToNodes() {
@@ -99,6 +103,7 @@ public class GraphViewModel implements ViewModel {
         }
         notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
     }
+
 
     public DoubleProperty nodeSizeProperty() {
         return graphScope.nodeSizeProperty();
@@ -138,5 +143,21 @@ public class GraphViewModel implements ViewModel {
 
     public BooleanProperty edgeVisibilityProperty() {
         return graphScope.edgeVisibilityProperty();
+    }
+
+    public DoubleProperty edgeWidthDecayProperty() {
+        return graphScope.edgeWidthDecayProperty();
+    }
+
+    public BooleanProperty edgeWidthDecayOnProperty(){
+        return graphScope.edgeWidthDecayOnProperty();
+    }
+
+    public DoubleProperty edgeOpacityDecayProperty() {
+        return graphScope.edgeOpacityDecayProperty();
+    }
+
+    public BooleanProperty edgeOpacityDecayOnProperty() {
+        return graphScope.edgeOpacityDecayOnProperty();
     }
 }

@@ -36,42 +36,44 @@ public class GraphManager {
         selectedNodes = new ArrayList<>();
     }
 
-    public void createPath(){
-        for(int i = 0; i < graph.getNodes().size()-1; i++) {
-            Node n1 = graph.getNodes().get(i);
-            Node n2 = graph.getNodes().get(i+1);
+    public void createPath(List<Node> nodes){
+        for(int i = 0; i < nodes.size()-1; i++) {
+            Node n1 = nodes.get(i);
+            Node n2 = nodes.get(i+1);
             if(!isEdgeBetween(n1,n2)) {
                 graph.addEdge(n1, n2);
             }
         }
     }
 
+    public void createPath(){
+        this.createPath(this.graph.getNodes());
+    }
+
+    public void createCompleteGraph(List<Node> nodes){
+        graph.applyToAllPairOfNodes(nodes, (n, m) -> {
+            if(!isEdgeBetween(n, m))
+                graph.addEdge(n, m);
+        });
+    }
+
     public void createCompleteGraph(){
-        for(int i = 0; i < graph.getNodes().size()-1; i++) {
-            for(int j = i + 1; j < graph.getNodes().size(); j++) {
-                Node n1 = graph.getNodes().get(i);
-                Node n2 = graph.getNodes().get(j);
-                if(!isEdgeBetween(n1,n2)) {
-                    graph.addEdge(n1, n2);
-                }
-            }
-        }
+        this.createCompleteGraph(this.graph.getNodes());
+    }
+
+    public void createComplementGraph(List<Node> nodes) {
+        graph.applyToAllPairOfNodes(nodes, (n, m) -> {
+            if(!isEdgeBetween(n, m))
+                graph.addEdge(n, m);
+            else
+                graph.removeEdge(n, m);
+        });
     }
 
     public void createComplementGraph() {
-        for(int i = 0; i < graph.getNodes().size(); i++){
-            Node n = graph.getNodes().get(i);
-            for (int j = i+1; j < graph.getNodes().size(); j++) {
-                Node m = graph.getNodes().get(j);
-                if(!isEdgeBetween(n, m)){
-                    graph.addEdge(n, m);
-                }
-                else{
-                    graph.removeEdge(n, m);
-                }
-            }
-        }
+        this.createComplementGraph(this.graph.getNodes());
     }
+
 
     public void subdivideEdge(Edge e){
         graph.removeEdge(e);
@@ -83,18 +85,20 @@ public class GraphManager {
         graph.addEdge(m, k);
     }
 
-    public void subdivideEdges() {
-        List<Edge> edgesCopy = new ArrayList<>(graph.getEdges());
-        graph.removeAllEdges();
-
-        for (Edge edge : edgesCopy) {
-            Node n = edge.getN1();
-            Node m = edge.getN2();
+    public void subdivideEdges(List<Node> nodes) {
+        ArrayList<Node> nodesCopy = new ArrayList<>(nodes);
+        graph.applyToAllConnectedPairOfNodes(nodesCopy, (n, m) -> {
+            Edge e = graph.getEdge(n, m);
             Point2D midpoint = n.getPos().midpoint(m.getPos());
             Node k = graph.addNode(midpoint);
+            graph.removeEdge(n, m);
             graph.addEdge(n, k);
             graph.addEdge(m, k);
-        }
+        });
+    }
+
+    public void subdivideEdges() {
+        this.subdivideEdges(this.graph.getNodes());
     }
 
     public void contractEdge(Edge e) {
@@ -123,7 +127,7 @@ public class GraphManager {
         }
     }
 
-    public Graph getSubgraphFromSelectedNodes(){
+    public Graph getSelectedSubgraph(){
         Graph subGraph = new Graph();
         for (Node n : selectedNodes) {
             subGraph.addNode(n.getPos(), n.getColor());
@@ -139,11 +143,15 @@ public class GraphManager {
     }
 
     public void copySelectedSubgraph(){
-        clipboardGraph = getSubgraphFromSelectedNodes();
+        clipboardGraph = getSelectedSubgraph();
     }
 
-    public void deleteEdges() {
-        graph.removeAllEdges();
+    public void deleteEdges(List<Node> nodes) {
+        graph.removeEdges(nodes);
+    }
+
+    public void deleteEdges(){
+        this.deleteEdges(this.graph.getNodes());
     }
 
     public boolean isEdgeBetween(Node n1, Node n2) {
@@ -152,6 +160,13 @@ public class GraphManager {
 
     public void updateNodePosition(Node n, Point2D d){
         n.setPos(n.getPos().add(d));
+    }
+
+    public void rotateNode(Node n, Point2D pivot, double angle){
+        Point2D u = n.getPos().subtract(pivot);
+        double x = u.getX() * Math.cos(angle) - u.getY() * Math.sin(angle);
+        double y = u.getX() * Math.sin(angle) + u.getY() * Math.cos(angle);
+        n.setPos(new Point2D(x, y).add(pivot));
     }
 
     private List<Node> selectedNodes = new ArrayList<>();

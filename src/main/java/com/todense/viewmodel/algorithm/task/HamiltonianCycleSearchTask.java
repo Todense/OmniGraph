@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Stack;
 
 
-public class HCSearchTask extends AlgorithmTask {
+public class HamiltonianCycleSearchTask extends AlgorithmTask {
 
     ArrayList<Node> cycle;
     boolean[] visitedDFS;
@@ -20,10 +20,11 @@ public class HCSearchTask extends AlgorithmTask {
     private Node startNode;
     private boolean checkingConnectivity;
 
-    public HCSearchTask(Node startNode, Graph graph, boolean checkingConnectivity){
+    public HamiltonianCycleSearchTask(Node startNode, Graph graph, boolean checkingConnectivity){
         super(graph);
         this.startNode = startNode;
         this.checkingConnectivity = checkingConnectivity;
+        super.algorithmName = "Hamiltonian Cycle Search";
     }
 
     @Override
@@ -56,7 +57,7 @@ public class HCSearchTask extends AlgorithmTask {
 
         Stack<Node> nodeStack = new Stack<>();
 
-        //push node twice : first time for removing from a cycle when backtracking, second time for adding node to a cycle
+        //push node twice: first time for removing from a cycle when backtracking, second time for adding node to a cycle
         nodeStack.push(startNode);
         nodeStack.push(startNode);
 

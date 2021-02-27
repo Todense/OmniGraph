@@ -28,7 +28,7 @@ class AlgorithmTaskTest {
                 graph.addEdge(n, m);
             }
         }
-        HCSearchTask hcService = new HCSearchTask(graph.getNodes().get(0),graph, true);
+        HamiltonianCycleSearchTask hcService = new HamiltonianCycleSearchTask(graph.getNodes().get(0),graph, true);
         assertDoesNotThrow(hcService::perform, () -> "HC Service should not throw exceptions");
         assertTrue(hcService.isCycleFound(), () -> "Hamiltonian Cycle should be found");
     }

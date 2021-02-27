@@ -19,6 +19,7 @@ public class KruskalTask extends WeightedAlgorithmTask {
 
 	public KruskalTask(Graph graph, boolean customWeight) {
 		super(graph, customWeight);
+		super.algorithmName = "Kruskal's algorithm";
 	}
 
 	@Override

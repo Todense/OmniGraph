@@ -1,12 +1,14 @@
 package com.todense.viewmodel.ants;
 
 import com.todense.model.graph.Graph;
+import com.todense.viewmodel.scope.AlgorithmScope;
 import com.todense.viewmodel.scope.AntsScope;
 
 public class AntSystemTask extends AntColonyAlgorithmTask {
 
-    public AntSystemTask(Graph graph, AntsScope antsScope) {
-        super(graph, antsScope);
+    public AntSystemTask(Graph graph, AntsScope antsScope, AlgorithmScope algorithmScope) {
+        super(graph, antsScope, algorithmScope);
+        super.algorithmName = "Ant System";
     }
 
     @Override

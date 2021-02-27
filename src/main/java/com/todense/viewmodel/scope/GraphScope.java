@@ -2,21 +2,30 @@ package com.todense.viewmodel.scope;
 
 import com.todense.model.EdgeWeightMode;
 import com.todense.model.NodeLabelMode;
+import com.todense.model.graph.Node;
 import com.todense.viewmodel.canvas.DisplayMode;
 import com.todense.viewmodel.graph.GraphManager;
 import de.saxsys.mvvmfx.Scope;
 import javafx.beans.property.*;
+import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
+
+import java.util.function.Function;
 
 public class GraphScope implements Scope {
 
     private final Color INITIAL_NODE_COLOR = Color.rgb(50,90,170);
     private final Color INITIAL_EDGE_COLOR = Color.rgb(120,160,200);
+    public static Function<Node, Point2D> NODE_ORDINARY_POSITION_FUNCTION = Node::getPos;
 
     private DoubleProperty nodeSizeProperty = new SimpleDoubleProperty(30d);
     private DoubleProperty edgeWidthProperty = new SimpleDoubleProperty(0.15);
+    private DoubleProperty edgeWidthDecayProperty = new SimpleDoubleProperty(0.06);
+    private DoubleProperty edgeOpacityDecayProperty = new SimpleDoubleProperty(0.06);
     private BooleanProperty nodeBorderProperty = new SimpleBooleanProperty(false);
     private BooleanProperty edgeVisibilityProperty = new SimpleBooleanProperty(true);
+    private BooleanProperty edgeWidthDecayOnProperty = new SimpleBooleanProperty(false);
+    private BooleanProperty edgeOpacityDecayOnProperty = new SimpleBooleanProperty(false);
     private ObjectProperty<Color> nodeColorProperty = new SimpleObjectProperty<>(INITIAL_NODE_COLOR);
     private ObjectProperty<Color> edgeColorProperty = new SimpleObjectProperty<>(INITIAL_EDGE_COLOR);
     private ObjectProperty<Color> nodeLabelColorProperty = new SimpleObjectProperty<>(Color.WHITE);
@@ -24,6 +33,9 @@ public class GraphScope implements Scope {
     private ObjectProperty<NodeLabelMode> nodeLabelModeProperty = new SimpleObjectProperty<>(NodeLabelMode.NONE);
     private ObjectProperty<EdgeWeightMode> edgeWeightModeProperty = new SimpleObjectProperty<>(EdgeWeightMode.NONE);
     private ObjectProperty<DisplayMode> displayModeProperty = new SimpleObjectProperty<>(DisplayMode.DEFAULT);
+
+    private Function<Node, Double> nodeScaleFunction = node -> 1.0;
+    private Function<Node, Point2D> nodeCustomPositionFunction = Node::getPos;
 
     private GraphManager graphManager = new GraphManager();
 
@@ -117,5 +129,53 @@ public class GraphScope implements Scope {
 
     public BooleanProperty edgeVisibilityProperty() {
         return edgeVisibilityProperty;
+    }
+
+    public Function<Node, Double> getNodeScaleFunction() {
+        return nodeScaleFunction;
+    }
+
+    public void setNodeScaleFunction(Function<Node, Double> nodeScaleFunction) {
+        this.nodeScaleFunction = nodeScaleFunction;
+    }
+
+    public Function<Node, Point2D> getNodePositionFunction() {
+        return nodeCustomPositionFunction;
+    }
+
+    public void setNodePositionFunction(Function<Node, Point2D> nodeCustomPositionFunction) {
+        this.nodeCustomPositionFunction = nodeCustomPositionFunction;
+    }
+
+    public DoubleProperty edgeWidthDecayProperty() {
+        return edgeWidthDecayProperty;
+    }
+
+    public double getEdgeWidthDecay(){
+        return edgeWidthDecayProperty.get();
+    }
+
+    public boolean isEdgeWidthDecayOn() {
+        return edgeWidthDecayOnProperty.get();
+    }
+
+    public BooleanProperty edgeWidthDecayOnProperty() {
+        return edgeWidthDecayOnProperty;
+    }
+
+    public double getEdgeOpacityDecay() {
+        return edgeOpacityDecayProperty.get();
+    }
+
+    public DoubleProperty edgeOpacityDecayProperty() {
+        return edgeOpacityDecayProperty;
+    }
+
+    public boolean isEdgeOpacityDecayOn() {
+        return edgeOpacityDecayOnProperty.get();
+    }
+
+    public BooleanProperty edgeOpacityDecayOnProperty() {
+        return edgeOpacityDecayOnProperty;
     }
 }

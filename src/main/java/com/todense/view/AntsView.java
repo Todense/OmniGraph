@@ -186,12 +186,12 @@ public class AntsView implements FxmlView<AntsViewModel> {
 
     @FXML
     private void startAction() {
-        viewModel.startAlgorithm();
+        viewModel.startTask();
     }
 
     @FXML
     private void stopAction() {
-        viewModel.stopAlgorithm();
+        viewModel.stopTask();
     }
 }
     

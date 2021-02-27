@@ -5,6 +5,7 @@ import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.algorithm.Algorithm;
 import com.todense.viewmodel.algorithm.AlgorithmTask;
+import com.todense.viewmodel.algorithm.AlgorithmTaskManager;
 import com.todense.viewmodel.algorithm.task.*;
 import com.todense.viewmodel.canvas.DisplayMode;
 import com.todense.viewmodel.graph.GraphManager;
@@ -22,7 +23,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 
 import javax.inject.Inject;
 
-public class AlgorithmViewModel implements ViewModel {
+public class AlgorithmViewModel extends AlgorithmTaskManager implements ViewModel {
 
     @Inject
     NotificationCenter notificationCenter;
@@ -41,8 +42,6 @@ public class AlgorithmViewModel implements ViewModel {
 
     private GraphManager graphManager;
     private BooleanProperty connectivityChecksProperty = new SimpleBooleanProperty(true);
-
-    private AlgorithmTask task;
     private double startTime;
 
     public void initialize(){
@@ -63,22 +62,20 @@ public class AlgorithmViewModel implements ViewModel {
         });
 
         notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_REQUEST, (key, payload) -> {
-            Platform.runLater(this::stop);
+            Platform.runLater(this::stopTask);
             startNodeProperty().set(null);
             goalNodeProperty().set(null);
         });
+
+        super.initialize(taskScope, canvasScope, notificationCenter);
     }
 
-    public void start(){
 
+    @Override
+    protected AlgorithmTask createAlgorithmTask() {
         Graph g = graphManager.getGraph();
 
-        AlgorithmTask currentTask = taskScope.getTask();
-
-        if((currentTask != null && currentTask.isRunning()) || g.getNodes().size() == 0) return;
-
         graphScope.displayModeProperty().set(DisplayMode.ALGORITHMIC);
-
         graphManager.resetGraph();
 
         if(algorithmScope.getStartNode() == null){
@@ -94,39 +91,19 @@ public class AlgorithmViewModel implements ViewModel {
 
         boolean customWeight = graphScope.getEdgeWeightMode().equals(EdgeWeightMode.CUSTOM);
 
+        AlgorithmTask task = null;
+
         switch (getAlgorithm()){
             case BFS: task = new BFSTask(startNode, g); break;
             case DFS: task = new DFSTask(startNode, g); break;
             case PRIM: task = new PrimTask(startNode, g, customWeight); break;
             case KRUSKAL: task = new KruskalTask(g, customWeight); break;
             case DIJKSTRA: task = new DijkstraTask(startNode, goalNode, g, customWeight); break;
-            case HCSEARCH: task = new HCSearchTask(startNode, g, connectivityChecksProperty.get()); break;
+            case HCSEARCH: task = new HamiltonianCycleSearchTask(startNode, g, connectivityChecksProperty.get()); break;
             case ASTAR: task = new AStarTask(startNode, goalNode, g, customWeight); break;
         }
 
-        taskScope.setTask(task);
-
-        task.setOnSucceeded(workerStateEvent -> notificationCenter.publish(MainViewModel.TASK_FINISHED,
-                getAlgorithm(),
-                System.currentTimeMillis()- startTime,
-                task.getResultMessage()));
-
-        task.setOnCancelled(workerStateEvent ->
-                notificationCenter.publish(MainViewModel.TASK_CANCELLED, getAlgorithm()));
-
-        task.setPainter(canvasScope.getPainter());
-
-        notificationCenter.publish(MainViewModel.TASK_STARTED, getAlgorithm().toString());
-
-        startTime = System.currentTimeMillis();
-        Thread thread = new Thread(task);
-        thread.start();
-    }
-
-    public void stop(){
-        if(task != null){
-            task.cancel();
-        }
+        return task;
     }
 
 
@@ -153,4 +130,5 @@ public class AlgorithmViewModel implements ViewModel {
     public BooleanProperty showingEndpointsProperty() {
         return algorithmScope.showingEndpointsProperty();
     }
+
 }

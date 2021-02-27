@@ -48,7 +48,6 @@ public class EdgeList extends ArrayList<Edge> {
         String id = n.getID() < m.getID() ?
                 n.getID()+"-"+m.getID() :
                 m.getID()+"-"+n.getID();
-        assert edgeMap.get(id) != null : "No edge with id: "+id;
         return edgeMap.get(id);
     }
 

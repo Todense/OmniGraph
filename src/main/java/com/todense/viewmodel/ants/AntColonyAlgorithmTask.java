@@ -4,6 +4,7 @@ import com.todense.model.graph.Edge;
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.algorithm.AlgorithmTask;
+import com.todense.viewmodel.scope.AlgorithmScope;
 import com.todense.viewmodel.scope.AntsScope;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -25,6 +26,7 @@ import java.util.stream.IntStream;
 public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
 
     final AntsScope antsScope;
+    final AlgorithmScope algorithmScope;
 
     private DoubleProperty bestSolutionLength = new SimpleDoubleProperty(Double.POSITIVE_INFINITY); //global best cycle length
     
@@ -50,9 +52,10 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
     private Random rnd = new Random();
     private final Object lock = new Object();
     
-    public AntColonyAlgorithmTask(Graph graph, AntsScope antsScope){
+    public AntColonyAlgorithmTask(Graph graph, AntsScope antsScope, AlgorithmScope algorithmScope){
         super(graph);
         this.antsScope = antsScope;
+        this.algorithmScope = algorithmScope;
         this.graphOrder = graph.getOrder();
 
         antsScope.getAnts().clear();
@@ -64,7 +67,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
 
         antsScope.setGbCycle(new ArrayList<>());
         antsScope.setPheromones(new double[graphOrder][graphOrder]);
-
+        algorithmScope.setWalkingAgents(antsScope.getAnts());
     }
 
     @Override
@@ -76,7 +79,6 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
 
     @Override
     protected void onFinished() {
-
     }
 
     protected double getInitialPheromoneLevel(){
@@ -165,14 +167,12 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
 
     protected void moveAnts() {
         AtomicBoolean working = new AtomicBoolean(true);
-
         for (Ant ant : antsScope.getAnts()) {
             ant.setPrevious(ant.getStart());
             moveAnt(ant);
         }
         if(!super.isConnectedToUI())
             return;
-
         if(painter.isAnimationOn() && antsScope.isAntsAnimationOn()){
             ParallelTransition transition = new ParallelTransition();
             for (Ant ant : antsScope.getAnts()) {
@@ -190,6 +190,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
                     try {
                         lock.wait();
                     } catch (InterruptedException e) {
+                        working.set(false);
                         transition.stop();
                         antsScope.getAnts().clear();
                     }
@@ -221,7 +222,6 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
         else{
             ant.setStart(ant.getGoal());
         }
-        
     }
 
     protected int getRandomNeighbour(Ant ant, List<Integer> availableNeighbours) throws MathArithmeticException {
@@ -389,10 +389,8 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
     }
 
     private Timeline antMoveTimeline(Ant ant) {
-
         Node start = graph.getNodes().get(ant.getPrevious());
         Node goal = graph.getNodes().get(ant.getGoal());
-
         return new Timeline(
                 new KeyFrame(Duration.millis(0),
                         new KeyValue(ant.xProperty(), start.getPos().getX()),

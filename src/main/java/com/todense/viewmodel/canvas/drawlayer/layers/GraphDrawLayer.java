@@ -39,13 +39,15 @@ public class GraphDrawLayer implements DrawLayer {
         DisplayMode displayMode = graphScope.getDisplayMode();
         double defaultEdgeWidth = graphScope.getEdgeWidth() * graphScope.getNodeSize();
         double defaultNodeSize = graphScope.getNodeSize();
-        boolean selecting = graphScope.getGraphManager().getSelectedNodes().size() > 0 || inputScope.isSelecting();
+        boolean selecting = (inputScope.isSelecting() && graph.getNodes().stream().anyMatch(Node::isSelected)) ||
+                !graphScope.getGraphManager().getSelectedNodes().isEmpty();
         if(graphScope.areEdgesVisibile()){
             graph.getEdges().stream().filter(e -> !isEdgePrimary(e) && e.isVisible()).forEach(e ->
                     drawEdge(e, gc, defaultEdgeWidth, displayMode, selecting));
             graph.getEdges().stream().filter(this::isEdgePrimary).forEach(e ->
                     drawEdge(e, gc, defaultEdgeWidth, displayMode, selecting));
         }
+
         graph.getNodes().forEach(n ->
                 drawNode(n, gc, defaultNodeSize, displayMode, selecting));
     }
@@ -59,24 +61,25 @@ public class GraphDrawLayer implements DrawLayer {
         return 3;
     }
 
-    private void drawNode(Node node, GraphicsContext gc, double defaultSize ,DisplayMode displayMode, boolean selecting){
+    private void drawNode(Node node, GraphicsContext gc, double defaultSize , DisplayMode displayMode, boolean selecting){
         double size = getNodeSize(node, defaultSize, displayMode);
+        Point2D pos  = graphScope.getNodePositionFunction().apply(node);
         Color color = node.getColor() != null
                 ? getNodeDisplayColor(node.getColor(), node, displayMode, selecting)
                 : getNodeDisplayColor(graphScope.getNodeColor(), node, displayMode, selecting);
 
         gc.setFill(color);
+        
 
         if(graphScope.showingNodeBorder()){
-
             double width = graphScope.getEdgeWidth() * graphScope.getNodeSize();
-            gc.fillOval(node.getPos().getX() - (size-width)/2,
-                    node.getPos().getY() - (size-width)/2,
+            gc.fillOval(pos.getX() - (size-width)/2,
+                    pos.getY() - (size-width)/2,
                     size-width,
                     size-width
             );
         }else{
-            gc.fillOval(node.getPos().getX() - size/2, node.getPos().getY() - size/2, size, size);
+            gc.fillOval(pos.getX() - size/2, pos.getY() - size/2, size, size);
         }
 
         if(graphScope.showingNodeBorder()) {
@@ -84,8 +87,8 @@ public class GraphDrawLayer implements DrawLayer {
             gc.setLineWidth(width);
             gc.setStroke(getNodeDisplayColor(graphScope.getEdgeColor(), node, displayMode, selecting));
             gc.strokeOval(
-                    node.getPos().getX() - (size-width)/2,
-                    node.getPos().getY() - (size-width)/2,
+                    pos.getX() - (size-width)/2,
+                    pos.getY() - (size-width)/2,
                     size - width,
                     size - width
             );
@@ -114,33 +117,32 @@ public class GraphDrawLayer implements DrawLayer {
     }
 
     private void drawEdge(Edge edge, GraphicsContext gc, double defaultWidth, DisplayMode displayMode, boolean selecting){
-        Point2D p1 = edge.getN1().getPos();
-        Point2D p2 = edge.getN2().getPos();
+        Point2D p1 = graphScope.getNodePositionFunction().apply(edge.getN1());
+        Point2D p2 = graphScope.getNodePositionFunction().apply(edge.getN2());
 
         double width = getEdgeWidth(edge, defaultWidth, displayMode);
+        if(width == 0)
+            return;
 
-        //makes line shorter when it is wider
-        Point2D correctionVector = p1.subtract(p2).normalize().multiply(width/2);
-
+        // ant colony algorithm cycle marker
         if(edge.isMarked() && displayMode == DisplayMode.ANT_COLONY) {
             gc.setLineWidth(width + graphScope.getNodeSize() * 0.25);
             gc.setStroke(antsScope.getCycleColor());
-            gc.strokeLine(p1.getX() - correctionVector.getX(),
-                    p1.getY() - correctionVector.getY(),
-                    p2.getX() + correctionVector.getX(),
-                    p2.getY() + correctionVector.getY());
+            gc.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
         }
+
 
         if(displayMode == DisplayMode.ANT_COLONY && !antsScope.isShowingPheromones()) return;
 
         gc.setLineWidth(width);
-        gc.setStroke(getEdgeDisplayColor(edge, displayMode, selecting));
+        Color edgeColor = getEdgeDisplayColor(edge, displayMode, selecting);
 
-        gc.strokeLine(p1.getX() - correctionVector.getX(),
-                p1.getY() - correctionVector.getY(),
-                p2.getX() + correctionVector.getX(),
-                p2.getY() + correctionVector.getY());
+        if(edgeColor.equals(backgroundScope.getBackgroundColor())){
+            return;
+        }
+        gc.setStroke(edgeColor);
 
+        gc.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
 
         if(graphScope.getEdgeWeightMode() != EdgeWeightMode.NONE){
             if(graphScope.getEdgeWeightMode() == EdgeWeightMode.LENGTH){
@@ -193,7 +195,7 @@ public class GraphDrawLayer implements DrawLayer {
         return displayColor;
     }
 
-    private double getNodeSize(Node node, double defaultSize ,DisplayMode displayMode) {
+    private double getNodeSize(Node node, double defaultSize, DisplayMode displayMode) {
 
         if(node.isHighlighted()) {
             defaultSize = defaultSize * 1.05;
@@ -212,7 +214,7 @@ public class GraphDrawLayer implements DrawLayer {
                 break;
             default: defaultSize = 0;
         }
-        return defaultSize;
+        return defaultSize * graphScope.getNodeScaleFunction().apply(node);
     }
 
     private Color getEdgeDisplayColor(Edge edge, DisplayMode displayMode, boolean selecting) {
@@ -238,6 +240,16 @@ public class GraphDrawLayer implements DrawLayer {
                 break;
             default: displayColor = Color.PINK;
         }
+
+        if(graphScope.isEdgeOpacityDecayOn()){
+            double decay = getDecayedValue(edge, graphScope.getEdgeOpacityDecay(), graphScope.getNodeSize() * 2);
+            if(decay > 1){
+                decay = 1;
+            }
+            displayColor = displayColor.deriveColor(0,1,1, decay);
+        }
+
+        //return Util.getFaintColor(displayColor, backgroundScope.getBackgroundColor(), decay);
         return displayColor;
     }
 
@@ -266,6 +278,21 @@ public class GraphDrawLayer implements DrawLayer {
                 }
                 break;
         }
+
+        if(graphScope.isEdgeWidthDecayOn()){
+            double decay = getDecayedValue(edge, graphScope.getEdgeWidthDecay(), 2*graphScope.getNodeSize());
+            defaultWidth *= decay;
+        }
+
         return Math.min(defaultWidth, graphScope.getNodeSize());
     }
+
+    private double getDecayedValue(Edge edge, double decay, double maximum){
+        Point2D p1 = graphScope.getNodePositionFunction().apply(edge.getN1());
+        Point2D p2 = graphScope.getNodePositionFunction().apply(edge.getN2());
+        double exponent = decay*(p1.distance(p2)-maximum);
+        return  2 - 2 * (Math.pow(Math.E, exponent)/(1+Math.pow(Math.E, exponent)));
+    }
+
+
 }

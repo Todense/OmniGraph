@@ -36,13 +36,16 @@ public class Util {
     }
 
     //calculates rgb values of a color with given opacity over a background color
-    public static Color getFaintColor(Color color, Color backgroundColor) {
-        double opacity = 0.3;
+    public static Color getFaintColor(Color color, Color backgroundColor, double opacity) {
         int r = (int) (backgroundColor.getRed() * 255 + (color.getRed() * 255 - backgroundColor.getRed() * 255) * opacity);
         int g = (int) (backgroundColor.getGreen() * 255 + (color.getGreen()* 255 - backgroundColor.getGreen()* 255) * opacity);
         int b = (int) (backgroundColor.getBlue() * 255 + (color.getBlue()* 255 - backgroundColor.getBlue()* 255) * opacity);
 
         return Color.rgb(r, g, b);
+    }
+
+    public static Color getFaintColor(Color color, Color backgroundColor) {
+        return getFaintColor(color, backgroundColor, 0.3);
     }
 
     public static void bindSliderAndTextField(Slider slider, TextField textField, String pattern){

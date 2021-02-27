@@ -23,12 +23,12 @@ public class PopOverManager {
     private javafx.scene.Node owner;
     private Context context;
 
-    public PopOver createNodePopOver(GraphManager graphManager, List<Node> nodes, double x, double y){
+    public PopOver createNodePopOver(GraphManager graphManager, Node clickedNode, List<Node> nodes, double x, double y){
         final ViewTuple<NodePopOverView, NodePopOverViewModel> viewTuple =
                 FluentViewLoader.fxmlView(NodePopOverView.class).context(context).load();
 
         PopOver popOver = new PopOver(viewTuple.getView());
-        viewTuple.getViewModel().bindToNodes(nodes);
+        viewTuple.getViewModel().bindToNodes(clickedNode, nodes);
         popOver.animatedProperty().set(false);
         popOver.detachableProperty().set(false);
         popOver.show(owner, x, y);

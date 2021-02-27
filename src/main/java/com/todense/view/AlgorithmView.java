@@ -57,12 +57,12 @@ public class AlgorithmView implements FxmlView<AlgorithmViewModel> {
 
     @FXML
     private void startAlgorithmAction() {
-        viewModel.start();
+        viewModel.startTask();
     }
 
     @FXML
     private void stopAlgorithmAction() {
-        viewModel.stop();
+        viewModel.stopTask();
     }
 
 }

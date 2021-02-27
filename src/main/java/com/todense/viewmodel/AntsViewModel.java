@@ -1,31 +1,30 @@
 package com.todense.viewmodel;
 
 import com.todense.model.graph.Graph;
-import com.todense.viewmodel.algorithm.AlgorithmTask;
+import com.todense.viewmodel.algorithm.AlgorithmTaskManager;
 import com.todense.viewmodel.ants.*;
 import com.todense.viewmodel.canvas.DisplayMode;
-import com.todense.viewmodel.canvas.drawlayer.layers.AntsDrawLayer;
-import com.todense.viewmodel.scope.AntsScope;
-import com.todense.viewmodel.scope.CanvasScope;
-import com.todense.viewmodel.scope.GraphScope;
-import com.todense.viewmodel.scope.TaskScope;
+import com.todense.viewmodel.scope.*;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
-import javafx.application.Platform;
-import javafx.beans.property.*;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.scene.paint.Color;
 
 import javax.inject.Inject;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
-public class AntsViewModel implements ViewModel {
+public class AntsViewModel extends AlgorithmTaskManager implements ViewModel {
 
     @InjectScope
     CanvasScope canvasScope;
+
+    @InjectScope
+    AlgorithmScope algorithmScope;
 
     @InjectScope
     AntsScope antsScope;
@@ -39,68 +38,54 @@ public class AntsViewModel implements ViewModel {
     @Inject
     NotificationCenter notificationCenter;
 
-    private AntColonyAlgorithmTask algorithmTask;
-
     DateFormat dateFormat = new SimpleDateFormat("mm:ss:SSS");
 
-    private long startTime;
-
     public void initialize(){
-        AntsDrawLayer antsDrawLayer = new AntsDrawLayer(antsScope, graphScope);
-        Platform.runLater(() -> canvasScope.getPainter().addDrawLayer(antsDrawLayer));
+        //AntsDrawLayer antsDrawLayer = new AntsDrawLayer(antsScope, graphScope);
+        //Platform.runLater(() -> canvasScope.getPainter().addDrawLayer(antsDrawLayer));
+
+        super.initialize(taskScope, canvasScope, notificationCenter);
     }
 
-    public void startAlgorithm(){
-        AlgorithmTask currentTask = taskScope.getTask();
-
-        if(currentTask != null && currentTask.isRunning()) return;
+    @Override
+    protected AntColonyAlgorithmTask createAlgorithmTask() {
 
         Graph graph = graphScope.getGraphManager().getGraph();
 
-        if(graph.getNodes().size() < 3) return;
+        if(graph.getNodes().size() < 3){
+            throw new RuntimeException("Graph must have at least 3 nodes");
+        }
 
         graphScope.getGraphManager().createCompleteGraph();
-        startTime = System.currentTimeMillis();
-        notificationCenter.publish(MainViewModel.TASK_STARTED, algorithmProperty().get().toString());
+        //notificationCenter.publish(MainViewModel.TASK_STARTED, algorithmProperty().get().toString());
         graphScope.displayModeProperty().set(DisplayMode.ANT_COLONY);
+
+        AntColonyAlgorithmTask task = null;
 
         switch (antsScope.algorithmProperty().get()){
             case ACS:
-                algorithmTask = new AntColonySystemTask(graph, antsScope);
+                task = new AntColonySystemTask(graph, antsScope, algorithmScope);
                 break;
             case AS:
-                algorithmTask = new AntSystemTask(graph, antsScope);
+                task = new AntSystemTask(graph, antsScope, algorithmScope);
                 break;
             case MMAS:
-                algorithmTask = new MaxMinAntSystemTask(graph, antsScope);
+                task = new MaxMinAntSystemTask(graph, antsScope, algorithmScope);
                 break;
             case RANK_AS:
-                algorithmTask = new RankedAntSystem(graph, antsScope);
+                task = new RankedAntSystem(graph, antsScope, algorithmScope);
                 break;
         }
-        this.algorithmTask.setPainter(canvasScope.getPainter());
-        this.algorithmTask.bestSolutionLengthProperty().addListener((obs, oldVal, newVal) ->
+
+        task.setPainter(canvasScope.getPainter());
+        AntColonyAlgorithmTask finalTask = task;
+        task.bestSolutionLengthProperty().addListener((obs, oldVal, newVal) ->
                 notificationCenter.publish(MainViewModel.WRITE,
                         "Best Length: " + String.format("%.2f", newVal.doubleValue()) +
-                                " found in "+ dateFormat.format(System.currentTimeMillis()-startTime)+
-                                " after "+ algorithmTask.getIterationCounter()+ " iterations"));
-        taskScope.setTask(this.algorithmTask);
+                                " found in "+ dateFormat.format(System.currentTimeMillis() - super.getStartTime())+
+                                " after "+ finalTask.getIterationCounter()+ " iterations"));
 
-        EventHandler<WorkerStateEvent> finishHandler = workerStateEvent ->
-                notificationCenter.publish(MainViewModel.TASK_FINISHED,
-                algorithmProperty().get().toString(),
-                System.currentTimeMillis() - this.algorithmTask.getStartTime(),
-                "");
-
-        this.algorithmTask.setOnSucceeded(finishHandler);
-        this.algorithmTask.setOnCancelled(finishHandler);
-        this.algorithmTask.run();
-    }
-
-    public void stopAlgorithm(){
-        if(algorithmTask != null && algorithmTask.isRunning()){
-            algorithmTask.cancel();
-        }
+        return task;
     }
 
 
@@ -167,5 +152,4 @@ public class AntsViewModel implements ViewModel {
     public IntegerProperty rankSizeProperty() {
         return antsScope.rankSizeProperty();
     }
-
 }

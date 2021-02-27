@@ -38,6 +38,9 @@ public class CanvasViewModel implements ViewModel {
     AnimationScope animationScope;
 
     @InjectScope
+    AntsScope antsScope;
+
+    @InjectScope
     KeysScope keysScope;
 
     @InjectScope
@@ -47,7 +50,6 @@ public class CanvasViewModel implements ViewModel {
     NotificationCenter notificationCenter;
 
     private MouseHandler mouseHandler;
-
     private PopOverManager popOverManager;
 
     public void initialize(){
@@ -70,7 +72,7 @@ public class CanvasViewModel implements ViewModel {
 
         Platform.runLater(() ->{
             LowerDrawLayer lowerDrawLayer = new LowerDrawLayer(inputScope, graphScope);
-            UpperDrawLayer upperDrawLayer = new UpperDrawLayer(graphScope, inputScope, canvasScope, backgroundScope, algorithmScope);
+            UpperDrawLayer upperDrawLayer = new UpperDrawLayer(graphScope, inputScope, canvasScope, backgroundScope, algorithmScope, antsScope);
 
             painter.addDrawLayer(lowerDrawLayer);
             painter.addDrawLayer(upperDrawLayer);

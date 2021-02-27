@@ -1,14 +1,16 @@
 package com.todense.viewmodel.ants;
 
 import com.todense.model.graph.Graph;
+import com.todense.viewmodel.scope.AlgorithmScope;
 import com.todense.viewmodel.scope.AntsScope;
 
 import java.util.Comparator;
 
 public class RankedAntSystem extends AntColonyAlgorithmTask {
 
-    public RankedAntSystem(Graph graph, AntsScope antsScope) {
-        super(graph, antsScope);
+    public RankedAntSystem(Graph graph, AntsScope antsScope, AlgorithmScope algorithmScope) {
+        super(graph, antsScope, algorithmScope);
+        super.algorithmName = "Ranked Ant System";
     }
 
     @Override

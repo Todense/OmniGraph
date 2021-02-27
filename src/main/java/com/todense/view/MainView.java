@@ -195,7 +195,7 @@ public class MainView implements FxmlView<MainViewModel> {
 
     @FXML
     private void stopAction(){
-        viewModel.stop();
+        viewModel.stopAll();
     }
 
     @FXML

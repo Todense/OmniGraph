@@ -6,6 +6,8 @@ import javafx.concurrent.Task;
 
 public abstract class AlgorithmTask extends Task<Void>{
 
+    protected String algorithmName = "Unnamed Algorithm";
+
     protected Graph graph;
     protected String resultMessage = "";
     protected Painter painter;
@@ -71,7 +73,6 @@ public abstract class AlgorithmTask extends Task<Void>{
     }
 
 
-
     public String getResultMessage() {
         return resultMessage;
     }
@@ -94,5 +95,9 @@ public abstract class AlgorithmTask extends Task<Void>{
 
     public void setResult(double result) {
         this.result = result;
+    }
+
+    public String getAlgorithmName() {
+        return algorithmName;
     }
 }

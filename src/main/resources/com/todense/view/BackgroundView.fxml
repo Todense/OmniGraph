@@ -36,7 +36,7 @@
                <Insets />
             </HBox.margin>
          </Label>
-         <JFXSlider fx:id="gridGapSlider" blockIncrement="1.0" max="500.0" min="1.0" prefHeight="14.0" prefWidth="130.0" value="50.0" />
+         <JFXSlider fx:id="gridGapSlider" blockIncrement="1.0" max="500.0" min="5.0" prefHeight="14.0" prefWidth="130.0" value="50.0" />
       </HBox>
       <HBox alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0">
          <Label prefHeight="18.0" prefWidth="103.0" text="Grid Width">
@@ -47,7 +47,7 @@
                <Insets />
             </HBox.margin>
          </Label>
-         <JFXSlider fx:id="gridWidthSlider" blockIncrement="0.0" max="10.0" min="1.0E-4" prefHeight="14.0" prefWidth="130.0" value="1.0" />
+         <JFXSlider fx:id="gridWidthSlider" blockIncrement="0.0" max="10.0" min="0.01" prefHeight="14.0" prefWidth="130.0" value="1.0" />
       </HBox>
       <HBox alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0">
          <Label prefHeight="18.0" prefWidth="103.0" text="Grid Brightness">

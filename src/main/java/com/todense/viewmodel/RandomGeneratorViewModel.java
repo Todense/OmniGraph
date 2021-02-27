@@ -1,18 +1,20 @@
 package com.todense.viewmodel;
 
 import com.todense.model.graph.Graph;
+import com.todense.model.graph.Node;
 import com.todense.viewmodel.random.Generator;
 import com.todense.viewmodel.random.GeneratorModel;
 import com.todense.viewmodel.random.RandomEdgeGenerator;
 import com.todense.viewmodel.random.RandomGraphGenerator;
+import com.todense.viewmodel.random.arrangement.NodeArrangement;
 import com.todense.viewmodel.random.arrangement.generators.CircularPointGenerator;
 import com.todense.viewmodel.random.arrangement.generators.RandomCirclePointGenerator;
-import com.todense.viewmodel.random.arrangement.NodeArrangement;
 import com.todense.viewmodel.random.arrangement.generators.RandomSquarePointGenerator;
 import com.todense.viewmodel.random.generators.BarabasiAlbertGenerator;
 import com.todense.viewmodel.random.generators.ErdosRenyiGenerator;
 import com.todense.viewmodel.random.generators.GeometricGenerator;
 import com.todense.viewmodel.scope.CanvasScope;
+import com.todense.viewmodel.scope.GraphScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
@@ -49,6 +51,9 @@ public class RandomGeneratorViewModel implements ViewModel {
 
     @InjectScope
     CanvasScope canvasScope;
+
+    @InjectScope
+    GraphScope graphScope;
 
     public void initialize(){
         notificationCenter.subscribe("RANDOM", (key, payload) -> generate());
@@ -106,7 +111,6 @@ public class RandomGeneratorViewModel implements ViewModel {
                 throw new IllegalStateException("Unexpected value: " + generatorProperty.get());
         }
 
-
         try{
             Graph randomGraph = RandomGraphGenerator.generateGraph(nodeCountProperty.get(), pointGenerator, edgeGenerator, minDist);
             notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, randomGraph);
@@ -121,6 +125,8 @@ public class RandomGeneratorViewModel implements ViewModel {
         Thread thread = new Thread(this::generateGraph);
         thread.start();
     }
+
+
 
     public ObjectProperty<GeneratorModel> generatorProperty() {
         return generatorProperty;

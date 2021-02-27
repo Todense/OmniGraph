@@ -1,12 +1,11 @@
 package com.todense.viewmodel.ants;
 
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
+import com.todense.viewmodel.algorithm.WalkingAgent;
 
 import java.util.ArrayList;
 
-public class Ant{
+public class Ant extends WalkingAgent {
 
     private double cycleLength = 0;
 
@@ -18,10 +17,6 @@ public class Ant{
     private int start;
     private int goal;
     private int previous;
-
-
-    private DoubleProperty x  = new SimpleDoubleProperty();
-    private DoubleProperty y  = new SimpleDoubleProperty();
 
     public Ant(int start){
         this.start = start;
@@ -41,22 +36,6 @@ public class Ant{
 
     public void setCycleLength(double cycleLength) {
         this.cycleLength = cycleLength;
-    }
-
-    public double getX() {
-        return x.get();
-    }
-
-    public DoubleProperty xProperty() {
-        return x;
-    }
-
-    public double getY() {
-        return y.get();
-    }
-
-    public DoubleProperty yProperty() {
-        return y;
     }
 
     public int getGoal() {

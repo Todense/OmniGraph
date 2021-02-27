@@ -5,7 +5,9 @@ import com.todense.viewmodel.scope.GraphScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.paint.Color;
 
@@ -16,7 +18,7 @@ public class NodePopOverViewModel implements ViewModel {
     
     private ObjectProperty<Color> nodeColorProperty = new SimpleObjectProperty<>(Color.WHITE);
     private ObjectProperty<String> labelProperty = new SimpleObjectProperty<>("");
-
+    private DoubleProperty rotationProperty = new SimpleDoubleProperty(0d);
     private List<Node> nodes;
 
     @InjectScope
@@ -25,7 +27,7 @@ public class NodePopOverViewModel implements ViewModel {
     @Inject
     NotificationCenter notificationCenter;
 
-    public void bindToNodes(List<Node> nodes){
+    public void bindToNodes(Node clickedNode, List<Node> nodes){
         this.nodes = nodes;
         this.nodeColorProperty.addListener((obs, oldVal, newVal) -> {
                 nodes.forEach((node -> node.setColor(nodeColorProperty.get())));
@@ -34,6 +36,14 @@ public class NodePopOverViewModel implements ViewModel {
         this.labelProperty.addListener((obs, oldVal, newVal) -> {
                 nodes.forEach(node -> node.setLabelText(labelProperty.get()));
                 notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
+        });
+        this.rotationProperty.addListener((obs, oldVal, newVal) -> {
+            var GM = graphScope.getGraphManager();
+            double angle = Math.toRadians(newVal.doubleValue() - oldVal.doubleValue());
+            for(Node n : nodes){
+                GM.rotateNode(n, clickedNode.getPos(), angle);
+            }
+            notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
         });
 
         //remove buttons if more than one node is selected
@@ -81,4 +91,11 @@ public class NodePopOverViewModel implements ViewModel {
         return labelProperty;
     }
 
+    public double getRotationProperty() {
+        return rotationProperty.get();
+    }
+
+    public DoubleProperty rotationProperty() {
+        return rotationProperty;
+    }
 }

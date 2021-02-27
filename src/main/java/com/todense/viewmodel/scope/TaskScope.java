@@ -3,28 +3,28 @@ package com.todense.viewmodel.scope;
 import com.todense.viewmodel.algorithm.AlgorithmTask;
 import de.saxsys.mvvmfx.Scope;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 public class TaskScope implements Scope {
 
+    private ExecutorService executor = Executors.newSingleThreadExecutor();
+    private Future<?> future;
     private AlgorithmTask task;
 
-    private Thread thread;
-
-    public AlgorithmTask getTask() {
-        return task;
+    public boolean start(AlgorithmTask task){
+        if(isDone()){
+            this.executor = Executors.newSingleThreadExecutor();
+            this.future = executor.submit(task);
+            this.task = task;
+            return true;
+        }
+        return false;
     }
 
-    public void setTask(AlgorithmTask task) {
-        if(task != null && task.isRunning()){
-            task.cancel();
-        }
-        this.task = task;
-    }
-
-    public void setThread(Thread thread){
-        if(this.thread != null && this.thread.isAlive()){
-            this.thread.interrupt();
-        }
-        this.thread = thread;
+    public boolean isDone(){
+        return this.future == null || this.future.isCancelled() || this.future.isDone();
     }
 
     public void stopTask(){
@@ -33,16 +33,9 @@ public class TaskScope implements Scope {
         }
     }
 
-    public void stopThread(){
-        if(thread != null && thread.isAlive()){
-            thread.interrupt();
-            System.out.println(thread.getState());
-        }
+    public AlgorithmTask getTask() {
+        return task;
     }
 
-    public void stop(){
-        stopTask();
-        stopThread();
-    }
 
 }

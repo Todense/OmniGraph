@@ -6,6 +6,7 @@ import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -16,6 +17,8 @@ public class NodePopOverView implements FxmlView<NodePopOverViewModel> {
     @FXML private TextField nodeLabelTextField;
     @FXML private Button startNodeButton;
     @FXML private Button goalNodeButton;
+    @FXML private VBox rotationVBox;
+    @FXML private Slider rotationSlider;
 
 
     @InjectViewModel
@@ -24,8 +27,9 @@ public class NodePopOverView implements FxmlView<NodePopOverViewModel> {
     public void initialize(){
         this.editNodeColorPicker.valueProperty().bindBidirectional(viewModel.nodeColorProperty());
         this.nodeLabelTextField.textProperty().bindBidirectional(viewModel.labelProperty());
+        this.rotationSlider.valueProperty().bindBidirectional(viewModel.rotationProperty());
 
-        //remove buttons if more than one node is selected
+        //remove components if more than one node is selected
         viewModel.subscribe("MULTIPLE", (key, payload) -> {
             nodeVBox.getChildren().remove(startNodeButton);
             nodeVBox.getChildren().remove(goalNodeButton);

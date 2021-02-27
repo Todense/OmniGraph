@@ -43,7 +43,6 @@ public class Camera {
 
         affine.appendTranslation(translation.getX(), translation.getY());
         affine.appendScale(1/d, 1/d, center);
-
     }
 
     public void translate(Point2D delta) {
@@ -51,7 +50,7 @@ public class Camera {
         affine.appendTranslation(scaledDelta.getX(), scaledDelta.getY());
     }
 
-      public Point2D inverse(Point2D point) {
+    public Point2D inverse(Point2D point) {
         try {
             return affine.inverseTransform(point);
         } catch (NonInvertibleTransformException e) {

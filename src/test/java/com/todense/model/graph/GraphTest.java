@@ -34,8 +34,6 @@ class GraphTest {
 
         graph.removeEdge(e2);
 
-        assertThrows(AssertionError.class, () -> graph.removeEdge(e1.getN1(), e2.getN2()));
-
         assertEquals(graph.getEdges().size(), 1);
 
         graph.removeNode(n1);

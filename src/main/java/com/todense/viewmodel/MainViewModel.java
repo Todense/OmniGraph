@@ -83,6 +83,7 @@ public class MainViewModel implements ViewModel {
         notificationCenter.subscribe(TASK_CANCELLED, (key, payload) ->{
             writeInfo("");
             write(payload[0]+ " cancelled");
+            graphScope.setNodePositionFunction(GraphScope.NODE_ORDINARY_POSITION_FUNCTION);
             workingProperty.set(false);
             taskRunningProperty.set(false);
         });
@@ -102,12 +103,13 @@ public class MainViewModel implements ViewModel {
                 write((String) payload[2]); // result message
             }
             writeInfo("");
+            graphScope.setNodePositionFunction(GraphScope.NODE_ORDINARY_POSITION_FUNCTION);
             workingProperty.set(false);
             taskRunningProperty.set(false);
         });
 
         notificationCenter.subscribe(THREAD_STARTED, (key, payload) -> {
-            stop();
+            stopAll();
             writeInfo((String) payload[0]);
             workingProperty.set(true);
         });
@@ -155,8 +157,18 @@ public class MainViewModel implements ViewModel {
                     canvasScope.getCanvasHeight() * 0.9); break;
         }
         assert graphReader != null;
-        Graph openedGraph = graphReader.readGraph(file);
+        Graph openedGraph = null;
+        try{
+            openedGraph = graphReader.readGraph(file);
+        } catch (RuntimeException e){
+            if (e.getMessage() != null){
+                notificationCenter.publish(MainViewModel.WRITE,"ERROR: "+e.getMessage());
+            }else{
+                notificationCenter.publish(MainViewModel.WRITE, "Error: File is corrupted");
+            }
 
+            e.printStackTrace();
+        }
         if(openedGraph != null){
             notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, openedGraph);
             notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
@@ -165,8 +177,8 @@ public class MainViewModel implements ViewModel {
     }
 
 
-    public void stop() {
-        taskScope.stop();
+    public void stopAll() {
+        taskScope.stopTask();
     }
 
     public void setKeyInput(Scene scene){
@@ -198,11 +210,12 @@ public class MainViewModel implements ViewModel {
 
     public void write(String s){
         Platform.runLater(() -> {
-            String text = textProperty.get()
-                    + "\n"+"["+timeFormatter.format(System.currentTimeMillis())+"]"+" "+s;
+            String message = "["+timeFormatter.format(System.currentTimeMillis())+"]"+" "+s;
+            String text = textProperty.get() + "\n"+message;
             textProperty.setValue(text);
-            System.out.println(text);
+            System.out.println(message);
         });
+
     }
 
     public void writeInfo(String s){
@@ -227,6 +240,7 @@ public class MainViewModel implements ViewModel {
         notificationCenter.publish("ADJUST");
         notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
     }
+
 
     public ObjectProperty<String> textProperty() {
         return textProperty;

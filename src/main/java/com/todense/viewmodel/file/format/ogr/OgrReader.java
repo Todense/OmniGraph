@@ -33,6 +33,7 @@ public class OgrReader implements GraphReader {
         int edgeCount = Integer.parseInt(edgeCountLine[1]);
 
         Graph graph = new Graph(name);
+
         for (int i = 0; i < nodeCount; i++) {
             scanner.nextInt();
             Point2D pos = new Point2D(Double.parseDouble(scanner.next()), Double.parseDouble(scanner.next()));

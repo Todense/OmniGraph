@@ -13,6 +13,7 @@ import java.util.Stack;
 
 public class GraphCoarsener {
 
+    private Graph originalGraph;
     private GraphManager graphManager;
     private Stack<Graph> graphSequence = new Stack<>();
     private Stack<HashMap<Node, Node>> nodeMaps = new Stack<>();
@@ -22,6 +23,7 @@ public class GraphCoarsener {
 
     public GraphCoarsener(GraphManager graphManager){
         this.graphManager = graphManager;
+        this.originalGraph = graphManager.getGraph().copy();
     }
 
     public void reconstruct(double variation) {
@@ -104,5 +106,9 @@ public class GraphCoarsener {
 
     public boolean maxLevelReached() {
          return (graphSequence.peek().getEdges().size() <= 1 || reductionRate > 0.75);
+    }
+
+    public Graph getOriginalGraph() {
+        return originalGraph;
     }
 }

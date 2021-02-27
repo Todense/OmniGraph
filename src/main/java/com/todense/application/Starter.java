@@ -16,6 +16,7 @@ public class Starter extends MvvmfxGuiceApplication {
 
     @Override
     public void startMvvmfx(Stage stage) {
+
         stage.setTitle("OmniGraph");
         final ViewTuple<MainView, MainViewModel> viewTuple = FluentViewLoader.fxmlView(MainView.class).load();
         final Parent root = viewTuple.getView();

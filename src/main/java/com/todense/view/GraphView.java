@@ -11,16 +11,18 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Label;
+import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 
 public class GraphView implements FxmlView<GraphViewModel> {
     
-    @FXML private Label nodeSizeLabel, edgeWidthLabel;
-    @FXML private JFXSlider nodeSizeSlider, edgeWidthSlider;
+    @FXML private Label nodeSizeLabel, edgeWidthLabel, edgeWidthDecayLabel, edgeOpacityDecayLabel;
+    @FXML private JFXSlider nodeSizeSlider, edgeWidthSlider, edgeWidthDecaySlider, edgeOpacityDecaySlider;
     @FXML private ColorPicker nodeColorPicker, edgeColorPicker, labelColorPicker, weightColorPicker;
     @FXML private ChoiceBox<NodeLabelMode> nodeLabelChoiceBox;
     @FXML private ChoiceBox<EdgeWeightMode> edgeWeightChoiceBox;
-    @FXML private ToggleSwitch nodeBorderToggleSwitch, edgeVisibilityToggleSwitch;
+    @FXML private ToggleSwitch nodeBorderToggleSwitch, edgeVisibilityToggleSwitch, widthDecayToggleSwitch, opacityDecayToggleSwitch;
+    @FXML private VBox edgeWidthDecayVBox, edgeWidthDecayStrengthVBox, edgeOpacityDecayVBox, edgeOpacityDecayStrengthVBox;
 
     @InjectViewModel
     GraphViewModel viewModel;
@@ -35,8 +37,32 @@ public class GraphView implements FxmlView<GraphViewModel> {
         edgeWeightChoiceBox.valueProperty().bindBidirectional(viewModel.edgeWeightModeProperty());
         nodeSizeSlider.valueProperty().bindBidirectional(viewModel.nodeSizeProperty());
         edgeWidthSlider.valueProperty().bindBidirectional(viewModel.edgeWidthProperty());
+        edgeWidthDecaySlider.valueProperty().bindBidirectional(viewModel.edgeWidthDecayProperty());
+        edgeOpacityDecaySlider.valueProperty().bindBidirectional(viewModel.edgeOpacityDecayProperty());
         nodeBorderToggleSwitch.selectedProperty().bindBidirectional(viewModel.nodeBorderProperty());
         edgeVisibilityToggleSwitch.selectedProperty().bindBidirectional(viewModel.edgeVisibilityProperty());
+        widthDecayToggleSwitch.selectedProperty().bindBidirectional(viewModel.edgeWidthDecayOnProperty());
+        opacityDecayToggleSwitch.selectedProperty().bindBidirectional(viewModel.edgeOpacityDecayOnProperty());
+
+        widthDecayToggleSwitch.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal){
+                edgeWidthDecayVBox.getChildren().add(edgeWidthDecayStrengthVBox);
+            }else{
+                edgeWidthDecayVBox.getChildren().remove(edgeWidthDecayStrengthVBox);
+            }
+        });
+
+        opacityDecayToggleSwitch.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal){
+                edgeOpacityDecayVBox.getChildren().add(edgeOpacityDecayStrengthVBox);
+            }else{
+                edgeOpacityDecayVBox.getChildren().remove(edgeOpacityDecayStrengthVBox);
+            }
+        });
+
+        edgeWidthDecayVBox.getChildren().remove(edgeWidthDecayStrengthVBox);
+        edgeOpacityDecayVBox.getChildren().remove(edgeOpacityDecayStrengthVBox);
+
 
         nodeSizeLabel.textProperty().bind(Bindings.createStringBinding(() ->
                 String.format("%.1f",  nodeSizeSlider.getValue()), nodeSizeSlider.valueProperty()));
@@ -44,6 +70,12 @@ public class GraphView implements FxmlView<GraphViewModel> {
 
         edgeWidthLabel.textProperty().bind(Bindings.createStringBinding(()->
                 String.format("%.2f",  edgeWidthSlider.getValue()), edgeWidthSlider.valueProperty()));
+
+        edgeWidthDecayLabel.textProperty().bind(Bindings.createStringBinding(()->
+                String.format("%.4f",  edgeWidthDecaySlider.getValue()), edgeWidthDecaySlider.valueProperty()));
+
+        edgeOpacityDecayLabel.textProperty().bind(Bindings.createStringBinding(()->
+                String.format("%.4f",  edgeOpacityDecaySlider.getValue()), edgeOpacityDecaySlider.valueProperty()));
 
 
         nodeLabelChoiceBox.getItems().addAll(NodeLabelMode.values());

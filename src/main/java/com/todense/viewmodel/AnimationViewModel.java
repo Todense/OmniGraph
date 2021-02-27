@@ -15,7 +15,6 @@ public class AnimationViewModel implements ViewModel {
         nextStepProperty().setValue(true);
     }
 
-
     public IntegerProperty stepTimeProperty() {
         return animationScope.stepTimeProperty();
     }

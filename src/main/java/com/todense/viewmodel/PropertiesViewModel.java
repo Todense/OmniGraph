@@ -72,7 +72,7 @@ public class PropertiesViewModel implements ViewModel {
                 calculate();
                 notificationCenter.publish(MainViewModel.THREAD_FINISHED, "Calculated Properties");
             });
-            taskScope.setThread(propertiesThread);
+            //taskScope.setThread(propertiesThread);
             propertiesThread.start();
         }
     }

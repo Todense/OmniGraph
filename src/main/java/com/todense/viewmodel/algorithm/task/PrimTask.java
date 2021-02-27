@@ -22,6 +22,7 @@ public class PrimTask extends WeightedAlgorithmTask {
 	public PrimTask(Node startNode, Graph graph, boolean customWeight) {
 		super(graph, customWeight);
 		this.startNode = startNode;
+		super.algorithmName = "Prim's algorithm";
 	}
 
 

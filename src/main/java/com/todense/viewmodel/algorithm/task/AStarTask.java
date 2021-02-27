@@ -23,6 +23,7 @@ public class AStarTask extends ShortestPathAlgorithmTask {
         super(graph, customWeight);
         this.startNode = startNode;
         this.goalNode = goalNode;
+        super.algorithmName = "A* Shortest Path";
     }
 
     @Override
@@ -30,6 +31,8 @@ public class AStarTask extends ShortestPathAlgorithmTask {
         pathFound = super.findShortestPath(startNode, goalNode);
         result = super.pathLength;
     }
+
+
 
     @Override
     protected void init(){

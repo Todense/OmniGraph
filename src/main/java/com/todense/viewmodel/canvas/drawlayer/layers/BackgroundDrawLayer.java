@@ -41,13 +41,18 @@ public class BackgroundDrawLayer implements DrawLayer {
     private void drawGrid(GraphicsContext gc, double width, double height){
 
         double gap = backgroundScope.getGridGap();
+        double screenGap = camera.getZoom() * gap;
+        double log2Floor = Math.floor(Math.log(screenGap/gap)/Math.log(2));
+
+        screenGap /= Math.pow(2, log2Floor);
+        gap = screenGap / camera.getZoom();
 
         Point2D center = new Point2D(width/2, height/2);
         Point2D start = camera.inverse(new Point2D(0,0));
         Point2D end = camera.inverse(new Point2D(width, height));
 
         gc.setStroke(Color.grayRgb(backgroundScope.getGridBrightness()));
-        gc.setLineWidth(backgroundScope.getGridWidth());
+        gc.setLineWidth(backgroundScope.getGridWidth()/ camera.getZoom());
 
         //vertical lines
         int iMin = (int) ((start.getX() - center.getX())/gap);

@@ -14,6 +14,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.StringConverter;
 import javafx.util.converter.NumberStringConverter;
@@ -23,10 +24,11 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
     @FXML private TextField stepTextField, toleranceTextField, optDistTextField,
             pullStrengthTextField, coolingFactorTextField;
     @FXML private Slider toleranceSlider, stepSlider,  coolingFactorSlider, pullStrengthSlider;
-    @FXML private JFXSlider optDistSlider;
-    @FXML private ToggleSwitch pullToggleSwitch, coolingToggleSwitch, multilevelToggleSwitch, barnesHutToggleSwitch;
+    @FXML private JFXSlider optDistSlider, smoothnessSlider;
+    @FXML private ToggleSwitch pullToggleSwitch, coolingToggleSwitch, multilevelToggleSwitch, barnesHutToggleSwitch, smoothToggleSwitch;
     @FXML private Button startButton;
     @FXML private VBox coolingVBox, pullVBox;
+    @FXML private HBox smoothnessHBox;
     @FXML private ChoiceBox<LongRangeForce> longRangeChoiceBox;
 
     @InjectViewModel
@@ -38,11 +40,13 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
         optDistSlider.valueProperty().bindBidirectional(viewModel.optDistProperty());
         coolingFactorSlider.valueProperty().bindBidirectional(viewModel.coolingStrengthProperty());
         pullStrengthSlider.valueProperty().bindBidirectional(viewModel.centerPullStrengthProperty());
+        smoothnessSlider.valueProperty().bindBidirectional(viewModel.smoothnessProperty());
 
         pullToggleSwitch.selectedProperty().bindBidirectional(viewModel.centerPullOnProperty());
         coolingToggleSwitch.selectedProperty().bindBidirectional(viewModel.coolingOnProperty());
         multilevelToggleSwitch.selectedProperty().bindBidirectional(viewModel.multilevelOnProperty());
         barnesHutToggleSwitch.selectedProperty().bindBidirectional(viewModel.barnesHutOnProperty());
+        smoothToggleSwitch.selectedProperty().bindBidirectional(viewModel.smoothnessOnProperty());
 
         bindSliderAndTextField(optDistSlider, optDistTextField);
         bindSliderAndTextField(stepSlider, stepTextField);
@@ -52,6 +56,7 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
 
         pullVBox.disableProperty().bind(pullToggleSwitch.selectedProperty().not());
         coolingVBox.disableProperty().bind(coolingToggleSwitch.selectedProperty().not());
+        smoothnessHBox.disableProperty().bind(smoothToggleSwitch.selectedProperty().not());
 
         longRangeChoiceBox.valueProperty().bindBidirectional(viewModel.longRangeForceProperty());
         longRangeChoiceBox.getItems().addAll(LongRangeForce.values());
@@ -75,14 +80,20 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
                 String.valueOf(property.getValue().intValue()), property);
     }
 
+
     @FXML
     private void dynamicLayoutAction() {
-        viewModel.start();
+        viewModel.startTask();
     }
 
     @FXML
     private void stopAlgorithmAction() {
-        viewModel.stop();
+        viewModel.stopTask();
+    }
+
+    @FXML
+    private void randomLayoutAction(){
+        viewModel.randomLayout();
     }
 
 }

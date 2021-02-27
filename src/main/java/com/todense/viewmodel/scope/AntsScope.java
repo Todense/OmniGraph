@@ -8,12 +8,13 @@ import javafx.beans.property.*;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AntsScope implements Scope {
 
-    private ArrayList<Ant> ants = new ArrayList<>();
+    private List<Ant> ants = new ArrayList<>();
 
-    ArrayList<Integer> gbCycle = new ArrayList<>();
+    ArrayList<Integer> gbCycle = new ArrayList<>(); //globally best cycle
 
     private double[][] pheromones;
 
@@ -57,7 +58,7 @@ public class AntsScope implements Scope {
         return pheromones[i][j];
     }
 
-    public ArrayList<Ant> getAnts() {
+    public List<Ant> getAnts() {
         return ants;
     }
 

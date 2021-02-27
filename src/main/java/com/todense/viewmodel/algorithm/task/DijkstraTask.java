@@ -21,6 +21,7 @@ public class DijkstraTask extends ShortestPathAlgorithmTask {
 		super(graph, customWeight);
 		this.startNode = startNode;
 		this.goalNode = goalNode;
+		super.algorithmName  = "Dijkstra's Algorithm";
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
 public class CanvasScope implements Scope {
@@ -54,4 +55,9 @@ public class CanvasScope implements Scope {
     public ObjectProperty<Color> borderColorProperty() {
         return borderColorProperty;
     }
+
+    public Point2D getCanvasCenter(){
+        return new Point2D(canvasWidthProperty.get()/2, canvasHeightProperty.get()/2);
+    }
+
 }

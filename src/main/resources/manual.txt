@@ -2,15 +2,17 @@ OmniGraph
 
 1. Basic mouse controls
 
-- Zoom in\out: mouse scroll
 - Add node: left click on background
 - Add edge: right click on first node and drag mouse to second node
-- Remove node/edge: middle click on node/edge or open context menu -> delete
+- Remove node/edge: middle click on node/edge or right click on node -> delete
 - Open node/edge context menu: right click on node/edge
-- Select nodes: right click on canvas and drag mouse to create selection area
+- Select nodes: right click on background and drag mouse to create selection area
 - Select/deselect node/edge: CTRL + left click on node/edge
-- Drag one node or all selected nodes: left click on node and drag the mouse
-- Move camera: SHIFT + left mouse drag
+- Drag one node or all selected nodes: left click on node + drag mouse
+- Zoom in\out: mouse scroll
+- Move camera: left mouse click on background + drag mouse
+- Copy selected subgraph: CTRL+C+left mouse click one of selected nodes or right click on one of selected nodes -> copy subgraph
+- Paste copied graph: CTRL+V+left mouse click on background or right click on background -> paste subgraph
 
 
 2. Keyboard shortcuts
@@ -18,6 +20,7 @@ OmniGraph
 CTRL + DEL - delete graph
 CTRL + Q - adjust camera to graph
 CTRL + R - create random graph
+CTRL + E - create preset graph
 CTRL + L - start graph layout
 CTRL + P - create path 
 CTRL + K - add all edges

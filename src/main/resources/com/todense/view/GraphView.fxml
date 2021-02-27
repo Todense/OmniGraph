@@ -14,7 +14,7 @@
 <?import org.controlsfx.control.ToggleSwitch?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="220.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.GraphView">
+<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="526.0" prefWidth="220.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.GraphView">
    <Label alignment="CENTER" prefHeight="1.0" prefWidth="208.0" styleClass="darkLabel" text="Node Options" />
    <VBox alignment="CENTER" prefHeight="149.0" prefWidth="220.0" spacing="5.0" styleClass="subsection">
       <children>
@@ -93,7 +93,7 @@
       </VBox.margin>
    </VBox>
    <Label alignment="CENTER" layoutX="16.0" layoutY="10.0" prefHeight="7.0" prefWidth="208.0" styleClass="darkLabel" text="Edge Options" />
-   <VBox alignment="CENTER" prefHeight="123.0" prefWidth="220.0" spacing="5.0" styleClass="subsection">
+   <VBox fx:id="edgeOptionsVBox" alignment="CENTER" prefHeight="123.0" prefWidth="220.0" spacing="5.0" styleClass="subsection">
       <children>
          <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="11.0" prefWidth="146.0">
             <Label contentDisplay="CENTER" prefHeight="15.0" prefWidth="98.0" text="Width">
@@ -167,6 +167,75 @@
                <Font size="16.0" />
             </font>
          </ToggleSwitch>
+         <VBox fx:id="edgeWidthDecayVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+            <children>
+               <ToggleSwitch fx:id="widthDecayToggleSwitch" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="190.0" text="Distance Width Decay">
+                  <font>
+                     <Font size="16.0" />
+                  </font>
+               </ToggleSwitch>
+               <VBox fx:id="edgeWidthDecayStrengthVBox" alignment="CENTER" prefHeight="0.0" prefWidth="100.0" spacing="5.0">
+                  <children>
+                     <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="11.0" prefWidth="146.0">
+                        <children>
+                           <Label contentDisplay="CENTER" prefHeight="15.0" prefWidth="98.0" text="Decay Strength">
+                              <font>
+                                 <Font size="10.0" />
+                              </font>
+                           </Label>
+                           <Pane maxWidth="1.7976931348623157E308" prefHeight="15.0" HBox.hgrow="ALWAYS" />
+                           <Label fx:id="edgeWidthDecayLabel" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="60.0" text="60" textAlignment="CENTER">
+                              <font>
+                                 <Font name="System Bold" size="10.0" />
+                              </font>
+                           </Label>
+                        </children>
+                     </HBox>
+                     <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
+                        <children>
+                           <JFXSlider fx:id="edgeWidthDecaySlider" blockIncrement="0.001" max="0.2" min="1.0E-4" prefHeight="14.0" prefWidth="190.0" value="1.0" />
+                        </children>
+                     </HBox>
+                  </children>
+               </VBox>
+            </children>
+         </VBox>
+         <VBox fx:id="edgeOpacityDecayVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+            <children>
+               <ToggleSwitch fx:id="opacityDecayToggleSwitch" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="190.0" text="Distance Opacity Decay">
+                  <font>
+                     <Font size="16.0" />
+                  </font>
+                  <VBox.margin>
+                     <Insets top="5.0" />
+                  </VBox.margin>
+               </ToggleSwitch>
+               <VBox fx:id="edgeOpacityDecayStrengthVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                  <children>
+                     <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="11.0" prefWidth="146.0">
+                        <children>
+                           <Label contentDisplay="CENTER" prefHeight="15.0" prefWidth="98.0" text="Decay Strength">
+                              <font>
+                                 <Font size="10.0" />
+                              </font>
+                           </Label>
+                           <Pane maxWidth="1.7976931348623157E308" prefHeight="15.0" HBox.hgrow="ALWAYS" />
+                           <Label fx:id="edgeOpacityDecayLabel" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="17.0" prefWidth="60.0" text="60" textAlignment="CENTER">
+                              <font>
+                                 <Font name="System Bold" size="10.0" />
+                              </font>
+                           </Label>
+                        </children>
+                     </HBox>
+                     <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
+                        <children>
+                           <JFXSlider fx:id="edgeOpacityDecaySlider" blockIncrement="0.001" max="0.2" min="1.0E-4" prefHeight="14.0" prefWidth="190.0" value="1.0" />
+                        </children>
+                     </HBox>
+                  </children>
+               </VBox>
+            </children>
+         </VBox>
       </children>
    </VBox>
 </VBox>

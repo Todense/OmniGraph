@@ -200,7 +200,7 @@
                   <Tooltip showDelay="0.1s" text="Lock graph edit" />
                </tooltip>
                <HBox.margin>
-                  <Insets right="30.0" />
+                  <Insets right="70.0" />
                </HBox.margin>
             </ToggleButton>
             <ColorPicker fx:id="appColorPicker" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="30.0">
@@ -237,8 +237,8 @@
       </HBox>
    </bottom>
    <center>
-      <VBox prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
-         <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" prefWidth="200.0">
+      <VBox minHeight="10.0" minWidth="10.0" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+         <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="40.0" prefWidth="200.0">
             <fx:include source="AnimationView.fxml" />
          </HBox>
          <VBox prefHeight="2000.0" prefWidth="2000.0">

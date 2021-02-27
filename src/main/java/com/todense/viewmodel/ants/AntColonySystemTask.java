@@ -2,6 +2,7 @@ package com.todense.viewmodel.ants;
 
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
+import com.todense.viewmodel.scope.AlgorithmScope;
 import com.todense.viewmodel.scope.AntsScope;
 import org.apache.commons.math3.exception.MathArithmeticException;
 
@@ -12,8 +13,9 @@ public class AntColonySystemTask extends AntColonyAlgorithmTask {
 
     private Random rnd = new Random();
 
-    public AntColonySystemTask(Graph graph, AntsScope antsScope) {
-        super(graph, antsScope);
+    public AntColonySystemTask(Graph graph, AntsScope antsScope, AlgorithmScope algorithmScope) {
+        super(graph, antsScope, algorithmScope);
+        super.algorithmName = "Ant Colony System";
     }
 
     @Override

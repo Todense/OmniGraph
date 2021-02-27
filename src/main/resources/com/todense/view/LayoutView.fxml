@@ -13,7 +13,7 @@
 <?import org.controlsfx.control.ToggleSwitch?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox alignment="CENTER" minWidth="-Infinity" prefHeight="457.0" prefWidth="200.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.LayoutView">
+<VBox alignment="CENTER" minWidth="-Infinity" prefHeight="519.0" prefWidth="200.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.LayoutView">
    <padding>
       <Insets bottom="5.0" top="5.0" />
    </padding>
@@ -93,20 +93,16 @@
       <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
          <children>
             <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0">
-               <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="115.0" text="Initial step">
+               <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="115.0" text="Step size">
                   <font>
                      <Font size="10.0" />
                   </font>
                </Label>
                <TextField fx:id="stepTextField" alignment="CENTER" minWidth="-Infinity" prefHeight="25.0" prefWidth="60.0" />
             </HBox>
-            <JFXSlider fx:id="stepSlider" blockIncrement="1.0" majorTickUnit="1.0" max="50.0" min="1.0" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="1" prefHeight="15.0" prefWidth="190.0" value="3.0">
-               <VBox.margin>
-                  <Insets left="5.0" right="5.0" />
-               </VBox.margin>
-            </JFXSlider>
          </children>
       </VBox>
+      <JFXSlider fx:id="stepSlider" blockIncrement="1.0" min="0.01" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="190.0" value="50.0" />
       <VBox alignment="CENTER" layoutX="14.0" layoutY="57.0" prefHeight="200.0" prefWidth="100.0">
          <children>
             <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0">
@@ -159,6 +155,40 @@
          </children>
       </VBox>
    </VBox>
+   <Label alignment="CENTER" layoutX="15.0" layoutY="173.0" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Visauls" textFill="#2c2c2c">
+      <font>
+         <Font size="9.0" />
+      </font>
+   </Label>
+   <VBox fx:id="smoothingVBox" alignment="TOP_CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="64.0" prefWidth="200.0" styleClass="subsection">
+      <children>
+         <ToggleSwitch fx:id="smoothToggleSwitch" contentDisplay="CENTER" minWidth="-Infinity" prefHeight="18.0" prefWidth="181.0" selected="true" text="Smoothed Movement">
+            <font>
+               <Font size="10.0" />
+            </font>
+            <tooltip>
+               <Tooltip text=" ">
+                  <graphic>
+                     <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="115.0" text="Cooling Speed">
+                        <font>
+                           <Font size="10.0" />
+                        </font>
+                     </Label>
+                  </graphic></Tooltip>
+            </tooltip>
+         </ToggleSwitch>
+         <HBox fx:id="smoothnessHBox" alignment="CENTER" minWidth="-Infinity" prefHeight="38.0" prefWidth="190.0">
+            <children>
+               <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="68.0" text="Smoothness">
+                  <font>
+                     <Font size="10.0" />
+                  </font>
+               </Label>
+               <JFXSlider fx:id="smoothnessSlider" blockIncrement="0.001" majorTickUnit="0.1" max="0.999" min="0.6" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="1" prefHeight="30.0" prefWidth="102.0" value="0.9" />
+            </children>
+         </HBox>
+      </children>
+   </VBox>
    <HBox alignment="CENTER" prefHeight="25.0" prefWidth="190.0" spacing="3.0">
       <Button fx:id="startButton" alignment="CENTER" mnemonicParsing="false" onAction="#dynamicLayoutAction" prefHeight="25.0" prefWidth="108.0" styleClass="danger" text="Start Layout">
          <graphic>
@@ -178,6 +208,17 @@
          <tooltip>
             <Tooltip text="Stop all" />
          </tooltip>
+      </Button>
+      <Button layoutX="153.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#randomLayoutAction" prefHeight="25.0" prefWidth="25.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+         <tooltip>
+            <Tooltip text="New random layout" />
+         </tooltip>
+         <graphic>
+            <FontIcon iconLiteral="fas-dice" iconSize="15" />
+         </graphic>
       </Button>
    </HBox>
 </VBox>

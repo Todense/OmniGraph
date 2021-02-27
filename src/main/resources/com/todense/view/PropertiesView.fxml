@@ -171,14 +171,6 @@
                <FontIcon iconColor="#08ae34" iconLiteral="fas-play" styleClass="start-icon" />
             </graphic>
          </Button>
-         <Button disable="true" layoutX="185.0" layoutY="16.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="25.0" prefWidth="104.0" text="Infographic" textFill="#aeaeae">
-            <font>
-               <Font name="Font Awesome 5 Free Regular" size="11.0" />
-            </font>
-            <graphic>
-               <FontIcon iconColor="#d0d0d0" iconLiteral="fa-bar-chart" iconSize="20" selectionStart="0" />
-            </graphic>
-         </Button>
          <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopAction" prefHeight="25.0" prefWidth="25.0">
             <font>
                <Font name="Font Awesome 5 Free Regular" size="11.0" />
@@ -187,7 +179,7 @@
                <FontIcon iconColor="#e14444" iconLiteral="fas-stop" iconSize="15" selectionStart="0" styleClass="stop-icon" />
             </graphic>
             <tooltip>
-               <Tooltip showDelay="0.1s" text="Stop all" />
+               <Tooltip showDelay="0.1s" text="Stop" />
             </tooltip>
          </Button>
       </children>

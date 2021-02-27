@@ -4,6 +4,7 @@ import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.file.format.tsp.TspReader;
 import com.todense.viewmodel.graph.GraphManager;
+import com.todense.viewmodel.scope.AlgorithmScope;
 import com.todense.viewmodel.scope.AntsScope;
 import javafx.geometry.Point2D;
 import org.junit.jupiter.api.Assertions;
@@ -33,6 +34,7 @@ class AntColonyAlgoritmsTest {
         }
         double trails = 1;
         AntsScope antScope = new AntsScope();
+        AlgorithmScope algorithmScope = new AlgorithmScope();
         antScope.betaProperty().setValue(8.2);
         antScope.neighbourhoodSizeProperty().setValue(25);
         antScope.antCountProperty().setValue(20);
@@ -50,7 +52,7 @@ class AntColonyAlgoritmsTest {
             double explorSum = 0;
             for (int j = 0; j < trails; j++) {
                 antScope.betaProperty().set(d);
-                AntColonyAlgorithmTask antService = new AntSystemTask(graph, antScope);
+                AntColonyAlgorithmTask antService = new AntSystemTask(graph, antScope, algorithmScope);
                 antService.setMaxTimeSec(10);
                 antService.setMinSolution(6111);
                 antService.perform();
@@ -73,6 +75,7 @@ class AntColonyAlgoritmsTest {
     @Test
     void cycleLengthTest(){
         AntsScope antsScope = new AntsScope();
+        AlgorithmScope algorithmScope = new AlgorithmScope();
         GraphManager GM = new GraphManager();
         Graph graph = GM.getGraph();
         graph.addNode(new Point2D(0, 0));
@@ -84,10 +87,10 @@ class AntColonyAlgoritmsTest {
         antsScope.with2OptProperty().setValue(false);
 
         List<AntColonyAlgorithmTask> algorithms = new ArrayList<>(Arrays.asList(
-                new AntSystemTask(graph, antsScope),
-                new AntColonySystemTask(graph, antsScope),
-                new MaxMinAntSystemTask(graph, antsScope),
-                new RankedAntSystem(graph, antsScope)));
+                new AntSystemTask(graph, antsScope, algorithmScope),
+                new AntColonySystemTask(graph, antsScope, algorithmScope),
+                new MaxMinAntSystemTask(graph, antsScope, algorithmScope),
+                new RankedAntSystem(graph, antsScope, algorithmScope)));
 
         for(var algorithm : algorithms){
             algorithm.setMaxTimeSec(0.2);

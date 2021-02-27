@@ -114,6 +114,9 @@ public class MouseHandler {
     }
 
     public void onMouseClicked(MouseEvent event) {
+
+        if(inputScope.isEditLocked()) return;
+
         if(event.getButton() == MouseButton.PRIMARY && !dragging) {  // LEFT MOUSE BUTTON
             if(!pressedKeys.contains(KeyCode.SHIFT)){
                 if(clickedNode == null && clickedEdge == null){  // click on background
@@ -130,11 +133,13 @@ public class MouseHandler {
                     if(pressedKeys.contains(KeyCode.C)){
                         graphScope.getGraphManager().copySelectedSubgraph();
                     }
-                    if(clickedNode != null){
-                        reverseSelection(clickedNode);
-                    }
                     else{
-                        reverseSelection(clickedEdge);
+                        if(clickedNode != null){
+                            reverseSelection(clickedNode);
+                        }
+                        else{
+                            reverseSelection(clickedEdge);
+                        }
                     }
                 }
             }
@@ -177,7 +182,7 @@ public class MouseHandler {
                         releaseNode.setSelected(true);
                         GM.getSelectedNodes().add(releaseNode);
                     }
-                    popOver = popOverManager.createNodePopOver(graphScope.getGraphManager(),
+                    popOver = popOverManager.createNodePopOver(graphScope.getGraphManager(), releaseNode,
                             GM.getSelectedNodes(), event.getScreenX(), event.getScreenY());
                 } else if (releaseEdge != null) {  //edge popover
                     if (!releaseEdge.isSelected()) {
@@ -205,16 +210,17 @@ public class MouseHandler {
             }
             edgeStartNode = null;
         }
+        inputScope.getDummyEdgeStartNodes().clear();
         painter.repaint();
     }
 
 
     public void onMouseMoved(MouseEvent event){
 
-        if(inputScope.isEditLocked()) return;
-
         Point2D movePt = new Point2D(event.getX(), event.getY());
         currentMousePt = movePt;
+
+        if(inputScope.isEditLocked()) return;
 
         Node prevNode = hoverNode;
         hoverNode = getNodeFromPoint(movePt);
@@ -261,7 +267,7 @@ public class MouseHandler {
 
         if(inputScope.isEditLocked()){
             camera.translate(delta);
-            currentMousePt = new Point2D(event.getX(),event.getY());
+            currentMousePt = new Point2D(event.getX(), event.getY());
             painter.repaint();
             return;
         }
@@ -281,9 +287,15 @@ public class MouseHandler {
                 camera.translate(delta);
                 currentMousePt = new Point2D(event.getX(),event.getY());
             }
-            else if(clickedNode != null) {
+            else if(clickedNode != null && !pressedKeys.contains(KeyCode.CONTROL)) {
                 if (!clickedNode.isSelected()) {
-                    GM.updateNodePosition(clickedNode, delta.multiply(1/ camera.getZoom()));
+                    GM.updateNodePosition(clickedNode, delta.multiply(1/camera.getZoom()));
+                }
+                else if(pressedKeys.contains(KeyCode.A)){
+                    int clockwise = delta.getY() > 0? 1 : -1;
+                    for (Node n : GM.getSelectedNodes()) {
+                        GM.rotateNode(n, clickedNode.getPos(), clockwise * 0.02);
+                    }
                 }
                 else {
                     for (Node n : GM.getSelectedNodes()) {
@@ -388,6 +400,9 @@ public class MouseHandler {
         for(Node n: GM.getGraph().getNodes()){
             n.setSelected(rect.contains(camera.transform(n.getPos())));
         }
+        for(Edge e: GM.getGraph().getEdges()){
+            e.setMarked(e.getN1().isSelected() && e.getN2().isSelected());
+        }
     }
 
     private void reverseSelection(Node n){
@@ -397,6 +412,11 @@ public class MouseHandler {
         }else{
             n.setSelected(true);
             GM.getSelectedNodes().add(n);
+        }
+        Graph g = GM.getGraph();
+        for(Node m : n.getNeighbours()){
+            Edge e = g.getEdge(n, m);
+            e.setMarked(e.getN1().isSelected() && e.getN2().isSelected());
         }
     }
 
@@ -419,6 +439,11 @@ public class MouseHandler {
     public void clearSelection(){
         for(Edge edge : selectedEdges){
             edge.setSelected(false);
+            //edge.setHighlighted(false);
+            //edge.setMarked(false);
+        }
+        for(Edge edge : GM.getGraph().getEdges()){
+            edge.setMarked(false);
         }
         selectedEdges.clear();
         for(Node node : GM.getSelectedNodes()){

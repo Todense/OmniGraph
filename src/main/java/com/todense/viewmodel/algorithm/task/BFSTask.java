@@ -14,6 +14,7 @@ public class BFSTask extends AlgorithmTask {
 	public BFSTask(Node startNode, Graph graph){
 		super(graph);
 		this.startNode = startNode;
+		super.algorithmName = "BFS";
 	}
 
 	@Override

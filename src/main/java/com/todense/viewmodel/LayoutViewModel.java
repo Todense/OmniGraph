@@ -1,8 +1,12 @@
 package com.todense.viewmodel;
 
+import com.todense.model.graph.Node;
 import com.todense.viewmodel.algorithm.AlgorithmTask;
+import com.todense.viewmodel.algorithm.AlgorithmTaskManager;
 import com.todense.viewmodel.algorithm.task.ForceDirectedLayoutTask;
 import com.todense.viewmodel.layout.LongRangeForce;
+import com.todense.viewmodel.random.Generator;
+import com.todense.viewmodel.random.arrangement.generators.RandomCirclePointGenerator;
 import com.todense.viewmodel.scope.CanvasScope;
 import com.todense.viewmodel.scope.GraphScope;
 import com.todense.viewmodel.scope.TaskScope;
@@ -10,19 +14,20 @@ import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import javafx.beans.property.*;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Point2D;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 
-public class LayoutViewModel implements ViewModel {
+public class LayoutViewModel extends AlgorithmTaskManager implements ViewModel {
 
     private IntegerProperty optDistProperty = new SimpleIntegerProperty(30);
+    private DoubleProperty smoothnessProperty = new SimpleDoubleProperty(0.9);
     private DoubleProperty stepProperty = new SimpleDoubleProperty(5d);
     private DoubleProperty toleranceProperty = new SimpleDoubleProperty(0.01);
     private BooleanProperty coolingOnProperty = new SimpleBooleanProperty(true);
     private BooleanProperty barnesHutOnProperty = new SimpleBooleanProperty(true);
+    private BooleanProperty smoothnessOnProperty = new SimpleBooleanProperty(false);
     private DoubleProperty coolingStrengthProperty = new SimpleDoubleProperty(0.02);
     private BooleanProperty centerPullOnProperty = new SimpleBooleanProperty(true);
     private BooleanProperty multilevelOnProperty = new SimpleBooleanProperty(false);
@@ -41,42 +46,35 @@ public class LayoutViewModel implements ViewModel {
     @Inject
     NotificationCenter notificationCenter;
 
-    private AlgorithmTask task;
+    private HashMap<Node, Point2D> nodeSmoothedPositionMap;
+
 
     public void initialize(){
-        notificationCenter.subscribe("LAYOUT", (key, payload) -> start());
+        notificationCenter.subscribe("LAYOUT", (key, payload) -> super.startTask());
+        super.initialize(taskScope, canvasScope, notificationCenter);
     }
 
-    public void start(){
-        AlgorithmTask currentTask = taskScope.getTask();
-
-        if(currentTask != null && currentTask.isRunning()) return;
-
-        task = new ForceDirectedLayoutTask(graphScope.getGraphManager(),
-                this,new Point2D(canvasScope.getCanvasWidth()/2,
-                canvasScope.getCanvasHeight()/2));
-        task.setPainter(canvasScope.getPainter());
-        taskScope.setTask(task);
-
-        EventHandler<WorkerStateEvent> handler = workerStateEvent -> {
-            notificationCenter.publish(MainViewModel.TASK_FINISHED,
-                    "Force-Directed Layout",
-                    System.currentTimeMillis() - task.getStartTime(),
-                    "");
-        };
-
-        task.setOnSucceeded(handler);
-        task.setOnCancelled(handler);
-        notificationCenter.publish(MainViewModel.TASK_STARTED, "Force-Directed Layout");
-        new Thread(task).start();
+    @Override
+    public AlgorithmTask createAlgorithmTask() {
+        return new ForceDirectedLayoutTask(graphScope.getGraphManager(), this, canvasScope.getCanvasCenter());
     }
 
-    public void stop(){
-        if(task != null && task.isRunning()){
-            task.cancel();
+    @Override
+    public void startTask() {
+        nodeSmoothedPositionMap = new HashMap<>();
+        graphScope.setNodePositionFunction(node -> nodeSmoothedPositionMap.get(node) != null ? nodeSmoothedPositionMap.get(node) : node.getPos());
+        super.startTask();
+    }
+
+    public void randomLayout() {
+        double height = canvasScope.getCanvasHeight() * 0.9;
+        Point2D canvasCenter = new Point2D(canvasScope.getCanvasWidth()/2, canvasScope.getCanvasHeight()/2);
+        Generator<Point2D> generator = new RandomCirclePointGenerator(height/2, canvasCenter);
+        for(Node n: graphScope.getGraphManager().getGraph().getNodes()){
+            n.setPos(generator.next());
         }
+        notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
     }
-
 
     public int getOptDist() {
         return optDistProperty.get();
@@ -157,4 +155,25 @@ public class LayoutViewModel implements ViewModel {
     public ObjectProperty<LongRangeForce> longRangeForceProperty() {
         return longRangeForceProperty;
     }
+
+    public double getSmoothness() {
+        return smoothnessProperty.get();
+    }
+
+    public DoubleProperty smoothnessProperty() {
+        return smoothnessProperty;
+    }
+
+    public boolean isSmoothnessOn() {
+        return smoothnessOnProperty.get();
+    }
+
+    public BooleanProperty smoothnessOnProperty() {
+        return smoothnessOnProperty;
+    }
+
+    public HashMap<Node, Point2D> getNodeSmoothedPositionMap() {
+        return nodeSmoothedPositionMap;
+    }
+
 }

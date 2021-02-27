@@ -11,7 +11,7 @@
 <?import org.controlsfx.control.ToggleSwitch?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="323.0" prefWidth="200.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.RandomGeneratorView">
+<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="200.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.RandomGeneratorView">
    <padding>
       <Insets top="5.0" />
    </padding>
@@ -20,7 +20,7 @@
          <Font size="9.0" />
       </font>
    </Label>
-   <VBox fx:id="nodePosVBox" alignment="CENTER" prefHeight="70.0" prefWidth="200.0" spacing="7.0" style="-fx-border-color: #595959; -fx-border-radius: 5;">
+   <VBox fx:id="nodePosVBox" alignment="CENTER" prefHeight="107.0" prefWidth="200.0" spacing="7.0" style="-fx-border-color: #595959; -fx-border-radius: 5;">
       <children>
          <ChoiceBox fx:id="arrangementChoiceBox" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0">
             <VBox.margin>
@@ -44,6 +44,9 @@
             </VBox.margin>
          </HBox>
       </children>
+      <padding>
+         <Insets bottom="3.0" />
+      </padding>
    </VBox>
    <Label alignment="CENTER" layoutX="18.0" layoutY="15.0" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Model" textFill="#2c2c2c">
       <font>

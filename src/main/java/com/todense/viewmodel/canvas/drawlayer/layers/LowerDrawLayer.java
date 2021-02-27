@@ -31,7 +31,6 @@ public class LowerDrawLayer implements DrawLayer {
         gc.setFill(dummyColor);
         gc.setLineWidth(graphScope.getEdgeWidth() * graphScope.getNodeSize());
 
-
         double circleSize = graphScope.getNodeSize() * 0.5;
         Point2D endPoint = inputScope.getDummyEdgeEnd();
         for(Node node : inputScope.getDummyEdgeStartNodes()){

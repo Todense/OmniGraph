@@ -10,6 +10,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.StrokeLineCap;
 
 public class CanvasView implements FxmlView<CanvasViewModel> {
 
@@ -49,10 +50,15 @@ public class CanvasView implements FxmlView<CanvasViewModel> {
         canvas.setOnScroll(viewModel.getMouseHandler()::onMouseScroll);
         canvas.setOnMouseExited(viewModel.getMouseHandler()::onMouseExited);
 
+        canvas.getGraphicsContext2D().setLineCap(StrokeLineCap.BUTT);
+
         Platform.runLater(() -> {
                 viewModel.setCanvasNode(canvas);
                 viewModel.getPopOverManager().setContext(context);
         });
     }
+
+
+
 
 }

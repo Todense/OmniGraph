@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.BiConsumer;
 
 public class Graph {
 
@@ -44,7 +45,6 @@ public class Graph {
         return n;
     }
 
-
     public Edge addEdge(Node n, Node m){
         assert !edges.isEdgeBetween(n, m):
                 "Edge "+edges.getEdge(n, m).toString()+" already exist!";
@@ -67,11 +67,45 @@ public class Graph {
         edges.remove(e);
     }
 
-    public void removeAllEdges(){
-        edges.clear();
-        for (Node node : nodes) {
-            node.getNeighbours().clear();
+    public void removeEdges(List<Node> nodes){
+        applyToAllPairOfNodes(nodes, (n, m) -> {
+            if(edges.isEdgeBetween(n, m)){
+                removeEdge(n, m);
+            }
+        });
+    }
+
+    public void applyToAllPairOfNodes(List<Node> nodes, BiConsumer<Node, Node> consumer){
+        for (int i = 0; i < nodes.size(); i++) {
+            for (int j = i+1; j < nodes.size(); j++) {
+                consumer.accept(nodes.get(i), nodes.get(j));
+            }
         }
+    }
+
+    public void applyToAllConnectedPairOfNodes(List<Node> nodes, BiConsumer<Node, Node> consumer){
+        for (int i = 0; i < nodes.size(); i++) {
+            for (int j = i+1; j < nodes.size(); j++) {
+                Node n = nodes.get(i);
+                Node m = nodes.get(j);
+                Edge e = getEdge(n, m);
+                if(e != null){
+                    consumer.accept(nodes.get(i), nodes.get(j));
+                }
+            }
+        }
+    }
+
+    public void applyToAllConnectedPairOfNodes(BiConsumer<Node, Node> consumer){
+        applyToAllConnectedPairOfNodes(nodes, consumer);
+    }
+
+    public void applyToAllPairOfNodes(BiConsumer<Node, Node> consumer){
+        applyToAllPairOfNodes(nodes, consumer);
+    }
+
+    public void removeEdges(){
+        this.removeEdges(this.nodes);
     }
 
     public void removeNode(Node n){

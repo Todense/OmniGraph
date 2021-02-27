@@ -15,6 +15,7 @@ public class DFSTask extends AlgorithmTask {
 	public DFSTask(Node startNode, Graph graph){
 		super(graph);
 		this.startNode = startNode;
+		super.algorithmName = "DFS";
 	}
 
 	@Override

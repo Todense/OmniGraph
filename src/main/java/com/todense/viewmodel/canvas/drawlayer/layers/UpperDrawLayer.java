@@ -1,6 +1,7 @@
 package com.todense.viewmodel.canvas.drawlayer.layers;
 
 import com.todense.model.graph.Node;
+import com.todense.viewmodel.algorithm.WalkingAgent;
 import com.todense.viewmodel.canvas.DisplayMode;
 import com.todense.viewmodel.canvas.drawlayer.DrawLayer;
 import com.todense.viewmodel.scope.*;
@@ -17,17 +18,20 @@ public class UpperDrawLayer implements DrawLayer {
     private CanvasScope canvasScope;
     private BackgroundScope backgroundScope;
     private AlgorithmScope algorithmScope;
+    private AntsScope antsScope;
 
     public UpperDrawLayer(GraphScope graphScope,
                           InputScope inputScope,
                           CanvasScope canvasScope,
                           BackgroundScope backgroundScope,
-                          AlgorithmScope algorithmScope){
+                          AlgorithmScope algorithmScope,
+                          AntsScope antsScope){
         this.graphScope = graphScope;
         this.inputScope = inputScope;
         this.canvasScope = canvasScope;
         this.backgroundScope = backgroundScope;
         this.algorithmScope = algorithmScope;
+        this.antsScope = antsScope;
     }
 
 
@@ -68,6 +72,8 @@ public class UpperDrawLayer implements DrawLayer {
             }
 
             /*
+            // quad tree debugger
+
             Graph graph = graphScope.getGraphManager().getGraph();
 
             if(graph.getNodes().size() < 2) return;
@@ -110,6 +116,21 @@ public class UpperDrawLayer implements DrawLayer {
              */
         }
 
+        if(graphScope.getDisplayMode() == DisplayMode.ANT_COLONY){
+            if (antsScope.isAntsAnimationOn()) {
+                gc.setFill(antsScope.getAntColor());
+                double size = antsScope.getAntSize() * graphScope.getNodeSize();
+                for(WalkingAgent agent: algorithmScope.getWalkingAgents()) {
+                    gc.fillOval(
+                            agent.getX() - size,
+                            agent.getY() - size,
+                            2 * size,
+                            2 * size
+                    );
+                }
+            }
+        }
+
         gc.setTransform(new Affine());
 
         //select rectangle
@@ -142,7 +163,7 @@ public class UpperDrawLayer implements DrawLayer {
         Color rectColor = backgroundScope.getBackgroundColor()
                 .invert()
                 .grayscale()
-                .deriveColor(0,1,1,0.4);
+                .deriveColor(0,1,1,0.2);
         Rectangle2D rect = inputScope.getSelectRect();
 
         gc.setFill(rectColor);

@@ -12,9 +12,7 @@ import com.todense.viewmodel.layout.barnesHut.Cell;
 import com.todense.viewmodel.layout.barnesHut.QuadTree;
 import javafx.geometry.Point2D;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Stack;
+import java.util.*;
 
 public class ForceDirectedLayoutTask extends AlgorithmTask {
 
@@ -22,6 +20,8 @@ public class ForceDirectedLayoutTask extends AlgorithmTask {
 	private LayoutViewModel layoutVM;
 
 	private int coolingCounter = 0;
+	private double smoothness;
+	private boolean smoothModeOn;
 
 	double energy = Double.POSITIVE_INFINITY;
 
@@ -41,12 +41,15 @@ public class ForceDirectedLayoutTask extends AlgorithmTask {
 	private double repulsiveStrength;
 
 	private final double repulsiveness = 1d;
+	private int counter = 0;
 
 	private QuadTree quadTree;
 
 	private double gamma = Math.sqrt(9d/4d);
 	private LongRangeForce longRangeForce;
 	private Point2D center;
+
+	private Random rnd = new Random();
 
 	public ForceDirectedLayoutTask(GraphManager graphManager, LayoutViewModel layoutVM, Point2D center){
     	super(graphManager.getGraph());
@@ -59,30 +62,20 @@ public class ForceDirectedLayoutTask extends AlgorithmTask {
     	this.tolerance = layoutVM.getTolerance();
     	this.longRangeForce = layoutVM.getLongRangeForce();
     	this.repulsiveStrength = getRepulsiveStrength(repulsiveness, optDist, longRangeForce.getExponent() + 1);
+    	this.smoothness = layoutVM.getSmoothness();
+    	this.smoothModeOn = layoutVM.isSmoothnessOn();
+    	super.algorithmName = "Force Directed Layout";
 	}
 
 	@Override
-	public void perform() throws InterruptedException {
-
+	public void perform() {
 		if(layoutVM.isMultilevelOn()){
-			GraphCoarsener graphCoarsener = new GraphCoarsener(graphManager);
-			graphCoarsener.initGraphSequence();
-
-			while(!graphCoarsener.maxLevelReached()){
-				graphCoarsener.coarsen();
-				painter.sleep();
-			}
-			optDist = optDist * Math.pow(gamma, graphCoarsener.getGraphSequence().size()-1);
-
-			while(graphCoarsener.getGraphSequence().size() > 1){
-				optDist = optDist/gamma;
-				stepSize = initStep;
-				graphCoarsener.reconstruct(0.3 * optDist);
-				painter.sleep();
-				forceDirectedLayout(graphCoarsener.getGraphSequence().peek());
-			}
+			multilevelForceDirectedLayout(graph);
 		}else{
-			forceDirectedLayout(graph);
+			try {
+				forceDirectedLayout(graph);
+			} catch (InterruptedException ignored) {
+			}
 		}
 	}
 
@@ -90,20 +83,51 @@ public class ForceDirectedLayoutTask extends AlgorithmTask {
 	protected void onFinished() {
 	}
 
+
 	void init(Graph graph){
-    	int nodeCount = graph.getNodes().size();
+    	int nodeCount = graph.getOrder();
 		repulsiveForces = new double[nodeCount][nodeCount];
 		attractiveForces = new double[nodeCount][nodeCount];
 		nodeEnergies = new double[nodeCount];
 		distances = new double[nodeCount][nodeCount];
+
+		var smoothedNodePositionMap = layoutVM.getNodeSmoothedPositionMap();
+		for (Node n: graph.getNodes()){
+			smoothedNodePositionMap.put(n, n.getPos());
+		}
 	}
 
-	public int counter = 0;
+	public void multilevelForceDirectedLayout(Graph graph){
+		GraphCoarsener graphCoarsener = new GraphCoarsener(graphManager);
+		graphCoarsener.initGraphSequence();
+		while(!graphCoarsener.maxLevelReached()){
+			graphCoarsener.coarsen();
+			try {
+				painter.sleep();
+			} catch (InterruptedException e) {
+				if(graphManager.getGraph().getOrder() < graphCoarsener.getOriginalGraph().getOrder()){
+					graphManager.setGraph(graphCoarsener.getOriginalGraph());
+				}
+			}
+		}
+		optDist = optDist * Math.pow(gamma, graphCoarsener.getGraphSequence().size()-1);
+		while(graphCoarsener.getGraphSequence().size() > 1){
+			optDist = optDist/gamma;
+			stepSize = initStep;
+			graphCoarsener.reconstruct(0.3 * optDist);
+			try {
+				painter.sleep();
+				forceDirectedLayout(graphCoarsener.getGraphSequence().peek());
+			} catch (InterruptedException e) {
+				if(graphManager.getGraph().getOrder() < graphCoarsener.getOriginalGraph().getOrder()){
+					graphManager.setGraph(graphCoarsener.getOriginalGraph());
+				}
+			}
+		}
+	}
 
 	public void forceDirectedLayout(Graph graph) throws InterruptedException {
-
 		init(graph);
-
 		while(!super.isCancelled() &&  stepSize > tolerance * optDist) {
 			counter++;
 
@@ -149,6 +173,7 @@ public class ForceDirectedLayoutTask extends AlgorithmTask {
 
 			nodeForceMap = new HashMap<>();
 
+
 			//apply forces to every node
 			graph.getNodes().forEach(n ->{
 				Point2D force = new Point2D(0, 0);
@@ -160,7 +185,7 @@ public class ForceDirectedLayoutTask extends AlgorithmTask {
 					for (Node m : graph.getNodes()) {
 						double dist = getDistance(n, m);
 						//if(dist > 0 && dist < 2 * (coarserLevel + 1) * optDist) {
-						if(dist > 0 ) {
+						if(dist > 0) {
 							double rf = repulsiveForces[n.getIndex()][m.getIndex()];
 							force = force.add(m.getPos().subtract(n.getPos()).multiply(rf/dist));
 						}
@@ -184,10 +209,22 @@ public class ForceDirectedLayoutTask extends AlgorithmTask {
 
 				nodeEnergies[n.getIndex()] = Math.pow(force.getX(), 2) + Math.pow(force.getY(), 2);
 
-				nodeForceMap.put(n, force.normalize().multiply(stepSize));
+				nodeForceMap.put(n, force.normalize().multiply(stepSize).add(new Point2D(rnd.nextGaussian()/5, rnd.nextGaussian()/5)));
 			});
 
-			nodeForceMap.forEach((node, force) -> node.setPos(node.getPos().add(force)));
+
+			nodeForceMap.forEach((node, force) -> {
+				Point2D updatedPos = node.getPos().add(force);
+				if(layoutVM.isSmoothnessOn()){
+					double smoothness = layoutVM.getSmoothness();
+					Point2D smoothedPos = updatedPos.multiply(1-smoothness).add(layoutVM.getNodeSmoothedPositionMap().get(node).multiply(smoothness));
+					layoutVM.getNodeSmoothedPositionMap().replace(node, smoothedPos);
+				}
+				else{
+					layoutVM.getNodeSmoothedPositionMap().replace(node, updatedPos);
+				}
+				node.setPos(updatedPos);
+			});
 
 			Arrays.stream(nodeEnergies).forEach(e -> energy += e);
 
@@ -195,12 +232,25 @@ public class ForceDirectedLayoutTask extends AlgorithmTask {
 
 			if(layoutVM.isCoolingOn()) {
 				stepSize = updateStepLength(energy, prevEnergy);
+			}else{
+				stepSize = layoutVM.getStep();
 			}
 		}
-		super.repaint();
+
+		//transition between smoothed and real position
+		if(smoothModeOn){
+			for(int i = 0; i < 20; i++){
+				for(Node node: graph.getNodes()){
+					var currentPos = layoutVM.getNodeSmoothedPositionMap().get(node);
+					layoutVM.getNodeSmoothedPositionMap().replace(node, node.getPos().add(currentPos.subtract(node.getPos()).multiply(0.8)));
+				}
+				painter.sleep(10);
+			}
+		}
+		painter.repaint();
 	}
 
-	private Point2D calcBarnesHutRepulsiveForce(Node node, double strength ,QuadTree quadTree){
+	private Point2D calcBarnesHutRepulsiveForce(Node node, double strength, QuadTree quadTree){
 		Point2D repulsiveForce = new Point2D(0, 0);
 		Stack<Cell> cellStack = new Stack<>();
 		cellStack.add(quadTree.getRoot());
