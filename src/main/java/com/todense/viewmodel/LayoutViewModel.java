@@ -50,7 +50,7 @@ public class LayoutViewModel extends AlgorithmTaskManager implements ViewModel {
 
 
     public void initialize(){
-        notificationCenter.subscribe("LAYOUT", (key, payload) -> super.startTask());
+        notificationCenter.subscribe("LAYOUT", (key, payload) -> startTask());
         super.initialize(taskScope, canvasScope, notificationCenter);
     }
 
