@@ -18,6 +18,7 @@ public class Node{
     private boolean visited = false; //flag not changing visuals
     private boolean selected = false; //selected by user
     private boolean highlighted = false; //highlighted by user
+    private int status = 0;
 
     private ArrayList<Node> neighbours = new ArrayList<>();
 
@@ -101,5 +102,13 @@ public class Node{
 
     public void setVisited(boolean visited) {
         this.visited = visited;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
     }
 }

@@ -7,6 +7,10 @@ import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.util.Util;
 import com.todense.viewmodel.canvas.DisplayMode;
+import com.todense.viewmodel.canvas.displayrule.AlgorithmDisplayRule;
+import com.todense.viewmodel.canvas.displayrule.AntColonyDisplayRule;
+import com.todense.viewmodel.canvas.displayrule.DisplayRule;
+import com.todense.viewmodel.canvas.displayrule.ResponsiveDisplayRule;
 import com.todense.viewmodel.canvas.drawlayer.DrawLayer;
 import com.todense.viewmodel.scope.AntsScope;
 import com.todense.viewmodel.scope.BackgroundScope;
@@ -33,23 +37,32 @@ public class GraphDrawLayer implements DrawLayer {
         this.inputScope = inputScope;
     }
 
+    public DisplayRule getDisplayRule(DisplayMode displayMode){
+        DisplayRule displayRule = null;
+        switch (displayMode){
+            case DEFAULT: displayRule = new ResponsiveDisplayRule(graphScope, backgroundScope); break;
+            case ALGORITHMIC: displayRule = new AlgorithmDisplayRule(graphScope, backgroundScope); break;
+            case ANT_COLONY: displayRule = new AntColonyDisplayRule(graphScope, backgroundScope, antsScope); break;
+        }
+        return displayRule;
+    }
+
     @Override
     public void draw(GraphicsContext gc) {
         Graph graph = graphScope.getGraphManager().getGraph();
         DisplayMode displayMode = graphScope.getDisplayMode();
-        double defaultEdgeWidth = graphScope.getEdgeWidth() * graphScope.getNodeSize();
-        double defaultNodeSize = graphScope.getNodeSize();
-        boolean selecting = (inputScope.isSelecting() && graph.getNodes().stream().anyMatch(Node::isSelected)) ||
-                !graphScope.getGraphManager().getSelectedNodes().isEmpty();
+        DisplayRule displayRule = this.getDisplayRule(displayMode);
+        //boolean selecting = (inputScope.isSelecting() && graph.getNodes().stream().anyMatch(Node::isSelected)) ||
+        //        !graphScope.getGraphManager().getSelectedNodes().isEmpty();
         if(graphScope.areEdgesVisibile()){
             graph.getEdges().stream().filter(e -> !isEdgePrimary(e) && e.isVisible()).forEach(e ->
-                    drawEdge(e, gc, defaultEdgeWidth, displayMode, selecting));
+                    drawEdge(e, gc, displayRule));
             graph.getEdges().stream().filter(this::isEdgePrimary).forEach(e ->
-                    drawEdge(e, gc, defaultEdgeWidth, displayMode, selecting));
+                    drawEdge(e, gc, displayRule));
         }
 
         graph.getNodes().forEach(n ->
-                drawNode(n, gc, defaultNodeSize, displayMode, selecting));
+                drawNode(n, gc, displayRule));
     }
 
     private boolean isEdgePrimary(Edge e){
@@ -61,15 +74,11 @@ public class GraphDrawLayer implements DrawLayer {
         return 3;
     }
 
-    private void drawNode(Node node, GraphicsContext gc, double defaultSize , DisplayMode displayMode, boolean selecting){
-        double size = getNodeSize(node, defaultSize, displayMode);
+    private void drawNode(Node node, GraphicsContext gc, DisplayRule displayRule){
+        double size = displayRule.getNodeSize(node);
         Point2D pos  = graphScope.getNodePositionFunction().apply(node);
-        Color color = node.getColor() != null
-                ? getNodeDisplayColor(node.getColor(), node, displayMode, selecting)
-                : getNodeDisplayColor(graphScope.getNodeColor(), node, displayMode, selecting);
-
+        Color color = displayRule.getNodeColor(node);
         gc.setFill(color);
-        
 
         if(graphScope.showingNodeBorder()){
             double width = graphScope.getEdgeWidth() * graphScope.getNodeSize();
@@ -85,7 +94,7 @@ public class GraphDrawLayer implements DrawLayer {
         if(graphScope.showingNodeBorder()) {
             double width = graphScope.getEdgeWidth() * graphScope.getNodeSize();
             gc.setLineWidth(width);
-            gc.setStroke(getNodeDisplayColor(graphScope.getEdgeColor(), node, displayMode, selecting));
+            gc.setStroke(displayRule.getNodeBorderColor(node));
             gc.strokeOval(
                     pos.getX() - (size-width)/2,
                     pos.getY() - (size-width)/2,
@@ -116,26 +125,27 @@ public class GraphDrawLayer implements DrawLayer {
         gc.fillText(s, node.getPos().getX(), node.getPos().getY()+size/5, size*2);
     }
 
-    private void drawEdge(Edge edge, GraphicsContext gc, double defaultWidth, DisplayMode displayMode, boolean selecting){
+    private void drawEdge(Edge edge, GraphicsContext gc, DisplayRule displayRule){
         Point2D p1 = graphScope.getNodePositionFunction().apply(edge.getN1());
         Point2D p2 = graphScope.getNodePositionFunction().apply(edge.getN2());
 
-        double width = getEdgeWidth(edge, defaultWidth, displayMode);
+        double width = displayRule.getEdgeWidth(edge) * graphScope.getNodeSize();
         if(width == 0)
             return;
 
         // ant colony algorithm cycle marker
-        if(edge.isMarked() && displayMode == DisplayMode.ANT_COLONY) {
+        if(edge.isMarked() && displayRule.getClass().equals(AntColonyDisplayRule.class)) {
             gc.setLineWidth(width + graphScope.getNodeSize() * 0.25);
             gc.setStroke(antsScope.getCycleColor());
             gc.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
         }
 
 
-        if(displayMode == DisplayMode.ANT_COLONY && !antsScope.isShowingPheromones()) return;
+        if(displayRule.getClass().equals(AntColonyDisplayRule.class)  && !antsScope.isShowingPheromones()) return;
 
         gc.setLineWidth(width);
-        Color edgeColor = getEdgeDisplayColor(edge, displayMode, selecting);
+
+        Color edgeColor = displayRule.getEdgeColor(edge);
 
         if(edgeColor.equals(backgroundScope.getBackgroundColor())){
             return;
@@ -217,10 +227,8 @@ public class GraphDrawLayer implements DrawLayer {
         return defaultSize * graphScope.getNodeScaleFunction().apply(node);
     }
 
-    private Color getEdgeDisplayColor(Edge edge, DisplayMode displayMode, boolean selecting) {
-        Color displayColor = edge.getColor() != null
-                ? edge.getColor()
-                : graphScope.getEdgeColor();
+    private Color getEdgeDisplayColor(Color defaultColor, Edge edge, DisplayMode displayMode, boolean selecting) {
+        Color displayColor = defaultColor;
 
         switch (displayMode){
             case DEFAULT: case ANT_COLONY:
