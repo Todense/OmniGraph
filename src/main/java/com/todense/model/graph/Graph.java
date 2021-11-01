@@ -124,10 +124,12 @@ public class Graph {
             n.setMarked(false);
             n.setSelected(false);
             n.setVisited(false);
+            n.setStatus(0);
         }
         for (Edge e : edges) {
             e.setMarked(false);
             e.setVisible(true);
+            e.setStatus(0);
         }
     }
 

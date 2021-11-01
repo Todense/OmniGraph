@@ -16,7 +16,7 @@ public class AlgorithmDisplayRule extends ResponsiveDisplayRule{
     @Override
     public Color getNodeColor(Node node) {
         Color displayColor = super.getNodeColor(node);
-        if(!node.isMarked()){
+        if(node.getStatus() == 0){
             displayColor = Util.getFaintColor(displayColor, backgroundScope.getBackgroundColor());
         }
         return displayColor;
@@ -25,25 +25,20 @@ public class AlgorithmDisplayRule extends ResponsiveDisplayRule{
     @Override
     public Color getEdgeColor(Edge edge) {
         Color displayColor = super.getEdgeColor(edge);
-        if(!edge.isMarked()){
+        if(edge.getStatus() == 0){
             displayColor = Util.getFaintColor(displayColor, backgroundScope.getBackgroundColor());
+        }
+        else{
+            displayColor = displayColor.brighter().brighter();
         }
         return displayColor;
     }
 
-    @Override
-    public double getNodeSize(Node node) {
-        double multiplier = super.getNodeSize(node);
-        if(node.isMarked()){
-            multiplier = multiplier * 1.05;
-        }
-        return multiplier;
-    }
 
     @Override
     public double getEdgeWidth(Edge edge) {
         double multiplier = super.getEdgeWidth(edge);
-        if(edge.isMarked()){
+        if(edge.getStatus() == 1){
             multiplier = multiplier * 2;
         }
         return multiplier;

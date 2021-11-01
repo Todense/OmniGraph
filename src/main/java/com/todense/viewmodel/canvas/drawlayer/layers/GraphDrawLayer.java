@@ -7,10 +7,7 @@ import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.util.Util;
 import com.todense.viewmodel.canvas.DisplayMode;
-import com.todense.viewmodel.canvas.displayrule.AlgorithmDisplayRule;
-import com.todense.viewmodel.canvas.displayrule.AntColonyDisplayRule;
-import com.todense.viewmodel.canvas.displayrule.DisplayRule;
-import com.todense.viewmodel.canvas.displayrule.ResponsiveDisplayRule;
+import com.todense.viewmodel.canvas.displayrule.*;
 import com.todense.viewmodel.canvas.drawlayer.DrawLayer;
 import com.todense.viewmodel.scope.AntsScope;
 import com.todense.viewmodel.scope.BackgroundScope;
@@ -40,7 +37,17 @@ public class GraphDrawLayer implements DrawLayer {
     public DisplayRule getDisplayRule(DisplayMode displayMode){
         DisplayRule displayRule = null;
         switch (displayMode){
-            case DEFAULT: displayRule = new ResponsiveDisplayRule(graphScope, backgroundScope); break;
+            case DEFAULT: {
+                Graph graph = graphScope.getGraphManager().getGraph();
+                boolean selecting = (inputScope.isSelecting() && graph.getNodes().stream().anyMatch(Node::isSelected)) ||
+                        !graphScope.getGraphManager().getSelectedNodes().isEmpty();
+                if(selecting){
+                    displayRule = new SelectingDisplayRule(graphScope, backgroundScope); break;
+                }else{
+                    displayRule = new ResponsiveDisplayRule(graphScope, backgroundScope);
+                }
+                break;
+            }
             case ALGORITHMIC: displayRule = new AlgorithmDisplayRule(graphScope, backgroundScope); break;
             case ANT_COLONY: displayRule = new AntColonyDisplayRule(graphScope, backgroundScope, antsScope); break;
         }
@@ -52,8 +59,6 @@ public class GraphDrawLayer implements DrawLayer {
         Graph graph = graphScope.getGraphManager().getGraph();
         DisplayMode displayMode = graphScope.getDisplayMode();
         DisplayRule displayRule = this.getDisplayRule(displayMode);
-        //boolean selecting = (inputScope.isSelecting() && graph.getNodes().stream().anyMatch(Node::isSelected)) ||
-        //        !graphScope.getGraphManager().getSelectedNodes().isEmpty();
         if(graphScope.areEdgesVisibile()){
             graph.getEdges().stream().filter(e -> !isEdgePrimary(e) && e.isVisible()).forEach(e ->
                     drawEdge(e, gc, displayRule));
@@ -66,7 +71,7 @@ public class GraphDrawLayer implements DrawLayer {
     }
 
     private boolean isEdgePrimary(Edge e){
-        return e.isSelected() || e.isMarked() || e.isHighlighted();
+        return e.isSelected() || e.isMarked() || e.isHighlighted() || e.getStatus() > 0;
     }
 
     @Override
@@ -175,131 +180,6 @@ public class GraphDrawLayer implements DrawLayer {
         gc.setFill(graphScope.getEdgeWeightColor());
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText(weight, midPoint.getX(), midPoint.getY() + fontSize/3);
-    }
-
-    private Color getNodeDisplayColor(Color color, Node node, DisplayMode displayMode, boolean selecting) {
-        Color displayColor = color;
-
-        switch (displayMode){
-            case DEFAULT:
-                if(selecting){
-                    if(!node.isSelected()){
-                        displayColor = Util.getFaintColor(color, backgroundScope.getBackgroundColor());
-                    }
-                } else if(node.isHighlighted()){
-                    displayColor = displayColor.brighter().brighter();
-                }
-                break;
-            case ANT_COLONY:
-                if(node.isHighlighted()){
-                    displayColor = displayColor.brighter().brighter();
-                }
-                break;
-            case ALGORITHMIC:
-                if(!node.isMarked()){
-                    displayColor = Util.getFaintColor(color, backgroundScope.getBackgroundColor());
-                }
-                break;
-            default: displayColor = Color.PINK;
-        }
-        return displayColor;
-    }
-
-    private double getNodeSize(Node node, double defaultSize, DisplayMode displayMode) {
-
-        if(node.isHighlighted()) {
-            defaultSize = defaultSize * 1.05;
-        }
-        if(node.isSelected()){
-            defaultSize = defaultSize * 1.1;
-        }
-
-        switch (displayMode){
-            case DEFAULT: case ANT_COLONY:
-                break;
-            case ALGORITHMIC:
-                if(node.isMarked()){
-                    defaultSize = defaultSize * 1.05;
-                }
-                break;
-            default: defaultSize = 0;
-        }
-        return defaultSize * graphScope.getNodeScaleFunction().apply(node);
-    }
-
-    private Color getEdgeDisplayColor(Color defaultColor, Edge edge, DisplayMode displayMode, boolean selecting) {
-        Color displayColor = defaultColor;
-
-        switch (displayMode){
-            case DEFAULT: case ANT_COLONY:
-                if(selecting){
-                    if(!edge.isMarked()){
-                        displayColor = Util.getFaintColor(displayColor, backgroundScope.getBackgroundColor());
-                    }
-                }
-                else if(edge.isHighlighted() || edge.isSelected() || edge.isMarked()){
-                    displayColor = displayColor.brighter().brighter();
-                }
-                break;
-            case ALGORITHMIC:
-                if(!edge.isMarked()){
-                    displayColor = Util.getFaintColor(displayColor, backgroundScope.getBackgroundColor());
-                }
-                break;
-            default: displayColor = Color.PINK;
-        }
-
-        if(graphScope.isEdgeOpacityDecayOn()){
-            double decay = getDecayedValue(edge, graphScope.getEdgeOpacityDecay(), graphScope.getNodeSize() * 2);
-            if(decay > 1){
-                decay = 1;
-            }
-            displayColor = displayColor.deriveColor(0,1,1, decay);
-        }
-
-        //return Util.getFaintColor(displayColor, backgroundScope.getBackgroundColor(), decay);
-        return displayColor;
-    }
-
-    private double getEdgeWidth(Edge edge, double defaultWidth, DisplayMode displayMode) {
-        switch (displayMode){
-            case DEFAULT:
-                if(edge.isHighlighted()){
-                    defaultWidth = defaultWidth * 1.5;
-                }
-                if(edge.isSelected()){
-                    defaultWidth = defaultWidth * 1.5;
-                }
-                break;
-            case ALGORITHMIC:
-                if(edge.isMarked()){
-                    defaultWidth = defaultWidth * 2;
-                }
-                break;
-            case ANT_COLONY:
-                if(antsScope.isShowingPheromones()){
-                    defaultWidth = Math.min(
-                            antsScope.getPheromone(edge) * antsScope.getScale() * antsScope.getScale(),
-                            graphScope.getNodeSize() * 0.75);
-                }else{
-                    defaultWidth = 0;
-                }
-                break;
-        }
-
-        if(graphScope.isEdgeWidthDecayOn()){
-            double decay = getDecayedValue(edge, graphScope.getEdgeWidthDecay(), 2*graphScope.getNodeSize());
-            defaultWidth *= decay;
-        }
-
-        return Math.min(defaultWidth, graphScope.getNodeSize());
-    }
-
-    private double getDecayedValue(Edge edge, double decay, double maximum){
-        Point2D p1 = graphScope.getNodePositionFunction().apply(edge.getN1());
-        Point2D p2 = graphScope.getNodePositionFunction().apply(edge.getN2());
-        double exponent = decay*(p1.distance(p2)-maximum);
-        return  2 - 2 * (Math.pow(Math.E, exponent)/(1+Math.pow(Math.E, exponent)));
     }
 
 

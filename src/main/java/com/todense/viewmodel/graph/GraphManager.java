@@ -28,6 +28,7 @@ public class GraphManager {
             n.setMarked(false);
             n.setSelected(false);
             n.setVisited(false);
+            n.setStatus(0);
         }
         for (Edge e : graph.getEdges()) {
             e.setMarked(false);

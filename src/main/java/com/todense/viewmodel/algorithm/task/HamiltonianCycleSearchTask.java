@@ -45,9 +45,6 @@ public class HamiltonianCycleSearchTask extends AlgorithmTask {
         int nodeCount = graph.getNodes().size();
         cycle = new ArrayList<>();
         visitedDFS = new boolean[nodeCount];
-        for (int i = 0; i < nodeCount; i++) {
-            graph.getNodes().get(i).setMarked(false);
-        }
     }
 
 
@@ -65,7 +62,7 @@ public class HamiltonianCycleSearchTask extends AlgorithmTask {
             if(cycle.size() == graph.getNodes().size()) {
                 Edge edge = graph.getEdge(cycle.get(0), cycle.get(cycle.size()-1));
                 if (edge != null) {
-                    edge.setMarked(true);
+                    edge.setStatus(EDGE_LIT);
                     super.sleep();
                     return true;
                 }
@@ -74,14 +71,14 @@ public class HamiltonianCycleSearchTask extends AlgorithmTask {
             Node n = nodeStack.pop();
 
             if(!cycle.contains(n)){
-                if(n.isMarked())
+                if(n.getStatus() == NODE_VISITED)
                     continue;
 
                 cycle.add(n);
 
-                n.setMarked(true);
+                n.setStatus(NODE_VISITED);
                 if(cycle.size() > 1) {
-                    graph.getEdge(cycle.get(cycle.size()-1), cycle.get(cycle.size()-2)).setMarked(true);
+                    graph.getEdge(cycle.get(cycle.size()-1), cycle.get(cycle.size()-2)).setStatus(EDGE_LIT);
                 }
                 super.sleep();
 
@@ -92,7 +89,7 @@ public class HamiltonianCycleSearchTask extends AlgorithmTask {
                 }
 
                 for(Node m : n.getNeighbours()){
-                    if(!m.isMarked()){
+                    if(m.getStatus() != NODE_VISITED){
                         nodeStack.push(m);
                         nodeStack.push(m);
                     }
@@ -100,9 +97,9 @@ public class HamiltonianCycleSearchTask extends AlgorithmTask {
             }
             else{
                 Node lastNode = cycle.get(cycle.size()-1);
-                lastNode.setMarked(false);
+                lastNode.setStatus(NODE_UNVISITED);
                 if(cycle.size() > 1) {
-                    graph.getEdge(lastNode, cycle.get(cycle.size() - 2)).setMarked(false);
+                    graph.getEdge(lastNode, cycle.get(cycle.size() - 2)).setStatus(EDGE_UNLIT);
                 }
                 cycle.remove(cycle.size()-1);
                 super.sleep();
@@ -116,7 +113,7 @@ public class HamiltonianCycleSearchTask extends AlgorithmTask {
         Arrays.fill(visitedDFS, false);
         Node startNodeUnvisitedNeighbour = null;
         for(Node n : startNode.getNeighbours()){
-            if(!n.isMarked()){
+            if(n.getStatus() != NODE_VISITED){
                 startNodeUnvisitedNeighbour = n;
                 break;
             }
@@ -144,7 +141,7 @@ public class HamiltonianCycleSearchTask extends AlgorithmTask {
             visitedDFS[m.getIndex()] = true;
 
             for (Node k : m.getNeighbours()) {
-                if(!visitedDFS[k.getIndex()] && !k.isMarked()){
+                if(!visitedDFS[k.getIndex()] && k.getStatus() != NODE_VISITED){
                     stack.push(k);
                 }
             }

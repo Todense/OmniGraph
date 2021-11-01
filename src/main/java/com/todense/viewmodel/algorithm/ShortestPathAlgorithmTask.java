@@ -44,7 +44,7 @@ public abstract class ShortestPathAlgorithmTask extends WeightedAlgorithmTask {
 
         while(!openSet.isEmpty()){
             Node current = openSet.poll();
-            current.setMarked(true);
+            current.setStatus(NODE_VISITED);
             super.sleep();
 
             if (current == end){
@@ -62,18 +62,18 @@ public abstract class ShortestPathAlgorithmTask extends WeightedAlgorithmTask {
 
     protected void showPath(){
         for(Node n : graph.getNodes()){
-            n.setMarked(false);
+            n.setStatus(NODE_UNVISITED);
         }
         for(Edge e : graph.getEdges()){
-            e.setMarked(false);
+            e.setStatus(EDGE_UNLIT);
         }
         for(Node n : path){
-            n.setMarked(true);
+            n.setStatus(NODE_VISITED);
         }
         for (int i = 0; i < path.size()-1; i++) {
             Edge e = graph.getEdge(path.get(i), path.get(i+1));
             pathLength += weightFunction.applyAsDouble(e);
-            e.setMarked(true);
+            e.setStatus(EDGE_LIT);
         }
         super.repaint();
     }

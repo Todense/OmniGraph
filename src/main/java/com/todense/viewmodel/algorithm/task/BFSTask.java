@@ -32,7 +32,7 @@ public class BFSTask extends AlgorithmTask {
 		ComponentBFS(startNode);
 
 		for(Node n: graph.getNodes()) {
-			if (!n.isMarked()) {
+			if (n.getStatus() != NODE_VISITED) {
 				ComponentBFS(n);
 			}
 		}
@@ -41,15 +41,15 @@ public class BFSTask extends AlgorithmTask {
 	public void ComponentBFS(Node n) throws InterruptedException {
 		LinkedList<Node> queue = new LinkedList<>();
 		queue.add(n);
-		n.setMarked(true);
+		n.setStatus(NODE_VISITED);
 		super.sleep();
 		while(!queue.isEmpty()) {
 			Node m = queue.poll();
 			for(Node k: m.getNeighbours()) {
-				if(!k.isMarked()) {
-					graph.getEdge(k,m).setMarked(true);
+				if(k.getStatus() != NODE_VISITED) {
+					graph.getEdge(k,m).setStatus(EDGE_LIT);
 					queue.add(k);
-					k.setMarked(true);
+					k.setStatus(NODE_VISITED);
 					super.sleep();
 				}
 			}

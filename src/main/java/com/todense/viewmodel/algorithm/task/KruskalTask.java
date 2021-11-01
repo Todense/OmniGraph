@@ -73,9 +73,9 @@ public class KruskalTask extends WeightedAlgorithmTask {
 			int ySet = find(y);
 
 			if(xSet != ySet){
-				e.setMarked(true);
-				n1.setMarked(true);
-				n2.setMarked(true);
+				e.setStatus(EDGE_LIT);
+				n1.setStatus(NODE_VISITED);
+				n2.setStatus(NODE_VISITED);
 				super.sleep();
 
 				weight += weightFunction.applyAsDouble(e);

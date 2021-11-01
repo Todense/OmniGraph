@@ -59,14 +59,15 @@ public class DijkstraTask extends ShortestPathAlgorithmTask {
 		if(getCost(nodeTo) > getCost(nodeFrom) + weight) {
 			setCost(nodeTo, getCost(nodeFrom) + weight);
 			if(super.getPrev(nodeTo) != null){
-				graph.getEdge(nodeTo, super.getPrev(nodeTo)).setMarked(false);
+				graph.getEdge(nodeTo, super.getPrev(nodeTo)).setStatus(EDGE_UNLIT);
 			}
-			e.setMarked(true);
+			e.setStatus(EDGE_LIT);
 			super.setPrev(nodeTo, nodeFrom);
 			if(openSet.contains(nodeTo)){
 				super.openSet.remove(nodeTo);  //remove then add to maintain queue order
 			}
 			super.openSet.offer(nodeTo);
+			nodeTo.setStatus(NODE_VISITED);
 			super.sleep();
 		}
 	}

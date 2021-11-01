@@ -6,6 +6,11 @@ import javafx.concurrent.Task;
 
 public abstract class AlgorithmTask extends Task<Void>{
 
+    protected static final int EDGE_LIT = 1;
+    protected static final int EDGE_UNLIT = 0;
+    protected static final int NODE_UNVISITED = 0;
+    protected static final int NODE_VISITED = 1;
+
     protected String algorithmName = "Unnamed Algorithm";
 
     protected Graph graph;

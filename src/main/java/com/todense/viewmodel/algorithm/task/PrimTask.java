@@ -48,7 +48,7 @@ public class PrimTask extends WeightedAlgorithmTask {
 
 		for(Node n : graph.getNodes()) {
 			setCost(n, Double.POSITIVE_INFINITY);
-			n.setMarked(false);
+			n.setStatus(NODE_UNVISITED);
 		}
 		setCost(start, 0);
 
@@ -65,11 +65,11 @@ public class PrimTask extends WeightedAlgorithmTask {
 
 		while(!queue.isEmpty()) {
 			current = queue.poll();
-			current.setMarked(true);
+			current.setStatus(NODE_VISITED);
 
 			if(getPrev(current) != null){
 				Edge e = graph.getEdge(current, getPrev(current));
-				e.setMarked(true);
+				e.setStatus(EDGE_LIT);
 				weight += weightFunction.applyAsDouble(e);
 			}else{
 				componentCount++;
@@ -77,7 +77,7 @@ public class PrimTask extends WeightedAlgorithmTask {
 			super.sleep();
 
 			for(Node neighbour : current.getNeighbours()) {
-				if(!neighbour.isMarked()){
+				if(neighbour.getStatus() != NODE_VISITED){
 					Edge e = graph.getEdge(current, neighbour);
 					double weight = weightFunction.applyAsDouble(e);
 					if(weight < getCost(neighbour)){

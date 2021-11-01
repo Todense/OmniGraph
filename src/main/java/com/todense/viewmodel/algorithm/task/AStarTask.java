@@ -58,16 +58,17 @@ public class AStarTask extends ShortestPathAlgorithmTask {
         double tentativeGScore = gScores.get(nodeFrom.getIndex()) + weightFunction.applyAsDouble(edge);
         if(tentativeGScore < gScores.get(nodeTo.getIndex())){
             if(super.getPrev(nodeTo) != null){
-                graph.getEdge(nodeTo, super.getPrev(nodeTo)).setMarked(false);
+                graph.getEdge(nodeTo, super.getPrev(nodeTo)).setStatus(EDGE_UNLIT);
             }
             super.setPrev(nodeTo, nodeFrom);
             gScores.set(nodeTo.getIndex(), tentativeGScore);
             fScores.set(nodeTo.getIndex(), gScores.get(nodeTo.getIndex()) + goalDist.get(nodeTo.getIndex()));
-            edge.setMarked(true);
+            edge.setStatus(EDGE_LIT);
             if(openSet.contains(nodeTo)){
                 super.openSet.remove(nodeTo);  //remove then add to maintain queue order
             }
             super.openSet.offer(nodeTo);
+            nodeTo.setStatus(NODE_VISITED);
             super.sleep();
         }
     }

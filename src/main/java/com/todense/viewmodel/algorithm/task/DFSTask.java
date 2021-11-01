@@ -31,7 +31,7 @@ public class DFSTask extends AlgorithmTask {
 		ComponentDFS(startNode);
 
 		for(Node n: graph.getNodes()) {
-			if (!n.isMarked()) {
+			if (n.getStatus() != NODE_VISITED) {
 				ComponentDFS(n);
 			}
 		}
@@ -49,17 +49,17 @@ public class DFSTask extends AlgorithmTask {
 		while(!stack.isEmpty()){
 			Node m = stack.pop();
 
-			if(m.isMarked())
+			if(m.getStatus() == NODE_VISITED)
 				continue;
 
-			m.setMarked(true);
+			m.setStatus(NODE_VISITED);
 			if(prev.get(m) != null){
-				graph.getEdge(m, prev.get(m)).setMarked(true);
+				graph.getEdge(m, prev.get(m)).setStatus(EDGE_LIT);
 			}
 			super.sleep();
 
 			for (Node k : m.getNeighbours()) {
-				if(!k.isMarked()){
+				if(k.getStatus() != NODE_VISITED){
 					stack.push(k);
 					prev.put(k, m);
 				}

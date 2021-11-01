@@ -18,6 +18,7 @@ public class Edge {
     private boolean selected = false;
     private boolean visible = true;
     private boolean highlighted = false;
+    private int status = 0;
 
     protected Edge(Node n1, Node n2) {
         if(n1.equals(n2)){
@@ -103,4 +104,11 @@ public class Edge {
         return ID;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
 }
