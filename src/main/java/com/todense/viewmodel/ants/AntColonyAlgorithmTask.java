@@ -25,6 +25,9 @@ import java.util.stream.IntStream;
 
 public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
 
+    public static final int EDGE_OUTSIDE_CYCLE = 0;
+    public static final int EDGE_ON_CYCLE = 1;
+
     final AntsScope antsScope;
     final AlgorithmScope algorithmScope;
 
@@ -123,7 +126,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
         for (Edge e : graph.getEdges()){
             int i = e.getN1().getIndex();
             int j = e.getN2().getIndex();
-            e.setMarked(false);
+            e.setStatus(EDGE_OUTSIDE_CYCLE);
             e.setVisible(isImportant[i][j]);
         }
     }
@@ -355,7 +358,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
 
     private void updateCycleMarkers(){
         for (Edge e : graph.getEdges()) {
-            e.setMarked(false);
+            e.setStatus(EDGE_OUTSIDE_CYCLE);
         }
 
         if(antsScope.getGbCycle() != null) {
@@ -364,7 +367,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
                         antsScope.getGbCycle().get(i),
                         antsScope.getGbCycle().get((i + 1) % graphOrder)
                 );
-                e.setMarked(true);
+                e.setStatus(EDGE_ON_CYCLE);
             }
         }
     }

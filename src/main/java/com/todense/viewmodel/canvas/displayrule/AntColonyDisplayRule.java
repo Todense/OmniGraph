@@ -1,11 +1,9 @@
 package com.todense.viewmodel.canvas.displayrule;
 
 import com.todense.model.graph.Edge;
-import com.todense.model.graph.Node;
 import com.todense.viewmodel.scope.AntsScope;
 import com.todense.viewmodel.scope.BackgroundScope;
 import com.todense.viewmodel.scope.GraphScope;
-import javafx.scene.paint.Color;
 
 public class AntColonyDisplayRule extends ResponsiveDisplayRule{
 
@@ -16,19 +14,6 @@ public class AntColonyDisplayRule extends ResponsiveDisplayRule{
         this.antsScope = antsScope;
     }
 
-    @Override
-    public Color getNodeColor(Node node) {
-        Color displayColor = super.getNodeColor(node);
-        if(node.isHighlighted()){
-            displayColor = displayColor.brighter().brighter();
-        }
-        return displayColor;
-    }
-
-    @Override
-    public double getNodeSize(Node node) {
-        return super.getNodeSize(node);
-    }
 
     @Override
     public double getEdgeWidth(Edge edge) {

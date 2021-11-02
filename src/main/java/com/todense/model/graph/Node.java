@@ -14,7 +14,6 @@ public class Node{
     private Point2D pos;
     private Color color;
 
-    private boolean marked = false; //flag changing visuals
     private boolean visited = false; //flag not changing visuals
     private boolean selected = false; //selected by user
     private boolean highlighted = false; //highlighted by user
@@ -36,13 +35,9 @@ public class Node{
         return neighbours;
     }
 
-    public boolean isMarked(){return this.marked;}
-
     public boolean isHighlighted() {
         return highlighted;
     }
-
-    public void setMarked(boolean marked){this.marked = marked;}
 
     public boolean isSelected() {
         return selected;

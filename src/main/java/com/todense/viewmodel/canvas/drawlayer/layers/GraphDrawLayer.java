@@ -5,7 +5,7 @@ import com.todense.model.NodeLabelMode;
 import com.todense.model.graph.Edge;
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
-import com.todense.util.Util;
+import com.todense.viewmodel.ants.AntColonyAlgorithmTask;
 import com.todense.viewmodel.canvas.DisplayMode;
 import com.todense.viewmodel.canvas.displayrule.*;
 import com.todense.viewmodel.canvas.drawlayer.DrawLayer;
@@ -135,16 +135,17 @@ public class GraphDrawLayer implements DrawLayer {
         Point2D p2 = graphScope.getNodePositionFunction().apply(edge.getN2());
 
         double width = displayRule.getEdgeWidth(edge) * graphScope.getNodeSize();
-        if(width == 0)
-            return;
+        width = Math.min(width, graphScope.getNodeSize());
 
         // ant colony algorithm cycle marker
-        if(edge.isMarked() && displayRule.getClass().equals(AntColonyDisplayRule.class)) {
+        if(edge.getStatus() == AntColonyAlgorithmTask.EDGE_ON_CYCLE && displayRule.getClass().equals(AntColonyDisplayRule.class)) {
             gc.setLineWidth(width + graphScope.getNodeSize() * 0.25);
             gc.setStroke(antsScope.getCycleColor());
             gc.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
         }
 
+        if(width == 0)
+            return;
 
         if(displayRule.getClass().equals(AntColonyDisplayRule.class)  && !antsScope.isShowingPheromones()) return;
 

@@ -25,7 +25,6 @@ public class GraphManager {
 
     public void resetGraph() {
         for (Node n : graph.getNodes()) {
-            n.setMarked(false);
             n.setSelected(false);
             n.setVisited(false);
             n.setStatus(0);

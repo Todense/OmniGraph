@@ -194,14 +194,15 @@ public class GraphAnalyzer {
 
     public static double getNearestNeighbourSpanningTreeLength(Graph graph, int limit){
         double length = 0;
+        boolean[] visited = new boolean[graph.getOrder()];
         Node currentNode = graph.getNodes().get(0);
-        currentNode.setVisited(true);
+        visited[currentNode.getIndex()] = true;
         int iterCount = limit < graph.getOrder()? limit : graph.getOrder()-1;
         for (int i = 0; i < iterCount; i++) {
             double minDist = Double.POSITIVE_INFINITY;
             Node bestNode = null;
             for(Node node : graph.getNodes()){
-                if(node.isVisited())
+                if(visited[node.getIndex()])
                     continue;
                 double dist = node.getPos().distance(currentNode.getPos());
                 if(dist < minDist){
@@ -210,12 +211,9 @@ public class GraphAnalyzer {
                 }
             }
             assert bestNode != null;
-            bestNode.setVisited(true);
+            visited[bestNode.getIndex()] = true;
             length += minDist;
             currentNode = bestNode;
-        }
-        for (Node node : graph.getNodes()){
-            node.setVisited(false);
         }
         return length;
     }

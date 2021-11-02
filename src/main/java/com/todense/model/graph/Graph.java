@@ -121,7 +121,6 @@ public class Graph {
 
     public void reset(){
         for (Node n : nodes) {
-            n.setMarked(false);
             n.setSelected(false);
             n.setVisited(false);
             n.setStatus(0);
