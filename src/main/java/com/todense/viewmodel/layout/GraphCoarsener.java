@@ -59,20 +59,21 @@ public class GraphCoarsener {
         }
         nodeWeights = newNodeWeights;
         List<Edge> matching = new ArrayList<>();
+        boolean[] visited = new boolean[graph.getOrder()];
         for(Node n : copyGraph.getNodes()){
-            if(n.isVisited()) continue;
+            if(visited[n.getIndex()]) continue;
             Node bestNode = null;
             int minWeight = Integer.MAX_VALUE;
             for(Node m : n.getNeighbours()){
-                if(m.isVisited()) continue;
+                if(visited[m.getIndex()]) continue;
                 if(nodeWeights.get(m) < minWeight){
                     minWeight = nodeWeights.get(m);
                     bestNode = m;
                 }
             }
             if(bestNode != null){
-                n.setVisited(true);
-                bestNode.setVisited(true);
+                visited[n.getIndex()] = true;
+                visited[bestNode.getIndex()] = true;
                 matching.add(copyGraph.getEdge(n ,bestNode));
             }
         }

@@ -191,6 +191,7 @@ public class PresetCreator {
 
         Stack<Node> stack = new Stack<>();
         HashMap<Node, Node> prev = new HashMap<>();
+        boolean[] visited = new boolean[graph.getOrder()];
 
         graph.getNodes().forEach((node) -> prev.put(node, null));
         stack.push(n);
@@ -198,17 +199,16 @@ public class PresetCreator {
         while(!stack.isEmpty()){
             Node m = stack.pop();
 
-            if(m.isVisited())
+            if(visited[m.getIndex()])
                 continue;
-
-            m.setVisited(true);
+            visited[m.getIndex()] = true;
 
             if(prev.get(m) != null){
                 graph.getEdge(m, prev.get(m)).setMarked(true);
             }
 
             for (Node k : m.getNeighbours()) {
-                if(!k.isVisited()){
+                if(!visited[k.getIndex()]){
                     stack.push(k);
                     prev.put(k, m);
                 }

@@ -122,7 +122,6 @@ public class Graph {
     public void reset(){
         for (Node n : nodes) {
             n.setSelected(false);
-            n.setVisited(false);
             n.setStatus(0);
         }
         for (Edge e : edges) {

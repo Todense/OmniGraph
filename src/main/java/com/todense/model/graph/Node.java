@@ -14,7 +14,6 @@ public class Node{
     private Point2D pos;
     private Color color;
 
-    private boolean visited = false; //flag not changing visuals
     private boolean selected = false; //selected by user
     private boolean highlighted = false; //highlighted by user
     private int status = 0;
@@ -89,14 +88,6 @@ public class Node{
 
     public String toString(){
         return "n"+ (index + 1);
-    }
-
-    public boolean isVisited() {
-        return visited;
-    }
-
-    public void setVisited(boolean visited) {
-        this.visited = visited;
     }
 
     public int getStatus() {
