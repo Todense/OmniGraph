@@ -57,13 +57,10 @@ public class RandomGraphGenerator {
     }
 
     public static void generateEdges(Graph graph, EdgeGenerator generator){
-        var adjacencyMatrix = generator.generateAdjacencyMatrix();
-        for (int i = 0; i < graph.getNodes().size(); i++) {
-            for (int j = i + 1; j < graph.getNodes().size(); j++) {
-                if (adjacencyMatrix[i][j]){
-                    graph.addEdge(graph.getNodes().get(i), graph.getNodes().get(j));
-                }
-            }
-        }
+        var connections = generator.generateConnections();
+        var beginnings = connections.getKey();
+        var ends = connections.getValue();
+        while(!beginnings.isEmpty())
+            graph.addEdge(graph.getNodes().get(beginnings.pop()), graph.getNodes().get(ends.pop()));
     }
 }

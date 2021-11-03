@@ -1,37 +1,35 @@
 package com.todense.viewmodel.random;
 
 import com.todense.model.graph.Node;
+import javafx.util.Pair;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Stack;
 
 public abstract class RandomEdgeGenerator implements EdgeGenerator {
 
     protected Random rnd = new Random();
     protected List<Node> nodes;
-    private boolean[][] adjacencyMatrix;
+    private Pair<Stack<Integer>, Stack<Integer>> connections;
 
     public RandomEdgeGenerator(){
     }
 
-    public boolean[][] generateAdjacencyMatrix(){
+    public Pair<Stack<Integer>, Stack<Integer>> generateConnections(){
         generate();
-        return this.adjacencyMatrix;
+        return this.connections;
     }
 
     protected abstract void generate();
 
     protected void addEdge(int i, int j){
-        if(i < j){
-            adjacencyMatrix[i][j] = true;
-        }
-        else{
-            adjacencyMatrix[j][i] = true;
-        }
+        connections.getKey().push(i);
+        connections.getValue().push(j);
     }
 
     public void setNodes(List<Node> nodes){
         this.nodes = nodes;
-        adjacencyMatrix = new boolean[nodes.size()][nodes.size()];
+        connections = new Pair<>(new Stack<>(), new Stack<>());
     }
 }
