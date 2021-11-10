@@ -169,7 +169,7 @@
          </ToggleSwitch>
          <VBox fx:id="edgeWidthDecayVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
             <children>
-               <ToggleSwitch fx:id="widthDecayToggleSwitch" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="190.0" text="Distance Width Decay">
+               <ToggleSwitch fx:id="widthDecayToggleSwitch" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="190.0" text="Length Width Decay">
                   <font>
                      <Font size="16.0" />
                   </font>
@@ -202,7 +202,7 @@
          </VBox>
          <VBox fx:id="edgeOpacityDecayVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
             <children>
-               <ToggleSwitch fx:id="opacityDecayToggleSwitch" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="190.0" text="Distance Opacity Decay">
+               <ToggleSwitch fx:id="opacityDecayToggleSwitch" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="190.0" text="Length Opacity Decay">
                   <font>
                      <Font size="16.0" />
                   </font>

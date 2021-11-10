@@ -17,8 +17,8 @@ public class AntsView implements FxmlView<AntsViewModel> {
     @FXML private ColorPicker antColorPicker, cycleColorPicker;
     @FXML private ToggleSwitch twoOptToggleSwitch, threeOptToggleSwitch, animationToggleSwitch, showPheromonesToggleSwitch;
     @FXML private TextField alphaTextField, betaTextField, evaporationTextField, q0TextField, ksiTextField,
-            scaleTextField, antCountTextField, neighbourhoodTextField, rankTextField;
-    @FXML private Slider alphaSlider, betaSlider, evaporationSlider, q0Slider, scaleSlider,
+            antCountTextField, neighbourhoodTextField, rankTextField;
+    @FXML private Slider alphaSlider, betaSlider, evaporationSlider, q0Slider,
             ksiSlider, antCountSlider, neighbourhoodSlider, rankSlider;
     @FXML private Button startButton;
     @FXML private VBox paramVBox, ksiVBox, q0VBox, rankVBox;
@@ -32,7 +32,6 @@ public class AntsView implements FxmlView<AntsViewModel> {
         Util.bindSliderAndTextField(evaporationSlider, evaporationTextField, "###.##");
         Util.bindSliderAndTextField(q0Slider, q0TextField, "###.##");
         Util.bindSliderAndTextField(ksiSlider, ksiTextField, "###.##");
-        Util.bindSliderAndTextField(scaleSlider, scaleTextField, "###.##");
         Util.bindSliderAndTextField(antCountSlider, antCountTextField, "##");
         Util.bindSliderAndTextField(neighbourhoodSlider, neighbourhoodTextField, "###");
         Util.bindSliderAndTextField(rankSlider, rankTextField, "###");
@@ -65,7 +64,6 @@ public class AntsView implements FxmlView<AntsViewModel> {
         evaporationSlider.valueProperty().bindBidirectional(viewModel.evaporationProperty());
         ksiSlider.valueProperty().bindBidirectional(viewModel.ksiProperty());
         q0Slider.valueProperty().bindBidirectional(viewModel.q0Property());
-        scaleSlider.valueProperty().bindBidirectional(viewModel.scaleProperty());
         rankSlider.valueProperty().bindBidirectional(viewModel.rankSizeProperty());
 
         twoOptToggleSwitch.selectedProperty().bindBidirectional(viewModel.with2OptProperty());
@@ -174,15 +172,6 @@ public class AntsView implements FxmlView<AntsViewModel> {
         antCountSlider.increment();
     }
 
-    @FXML
-    private void scaleDecrementAction() {
-        scaleSlider.decrement();
-    }
-
-    @FXML
-    private void scaleIncrementAction() {
-        scaleSlider.increment();
-    }
 
     @FXML
     private void startAction() {

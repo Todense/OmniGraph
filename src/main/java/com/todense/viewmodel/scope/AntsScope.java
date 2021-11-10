@@ -18,6 +18,8 @@ public class AntsScope implements Scope {
 
     private double[][] pheromones;
 
+    private double maxPheromone = 0;
+
     //PARAMETERS
     private IntegerProperty antCountProperty = new SimpleIntegerProperty(5);
     private IntegerProperty neighbourhoodSizeProperty = new SimpleIntegerProperty(15);
@@ -33,7 +35,6 @@ public class AntsScope implements Scope {
     private BooleanProperty with3OptProperty = new SimpleBooleanProperty(false);
 
     //VISUALS
-    private DoubleProperty scaleProperty = new SimpleDoubleProperty(50);
     private BooleanProperty antsAnimationOnProperty = new SimpleBooleanProperty(true);
     private BooleanProperty showPheromonesProperty = new SimpleBooleanProperty(true);
     private ObjectProperty<Color> antColorProperty = new SimpleObjectProperty<>(Color.rgb(200,0,0));
@@ -126,14 +127,6 @@ public class AntsScope implements Scope {
         return localEvaporationProperty;
     }
 
-    public double getScale() {
-        return scaleProperty.get();
-    }
-
-    public DoubleProperty scaleProperty() {
-        return scaleProperty;
-    }
-
     public boolean isWith2Opt() {
         return with2OptProperty.get();
     }
@@ -200,5 +193,13 @@ public class AntsScope implements Scope {
 
     public IntegerProperty rankSizeProperty() {
         return rankSizeProperty;
+    }
+
+    public double getMaxPheromone() {
+        return maxPheromone;
+    }
+
+    public void setMaxPheromone(double maxPheromone) {
+        this.maxPheromone = maxPheromone;
     }
 }

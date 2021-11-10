@@ -251,29 +251,6 @@
    </Label>
    <VBox alignment="CENTER" prefHeight="129.0" prefWidth="200.0" spacing="5.0" styleClass="subsection">
       <children>
-         <HBox alignment="CENTER" prefHeight="11.0" prefWidth="170.0">
-            <Label alignment="BOTTOM_LEFT" contentDisplay="CENTER" prefHeight="8.0" prefWidth="130.0" text="Pheromone scale">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <TextField fx:id="scaleTextField" alignment="CENTER" prefHeight="25.0" prefWidth="59.0" />
-         </HBox>
-         <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
-            <children>
-               <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#scaleDecrementAction" prefHeight="15.0" prefWidth="15.0">
-                  <graphic>
-                     <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
-                  </graphic>
-               </Button>
-               <JFXSlider fx:id="scaleSlider" blockIncrement="1.0" majorTickUnit="0.01" max="300.0" min="0.01" minorTickCount="0" prefHeight="15.0" prefWidth="160.0" value="100.0" />
-               <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#scaleIncrementAction" prefHeight="15.0" prefWidth="15.0">
-                  <graphic>
-                     <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
-                  </graphic>
-               </Button>
-            </children>
-         </HBox>
          <HBox alignment="CENTER" minHeight="-Infinity" prefHeight="25.0" prefWidth="190.0">
             <children>
                <Label prefHeight="17.0" prefWidth="145.0" text="Cycle color">

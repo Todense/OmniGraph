@@ -19,9 +19,7 @@ public class AntColonyDisplayRule extends ResponsiveDisplayRule{
     public double getEdgeWidth(Edge edge) {
         double width;
         if(antsScope.isShowingPheromones()){
-            width = Math.min(
-                    antsScope.getPheromone(edge) * antsScope.getScale() * antsScope.getScale(),
-                    graphScope.getNodeSize() * 0.75);
+            width = (antsScope.getPheromone(edge)/antsScope.getMaxPheromone())*graphScope.getEdgeWidth()*0.8;
         }else{
             width = 0;
         }

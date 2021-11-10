@@ -141,10 +141,13 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
             localSearch();
             checkIterationResults();
             updatePheromones();
+            setMaxPheromone();
             resetAnts();
             iterationCounter++;
         }
     }
+
+
 
     private void localSearch() {
         if(antsScope.isWith3Opt()){
@@ -266,6 +269,11 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
 
     protected void updatePheromones() {
         evaporatePheromone(antsScope.getEvaporation());
+    }
+
+    protected void setMaxPheromone(){
+        double maxPheromone = graph.getEdges().stream().mapToDouble(antsScope::getPheromone).max().getAsDouble();
+        antsScope.setMaxPheromone(maxPheromone);
     }
 
     protected void evaporatePheromone(double evaporation){

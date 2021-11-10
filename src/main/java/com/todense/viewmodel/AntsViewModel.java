@@ -117,10 +117,6 @@ public class AntsViewModel extends AlgorithmTaskManager implements ViewModel {
         return antsScope.localEvaporationProperty();
     }
 
-    public DoubleProperty scaleProperty() {
-        return antsScope.scaleProperty();
-    }
-
     public BooleanProperty with2OptProperty() {
         return antsScope.with2OptProperty();
     }

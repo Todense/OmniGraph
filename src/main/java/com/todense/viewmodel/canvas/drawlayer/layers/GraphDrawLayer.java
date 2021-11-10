@@ -139,7 +139,7 @@ public class GraphDrawLayer implements DrawLayer {
 
         // ant colony algorithm cycle marker
         if(edge.getStatus() == AntColonyAlgorithmTask.EDGE_ON_CYCLE && displayRule.getClass().equals(AntColonyDisplayRule.class)) {
-            gc.setLineWidth(width + graphScope.getNodeSize() * 0.25);
+            gc.setLineWidth(width + graphScope.getNodeSize() * 0.2);
             gc.setStroke(antsScope.getCycleColor());
             gc.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
         }
