@@ -3,12 +3,11 @@ package com.todense.viewmodel.preset;
 import com.todense.model.graph.Edge;
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
+import com.todense.viewmodel.graph.GraphManager;
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Random;
-import java.util.Stack;
+import java.util.*;
 
 
 public class PresetCreator {
@@ -75,6 +74,75 @@ public class PresetCreator {
 
         return g;
     }
+
+    public static Graph createHexagonalGrid(int size, Point2D center){
+        double pi = Math.PI;
+        double sqrt3 = Math.sqrt(3);
+        double width = center.getX() * 1.7;
+        double height = center.getY() * 1.7;
+        double gap = Math.min(width/((2*size-1)*sqrt3), height/((2*size-1)*sqrt3));
+        Graph g = new Graph("HexagonalGridGraph");
+
+        int level = 0;
+        int levelSize = size;
+        Point2D startPt = center.add(new Point2D(Math.cos(pi*4.0/3.0), Math.sin(pi*4.0/3.0)).multiply(sqrt3*gap*(size-1)).add(-sqrt3*gap/2, 0));
+        for(int i=0; i<size; i++){
+            g.addNode(startPt.add(i*sqrt3*gap, -gap/2).add(sqrt3*gap/2, -gap/2));
+        }
+
+        ArrayList<Node> prevLowerNodes = null;
+        ArrayList<Node> currLowerNodes;
+        while(level < 2*size-1){
+            double angle;
+            currLowerNodes = new ArrayList<>();
+            angle = level < size -1 ? 2*pi/3: pi/3;
+            levelSize = level < size ? levelSize+1: levelSize-1;
+
+            for(int i = 0; i<levelSize; i++){
+                Node lowerNode = g.addNode(startPt.add(i*sqrt3*gap, gap/2));
+                Node  upperNode = g.addNode(startPt.add(i*sqrt3*gap, -gap/2));
+                g.addEdge(lowerNode, upperNode);
+
+                currLowerNodes.add(lowerNode);
+
+                if(level > 0) {
+                    if (level < size) {
+                        if (i > 0) {
+                            g.addEdge(upperNode, prevLowerNodes.get(i - 1));
+                        }
+                        if (i < levelSize - 1) {
+                            g.addEdge(upperNode, prevLowerNodes.get(i));
+                        }
+                    } else {
+                        g.addEdge(upperNode, prevLowerNodes.get(i));
+                        g.addEdge(upperNode, prevLowerNodes.get(i + 1));
+                    }
+                }
+            }
+            prevLowerNodes = new ArrayList<>(currLowerNodes);
+            level++;
+            startPt = startPt.add(new Point2D(Math.cos(angle), Math.sin(angle)).multiply(sqrt3*gap));
+        }
+
+        startPt = startPt.subtract(new Point2D(Math.cos(pi/3), Math.sin(pi/3)).multiply(sqrt3*gap));
+
+        for(int i=0; i<size; i++){
+            g.addNode(startPt.add(i*sqrt3*gap, gap/2).add(sqrt3*gap/2, gap/2));
+        }
+
+        for(int i=0; i<size; i++){
+            g.addEdge(g.getNodes().get(i), g.getNodes().get(2*i + size + 1));
+            g.addEdge(g.getNodes().get(i), g.getNodes().get(2*i + size + 3));
+        }
+
+        for(int i=0; i<size; i++){
+            int nodeIdx = g.getOrder()-size+i;
+            g.addEdge(g.getNodes().get(nodeIdx), g.getNodes().get(nodeIdx+i-2*(size+1)));
+            g.addEdge(g.getNodes().get(nodeIdx), g.getNodes().get(nodeIdx+i-2*(size)));
+        }
+        return g;
+    }
+
 
     public static Graph createKingsGraph(int columns, int rows, Point2D center){
         Graph g = createGrid(columns, rows, center);

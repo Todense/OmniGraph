@@ -4,6 +4,7 @@ public enum Preset {
 
     CYCLE("Cycle"),
     GRID("Grid"),
+    HEX("Hexagonal Grid"),
     KING("King's"),
     MAZE("Maze"),
     STAR("Star"),

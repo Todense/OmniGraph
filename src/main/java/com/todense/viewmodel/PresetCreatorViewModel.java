@@ -43,6 +43,8 @@ public class PresetCreatorViewModel implements ViewModel {
         switch (preset) {
             case GRID:
                 presetGraph = PresetCreator.createGrid(getParam1(), getParam2(), center); break;
+            case HEX:
+                presetGraph = PresetCreator.createHexagonalGrid(getParam1(), center); break;
             case KING:
                 presetGraph = PresetCreator.createKingsGraph(getParam1(), getParam2(), center); break;
             case MAZE:

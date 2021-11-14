@@ -44,7 +44,7 @@ public class AntColonySystemTask extends AntColonyAlgorithmTask {
     }
 
     @Override
-    protected int getRandomNeighbour(Ant ant, List<Integer> availableNeighbours) throws MathArithmeticException {
+    protected int getRandomNeighbour(Ant ant, List<Integer> availableNeighbours){
         if (rnd.nextDouble() < antsScope.getExploitationStrength()) {
             return getBestQualityNeighbour(ant, availableNeighbours);
         }else{

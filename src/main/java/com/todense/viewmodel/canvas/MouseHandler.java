@@ -341,6 +341,11 @@ public class MouseHandler {
 
     public void onMouseScroll(ScrollEvent event){
         Point2D point = new Point2D(event.getX(), event.getY());
+
+        if(event.getDeltaY()==0.0){
+            return;
+        }
+
         if(event.getDeltaY()>0) {
             camera.zoomIn(1.08, point);
         }

@@ -35,7 +35,7 @@ public class PresetCreatorView implements FxmlView<PresetCreatorViewModel> {
         presetChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             presetVBox.getChildren().remove(param2HBox);
 
-            if(newVal != Preset.CYCLE && newVal != Preset.STAR){
+            if(newVal != Preset.CYCLE && newVal != Preset.STAR && newVal != Preset.HEX){
                 presetVBox.getChildren().add(param2HBox);
             }
 
@@ -48,6 +48,8 @@ public class PresetCreatorView implements FxmlView<PresetCreatorViewModel> {
                case COMPLETE_BIPARTITE:
                    param1Label.setText("First set size");
                    param2Label.setText("Second set size"); break;
+               case HEX:
+                   param1Label.setText("Size");
            }
 
         });

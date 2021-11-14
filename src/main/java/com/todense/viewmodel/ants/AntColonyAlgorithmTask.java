@@ -135,6 +135,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
     private void antColonyOptimization(){
         init();
         while(!super.isCancelled() && !endConditionsSatisfied()){
+            iterationCounter++;
             for (int i = 0; i < graphOrder; i++) {
                 moveAnts();
             }
@@ -143,7 +144,6 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
             updatePheromones();
             setMaxPheromone();
             resetAnts();
-            iterationCounter++;
         }
     }
 
@@ -230,7 +230,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
         }
     }
 
-    protected int getRandomNeighbour(Ant ant, List<Integer> availableNeighbours) throws MathArithmeticException {
+    protected int getRandomNeighbour(Ant ant, List<Integer> availableNeighbours) {
 
         int start = ant.getStart();
 
@@ -295,6 +295,10 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
     protected void checkIterationResults() {
         Ant iterationBestAnt = getIterationBestAnt();
 
+        if(iterationBestAnt == null){
+            return;
+        }
+
         if (iterationBestAnt.getCycleLength() + 0.0001 < bestSolutionLength.get()) {
             antsScope.setGbCycle(new ArrayList<>(iterationBestAnt.getCycle()));
             bestSolutionLength.set(iterationBestAnt.getCycleLength());
@@ -352,9 +356,12 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
                 }
             }
             Point2D pt  = graph.getNodes().get(i).getPos();
-            neighbourhood.sort((o1, o2) ->
-                    (int) (pt.distance(graph.getNodes().get(o1).getPos()) -
-                            pt.distance(graph.getNodes().get(o2).getPos())));
+            neighbourhood.sort((o1, o2) ->{
+                double d1 = pt.distance(graph.getNodes().get(o1).getPos());
+                double d2 = pt.distance(graph.getNodes().get(o2).getPos());
+                if(d1 == d2) return 0;
+                return d1 < d2 ? -1 : 1;
+            });
 
             if(neighbourhoodSize < graphOrder-1) {
                 neighbourhoods.put(i, neighbourhood.subList(0, neighbourhoodSize));

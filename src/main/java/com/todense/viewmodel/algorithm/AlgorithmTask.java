@@ -33,11 +33,19 @@ public abstract class AlgorithmTask extends Task<Void>{
     protected abstract void onFinished();
 
     @Override
-    protected Void call() throws Exception {
+    protected Void call() throws InterruptedException {
         startTime = System.currentTimeMillis();
         painter.startAnimationTimer();
         painter.sleep();
-        perform();
+        try{
+            perform();
+        }catch (Exception e){
+            if(!(e instanceof InterruptedException)){
+                e.printStackTrace();
+            }
+
+        }
+
         onFinished();
         return null;
     }
