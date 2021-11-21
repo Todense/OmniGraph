@@ -21,6 +21,7 @@ public class GraphManager {
 
     public void clearGraph() {
         setGraph(new Graph());
+        System.gc();
     }
 
     public void resetGraph() {

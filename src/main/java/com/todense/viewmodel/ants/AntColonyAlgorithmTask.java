@@ -14,9 +14,9 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.geometry.Point2D;
 import javafx.util.Duration;
-import org.apache.commons.math3.distribution.EnumeratedDistribution;
-import org.apache.commons.math3.exception.MathArithmeticException;
-import org.apache.commons.math3.util.Pair;
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.distribution.GuideTableDiscreteSampler;
+import org.apache.commons.rng.sampling.distribution.SharedStateDiscreteSampler;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -54,12 +54,14 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
     private LocalSearcher localSearcher = new LocalSearcher();
     private Random rnd = new Random();
     private final Object lock = new Object();
-    
+    UniformRandomProvider randomProvider;  //faster than EnumeratedDistribution
+
     public AntColonyAlgorithmTask(Graph graph, AntsScope antsScope, AlgorithmScope algorithmScope){
         super(graph);
         this.antsScope = antsScope;
         this.algorithmScope = algorithmScope;
         this.graphOrder = graph.getOrder();
+        this.randomProvider = new RandomDoubleProvider();
 
         antsScope.getAnts().clear();
         antsScope.getGbCycle().clear();
@@ -89,6 +91,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
     }
 
     protected void init(){
+        long initStart = System.currentTimeMillis();
         dist = new double[graphOrder][graphOrder];
         isImportant = new boolean[graphOrder][graphOrder];
 
@@ -234,33 +237,31 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
 
         int start = ant.getStart();
 
-        ArrayList<Pair<Integer, Double>> probabilities = new ArrayList<>();
-
-        for(Integer i: availableNeighbours) {
+        double[] probabilities = new double[availableNeighbours.size()];
+        int j = 0;
+        for (int i: availableNeighbours) {
             double ph = getPheromone(start, i);
             double dist = this.dist[start][i];
-            probabilities.add(Pair.create(i,
-                    Math.pow(ph, antsScope.getAlpha()) * Math.pow(1/dist, antsScope.getBeta())));
+            probabilities[j++] = Math.pow(ph, antsScope.getAlpha()) * Math.pow(1/dist, antsScope.getBeta());
         }
-
-        EnumeratedDistribution<Integer> distribution = new EnumeratedDistribution<>(probabilities);
-        return distribution.sample();
+        SharedStateDiscreteSampler distribution = GuideTableDiscreteSampler.of(randomProvider, probabilities);
+        return availableNeighbours.get(distribution.sample());
     }
 
     private List<Integer> getCurrentNeighbours(Ant ant){
         ArrayList<Integer> currentNeighbours = new ArrayList<>();
 
-        for (int i : neighbourhoods.get(ant.getStart())) {
+        for (int i: neighbourhoods.get(ant.getStart())) {
             if(!ant.isVisited(i)){
                 currentNeighbours.add(i);
             }
         }
 
-        if(currentNeighbours.size() == 0){
+        if(currentNeighbours.size() == 0){ // all nodes in neighbourhood are already visited
             currentNeighbours = IntStream.range(0, graphOrder)
                     .boxed()
+                    .filter(integer -> !ant.getCycle().contains(integer))
                     .collect(Collectors.toCollection(ArrayList::new));
-            currentNeighbours.removeAll(ant.getCycle());
         }
 
         return currentNeighbours;
@@ -362,12 +363,10 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
                 if(d1 == d2) return 0;
                 return d1 < d2 ? -1 : 1;
             });
-
             if(neighbourhoodSize < graphOrder-1) {
-                neighbourhoods.put(i, neighbourhood.subList(0, neighbourhoodSize));
-            }else{
-                neighbourhoods.put(i, neighbourhood);
+                neighbourhood = neighbourhood.subList(0, neighbourhoodSize);
             }
+            neighbourhoods.put(i, neighbourhood);
         }
     }
 

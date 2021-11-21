@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class EdgeList extends ArrayList<Edge> {
 
-    private HashMap<String, Edge> edgeMap = new HashMap<>(); //edgeID -> edge mapping
+    private final HashMap<String, Edge> edgeMap = new HashMap<>(); //nodes -> edge mapping
 
     @Override
     public boolean add(Edge edge) {
@@ -52,9 +52,6 @@ public class EdgeList extends ArrayList<Edge> {
     }
 
     public boolean isEdgeBetween(Node n, Node m){
-        String id = n.getID() < m.getID() ?
-                n.getID()+"-"+m.getID() :
-                m.getID()+"-"+n.getID();
-        return edgeMap.containsKey(id);
+        return n.getNeighbours().contains(m);
     }
 }

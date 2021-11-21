@@ -16,12 +16,11 @@ import java.util.*;
 
 public class ForceDirectedLayoutTask extends AlgorithmTask {
 
-	private GraphManager graphManager;
-	private LayoutViewModel layoutVM;
+	private final GraphManager graphManager;
+	private final LayoutViewModel layoutVM;
 
 	private int coolingCounter = 0;
-	private double smoothness;
-	private boolean smoothModeOn;
+	private final boolean smoothModeOn;
 
 	double energy = Double.POSITIVE_INFINITY;
 
@@ -31,25 +30,22 @@ public class ForceDirectedLayoutTask extends AlgorithmTask {
 	private double[][] attractiveForces;
 	private double[][] distances;
 
-	private HashMap<Node, Point2D> nodeForceMap = new HashMap<>();
-
 	private double stepSize;
 
 	private double optDist;
-	private double initStep;
-	private double tolerance;
-	private double repulsiveStrength;
+	private final double initStep;
+	private final double tolerance;
+	private final double repulsiveStrength;
 
 	private final double repulsiveness = 1d;
-	private int counter = 0;
+	private int iterationCounter = 0;
 
 	private QuadTree quadTree;
 
-	private double gamma = Math.sqrt(9d/4d);
-	private LongRangeForce longRangeForce;
-	private Point2D center;
+	private final double gamma = Math.sqrt(9d/4d);
+	protected LongRangeForce longRangeForce;
+	private final Point2D center;
 
-	private Random rnd = new Random();
 
 	public ForceDirectedLayoutTask(GraphManager graphManager, LayoutViewModel layoutVM, Point2D center){
     	super(graphManager.getGraph());
@@ -62,7 +58,6 @@ public class ForceDirectedLayoutTask extends AlgorithmTask {
     	this.tolerance = layoutVM.getTolerance();
     	this.longRangeForce = layoutVM.getLongRangeForce();
     	this.repulsiveStrength = getRepulsiveStrength(repulsiveness, optDist, longRangeForce.getExponent() + 1);
-    	this.smoothness = layoutVM.getSmoothness();
     	this.smoothModeOn = layoutVM.isSmoothnessOn();
     	super.algorithmName = "Force Directed Layout";
 	}
@@ -70,7 +65,7 @@ public class ForceDirectedLayoutTask extends AlgorithmTask {
 	@Override
 	public void perform() {
 		if(layoutVM.isMultilevelOn()){
-			multilevelForceDirectedLayout(graph);
+			multilevelForceDirectedLayout();
 		}else{
 			try {
 				forceDirectedLayout(graph);
@@ -97,14 +92,45 @@ public class ForceDirectedLayoutTask extends AlgorithmTask {
 		}
 	}
 
-	public void multilevelForceDirectedLayout(Graph graph){
+	// main algorithm
+	public void forceDirectedLayout(Graph graph) throws InterruptedException {
+		init(graph);
+		while(!super.isCancelled() &&  stepSize > tolerance * optDist) {
+			iterationCounter++;
+
+			if(layoutVM.isBarnesHutOn()){
+				quadTree = new QuadTree(7, graph);
+			}
+
+			calculateDistanceMatrix(graph);
+
+			if(!layoutVM.isBarnesHutOn()) {
+				calculateRepulsiveForces(graph);
+			}
+
+			calculateAttractiveForces(graph);
+			List<Point2D> forceList = createForceList(graph);
+			updateNodePositions(graph, forceList);
+			stepSize = updateStepSize();
+			super.sleep(1);
+		}
+
+		//transition between smoothed and real position
+		if(smoothModeOn){
+			finalSmoothTransition(30, 0.8, 20);
+		}
+		painter.repaint();
+	}
+
+
+	public void multilevelForceDirectedLayout(){
 		GraphCoarsener graphCoarsener = new GraphCoarsener(graphManager);
 		graphCoarsener.initGraphSequence();
 		while(!graphCoarsener.maxLevelReached()){
 			graphCoarsener.coarsen();
 			try {
-				painter.sleep();
-			} catch (InterruptedException e) {
+				super.sleep();
+			} catch (InterruptedException ignored) {
 				if(graphManager.getGraph().getOrder() < graphCoarsener.getOriginalGraph().getOrder()){
 					graphManager.setGraph(graphCoarsener.getOriginalGraph());
 				}
@@ -118,7 +144,7 @@ public class ForceDirectedLayoutTask extends AlgorithmTask {
 			try {
 				painter.sleep();
 				forceDirectedLayout(graphCoarsener.getGraphSequence().peek());
-			} catch (InterruptedException e) {
+			} catch (InterruptedException ignored) {
 				if(graphManager.getGraph().getOrder() < graphCoarsener.getOriginalGraph().getOrder()){
 					graphManager.setGraph(graphCoarsener.getOriginalGraph());
 				}
@@ -126,128 +152,122 @@ public class ForceDirectedLayoutTask extends AlgorithmTask {
 		}
 	}
 
-	public void forceDirectedLayout(Graph graph) throws InterruptedException {
-		init(graph);
-		while(!super.isCancelled() &&  stepSize > tolerance * optDist) {
-			counter++;
-
-			if(layoutVM.isBarnesHutOn()){
-				quadTree = new QuadTree(7, graph);
-			}
-
-			//calculate distance matrix
-			for (Node n : graph.getNodes()) {
-				for (Node m : graph.getNodes()) {
-					if(n.getIndex() < m.getIndex()){
-						distances[n.getIndex()][m.getIndex()] = n.getPos().distance(m.getPos());
-					}
+	private void calculateDistanceMatrix(Graph graph){
+		for (Node n : graph.getNodes()) {
+			for (Node m : graph.getNodes()) {
+				if(n.getIndex() < m.getIndex()){
+					distances[n.getIndex()][m.getIndex()] = n.getPos().distance(m.getPos());
 				}
 			}
+		}
+	}
 
-			//calculate repulsive forces
-			if(!layoutVM.isBarnesHutOn()) {
-				graph.getNodes().forEach(n -> {
-					for (Node m : graph.getNodes()) {
-						if (n.getIndex() < m.getIndex()) {
-							double dist = getDistance(n, m);
-							//if(dist > 0 && dist < 2 * (coarserLevel + 1) * optDist) {
-							if (dist > 0) {
-								double rf = repulsiveStrength / Math.pow(dist, longRangeForce.getExponent());
-								repulsiveForces[n.getIndex()][m.getIndex()] = rf;
-								repulsiveForces[m.getIndex()][n.getIndex()] = rf;
-							}
-						}
-					}
-				});
-			}
-
-			//calculate attractive forces
-			graph.getEdges().forEach(e ->{
-				double af = Math.pow(getDistance(e.getN1(), e.getN2()), 2) / optDist;
-				attractiveForces[e.getN1().getIndex()][e.getN2().getIndex()] = af;
-				attractiveForces[e.getN2().getIndex()][e.getN1().getIndex()] = af;
-			});
-
-			double prevEnergy = energy;
-			energy = 0;
-
-			nodeForceMap = new HashMap<>();
-
-
-			//apply forces to every node
-			graph.getNodes().forEach(n ->{
-				Point2D force = new Point2D(0, 0);
-
-				//apply repulsive force to node n
-				if(layoutVM.isBarnesHutOn()){
-					force = force.add(calcBarnesHutRepulsiveForce(n, repulsiveStrength, quadTree));
-				}else{
-					for (Node m : graph.getNodes()) {
-						double dist = getDistance(n, m);
-						//if(dist > 0 && dist < 2 * (coarserLevel + 1) * optDist) {
-						if(dist > 0) {
-							double rf = repulsiveForces[n.getIndex()][m.getIndex()];
-							force = force.add(m.getPos().subtract(n.getPos()).multiply(rf/dist));
-						}
-					}
-				}
-
-
-				//apply attractive force to node n
-				for (Node m : n.getNeighbours()) {
+	private void calculateRepulsiveForces(Graph graph){
+		graph.getNodes().forEach(n -> {
+			for (Node m : graph.getNodes()) {
+				if (n.getIndex() < m.getIndex()) {
 					double dist = getDistance(n, m);
-					if(dist > 0){
-						double af = attractiveForces[n.getIndex()][m.getIndex()];
-						force = force.add((m.getPos().subtract(n.getPos())).multiply(af/dist));
+					if (dist > 0) {
+						double rf = repulsiveStrength / Math.pow(dist, longRangeForce.getExponent());
+						repulsiveForces[n.getIndex()][m.getIndex()] = rf;
+						repulsiveForces[m.getIndex()][n.getIndex()] = rf;
 					}
 				}
-
-				//apply center pull
-				if(layoutVM.isCenterPull()) {
-					force = force.subtract(n.getPos().subtract(center).multiply(layoutVM.getCenterPullStrength() / optDist));
-				}
-
-				nodeEnergies[n.getIndex()] = Math.pow(force.getX(), 2) + Math.pow(force.getY(), 2);
-
-				nodeForceMap.put(n, force.normalize().multiply(stepSize).add(new Point2D(rnd.nextGaussian()/5, rnd.nextGaussian()/5)));
-			});
-
-
-			nodeForceMap.forEach((node, force) -> {
-				Point2D updatedPos = node.getPos().add(force);
-				if(layoutVM.isSmoothnessOn()){
-					double smoothness = layoutVM.getSmoothness();
-					Point2D smoothedPos = updatedPos.multiply(1-smoothness).add(layoutVM.getNodeSmoothedPositionMap().get(node).multiply(smoothness));
-					layoutVM.getNodeSmoothedPositionMap().replace(node, smoothedPos);
-				}
-				else{
-					layoutVM.getNodeSmoothedPositionMap().replace(node, updatedPos);
-				}
-				node.setPos(updatedPos);
-			});
-
-			Arrays.stream(nodeEnergies).forEach(e -> energy += e);
-
-			painter.sleep(1);
-
-			if(layoutVM.isCoolingOn()) {
-				stepSize = updateStepLength(energy, prevEnergy);
-			}else{
-				stepSize = layoutVM.getStep();
 			}
-		}
+		});
+	}
 
-		//transition between smoothed and real position
-		if(smoothModeOn){
-			for(int i = 0; i < 20; i++){
-				for(Node node: graph.getNodes()){
-					var currentPos = layoutVM.getNodeSmoothedPositionMap().get(node);
-					layoutVM.getNodeSmoothedPositionMap().replace(node, node.getPos().add(currentPos.subtract(node.getPos()).multiply(0.8)));
-				}
-				painter.sleep(10);
+	private void calculateAttractiveForces(Graph graph){
+		graph.getEdges().forEach(e ->{
+			double af = Math.pow(getDistance(e.getN1(), e.getN2()), 2) / optDist;
+			attractiveForces[e.getN1().getIndex()][e.getN2().getIndex()] = af;
+			attractiveForces[e.getN2().getIndex()][e.getN1().getIndex()] = af;
+		});
+	}
+
+
+	private List<Point2D> createForceList(Graph graph){
+
+		LinkedList<Point2D> nodeForceMap = new LinkedList<>();
+
+		for(Node n: graph.getNodes()){
+			Point2D force = new Point2D(0, 0);
+
+			//apply repulsive force to node n
+			if(layoutVM.isBarnesHutOn()){
+				force = force.add(calcBarnesHutRepulsiveForce(n, repulsiveStrength, quadTree));
 			}
+			else{
+				for (Node m : graph.getNodes()) {
+					double dist = getDistance(n, m);
+					if(dist > 0) {
+						double rf = repulsiveForces[n.getIndex()][m.getIndex()];
+						force = force.add(m.getPos().subtract(n.getPos()).multiply(rf/dist));
+					}
+				}
+			}
+
+
+			//apply attractive force to node n
+			for (Node m : n.getNeighbours()) {
+				double dist = getDistance(n, m);
+				if(dist > 0){
+					double af = attractiveForces[n.getIndex()][m.getIndex()];
+					force = force.add((m.getPos().subtract(n.getPos())).multiply(af/dist));
+				}
+			}
+
+			//apply center pull
+			if(layoutVM.isCenterPull()) {
+				force = force.subtract(n.getPos().subtract(center).multiply(layoutVM.getCenterPullStrength() / optDist));
+			}
+
+			nodeEnergies[n.getIndex()] = Math.pow(force.getX(), 2) + Math.pow(force.getY(), 2);
+			nodeForceMap.add(force.normalize().multiply(stepSize));
 		}
-		painter.repaint();
+		return nodeForceMap;
+	}
+
+	private void updateNodePositions(Graph graph, List<Point2D> forceList){
+		int i = 0;
+		double smoothness = layoutVM.getSmoothness();
+		for(Point2D force: forceList){
+			Node node = graph.getNodes().get(i++);
+			Point2D updatedPos = node.getPos().add(force);
+			if(layoutVM.isSmoothnessOn()){
+				Point2D smoothedPos = updatedPos.multiply(1-smoothness)
+						.add(layoutVM.getNodeSmoothedPositionMap().get(node).multiply(smoothness));
+				layoutVM.getNodeSmoothedPositionMap().replace(node, smoothedPos);
+			}
+			else{
+				layoutVM.getNodeSmoothedPositionMap().replace(node, updatedPos);
+			}
+			node.setPos(updatedPos);
+		}
+	}
+
+	private double updateStepSize(){
+		double newStepSize;
+		double prevEnergy = energy;
+		energy = Arrays.stream(nodeEnergies).sum();
+
+		if(layoutVM.isCoolingOn()) {
+			newStepSize = coolDownStepSize(energy, prevEnergy);
+		}else{
+			newStepSize = layoutVM.getStep();
+		}
+		return newStepSize;
+	}
+	
+	private void finalSmoothTransition(int nSteps, double stepMulti, int stepTime) throws InterruptedException {
+		for(int i = 0; i < nSteps; i++){
+			for(Node node: graph.getNodes()){
+				var currentPos = layoutVM.getNodeSmoothedPositionMap().get(node);
+				layoutVM.getNodeSmoothedPositionMap()
+						.replace(node, node.getPos().add(currentPos.subtract(node.getPos()).multiply(stepMulti)));
+			}
+			super.sleep(stepTime);
+		}
 	}
 
 	private Point2D calcBarnesHutRepulsiveForce(Node node, double strength, QuadTree quadTree){
@@ -266,7 +286,8 @@ public class ForceDirectedLayoutTask extends AlgorithmTask {
 				if(cell.getChildren()[0] != null)
 					cellStack.addAll(Arrays.asList(cell.getChildren()));
 				else{
-					//if a node is too close to be considered by "cell.getWidth() / dist < 1.2" restriction, calculate its repulsive force in the standard way
+					//if a node is too close to be considered by "cell.getWidth() / dist < 1.2" restriction,
+					// calculate its repulsive force in the standard way
 					for(Node m : cell.getNodes()){
 						if(m.equals(node))
 							continue;
@@ -284,14 +305,14 @@ public class ForceDirectedLayoutTask extends AlgorithmTask {
 		return -repulsiveness * Math.pow(optDist, exponent);
 	}
 
-	private double getDistance(Node n, Node m) {
+	protected double getDistance(Node n, Node m) {
 		return n.getIndex() < m.getIndex()
 				? distances[n.getIndex()][m.getIndex()]
 				: distances[m.getIndex()][n.getIndex()];
 	}
 
 
-	public double updateStepLength(double energy, double energy0) {
+	public double coolDownStepSize(double energy, double energy0) {
 		if(energy < energy0) {
 			coolingCounter++;
 			if(coolingCounter >= 5) { //if energy was reduced 5 times in a row, decrease step magnitude

@@ -1,5 +1,6 @@
 package com.todense.viewmodel.preset;
 
+import com.todense.model.EdgeList;
 import com.todense.model.graph.Edge;
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
@@ -183,17 +184,23 @@ public class PresetCreator {
         Graph g = createGrid(columns, rows, center);
         g.getNodes().forEach(n -> Collections.shuffle(n.getNeighbours()));
         DFS(g.getNodes().get(new Random().nextInt(g.getNodes().size())), g);
+        EdgeList edgesToLeave = new EdgeList();
         for(Node n : g.getNodes()){
-            for (Node m : g.getNodes()){
-                if(g.getEdges().isEdgeBetween(n, m)){
-                    Edge e = g.getEdges().getEdge(n, m);
-                    if(!e.isMarked()){
-                        g.removeEdge(e);
+            int nIdx = n.getIndex();
+            for(int mIdx: new int[]{nIdx+1, nIdx-1, nIdx-rows, nIdx+rows}){
+                if(mIdx > 0 && mIdx < g.getOrder()){
+                    Node m = g.getNodes().get(mIdx);
+                    if(g.getEdges().isEdgeBetween(n, m)){
+                        Edge e = g.getEdges().getEdge(n, m);
+                        if(e.isMarked()){
+                            edgesToLeave.add(e);
+                        }
                     }
                 }
             }
         }
-        g.getEdges().forEach(e -> e.setMarked(false));
+        edgesToLeave.forEach(e -> e.setMarked(false));
+        g.setEdges(edgesToLeave);
         return g;
     }
 

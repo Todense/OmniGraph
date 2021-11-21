@@ -88,24 +88,11 @@ public class Graph {
             for (int j = i+1; j < nodes.size(); j++) {
                 Node n = nodes.get(i);
                 Node m = nodes.get(j);
-                Edge e = getEdge(n, m);
-                if(e != null){
-                    consumer.accept(nodes.get(i), nodes.get(j));
+                if(edges.isEdgeBetween(n, m)){
+                    consumer.accept(n, m);
                 }
             }
         }
-    }
-
-    public void applyToAllConnectedPairOfNodes(BiConsumer<Node, Node> consumer){
-        applyToAllConnectedPairOfNodes(nodes, consumer);
-    }
-
-    public void applyToAllPairOfNodes(BiConsumer<Node, Node> consumer){
-        applyToAllPairOfNodes(nodes, consumer);
-    }
-
-    public void removeEdges(){
-        this.removeEdges(this.nodes);
     }
 
     public void removeNode(Node n){
@@ -168,6 +155,10 @@ public class Graph {
 
     public EdgeList getEdges() {
         return edges;
+    }
+
+    public void setEdges(EdgeList edges){
+        this.edges = edges;
     }
 
     public int getOrder(){

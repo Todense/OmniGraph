@@ -56,7 +56,19 @@ public abstract class AlgorithmTask extends Task<Void>{
         }
     }
 
+    protected void sleep(int millis) throws InterruptedException {
+        if (super.isCancelled()){
+           throw new InterruptedException();
+        }
+        if(connectedToUI){
+            painter.sleep(millis);
+        }
+    }
+
     protected void sleep() throws InterruptedException {
+        if (super.isCancelled()){
+            throw new InterruptedException();
+        }
         if(connectedToUI){
             painter.sleep();
         }
