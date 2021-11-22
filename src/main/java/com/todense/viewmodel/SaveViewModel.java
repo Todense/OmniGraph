@@ -28,7 +28,7 @@ public class SaveViewModel implements ViewModel {
     public void saveGraph(Format format, String name, File directory) {
         Graph graph = graphScope.getGraphManager().getGraph();
         graph.setName(name);
-        File file = new File(directory+"\\"+graph.toString()+"."+format.getExtension());
+        File file = new File(directory+File.separator+graph.toString()+"."+format.getExtension());
         GraphWriter graphWriter = null;
         switch (format){
             case OGR: graphWriter = new OgrWriter();break;

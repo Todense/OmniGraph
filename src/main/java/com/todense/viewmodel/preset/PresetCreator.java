@@ -184,24 +184,19 @@ public class PresetCreator {
         Graph g = createGrid(columns, rows, center);
         g.getNodes().forEach(n -> Collections.shuffle(n.getNeighbours()));
         DFS(g.getNodes().get(new Random().nextInt(g.getNodes().size())), g);
-        EdgeList edgesToLeave = new EdgeList();
-        for(Node n : g.getNodes()){
-            int nIdx = n.getIndex();
-            for(int mIdx: new int[]{nIdx+1, nIdx-1, nIdx-rows, nIdx+rows}){
-                if(mIdx > 0 && mIdx < g.getOrder()){
-                    Node m = g.getNodes().get(mIdx);
-                    if(g.getEdges().isEdgeBetween(n, m)){
-                        Edge e = g.getEdges().getEdge(n, m);
-                        if(e.isMarked()){
-                            edgesToLeave.add(e);
-                        }
-                    }
-                }
+
+        Graph maze = new Graph();
+        for(Node n: g.getNodes()){
+            maze.addNode(n.getPos());
+        }
+        for(Edge e: g.getEdges()){
+            if(e.isMarked()){
+                Node n1 = maze.getNodes().get(e.getN1().getIndex());
+                Node n2 = maze.getNodes().get(e.getN2().getIndex());
+                maze.addEdge(n1, n2);
             }
         }
-        edgesToLeave.forEach(e -> e.setMarked(false));
-        g.setEdges(edgesToLeave);
-        return g;
+        return maze;
     }
 
     public static Graph createStar(int n, double radius, Point2D center){

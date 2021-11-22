@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 public class LayoutViewModel extends AlgorithmTaskManager implements ViewModel {
 
-    private IntegerProperty optDistProperty = new SimpleIntegerProperty(30);
+    private IntegerProperty optDistProperty = new SimpleIntegerProperty(50);
     private DoubleProperty smoothnessProperty = new SimpleDoubleProperty(0.9);
     private DoubleProperty stepProperty = new SimpleDoubleProperty(5d);
     private DoubleProperty toleranceProperty = new SimpleDoubleProperty(0.01);
