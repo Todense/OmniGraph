@@ -1,5 +1,6 @@
 package com.todense.viewmodel;
 
+import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.scope.GraphScope;
 import de.saxsys.mvvmfx.InjectScope;
@@ -15,6 +16,8 @@ import javax.inject.Inject;
 import java.util.List;
 
 public class NodePopOverViewModel implements ViewModel {
+
+    public static String NODES = "NODES";
     
     private ObjectProperty<Color> nodeColorProperty = new SimpleObjectProperty<>(Color.WHITE);
     private ObjectProperty<String> labelProperty = new SimpleObjectProperty<>("");
@@ -47,17 +50,42 @@ public class NodePopOverViewModel implements ViewModel {
         });
 
         //remove buttons if more than one node is selected
-        if(nodes.size() > 1){
-            publish("MULTIPLE");
-        }
+        publish(NODES, nodes);
     }
 
     public void deleteNodes(){
         notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable)() ->{
-            for (Node node : nodes) {
-                graphScope.getGraphManager().getGraph().removeNode(node);
+            synchronized (Graph.LOCK) {
+                Graph graph =  graphScope.getGraphManager().getGraph();
+                for (Node node : nodes) {
+                    graph.removeNode(node);
+                }
             }
         });
+        notificationCenter.publish("HIDE");
+    }
+
+    public void pinNode() {
+        this.nodes.get(0).setPinned(true);
+        notificationCenter.publish("HIDE");
+    }
+
+    public void unpinNode() {
+        this.nodes.get(0).setPinned(false);
+        notificationCenter.publish("HIDE");
+    }
+
+    public void pinSelectedNodes() {
+        for (Node node : nodes) {
+            node.setPinned(true);
+        }
+        notificationCenter.publish("HIDE");
+    }
+
+    public void unpinSelectedNodes() {
+        for (Node node : nodes) {
+            node.setPinned(false);
+        }
         notificationCenter.publish("HIDE");
     }
 
@@ -97,5 +125,9 @@ public class NodePopOverViewModel implements ViewModel {
 
     public DoubleProperty rotationProperty() {
         return rotationProperty;
+    }
+
+    public GraphScope getGraphScope() {
+        return graphScope;
     }
 }

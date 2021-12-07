@@ -30,7 +30,7 @@ public class MainView implements FxmlView<MainViewModel> {
     @FXML private VBox appearanceVBox;
     @FXML private TextField infoTextField;
     @FXML private FontIcon lockIcon;
-    @FXML private ToggleButton lockToggleButton;
+    @FXML private ToggleButton lockToggleButton, autoLayoutToggleButton;
     @FXML private Button stopButton;
     @FXML private ColorPicker appColorPicker;
 
@@ -69,7 +69,7 @@ public class MainView implements FxmlView<MainViewModel> {
         }));
 
         lockToggleButton.setOnAction(actionEvent ->
-                viewModel.editManuallyLockedProperty().set(!viewModel.isEditManuallyLocked()));
+                viewModel.manualEditLockProperty().set(!viewModel.isManualEditLockOn()));
 
         lockToggleButton.disableProperty().bind(viewModel.workingProperty());
 
@@ -81,6 +81,8 @@ public class MainView implements FxmlView<MainViewModel> {
                 lockIcon.setIconLiteral("fa-unlock");
             }
         });
+
+        autoLayoutToggleButton.selectedProperty().bindBidirectional(viewModel.autoLayoutOnProperty());
 
         double scrollSpeed = 0.005;
         setScrollSpeed(scrollSpeed, leftScrollPane);

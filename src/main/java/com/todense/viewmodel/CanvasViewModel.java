@@ -58,7 +58,9 @@ public class CanvasViewModel implements ViewModel {
 
         popOverManager = new PopOverManager();
 
-        mouseHandler = new MouseHandler(canvasScope.getCamera(),
+        mouseHandler = new MouseHandler(
+                canvasScope.getCamera(),
+                notificationCenter,
                 inputScope,
                 painter,
                 graphScope,

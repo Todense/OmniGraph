@@ -1,12 +1,9 @@
 package com.todense.viewmodel.preset;
 
-import com.todense.model.EdgeList;
 import com.todense.model.graph.Edge;
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
-import com.todense.viewmodel.graph.GraphManager;
 import javafx.geometry.Point2D;
-import javafx.scene.paint.Color;
 
 import java.util.*;
 
@@ -14,7 +11,7 @@ import java.util.*;
 public class PresetCreator {
 
 
-    public static Graph createCycle(int n, double radius, Point2D center) {
+    public static Graph createCycle(int n, double size) {
 
         Graph g = new Graph("CycleGraph");
 
@@ -23,8 +20,8 @@ public class PresetCreator {
 
         //nodes
         for (int k = 0; k < n; k++) {
-            dx = center.getX() + radius * Math.cos(-Math.PI/2 + (k * 2 * Math.PI) / n);
-            dy = center.getY() + radius * Math.sin(-Math.PI/2 + (k * 2 * Math.PI) / n);
+            dx = size/2 * Math.cos(-Math.PI/2 + (k * 2 * Math.PI) / n);
+            dy = size/2 * Math.sin(-Math.PI/2 + (k * 2 * Math.PI) / n);
             g.addNode(new Point2D(dx, dy));
         }
 
@@ -38,22 +35,22 @@ public class PresetCreator {
         return g;
     }
 
-    public static Graph createGrid(int columns, int rows, Point2D center){
+    public static Graph createGrid(int columns, int rows, Point2D size){
         Graph g = new Graph("GridGraph");
 
         if(columns == 1 && rows == 1){
-            g.addNode(center);
+            g.addNode(new Point2D(0,0));
             return g;
         }
 
         Node[][] nodeMatrix = new Node[columns][rows];
 
-        double width = center.getX() * 1.7;
-        double height = center.getY() * 1.7;
+        double width = size.getX() * 0.85;
+        double height = size.getY() * 0.85;
 
         double gap = Math.min(width/(columns-1), height/(rows-1));
 
-        Point2D startPt = center.subtract(new Point2D((columns-1)*gap/2, (rows-1)*gap/2));
+        Point2D startPt = new Point2D(-(columns-1)*gap/2, -(rows-1)*gap/2);
 
         for(int i = 0; i < columns; i++){
             for(int j = 0; j < rows; j++){
@@ -76,28 +73,28 @@ public class PresetCreator {
         return g;
     }
 
-    public static Graph createHexagonalGrid(int size, Point2D center){
+    public static Graph createHexagonalGrid(int gridWidth, Point2D size){
         double pi = Math.PI;
         double sqrt3 = Math.sqrt(3);
-        double width = center.getX() * 1.7;
-        double height = center.getY() * 1.7;
-        double gap = Math.min(width/((2*size-1)*sqrt3), height/((2*size-1)*sqrt3));
+        double width = size.getX() * 0.85;
+        double height = size.getY() * 0.85;
+        double gap = Math.min(width/((2*gridWidth-1)*sqrt3), height/((2*gridWidth-1)*sqrt3));
         Graph g = new Graph("HexagonalGridGraph");
 
         int level = 0;
-        int levelSize = size;
-        Point2D startPt = center.add(new Point2D(Math.cos(pi*4.0/3.0), Math.sin(pi*4.0/3.0)).multiply(sqrt3*gap*(size-1)).add(-sqrt3*gap/2, 0));
-        for(int i=0; i<size; i++){
+        int levelSize = gridWidth;
+        Point2D startPt = new Point2D(Math.cos(pi*4.0/3.0), Math.sin(pi*4.0/3.0)).multiply(sqrt3*gap*(gridWidth-1)).add(-sqrt3*gap/2, 0);
+        for(int i=0; i<gridWidth; i++){
             g.addNode(startPt.add(i*sqrt3*gap, -gap/2).add(sqrt3*gap/2, -gap/2));
         }
 
         ArrayList<Node> prevLowerNodes = null;
         ArrayList<Node> currLowerNodes;
-        while(level < 2*size-1){
+        while(level < 2*gridWidth-1){
             double angle;
             currLowerNodes = new ArrayList<>();
-            angle = level < size -1 ? 2*pi/3: pi/3;
-            levelSize = level < size ? levelSize+1: levelSize-1;
+            angle = level < gridWidth -1 ? 2*pi/3: pi/3;
+            levelSize = level < gridWidth ? levelSize+1: levelSize-1;
 
             for(int i = 0; i<levelSize; i++){
                 Node lowerNode = g.addNode(startPt.add(i*sqrt3*gap, gap/2));
@@ -107,7 +104,7 @@ public class PresetCreator {
                 currLowerNodes.add(lowerNode);
 
                 if(level > 0) {
-                    if (level < size) {
+                    if (level < gridWidth) {
                         if (i > 0) {
                             g.addEdge(upperNode, prevLowerNodes.get(i - 1));
                         }
@@ -127,19 +124,19 @@ public class PresetCreator {
 
         startPt = startPt.subtract(new Point2D(Math.cos(pi/3), Math.sin(pi/3)).multiply(sqrt3*gap));
 
-        for(int i=0; i<size; i++){
+        for(int i=0; i<gridWidth; i++){
             g.addNode(startPt.add(i*sqrt3*gap, gap/2).add(sqrt3*gap/2, gap/2));
         }
 
-        for(int i=0; i<size; i++){
-            g.addEdge(g.getNodes().get(i), g.getNodes().get(2*i + size + 1));
-            g.addEdge(g.getNodes().get(i), g.getNodes().get(2*i + size + 3));
+        for(int i=0; i<gridWidth; i++){
+            g.addEdge(g.getNodes().get(i), g.getNodes().get(2*i + gridWidth + 1));
+            g.addEdge(g.getNodes().get(i), g.getNodes().get(2*i + gridWidth + 3));
         }
 
-        for(int i=0; i<size; i++){
-            int nodeIdx = g.getOrder()-size+i;
-            g.addEdge(g.getNodes().get(nodeIdx), g.getNodes().get(nodeIdx+i-2*(size+1)));
-            g.addEdge(g.getNodes().get(nodeIdx), g.getNodes().get(nodeIdx+i-2*(size)));
+        for(int i=0; i<gridWidth; i++){
+            int nodeIdx = g.getOrder()-gridWidth+i;
+            g.addEdge(g.getNodes().get(nodeIdx), g.getNodes().get(nodeIdx+i-2*(gridWidth+1)));
+            g.addEdge(g.getNodes().get(nodeIdx), g.getNodes().get(nodeIdx+i-2*(gridWidth)));
         }
         return g;
     }
@@ -199,18 +196,18 @@ public class PresetCreator {
         return maze;
     }
 
-    public static Graph createStar(int n, double radius, Point2D center){
+    public static Graph createStar(int n, double radius){
         Graph g = new Graph("StarGraph");
 
         double dx;
         double dy;
 
-        Node centerNode = g.addNode(center);
+        Node centerNode = g.addNode(new Point2D(0, 0));
 
         for (int k = 0; k < n-1; k++) {
             double angle = -Math.PI / 2 + (k * 2 * Math.PI) / (n - 1);
-            dx = center.getX() + radius * Math.cos(angle);
-            dy = center.getY() + radius * Math.sin(angle);
+            dx = radius * Math.cos(angle);
+            dy = radius * Math.sin(angle);
             Node newNode = g.addNode(new Point2D(dx, dy));
             g.addEdge(centerNode, newNode);
         }
@@ -218,33 +215,30 @@ public class PresetCreator {
     }
 
 
-    public static Graph createCompleteBipartite(int n, int m, Point2D center){
+    public static Graph createCompleteBipartite(int n, int m, Point2D size){
         Graph g = new Graph("CompleteBipartite");
         double gap;
 
-        double h = center.getY() * 0.8;
+        double h = size.getY() * 0.4;
+        double w = size.getX() * 0.3;
 
         if(n == 1){
-            g.addNode(new Point2D(center.getX() - 300, center.getY()));
+            g.addNode(new Point2D(-w, 0));
         }
         else {
             gap = 2*h/(n-1);
             for (int i = 0; i < n; i++) {
-                Point2D newPos = new Point2D(
-                        center.getX() - 300,
-                        (0.2 * center.getY()) + i * gap);
+                Point2D newPos = new Point2D(-w, -h+i*gap);
                 g.addNode(newPos);
             }
         }
         if(m == 1){
-            g.addNode(new Point2D(center.getX() + 300, center.getY()));
+            g.addNode(new Point2D(w, 0));
         }
         else {
-            gap = 2 * h / (m - 1);
+            gap = 2*h/(m-1);
             for (int i = 0; i < m; i++) {
-                Point2D newPos = new Point2D(
-                        center.getX() + 300,
-                        (0.2 * center.getY()) + i*gap);
+                Point2D newPos = new Point2D(w, -h+i*gap);
                 g.addNode(newPos);
             }
         }

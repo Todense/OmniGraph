@@ -13,10 +13,10 @@ import java.util.Stack;
 
 public class GraphCoarsener {
 
-    private Graph originalGraph;
-    private GraphManager graphManager;
-    private Stack<Graph> graphSequence = new Stack<>();
-    private Stack<HashMap<Node, Node>> nodeMaps = new Stack<>();
+    private final Graph originalGraph;
+    private final GraphManager graphManager;
+    private final Stack<Graph> graphSequence = new Stack<>();
+    private final Stack<HashMap<Node, Node>> nodeMaps = new Stack<>();
     private HashMap<Node, Integer> nodeWeights = new HashMap<>();
 
     private double reductionRate = 0;

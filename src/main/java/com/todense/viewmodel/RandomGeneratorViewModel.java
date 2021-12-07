@@ -25,35 +25,32 @@ import javax.inject.Inject;
 
 public class RandomGeneratorViewModel implements ViewModel {
 
-    private ObjectProperty<GeneratorModel> generatorProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<NodeArrangement> nodeArrangementProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<GeneratorModel> generatorProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<NodeArrangement> nodeArrangementProperty = new SimpleObjectProperty<>();
 
-    private ObjectProperty<Integer> nodeCountObjectProperty = new SimpleObjectProperty<>(50);
-    private IntegerProperty nodeCountProperty = IntegerProperty.integerProperty(nodeCountObjectProperty);
+    private final ObjectProperty<Integer> nodeCountObjectProperty = new SimpleObjectProperty<>(50);
+    private final IntegerProperty nodeCountProperty = IntegerProperty.integerProperty(nodeCountObjectProperty);
 
-    private ObjectProperty<Double> minNodeDistObjectProperty = new SimpleObjectProperty<>(0.1);
-    private DoubleProperty minNodeDistProperty = DoubleProperty.doubleProperty(minNodeDistObjectProperty);
+    private final ObjectProperty<Double> minNodeDistObjectProperty = new SimpleObjectProperty<>(0.1);
+    private final DoubleProperty minNodeDistProperty = DoubleProperty.doubleProperty(minNodeDistObjectProperty);
 
-    private ObjectProperty<Double> doubleParameterObjectProperty = new SimpleObjectProperty<>(0.18);
+    private final ObjectProperty<Double> doubleParameterObjectProperty = new SimpleObjectProperty<>(0.18);
 
-    private DoubleProperty doubleParameterProperty = DoubleProperty.doubleProperty(doubleParameterObjectProperty);
+    private final DoubleProperty doubleParameterProperty = DoubleProperty.doubleProperty(doubleParameterObjectProperty);
 
-    private ObjectProperty<Integer> intParameter1ObjectProperty = new SimpleObjectProperty<>(2);
-    private IntegerProperty intParameter1Property = IntegerProperty.integerProperty(intParameter1ObjectProperty);
+    private final ObjectProperty<Integer> intParameter1ObjectProperty = new SimpleObjectProperty<>(2);
+    private final IntegerProperty intParameter1Property = IntegerProperty.integerProperty(intParameter1ObjectProperty);
 
-    private ObjectProperty<Integer> intParameter2ObjectProperty = new SimpleObjectProperty<>(2);
-    private IntegerProperty intParameter2Property = IntegerProperty.integerProperty(intParameter2ObjectProperty);
+    private final ObjectProperty<Integer> intParameter2ObjectProperty = new SimpleObjectProperty<>(2);
+    private final IntegerProperty intParameter2Property = IntegerProperty.integerProperty(intParameter2ObjectProperty);
 
-    private BooleanProperty withMinDistProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty withMinDistProperty = new SimpleBooleanProperty(true);
     
     @Inject
     NotificationCenter notificationCenter;
 
     @InjectScope
     CanvasScope canvasScope;
-
-    @InjectScope
-    GraphScope graphScope;
 
     public void initialize(){
         notificationCenter.subscribe("RANDOM", (key, payload) -> generate());
@@ -62,7 +59,6 @@ public class RandomGeneratorViewModel implements ViewModel {
     private void generateGraph(){
 
         double height = canvasScope.getCanvasHeight() * 0.9;
-        Point2D canvasCenter = new Point2D(canvasScope.getCanvasWidth()/2, canvasScope.getCanvasHeight()/2);
         double minDist = withMinDistProperty.get() && nodeArrangementProperty.get() != NodeArrangement.CIRCULAR
                 ? minNodeDistProperty.get() * height
                 : 0d;
@@ -72,13 +68,13 @@ public class RandomGeneratorViewModel implements ViewModel {
 
         switch (nodeArrangementProperty.get()){
             case CIRCULAR:
-                pointGenerator = new CircularPointGenerator(nodeCountProperty.get(), height/2, canvasCenter);
+                pointGenerator = new CircularPointGenerator(nodeCountProperty.get(), height/2);
                 break;
             case RANDOM_SQUARE:
-                pointGenerator = new RandomSquarePointGenerator(height, canvasCenter);
+                pointGenerator = new RandomSquarePointGenerator(height);
                 break;
             case RANDOM_CIRCLE:
-                pointGenerator = new RandomCirclePointGenerator(height/2, canvasCenter);
+                pointGenerator = new RandomCirclePointGenerator(height/2);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + nodeArrangementProperty.get());

@@ -13,7 +13,7 @@ import java.util.List;
 
 public class InputScope implements Scope {
 
-    private BooleanProperty editLockedProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty editLockedProperty = new SimpleBooleanProperty(false);
 
     private boolean selecting = false;
     private boolean connecting = false;

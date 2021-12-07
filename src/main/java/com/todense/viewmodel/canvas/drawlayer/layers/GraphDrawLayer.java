@@ -81,10 +81,12 @@ public class GraphDrawLayer implements DrawLayer {
 
     private void drawNode(Node node, GraphicsContext gc, DisplayRule displayRule){
         double size = displayRule.getNodeSize(node);
-        Point2D pos  = graphScope.getNodePositionFunction().apply(node);
+        Point2D pos  = node.getPos();
         Color color = displayRule.getNodeColor(node);
+
         gc.setFill(color);
 
+        // interior
         if(graphScope.showingNodeBorder()){
             double width = graphScope.getEdgeWidth() * graphScope.getNodeSize();
             gc.fillOval(pos.getX() - (size-width)/2,
@@ -96,6 +98,7 @@ public class GraphDrawLayer implements DrawLayer {
             gc.fillOval(pos.getX() - size/2, pos.getY() - size/2, size, size);
         }
 
+        //border
         if(graphScope.showingNodeBorder()) {
             double width = graphScope.getEdgeWidth() * graphScope.getNodeSize();
             gc.setLineWidth(width);
@@ -107,6 +110,22 @@ public class GraphDrawLayer implements DrawLayer {
                     size - width
             );
         }
+
+        //pin
+        if(node.isPinned()){
+            Color pinColor;
+            if(color.getBrightness() == 0.0){
+                pinColor = Color.GRAY;
+            }else{
+                pinColor = color.getBrightness() > 0.5 ?
+                        color.deriveColor(0,1,1-0.3/color.getBrightness(),1) :
+                        color.deriveColor(0,1,1+0.3/color.getBrightness(),1);
+            }
+            gc.setFill(pinColor);
+            gc.fillOval(pos.getX() - size/6, pos.getY() - size/6, size/3, size/3);
+        }
+
+        //label
         if(!graphScope.nodeLabelModeProperty().get().equals(NodeLabelMode.NONE)){
             drawNodeLabel(node, gc);
         }
@@ -131,8 +150,8 @@ public class GraphDrawLayer implements DrawLayer {
     }
 
     private void drawEdge(Edge edge, GraphicsContext gc, DisplayRule displayRule){
-        Point2D p1 = graphScope.getNodePositionFunction().apply(edge.getN1());
-        Point2D p2 = graphScope.getNodePositionFunction().apply(edge.getN2());
+        Point2D p1 = edge.getN1().getPos();
+        Point2D p2 = edge.getN2().getPos();
 
         double width = displayRule.getEdgeWidth(edge) * graphScope.getNodeSize();
         width = Math.min(width, graphScope.getNodeSize());

@@ -13,7 +13,7 @@ class GraphManagerTest {
     @Test
     void complementTest(){
         GraphManager graphManager = new GraphManager();
-        graphManager.setGraph(PresetCreator.createStar(6,1, new Point2D(0,0)));
+        graphManager.setGraph(PresetCreator.createStar(6,1));
         Graph graph = graphManager.getGraph();
         int noOfEdges = graph.getEdges().size();
         int noOfNodes = graph.getNodes().size();
@@ -26,7 +26,7 @@ class GraphManagerTest {
     @Test
     void completeTest(){
         GraphManager graphManager = new GraphManager();
-        graphManager.setGraph(PresetCreator.createStar(6,1, new Point2D(0,0)));
+        graphManager.setGraph(PresetCreator.createStar(6,1));
         Graph graph = graphManager.getGraph();
         int noOfNodes = graph.getNodes().size();
 
@@ -38,7 +38,7 @@ class GraphManagerTest {
     @Test
     void subdivisionTest(){
         GraphManager graphManager = new GraphManager();
-        graphManager.setGraph(PresetCreator.createCycle(5,1, new Point2D(0,0)));
+        graphManager.setGraph(PresetCreator.createCycle(5,1));
         Graph graph = graphManager.getGraph();
         assertEquals(graph.getNodes().size(), 5);
         assertEquals(graph.getEdges().size(), 5);

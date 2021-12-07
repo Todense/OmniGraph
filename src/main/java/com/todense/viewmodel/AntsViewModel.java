@@ -41,9 +41,6 @@ public class AntsViewModel extends AlgorithmTaskManager implements ViewModel {
     DateFormat dateFormat = new SimpleDateFormat("mm:ss:SSS");
 
     public void initialize(){
-        //AntsDrawLayer antsDrawLayer = new AntsDrawLayer(antsScope, graphScope);
-        //Platform.runLater(() -> canvasScope.getPainter().addDrawLayer(antsDrawLayer));
-
         super.initialize(taskScope, canvasScope, notificationCenter);
     }
 
@@ -53,7 +50,7 @@ public class AntsViewModel extends AlgorithmTaskManager implements ViewModel {
         Graph graph = graphScope.getGraphManager().getGraph();
 
         if(graph.getNodes().size() < 3){
-            throw new RuntimeException("Graph must have at least 3 nodes");
+            throw new IllegalArgumentException("Graph must have at least 3 nodes");
         }
 
         graphScope.getGraphManager().createCompleteGraph();

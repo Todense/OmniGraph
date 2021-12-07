@@ -12,13 +12,22 @@ import javafx.scene.paint.Color;
 
 public class CanvasScope implements Scope {
 
-    private DoubleProperty canvasWidthProperty = new SimpleDoubleProperty();
-    private DoubleProperty canvasHeightProperty = new SimpleDoubleProperty();
+    private DoubleProperty canvasWidthProperty = new SimpleDoubleProperty(0.0);
+    private DoubleProperty canvasHeightProperty = new SimpleDoubleProperty(0.0);
     private ObjectProperty<Color> borderColorProperty = new SimpleObjectProperty<>(Color.WHITE);
 
     private Painter painter;
 
     private Camera camera = new Camera();
+
+    public CanvasScope(){
+        canvasWidthProperty.addListener((obs, oldVal, newVal) -> {
+            camera.translate(new Point2D((newVal.doubleValue()-oldVal.doubleValue())/2, 0));
+        });
+        canvasHeightProperty.addListener((obs, oldVal, newVal) -> {
+            camera.translate(new Point2D(0, (newVal.doubleValue()-oldVal.doubleValue())/2));
+        });
+    }
 
     public double getCanvasWidth() {
         return canvasWidthProperty.get();
@@ -55,9 +64,4 @@ public class CanvasScope implements Scope {
     public ObjectProperty<Color> borderColorProperty() {
         return borderColorProperty;
     }
-
-    public Point2D getCanvasCenter(){
-        return new Point2D(canvasWidthProperty.get()/2, canvasHeightProperty.get()/2);
-    }
-
 }

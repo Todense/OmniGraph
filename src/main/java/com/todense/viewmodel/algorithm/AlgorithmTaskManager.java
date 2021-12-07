@@ -4,8 +4,6 @@ import com.todense.viewmodel.MainViewModel;
 import com.todense.viewmodel.scope.CanvasScope;
 import com.todense.viewmodel.scope.TaskScope;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 
 public abstract class AlgorithmTaskManager {
 
@@ -28,16 +26,20 @@ public abstract class AlgorithmTaskManager {
         if (!taskScope.isDone())
             return;
 
-        task = createAlgorithmTask();
+        task = null;
+        try{
+            task = createAlgorithmTask();
+        } catch (IllegalArgumentException e){
+            notificationCenter.publish(MainViewModel.WRITE, e.getMessage());
+        } finally {
+            if(task != null){
+                setUpAndStartTask(task);
+            }
+        }
+    }
 
+    private void setUpAndStartTask(AlgorithmTask task){
         task.setPainter(canvasScope.getPainter());
-
-        EventHandler<WorkerStateEvent> handler = workerStateEvent -> {
-            notificationCenter.publish(MainViewModel.TASK_FINISHED,
-                    task.getAlgorithmName(),
-                    System.currentTimeMillis() - task.getStartTime(),
-                    "");
-        };
 
         task.setOnSucceeded(workerStateEvent -> notificationCenter.publish(MainViewModel.TASK_FINISHED,
                 task.getAlgorithmName(),
@@ -48,7 +50,7 @@ public abstract class AlgorithmTaskManager {
                 notificationCenter.publish(MainViewModel.TASK_CANCELLED, task.getAlgorithmName()));
 
         startTime = System.currentTimeMillis();
-        notificationCenter.publish(MainViewModel.TASK_STARTED, task.getAlgorithmName());
+        notificationCenter.publish(MainViewModel.TASK_STARTED, task);
         taskScope.start(task);
     }
 

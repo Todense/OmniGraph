@@ -57,8 +57,8 @@ public class DefaultDisplayRule implements DisplayRule{
     }
 
     private double getDecayedValue(Edge edge, double decay, double maximum){
-        Point2D p1 = graphScope.getNodePositionFunction().apply(edge.getN1());
-        Point2D p2 = graphScope.getNodePositionFunction().apply(edge.getN2());
+        Point2D p1 = edge.getN1().getPos();
+        Point2D p2 = edge.getN2().getPos();
         double exponent = decay*(p1.distance(p2)-maximum);
         return  2 - 2 * (Math.pow(Math.E, exponent)/(1+Math.pow(Math.E, exponent)));
     }

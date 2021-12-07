@@ -33,17 +33,16 @@ public abstract class AlgorithmTask extends Task<Void>{
     protected abstract void onFinished();
 
     @Override
-    protected Void call() throws InterruptedException {
+    protected Void call(){
         startTime = System.currentTimeMillis();
         painter.startAnimationTimer();
-        painter.sleep();
         try{
+            painter.sleep();
             perform();
         }catch (Exception e){
             if(!(e instanceof InterruptedException)){
                 e.printStackTrace();
             }
-
         }
 
         onFinished();
@@ -76,14 +75,14 @@ public abstract class AlgorithmTask extends Task<Void>{
 
     @Override
     protected void succeeded() {
-        painter.stopAnimationTimer();
+        //painter.stopAnimationTimer();
         painter.repaint();
     }
 
     @Override
     protected void cancelled() {
         cancelled = true;
-        painter.stopAnimationTimer();
+        //painter.stopAnimationTimer();
         painter.repaint();
     }
 

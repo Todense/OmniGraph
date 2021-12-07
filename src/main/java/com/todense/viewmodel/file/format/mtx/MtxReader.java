@@ -35,7 +35,7 @@ public class MtxReader implements GraphReader {
         }
         String[] graphInfo = currentLine.split(" ");
         int nodeCount = Integer.parseInt(graphInfo[0]);
-        RandomSquarePointGenerator pointGenerator = new RandomSquarePointGenerator(areaSize, center);
+        RandomSquarePointGenerator pointGenerator = new RandomSquarePointGenerator(areaSize);
         for (int i = 0; i < nodeCount; i++) {
             graph.addNode(pointGenerator.next());
         }

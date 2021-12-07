@@ -3,6 +3,8 @@ package com.todense.viewmodel;
 import com.todense.model.graph.Edge;
 import com.todense.util.Util;
 import com.todense.viewmodel.graph.GraphManager;
+import com.todense.viewmodel.scope.GraphScope;
+import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import javafx.beans.property.ObjectProperty;
@@ -16,10 +18,14 @@ import java.util.ArrayList;
 
 public class EdgePopOverViewModel implements ViewModel {
 
+    public static final String EDGES = "EDGES";
     private ObjectProperty<Color> edgeColorProperty = new SimpleObjectProperty<>();
     private StringProperty edgeWeightProperty = new SimpleStringProperty();
 
     private ArrayList<Edge> edges;
+
+    @InjectScope
+    GraphScope graphScope;
 
     @Inject
     NotificationCenter notificationCenter;
@@ -39,7 +45,7 @@ public class EdgePopOverViewModel implements ViewModel {
                 });
                 notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
         });
-
+        publish(EDGES, edges);
     }
 
     public void deleteEdges() {
@@ -83,5 +89,8 @@ public class EdgePopOverViewModel implements ViewModel {
         this.graphManager = graphManager;
     }
 
+    public GraphScope getGraphScope(){
+        return graphScope;
+    }
 
 }

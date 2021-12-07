@@ -337,16 +337,16 @@
 }
 
 .progress-bar{
-    -fx-accent: #25b862 ;
+    -fx-accent: fx-theme ;
 }
 
 .progress-bar > .track {
-     -fx-background-color: #2a5c3a;
+     -fx-background-color: fx-light;
 }
 
-.progress-bar .bar { 
-    -fx-padding: 8px; 
-    -fx-background-insets: 0; 
+.progress-bar .bar {
+    -fx-padding: 8px;
+    -fx-background-insets: 0;
 }
 
 .default-color0.chart-bar { -fx-bar-fill: #25b862; }

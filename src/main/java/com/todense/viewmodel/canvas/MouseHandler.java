@@ -7,6 +7,7 @@ import com.todense.viewmodel.graph.GraphManager;
 import com.todense.viewmodel.popover.PopOverManager;
 import com.todense.viewmodel.scope.GraphScope;
 import com.todense.viewmodel.scope.InputScope;
+import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.input.KeyCode;
@@ -20,11 +21,12 @@ import java.util.Set;
 
 public class MouseHandler {
 
-    private GraphManager GM;
-    private GraphScope graphScope;
-    private Painter painter;
-    private Camera camera;
-    private InputScope inputScope;
+    private final GraphManager GM;
+    private final GraphScope graphScope;
+    private final Painter painter;
+    private final Camera camera;
+    private final NotificationCenter notificationCenter;
+    private final InputScope inputScope;
 
     PopOverManager popOverManager;
     PopOver popOver;
@@ -48,10 +50,15 @@ public class MouseHandler {
 
     private Set<KeyCode> pressedKeys;
 
-    public MouseHandler(Camera camera, InputScope inputScope,
-                        Painter painter, GraphScope graphScope,
-                        PopOverManager popOverManager, Set<KeyCode> pressedKeys){
+    public MouseHandler(Camera camera,
+                        NotificationCenter notificationCenter,
+                        InputScope inputScope,
+                        Painter painter,
+                        GraphScope graphScope,
+                        PopOverManager popOverManager,
+                        Set<KeyCode> pressedKeys){
         this.camera = camera;
+        this.notificationCenter = notificationCenter;
         this.inputScope = inputScope;
         this.painter = painter;
         this.graphScope = graphScope;
@@ -125,7 +132,8 @@ public class MouseHandler {
                         GM.addSubgraph(transPt);
                     }
                     else{
-                        GM.getGraph().addNode(camera.inverse(mousePressPt));
+                        Thread thread = new Thread(() -> GM.getGraph().addNode(camera.inverse(mousePressPt)));
+                        thread.start();
                     }
 
                 }
@@ -152,10 +160,15 @@ public class MouseHandler {
 
         draggingNode = false;
 
+
         Point2D releasePt = new Point2D(event.getX(), event.getY());
 
         Node releaseNode = getNodeFromPoint(releasePt);
         Edge releaseEdge = getEdgeFromPoint(releasePt);
+        if(clickedNode != null){
+            clickedNode.setDragged(false);
+        }
+        GM.getSelectedNodes().forEach(n -> n.setDragged(false));
 
         if(event.getButton() == MouseButton.SECONDARY) {
             if(inputScope.isConnecting()){
@@ -182,7 +195,7 @@ public class MouseHandler {
                         releaseNode.setSelected(true);
                         GM.getSelectedNodes().add(releaseNode);
                     }
-                    popOver = popOverManager.createNodePopOver(graphScope.getGraphManager(), releaseNode,
+                    popOver = popOverManager.createNodePopOver(releaseNode,
                             GM.getSelectedNodes(), event.getScreenX(), event.getScreenY());
                 } else if (releaseEdge != null) {  //edge popover
                     if (!releaseEdge.isSelected()) {
@@ -289,7 +302,9 @@ public class MouseHandler {
             }
             else if(clickedNode != null && !pressedKeys.contains(KeyCode.CONTROL)) {
                 if (!clickedNode.isSelected()) {
-                    GM.updateNodePosition(clickedNode, delta.multiply(1/camera.getZoom()));
+                    var newPos = clickedNode.getPos().add(delta.multiply(1/camera.getZoom()));
+                    GM.getGraph().setNodePosition(clickedNode, newPos);
+                    clickedNode.setDragged(true);
                 }
                 else if(pressedKeys.contains(KeyCode.A)){
                     int clockwise = delta.getY() > 0? 1 : -1;
@@ -299,7 +314,9 @@ public class MouseHandler {
                 }
                 else {
                     for (Node n : GM.getSelectedNodes()) {
-                        GM.updateNodePosition(n, delta.multiply(1/camera.getZoom()));
+                        var newPos = n.getPos().add(delta.multiply(1/camera.getZoom()));
+                        GM.getGraph().setNodePosition(n, newPos);
+                        n.setDragged(true);
                     }
                 }
                 currentMousePt = new Point2D(event.getX(), event.getY());
@@ -355,22 +372,6 @@ public class MouseHandler {
         painter.repaint();
     }
 
-    public void onMouseExited(MouseEvent event) {
-        Graph graph = graphScope.getGraphManager().getGraph();
-        for (Node node : graph.getNodes()) {
-            if(node.isHighlighted()){
-                node.setHighlighted(false);
-                break;
-            }
-        }
-        for (Edge edge : graph.getEdges()) {
-            if(edge.isHighlighted()){
-                edge.setHighlighted(false);
-                break;
-            }
-        }
-        painter.repaint();
-    }
 
 
     //-----------------------------------------------------
@@ -442,17 +443,17 @@ public class MouseHandler {
     }
 
     public void clearSelection(){
-        for(Edge edge : selectedEdges){
-            edge.setSelected(false);
-            //edge.setHighlighted(false);
-            //edge.setMarked(false);
-        }
-        for(Edge edge : GM.getGraph().getEdges()){
-            edge.setMarked(false);
-        }
-        selectedEdges.clear();
-        for(Node node : GM.getSelectedNodes()){
-            node.setSelected(false);
+        synchronized (Graph.LOCK) {
+            for (Edge edge : selectedEdges) {
+                edge.setSelected(false);
+            }
+            for (Edge edge : GM.getGraph().getEdges()) {
+                edge.setMarked(false);
+            }
+            selectedEdges.clear();
+            for (Node node : GM.getSelectedNodes()) {
+                node.setSelected(false);
+            }
         }
         GM.getSelectedNodes().clear();
         selectedEdges.clear();

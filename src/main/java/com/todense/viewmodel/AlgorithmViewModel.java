@@ -56,7 +56,7 @@ public class AlgorithmViewModel extends AlgorithmTaskManager implements ViewMode
         notificationCenter.subscribe("SET_START", (key, payload) -> startNodeProperty().set((Node) payload[0]));
         notificationCenter.subscribe("SET_GOAL", (key, payload) -> goalNodeProperty().set((Node) payload[0]));
 
-        notificationCenter.subscribe("RESET", (key, payload ) -> {
+        notificationCenter.subscribe(MainViewModel.RESET, (key, payload ) -> {
             startNodeProperty().set(null);
             goalNodeProperty().set(null);
         });
@@ -74,6 +74,10 @@ public class AlgorithmViewModel extends AlgorithmTaskManager implements ViewMode
     @Override
     protected AlgorithmTask createAlgorithmTask() {
         Graph g = graphManager.getGraph();
+
+        if(g.getOrder() == 0){
+            throw new IllegalArgumentException("Graph is empty");
+        }
 
         graphScope.displayModeProperty().set(DisplayMode.ALGORITHMIC);
         graphManager.resetGraph();

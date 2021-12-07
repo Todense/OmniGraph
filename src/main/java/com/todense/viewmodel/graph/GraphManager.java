@@ -37,11 +37,13 @@ public class GraphManager {
     }
 
     public void createPath(List<Node> nodes){
-        for(int i = 0; i < nodes.size()-1; i++) {
-            Node n1 = nodes.get(i);
-            Node n2 = nodes.get(i+1);
-            if(!isEdgeBetween(n1,n2)) {
-                graph.addEdge(n1, n2);
+        synchronized (Graph.LOCK) {
+            for (int i = 0; i < nodes.size() - 1; i++) {
+                Node n1 = nodes.get(i);
+                Node n2 = nodes.get(i + 1);
+                if (!isEdgeBetween(n1, n2)) {
+                    graph.addEdge(n1, n2);
+                }
             }
         }
     }
@@ -51,10 +53,12 @@ public class GraphManager {
     }
 
     public void createCompleteGraph(List<Node> nodes){
-        graph.applyToAllPairOfNodes(nodes, (n, m) -> {
-            if(!isEdgeBetween(n, m))
-                graph.addEdge(n, m);
-        });
+        synchronized (Graph.LOCK) {
+            graph.applyToAllPairOfNodes(nodes, (n, m) -> {
+                if (!isEdgeBetween(n, m))
+                    graph.addEdge(n, m);
+            });
+        }
     }
 
     public void createCompleteGraph(){
@@ -62,12 +66,14 @@ public class GraphManager {
     }
 
     public void createComplementGraph(List<Node> nodes) {
-        graph.applyToAllPairOfNodes(nodes, (n, m) -> {
-            if(!isEdgeBetween(n, m))
-                graph.addEdge(n, m);
-            else
-                graph.removeEdge(n, m);
-        });
+        synchronized (Graph.LOCK) {
+            graph.applyToAllPairOfNodes(nodes, (n, m) -> {
+                if (!isEdgeBetween(n, m))
+                    graph.addEdge(n, m);
+                else
+                    graph.removeEdge(n, m);
+            });
+        }
     }
 
     public void createComplementGraph() {
@@ -86,15 +92,16 @@ public class GraphManager {
     }
 
     public void subdivideEdges(List<Node> nodes) {
-        ArrayList<Node> nodesCopy = new ArrayList<>(nodes);
-        graph.applyToAllConnectedPairOfNodes(nodesCopy, (n, m) -> {
-            Edge e = graph.getEdge(n, m);
-            Point2D midpoint = n.getPos().midpoint(m.getPos());
-            Node k = graph.addNode(midpoint);
-            graph.removeEdge(n, m);
-            graph.addEdge(n, k);
-            graph.addEdge(m, k);
-        });
+        synchronized (Graph.LOCK) {
+            ArrayList<Node> nodesCopy = new ArrayList<>(nodes);
+            graph.applyToAllConnectedPairOfNodes(nodesCopy, (n, m) -> {
+                Point2D midpoint = n.getPos().midpoint(m.getPos());
+                Node k = graph.addNode(midpoint);
+                graph.removeEdge(n, m);
+                graph.addEdge(n, k);
+                graph.addEdge(m, k);
+            });
+        }
     }
 
     public void subdivideEdges() {
@@ -117,13 +124,16 @@ public class GraphManager {
         Point2D subgraphCenter = GraphAnalyzer.getGraphCenter(clipboardGraph);
         Point2D change = center.subtract(subgraphCenter);
         HashMap<Node, Node> isomorphismMap = new HashMap<>();
-        for(Node node : clipboardGraph.getNodes()){
-            Node newNode = graph.addNode(node.getPos().add(change), node.getColor());
-            isomorphismMap.put(node, newNode);
-        }
 
-        for(Edge edge : clipboardGraph.getEdges()){
-            graph.addEdge(isomorphismMap.get(edge.getN1()), isomorphismMap.get(edge.getN2()), edge.getColor());
+        synchronized (Graph.LOCK) {
+            for (Node node : clipboardGraph.getNodes()) {
+                Node newNode = graph.addNode(node.getPos().add(change), node.getColor());
+                isomorphismMap.put(node, newNode);
+            }
+
+            for (Edge edge : clipboardGraph.getEdges()) {
+                graph.addEdge(isomorphismMap.get(edge.getN1()), isomorphismMap.get(edge.getN2()), edge.getColor());
+            }
         }
     }
 
@@ -158,15 +168,11 @@ public class GraphManager {
         return graph.getEdges().isEdgeBetween(n1, n2);
     }
 
-    public void updateNodePosition(Node n, Point2D d){
-        n.setPos(n.getPos().add(d));
-    }
-
     public void rotateNode(Node n, Point2D pivot, double angle){
         Point2D u = n.getPos().subtract(pivot);
         double x = u.getX() * Math.cos(angle) - u.getY() * Math.sin(angle);
         double y = u.getX() * Math.sin(angle) + u.getY() * Math.cos(angle);
-        n.setPos(new Point2D(x, y).add(pivot));
+        graph.setNodePosition(n, new Point2D(x, y).add(pivot));
     }
 
     private List<Node> selectedNodes = new ArrayList<>();
@@ -196,4 +202,5 @@ public class GraphManager {
     public void setClipboardGraph(Graph clipboardGraph) {
         this.clipboardGraph = clipboardGraph;
     }
+
 }

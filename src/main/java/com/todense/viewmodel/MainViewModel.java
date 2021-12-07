@@ -1,6 +1,10 @@
 package com.todense.viewmodel;
 
 import com.todense.model.graph.Graph;
+import com.todense.viewmodel.algorithm.AlgorithmTask;
+import com.todense.viewmodel.layout.LayoutTask;
+import com.todense.viewmodel.layout.task.AutoD3LayoutTask;
+import com.todense.viewmodel.layout.task.D3LayoutTask;
 import com.todense.viewmodel.file.GraphReader;
 import com.todense.viewmodel.file.format.graphml.GraphMLReader;
 import com.todense.viewmodel.file.format.mtx.MtxReader;
@@ -32,7 +36,7 @@ import java.text.SimpleDateFormat;
 @ScopeProvider(scopes = {AlgorithmScope.class, GraphScope.class,
         BackgroundScope.class, CanvasScope.class,
         AnimationScope.class, KeysScope.class,
-        AntsScope.class, TaskScope.class, InputScope.class})
+        AntsScope.class, TaskScope.class, InputScope.class, LayoutScope.class})
 public class MainViewModel implements ViewModel {
 
     public final static String TASK_STARTED = "TASK_STARTED";
@@ -42,17 +46,23 @@ public class MainViewModel implements ViewModel {
     public final static String THREAD_FINISHED = "THREAD_FINISHED";
     public final static String GRAPH_EDIT_REQUEST = "GRAPH_EDIT_REQUEST";
     public final static String WRITE = "WRITE";
+    public final static String RESET = "RESET";
 
-    private ObjectProperty<String> textProperty = new SimpleObjectProperty<>("");
-    private ObjectProperty<String> infoTextProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<Color> appColorProperty = new SimpleObjectProperty<>(Color.rgb(55,85,125));
-    private BooleanProperty workingProperty = new SimpleBooleanProperty(false);
-    private BooleanProperty taskRunningProperty = new SimpleBooleanProperty(false);
-    private BooleanProperty editManuallyLockedProperty = new SimpleBooleanProperty(false);
-    private BooleanProperty editLockedProperty = new SimpleBooleanProperty(false);
+    private final ObjectProperty<String> textProperty = new SimpleObjectProperty<>("");
+    private final ObjectProperty<String> infoTextProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Color> appColorProperty = new SimpleObjectProperty<>(Color.rgb(55,85,125));
+    private final BooleanProperty workingProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty taskRunningProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty manualEditLockProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty autoEditLockProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty editLockedProperty = new SimpleBooleanProperty(false);
 
-    private DateFormat durationFormatter = new SimpleDateFormat("mm:ss:SSS");
-    private DateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+    private final BooleanProperty autoLayoutOnProperty = new SimpleBooleanProperty(false);
+
+    private final DateFormat durationFormatter = new SimpleDateFormat("mm:ss:SSS");
+    private final DateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
+
+    private AutoD3LayoutTask autoLayout;
 
 
     @Inject
@@ -73,6 +83,9 @@ public class MainViewModel implements ViewModel {
     @InjectScope
     CanvasScope canvasScope;
 
+    @InjectScope
+    LayoutScope layoutScope;
+
     private GraphManager graphManager;
 
     public void initialize(){
@@ -83,16 +96,22 @@ public class MainViewModel implements ViewModel {
         notificationCenter.subscribe(TASK_CANCELLED, (key, payload) ->{
             writeInfo("");
             write(payload[0]+ " cancelled");
-            graphScope.setNodePositionFunction(GraphScope.NODE_ORDINARY_POSITION_FUNCTION);
             workingProperty.set(false);
+            autoEditLockProperty.set(false);
             taskRunningProperty.set(false);
         });
 
         notificationCenter.subscribe(TASK_STARTED, (key, payload) -> {
-            String taskName = (String) payload[0];
+            AlgorithmTask task = (AlgorithmTask) payload[0];
+            String taskName = task.getAlgorithmName();
             write(taskName + " started");
-            writeInfo("Running: "+ payload[0]);
+            writeInfo("Running: "+ taskName);
             workingProperty.set(true);
+            if (!(task instanceof LayoutTask)){
+                autoEditLockProperty.set(true);
+            }
+
+            autoLayoutOnProperty.set(false);
             taskRunningProperty.set(true);
             graphManager.resetGraph();
         });
@@ -103,8 +122,8 @@ public class MainViewModel implements ViewModel {
                 write((String) payload[2]); // result message
             }
             writeInfo("");
-            graphScope.setNodePositionFunction(GraphScope.NODE_ORDINARY_POSITION_FUNCTION);
             workingProperty.set(false);
+            autoEditLockProperty.set(false);
             taskRunningProperty.set(false);
         });
 
@@ -121,23 +140,57 @@ public class MainViewModel implements ViewModel {
         });
 
         notificationCenter.subscribe(GRAPH_EDIT_REQUEST, (key, payload) -> {
-            if(!workingProperty.get()) {
+            if(!editLockedProperty.get()) {
                 Runnable runnable = (Runnable) payload[0];
-                runnable.run();
+                Thread thread = new Thread(runnable);
+                thread.setPriority(Thread.MAX_PRIORITY);
+                thread.start();
             }
         });
 
 
         editLockedProperty.bind(Bindings.createBooleanBinding(
-                () -> editManuallyLockedProperty.get() || workingProperty.get(),
-                editManuallyLockedProperty,
-                workingProperty
+                () -> manualEditLockProperty.get() || autoEditLockProperty.get(),
+                manualEditLockProperty,
+                autoEditLockProperty
         ));
+
+        autoLayoutOnProperty.addListener((obs, oldVal, newVal) -> {
+            if(newVal){
+                startAutoLayout();
+            }else {
+                stopAutoLayout();
+            }
+        });
+
+        notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_REQUEST, (key, payload) -> {
+            stopAutoLayout();
+        });
+
+        notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_SET, (key, payload) -> {
+            if(isAutoLayoutOn()) {
+                stopAutoLayout();
+                startAutoLayout();
+            }
+        });
 
         inputScope.editLockedProperty().bind(editLockedProperty);
         canvasScope.borderColorProperty().bind(appColorProperty);
 
         appColorProperty.addListener((obs, oldVal, newVel) -> canvasScope.getPainter().repaint());
+    }
+
+    private void startAutoLayout(){
+        autoLayout = new AutoD3LayoutTask(layoutScope, graphManager);
+        autoLayout.setPainter(canvasScope.getPainter());
+        Thread thread = new Thread(autoLayout);
+        thread.start();
+    }
+
+    private void stopAutoLayout(){
+        if (autoLayout != null) {
+            autoLayout.cancel();
+        }
     }
 
     public void openGraph(File file) {
@@ -225,14 +278,14 @@ public class MainViewModel implements ViewModel {
     public void deleteGraph() {
         notificationCenter.publish(GRAPH_EDIT_REQUEST, (Runnable)() -> {
             graphManager.clearGraph();
-            notificationCenter.publish("RESET");
         });
+        notificationCenter.publish(GraphViewModel.NEW_GRAPH_SET);
     }
 
     public void resetGraph(){
         notificationCenter.publish(GRAPH_EDIT_REQUEST, (Runnable)() -> {
             graphManager.resetGraph();
-            notificationCenter.publish("RESET");
+            notificationCenter.publish(MainViewModel.RESET);
         });
     }
 
@@ -254,16 +307,24 @@ public class MainViewModel implements ViewModel {
         return workingProperty;
     }
 
-    public boolean isEditManuallyLocked() {
-        return editManuallyLockedProperty.get();
+    public boolean isManualEditLockOn() {
+        return manualEditLockProperty.get();
     }
 
-    public BooleanProperty editManuallyLockedProperty() {
-        return editManuallyLockedProperty;
+    public BooleanProperty manualEditLockProperty() {
+        return manualEditLockProperty;
     }
 
     public BooleanProperty editLockedProperty() {
         return editLockedProperty;
+    }
+
+    public boolean isAutoEditLockOn() {
+        return autoEditLockProperty.get();
+    }
+
+    public BooleanProperty autoEditLockProperty() {
+        return autoEditLockProperty;
     }
 
     public BooleanProperty taskRunningProperty() {
@@ -276,5 +337,17 @@ public class MainViewModel implements ViewModel {
 
     public ObjectProperty<Color> appColorProperty() {
         return appColorProperty;
+    }
+
+    public boolean isAutoLayoutOn() {
+        return autoLayoutOnProperty.get();
+    }
+
+    public BooleanProperty autoLayoutOnProperty() {
+        return autoLayoutOnProperty;
+    }
+
+    public void setAutoLayoutOnProperty(boolean autoLayoutOnProperty) {
+        this.autoLayoutOnProperty.set(autoLayoutOnProperty);
     }
 }

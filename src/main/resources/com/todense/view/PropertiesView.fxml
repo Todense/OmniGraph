@@ -10,7 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox alignment="CENTER" prefHeight="308.0" prefWidth="237.0" styleClass="subsection" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.PropertiesView">
+<VBox alignment="CENTER" prefHeight="308.0" prefWidth="237.0" styleClass="subsection" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.PropertiesView">
    <HBox alignment="CENTER" prefHeight="17.0" prefWidth="148.0" spacing="3.0">
       <children>
          <Label alignment="CENTER" prefHeight="17.0" prefWidth="272.0" styleClass="darkLabel" text="General" />
@@ -166,7 +166,7 @@
    </VBox>
    <HBox alignment="CENTER" prefHeight="36.0" prefWidth="232.0" spacing="3.0">
       <children>
-         <Button mnemonicParsing="false" onAction="#propertiesAction" prefHeight="25.0" prefWidth="92.0" text="Calculcate">
+         <Button mnemonicParsing="false" onAction="#propertiesAction" prefHeight="25.0" prefWidth="104.0" text="Calculcate">
             <graphic>
                <FontIcon iconColor="#08ae34" iconLiteral="fas-play" styleClass="start-icon" />
             </graphic>

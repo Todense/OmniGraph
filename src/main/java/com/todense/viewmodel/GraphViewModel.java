@@ -25,7 +25,8 @@ import javax.inject.Inject;
 
 public class GraphViewModel implements ViewModel {
 
-    public static final String NEW_GRAPH_REQUEST = "NEW_GRAPH";
+    public static final String NEW_GRAPH_REQUEST = "NEW_GRAPH_REQUEST";
+    public static final String NEW_GRAPH_SET = "NEW_GRAPH_SET";
 
     @InjectScope
     GraphScope graphScope;
@@ -61,15 +62,18 @@ public class GraphViewModel implements ViewModel {
 
             //auto node size
             int sampleSize = Math.min(newGraph.getOrder() - 1, 100);
-            Platform.runLater(() ->
+            Platform.runLater(() -> {
+                if(sampleSize > 0){
                     graphScope.nodeSizeProperty().set((
                             0.3 * GraphAnalyzer.getNearestNeighbourSpanningTreeLength(newGraph, sampleSize)/(sampleSize)
-                    ))
-            );
+                    ));
+                }
+            });
+            notificationCenter.publish(GraphViewModel.NEW_GRAPH_SET);
 
         });
 
-        notificationCenter.subscribe("RESET", (key, payload) ->
+        notificationCenter.subscribe(MainViewModel.RESET, (key, payload) ->
                 graphScope.displayModeProperty().set(DisplayMode.DEFAULT));
 
         ChangeListener<Object> listener = (obs, oldVal, newVal) -> canvasScope.getPainter().repaint();

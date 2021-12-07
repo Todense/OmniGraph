@@ -18,13 +18,13 @@ import java.util.concurrent.Executors;
 
 public class PresetCreatorViewModel implements ViewModel {
     
-    private ObjectProperty<Preset> presetProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Preset> presetProperty = new SimpleObjectProperty<>();
 
-    private ObjectProperty<Integer> param1ObjectProperty = new SimpleObjectProperty<>(10);
-    private IntegerProperty param1Property = IntegerProperty.integerProperty(param1ObjectProperty);
+    private final ObjectProperty<Integer> param1ObjectProperty = new SimpleObjectProperty<>(10);
+    private final IntegerProperty param1Property = IntegerProperty.integerProperty(param1ObjectProperty);
 
-    private ObjectProperty<Integer> param2ObjectProperty = new SimpleObjectProperty<>(10);
-    private IntegerProperty param2Property = IntegerProperty.integerProperty(param2ObjectProperty);
+    private final ObjectProperty<Integer> param2ObjectProperty = new SimpleObjectProperty<>(10);
+    private final IntegerProperty param2Property = IntegerProperty.integerProperty(param2ObjectProperty);
 
     @InjectScope
     CanvasScope canvasScope;
@@ -36,25 +36,25 @@ public class PresetCreatorViewModel implements ViewModel {
         notificationCenter.subscribe("PRESET", (key, payload) -> createPreset());
     }
 
-    private Graph create(Preset preset, Point2D center) {
+    private Graph create(Preset preset, Point2D size) {
 
         Graph presetGraph = null;
 
         switch (preset) {
             case GRID:
-                presetGraph = PresetCreator.createGrid(getParam1(), getParam2(), center); break;
+                presetGraph = PresetCreator.createGrid(getParam1(), getParam2(), size); break;
             case HEX:
-                presetGraph = PresetCreator.createHexagonalGrid(getParam1(), center); break;
+                presetGraph = PresetCreator.createHexagonalGrid(getParam1(), size); break;
             case KING:
-                presetGraph = PresetCreator.createKingsGraph(getParam1(), getParam2(), center); break;
+                presetGraph = PresetCreator.createKingsGraph(getParam1(), getParam2(), size); break;
             case MAZE:
-                presetGraph = PresetCreator.createMaze(getParam1(), getParam2(), center); break;
+                presetGraph = PresetCreator.createMaze(getParam1(), getParam2(), size); break;
             case CYCLE:
-                presetGraph = PresetCreator.createCycle(getParam1(), 0.8 * center.getY(), center); break;
+                presetGraph = PresetCreator.createCycle(getParam1(), 0.8 * size.getY()); break;
             case STAR:
-                presetGraph = PresetCreator.createStar(getParam1(),0.8 * center.getY(), center); break;
+                presetGraph = PresetCreator.createStar(getParam1(),0.4 * size.getY()); break;
             case COMPLETE_BIPARTITE:
-                presetGraph = PresetCreator.createCompleteBipartite(getParam1(), getParam2(), center); break;
+                presetGraph = PresetCreator.createCompleteBipartite(getParam1(), getParam2(), size); break;
         }
         return presetGraph;
     }
@@ -63,7 +63,7 @@ public class PresetCreatorViewModel implements ViewModel {
         notificationCenter.publish(MainViewModel.THREAD_STARTED, "Creating preset...");
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Thread thread = new Thread(() -> {
-            Graph presetGraph = create(presetProperty.get(), new Point2D(canvasScope.getCanvasWidth()/2, canvasScope.getCanvasHeight()/2));
+            Graph presetGraph = create(presetProperty.get(), new Point2D(canvasScope.getCanvasWidth(), canvasScope.getCanvasHeight()));
             notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, presetGraph);
             notificationCenter.publish(MainViewModel.THREAD_FINISHED, presetProperty.get().toString() +" created");
         });

@@ -10,13 +10,33 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="nodeVBox" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="130.0" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.NodePopOverView">
+<VBox fx:id="nodeVBox" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="254.0" prefWidth="130.0" spacing="5.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.NodePopOverView">
     <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteNodeAction" prefHeight="25.0" prefWidth="120.0" text="Delete">
         <font>
             <Font size="10.0" />
         </font>
     </Button>
    <Button layoutX="15.0" layoutY="15.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#copyAction" prefHeight="25.0" prefWidth="120.0" text="Copy Subgraph">
+      <font>
+         <Font size="10.0" />
+      </font>
+   </Button>
+   <Button fx:id="pinButton" layoutX="15.0" layoutY="105.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#pinAction" prefHeight="25.0" prefWidth="120.0" text="Pin">
+      <font>
+         <Font size="10.0" />
+      </font>
+   </Button>
+   <Button fx:id="unpinButton" layoutX="15.0" layoutY="75.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#unpinAction" prefHeight="25.0" prefWidth="120.0" text="Unpin">
+      <font>
+         <Font size="10.0" />
+      </font>
+   </Button>
+   <Button fx:id="pinAllButton" layoutX="15.0" layoutY="75.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#pinAllAction" prefHeight="25.0" prefWidth="120.0" text="Pin All">
+      <font>
+         <Font size="10.0" />
+      </font>
+   </Button>
+   <Button fx:id="unpinAllButton" layoutX="15.0" layoutY="105.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#unpinAllAction" prefHeight="25.0" prefWidth="120.0" text="Unpin All">
       <font>
          <Font size="10.0" />
       </font>

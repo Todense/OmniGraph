@@ -10,34 +10,33 @@ import javafx.beans.property.*;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
+import java.util.Random;
 import java.util.function.Function;
 
 public class GraphScope implements Scope {
 
-    private final Color INITIAL_NODE_COLOR = Color.rgb(50,90,170);
-    private final Color INITIAL_EDGE_COLOR = Color.rgb(120,160,200);
-    public static Function<Node, Point2D> NODE_ORDINARY_POSITION_FUNCTION = Node::getPos;
+    private Color INITIAL_NODE_COLOR = Color.rgb(50,90,170);
+    private Color INITIAL_EDGE_COLOR = Color.rgb(120,160,200);
 
-    private DoubleProperty nodeSizeProperty = new SimpleDoubleProperty(30d);
-    private DoubleProperty edgeWidthProperty = new SimpleDoubleProperty(0.15);
-    private DoubleProperty edgeWidthDecayProperty = new SimpleDoubleProperty(0.06);
-    private DoubleProperty edgeOpacityDecayProperty = new SimpleDoubleProperty(0.06);
-    private BooleanProperty nodeBorderProperty = new SimpleBooleanProperty(false);
-    private BooleanProperty edgeVisibilityProperty = new SimpleBooleanProperty(true);
-    private BooleanProperty edgeWidthDecayOnProperty = new SimpleBooleanProperty(false);
-    private BooleanProperty edgeOpacityDecayOnProperty = new SimpleBooleanProperty(false);
-    private ObjectProperty<Color> nodeColorProperty = new SimpleObjectProperty<>(INITIAL_NODE_COLOR);
-    private ObjectProperty<Color> edgeColorProperty = new SimpleObjectProperty<>(INITIAL_EDGE_COLOR);
-    private ObjectProperty<Color> nodeLabelColorProperty = new SimpleObjectProperty<>(Color.WHITE);
-    private ObjectProperty<Color> edgeWeightColorProperty = new SimpleObjectProperty<>(Color.WHITE);
-    private ObjectProperty<NodeLabelMode> nodeLabelModeProperty = new SimpleObjectProperty<>(NodeLabelMode.NONE);
-    private ObjectProperty<EdgeWeightMode> edgeWeightModeProperty = new SimpleObjectProperty<>(EdgeWeightMode.NONE);
-    private ObjectProperty<DisplayMode> displayModeProperty = new SimpleObjectProperty<>(DisplayMode.DEFAULT);
+    private final DoubleProperty nodeSizeProperty = new SimpleDoubleProperty(30d);
+    private final DoubleProperty edgeWidthProperty = new SimpleDoubleProperty(0.15);
+    private final DoubleProperty edgeWidthDecayProperty = new SimpleDoubleProperty(0.06);
+    private final DoubleProperty edgeOpacityDecayProperty = new SimpleDoubleProperty(0.06);
+    private final BooleanProperty nodeBorderProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty edgeVisibilityProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty edgeWidthDecayOnProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty edgeOpacityDecayOnProperty = new SimpleBooleanProperty(false);
+    private final ObjectProperty<Color> nodeColorProperty = new SimpleObjectProperty<>(INITIAL_NODE_COLOR);
+    private final ObjectProperty<Color> edgeColorProperty = new SimpleObjectProperty<>(INITIAL_EDGE_COLOR);
+    private final ObjectProperty<Color> nodeLabelColorProperty = new SimpleObjectProperty<>(Color.WHITE);
+    private final ObjectProperty<Color> edgeWeightColorProperty = new SimpleObjectProperty<>(Color.WHITE);
+    private final ObjectProperty<NodeLabelMode> nodeLabelModeProperty = new SimpleObjectProperty<>(NodeLabelMode.NONE);
+    private final ObjectProperty<EdgeWeightMode> edgeWeightModeProperty = new SimpleObjectProperty<>(EdgeWeightMode.NONE);
+    private final ObjectProperty<DisplayMode> displayModeProperty = new SimpleObjectProperty<>(DisplayMode.DEFAULT);
 
     private Function<Node, Double> nodeScaleFunction = node -> 1.0;
-    private Function<Node, Point2D> nodeCustomPositionFunction = Node::getPos;
 
-    private GraphManager graphManager = new GraphManager();
+    private final GraphManager graphManager = new GraphManager();
 
     public double getNodeSize() {
         return nodeSizeProperty.get();
@@ -137,14 +136,6 @@ public class GraphScope implements Scope {
 
     public void setNodeScaleFunction(Function<Node, Double> nodeScaleFunction) {
         this.nodeScaleFunction = nodeScaleFunction;
-    }
-
-    public Function<Node, Point2D> getNodePositionFunction() {
-        return nodeCustomPositionFunction;
-    }
-
-    public void setNodePositionFunction(Function<Node, Point2D> nodeCustomPositionFunction) {
-        this.nodeCustomPositionFunction = nodeCustomPositionFunction;
     }
 
     public DoubleProperty edgeWidthDecayProperty() {

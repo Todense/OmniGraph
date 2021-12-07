@@ -16,6 +16,8 @@ public class Node{
 
     private boolean selected = false; //selected by user
     private boolean highlighted = false; //highlighted by user
+    private boolean pinned = false; // position locked
+    private boolean dragged = false;
     private int status = 0;
 
     private ArrayList<Node> neighbours = new ArrayList<>();
@@ -96,5 +98,21 @@ public class Node{
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public boolean isPinned() {
+        return pinned;
+    }
+
+    public void setPinned(boolean pinned) {
+        this.pinned = pinned;
+    }
+
+    public boolean isDragged() {
+        return dragged;
+    }
+
+    public void setDragged(boolean dragged) {
+        this.dragged = dragged;
     }
 }

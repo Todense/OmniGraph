@@ -12,10 +12,11 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.StrokeLineCap;
 
-public class CanvasView implements FxmlView<CanvasViewModel> {
+public class CanvasView implements FxmlView<CanvasViewModel>{
 
     @FXML private Pane canvasPane;
-    @FXML private Canvas canvas;
+
+    private Canvas canvas;
 
     @InjectViewModel
     CanvasViewModel viewModel;
@@ -24,6 +25,11 @@ public class CanvasView implements FxmlView<CanvasViewModel> {
     Context context;
 
     public void initialize(){
+
+        canvas = new Canvas();
+        canvas.prefHeight(0);
+        canvas.prefWidth(0);
+        canvasPane.getChildren().add(canvas);
 
         viewModel.editLockedProperty().addListener((obs, oldVal, newVal)->{
             if(newVal)
@@ -48,17 +54,13 @@ public class CanvasView implements FxmlView<CanvasViewModel> {
         canvas.setOnMouseReleased(viewModel.getMouseHandler()::onMouseReleased);
         canvas.setOnMouseMoved(viewModel.getMouseHandler()::onMouseMoved);
         canvas.setOnScroll(viewModel.getMouseHandler()::onMouseScroll);
-        canvas.setOnMouseExited(viewModel.getMouseHandler()::onMouseExited);
 
         canvas.getGraphicsContext2D().setLineCap(StrokeLineCap.BUTT);
 
         Platform.runLater(() -> {
-                viewModel.setCanvasNode(canvas);
-                viewModel.getPopOverManager().setContext(context);
+            viewModel.setCanvasNode(canvas);
+            viewModel.getPopOverManager().setContext(context);
         });
     }
-
-
-
 
 }

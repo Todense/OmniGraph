@@ -11,9 +11,9 @@ import javafx.scene.transform.Affine;
 
 public class BackgroundDrawLayer implements DrawLayer {
 
-    private BackgroundScope backgroundScope;
-    private CanvasScope canvasScope;
-    private Camera camera;
+    private final BackgroundScope backgroundScope;
+    private final CanvasScope canvasScope;
+    private final Camera camera;
 
     public BackgroundDrawLayer(BackgroundScope backgroundScope, CanvasScope canvasScope){
         this.backgroundScope = backgroundScope;
@@ -55,20 +55,26 @@ public class BackgroundDrawLayer implements DrawLayer {
         gc.setLineWidth(backgroundScope.getGridWidth()/ camera.getZoom());
 
         //vertical lines
-        int iMin = (int) ((start.getX() - center.getX())/gap);
-        int iMax = (int) ((end.getX() - center.getX())/gap);
+        int iMin = (int) (start.getX()/gap + 1);//(int) ((start.getX() - center.getX())/gap);
+        int iMax = (int) (end.getX()/gap);// (int) ((end.getX() - center.getX())/gap);
 
         for (int i = iMin; i <= iMax; i++) {
-            gc.strokeLine(center.getX() + i*gap, start.getY(), center.getX() + i*gap, end.getY());
+            gc.strokeLine( i*gap, start.getY(), i*gap, end.getY());
         }
+
 
         //horizontal lines
-        int jMin = (int) ((start.getY() - center.getY())/gap);
-        int jMax = (int) ((end.getY() - center.getY())/gap);
+        int jMin = (int) (start.getY()/gap + 1);//(int) ((start.getY() - center.getY())/gap);
+        int jMax = (int) (end.getY()/gap);//(int) ((end.getY() - center.getY())/gap);
 
         for (int j = jMin; j <= jMax; j++) {
-            gc.strokeLine(start.getX(), center.getY() + j*gap, end.getX(), center.getY() + j*gap);
+            gc.strokeLine(start.getX(), j*gap, end.getX(), j*gap);
         }
+
+        //center lines
+        gc.setLineWidth(2.5 * backgroundScope.getGridWidth()/ camera.getZoom());
+        gc.strokeLine(0, start.getY(), 0, end.getY());
+        gc.strokeLine(start.getX(), 0, end.getX(), 0);
     }
 
     @Override

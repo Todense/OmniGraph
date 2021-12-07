@@ -31,6 +31,9 @@ public class EdgeList extends ArrayList<Edge> {
     @Override
     public boolean remove(Object o) {
         Edge e = (Edge)o;
+        if(e == null || !edgeMap.containsKey(e.getID())){
+            return false;
+        }
         e.getN1().getNeighbours().remove(e.getN2());
         e.getN2().getNeighbours().remove(e.getN1());
         edgeMap.remove(e.getID());

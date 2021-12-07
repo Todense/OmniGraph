@@ -18,7 +18,7 @@ class AlgorithmTaskTest {
     @RepeatedTest(100)
     void hamiltonianCycleTest() {
         int nodeCount = 20;
-        Generator<Point2D> point2DGenerator = new RandomCirclePointGenerator(1, new Point2D(0,0));
+        Generator<Point2D> point2DGenerator = new RandomCirclePointGenerator(1);
         EdgeGenerator edgeGenerator = new ErdosRenyiGenerator( 0.1);
         Graph graph = RandomGraphGenerator.generateGraph(nodeCount, point2DGenerator, edgeGenerator, 0);
         for (int i = 0; i < nodeCount; i++) {
@@ -35,7 +35,7 @@ class AlgorithmTaskTest {
 
     @RepeatedTest(100)
     void basicAlgorithmsTest() {
-        Generator<Point2D> point2DGenerator = new RandomCirclePointGenerator(1, new Point2D(0,0));
+        Generator<Point2D> point2DGenerator = new RandomCirclePointGenerator(1);
         EdgeGenerator edgeGenerator = new ErdosRenyiGenerator( 0.01);
         Graph graph = RandomGraphGenerator.generateGraph(300, point2DGenerator, edgeGenerator, 0);
         Node startNode = graph.getNodes().get(0);

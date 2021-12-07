@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXSlider?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ProgressBar?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -13,16 +12,25 @@
 <?import org.controlsfx.control.ToggleSwitch?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox alignment="CENTER" minWidth="-Infinity" prefHeight="519.0" prefWidth="200.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.LayoutView">
+<VBox fx:id="rootVBox" alignment="CENTER" minWidth="-Infinity" prefHeight="519.0" prefWidth="200.0" spacing="3.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.LayoutView">
    <padding>
       <Insets bottom="5.0" top="5.0" />
    </padding>
-   <Label alignment="CENTER" layoutX="15.0" layoutY="83.0" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Options" textFill="#2c2c2c">
+   <Label alignment="CENTER" layoutX="15.0" layoutY="130.0" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Algorithm" textFill="#2c2c2c">
       <font>
          <Font size="9.0" />
       </font>
    </Label>
-   <VBox alignment="TOP_CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="139.0" prefWidth="202.0" spacing="3.0" styleClass="subsection">
+   <ChoiceBox fx:id="layoutAlgorithmChoiceBox" prefHeight="24.0" prefWidth="170.0" />
+   <Label alignment="CENTER" layoutX="15.0" layoutY="83.0" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Options" textFill="#2c2c2c">
+      <font>
+         <Font size="9.0" />
+      </font>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </Label>
+   <VBox fx:id="optionsVBox" alignment="TOP_CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="139.0" prefWidth="202.0" spacing="3.0" styleClass="subsection">
       <ToggleSwitch fx:id="multilevelToggleSwitch" contentDisplay="CENTER" prefHeight="18.0" prefWidth="180.0" selected="true" text="Multilevel ">
          <font>
             <Font size="10.0" />
@@ -34,15 +42,7 @@
             <Tooltip text=" " />
          </tooltip>
       </ToggleSwitch>
-      <ToggleSwitch fx:id="coolingToggleSwitch" contentDisplay="CENTER" prefHeight="17.0" prefWidth="180.0" selected="true" text="Cooling">
-         <font>
-            <Font size="10.0" />
-         </font>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-      </ToggleSwitch>
-      <ToggleSwitch fx:id="pullToggleSwitch" contentDisplay="CENTER" prefHeight="17.0" prefWidth="180.0" selected="true" text="Center pull">
+      <ToggleSwitch fx:id="pullToggleSwitch" contentDisplay="CENTER" prefHeight="17.0" prefWidth="180.0" selected="true" text="Gravity">
          <font>
             <Font size="10.0" />
          </font>
@@ -58,137 +58,48 @@
             <Tooltip showDelay="0.1s" text="Faster, but less accurate repulsive forces calculations" />
          </tooltip>
       </ToggleSwitch>
-      <HBox alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity" prefHeight="40.0" prefWidth="194.0" spacing="3.0">
-         <Label prefHeight="36.0" prefWidth="100.0" text="Long-Range&#10;Repulsive Forces" wrapText="true" />
-         <ChoiceBox fx:id="longRangeChoiceBox" prefHeight="25.0" prefWidth="74.0" />
-      </HBox>
+      <ToggleSwitch fx:id="coolingToggleSwitch" contentDisplay="CENTER" prefHeight="17.0" prefWidth="180.0" selected="true" text="Cooling">
+         <font>
+            <Font size="10.0" />
+         </font>
+         <VBox.margin>
+            <Insets />
+         </VBox.margin>
+      </ToggleSwitch>
    </VBox>
    <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Parameters" textFill="#2c2c2c">
       <font>
          <Font size="9.0" />
       </font>
    </Label>
-   <VBox alignment="TOP_CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="101.0" prefWidth="202.0" spacing="5.0" styleClass="subsection">
+   <VBox fx:id="parametersVBox" alignment="TOP_CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="101.0" prefWidth="202.0" spacing="5.0" styleClass="subsection">
       <padding>
          <Insets bottom="3.0" top="3.0" />
       </padding>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-         <children>
-            <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0">
-               <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="115.0" text="Optimal dist">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
-               <TextField fx:id="optDistTextField" alignment="CENTER" minWidth="-Infinity" prefHeight="25.0" prefWidth="60.0" />
-            </HBox>
-            <JFXSlider fx:id="optDistSlider" blockIncrement="1.0" min="1.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="190.0" snapToTicks="true" value="50.0">
-               <VBox.margin>
-                  <Insets left="5.0" right="5.0" />
-               </VBox.margin>
-            </JFXSlider>
-            <VBox prefHeight="200.0" prefWidth="100.0" />
-         </children>
-      </VBox>
-      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
-         <children>
-            <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0">
-               <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="115.0" text="Step size">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
-               <TextField fx:id="stepTextField" alignment="CENTER" minWidth="-Infinity" prefHeight="25.0" prefWidth="60.0" />
-            </HBox>
-         </children>
-      </VBox>
-      <JFXSlider fx:id="stepSlider" blockIncrement="1.0" min="0.01" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="190.0" value="50.0" />
-      <VBox alignment="CENTER" layoutX="14.0" layoutY="57.0" prefHeight="200.0" prefWidth="100.0">
-         <children>
-            <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0">
-               <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="115.0" text="Tolerance">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
-               <TextField fx:id="toleranceTextField" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="60.0" />
-            </HBox>
-            <JFXSlider fx:id="toleranceSlider" blockIncrement="0.001" majorTickUnit="0.1" max="1.0" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="0" prefHeight="15.0" prefWidth="190.0" value="0.01">
-               <VBox.margin>
-                  <Insets left="5.0" right="5.0" />
-               </VBox.margin>
-            </JFXSlider>
-         </children>
-      </VBox>
-      <VBox fx:id="coolingVBox" alignment="CENTER" layoutX="14.0" layoutY="60.0" prefHeight="200.0" prefWidth="100.0">
-         <children>
-            <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0">
-               <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="115.0" text="Cooling Speed">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
-               <TextField fx:id="coolingFactorTextField" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="60.0" />
-            </HBox>
-            <JFXSlider fx:id="coolingFactorSlider" blockIncrement="0.001" majorTickUnit="0.1" max="0.3" min="0.001" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="0" prefHeight="15.0" prefWidth="190.0" value="0.01">
-               <VBox.margin>
-                  <Insets left="5.0" right="5.0" />
-               </VBox.margin>
-            </JFXSlider>
-         </children>
-      </VBox>
-      <VBox fx:id="pullVBox" alignment="CENTER" layoutX="14.0" layoutY="57.0" prefHeight="200.0" prefWidth="100.0">
-         <children>
-            <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0">
-               <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="115.0" text="Center pull strength">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
-               <TextField fx:id="pullStrengthTextField" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="60.0" />
-            </HBox>
-            <JFXSlider fx:id="pullStrengthSlider" blockIncrement="1.0" majorTickUnit="0.1" max="50.0" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="0" prefHeight="15.0" prefWidth="190.0" value="3.0">
-               <VBox.margin>
-                  <Insets left="5.0" right="5.0" />
-               </VBox.margin>
-            </JFXSlider>
-         </children>
-      </VBox>
    </VBox>
-   <Label alignment="CENTER" layoutX="15.0" layoutY="173.0" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Visauls" textFill="#2c2c2c">
-      <font>
-         <Font size="9.0" />
-      </font>
-   </Label>
-   <VBox fx:id="smoothingVBox" alignment="TOP_CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="64.0" prefWidth="200.0" styleClass="subsection">
+   <VBox fx:id="alphaProgressBarVBox" alignment="CENTER" prefHeight="0.0" prefWidth="100.0" spacing="5.0">
       <children>
-         <ToggleSwitch fx:id="smoothToggleSwitch" contentDisplay="CENTER" minWidth="-Infinity" prefHeight="18.0" prefWidth="181.0" selected="true" text="Smoothed Movement">
+         <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Activity (Alpha)" textFill="#2c2c2c">
             <font>
-               <Font size="10.0" />
+               <Font size="9.0" />
             </font>
-            <tooltip>
-               <Tooltip text=" ">
-                  <graphic>
-                     <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="115.0" text="Cooling Speed">
-                        <font>
-                           <Font size="10.0" />
-                        </font>
-                     </Label>
-                  </graphic></Tooltip>
-            </tooltip>
-         </ToggleSwitch>
-         <HBox fx:id="smoothnessHBox" alignment="CENTER" minWidth="-Infinity" prefHeight="38.0" prefWidth="190.0">
-            <children>
-               <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="68.0" text="Smoothness">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
-               <JFXSlider fx:id="smoothnessSlider" blockIncrement="0.001" majorTickUnit="0.1" max="0.999" min="0.6" minHeight="-Infinity" minWidth="-Infinity" minorTickCount="1" prefHeight="30.0" prefWidth="102.0" value="0.9" />
-            </children>
-         </HBox>
+         </Label>
+         <ProgressBar fx:id="alphaBar" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="165.0" progress="0.25" />
+      </children>
+      <padding>
+         <Insets top="3.0" />
+      </padding>
+   </VBox>
+   <VBox alignment="CENTER" prefHeight="0.0" prefWidth="100.0">
+      <children>
+         <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Step SIze" textFill="#2c2c2c">
+            <font>
+               <Font size="9.0" />
+            </font>
+         </Label>
       </children>
    </VBox>
+   <ProgressBar fx:id="stepSizeBar" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="165.0" progress="0.0" />
    <HBox alignment="CENTER" prefHeight="25.0" prefWidth="190.0" spacing="3.0">
       <Button fx:id="startButton" alignment="CENTER" mnemonicParsing="false" onAction="#dynamicLayoutAction" prefHeight="25.0" prefWidth="108.0" styleClass="danger" text="Start Layout">
          <graphic>
@@ -220,5 +131,8 @@
             <FontIcon iconLiteral="fas-dice" iconSize="15" />
          </graphic>
       </Button>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
    </HBox>
 </VBox>
