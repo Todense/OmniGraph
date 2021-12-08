@@ -83,6 +83,7 @@ public class MainView implements FxmlView<MainViewModel> {
         });
 
         autoLayoutToggleButton.selectedProperty().bindBidirectional(viewModel.autoLayoutOnProperty());
+        autoLayoutToggleButton.disableProperty().bind(viewModel.taskRunningProperty());
 
         double scrollSpeed = 0.005;
         setScrollSpeed(scrollSpeed, leftScrollPane);

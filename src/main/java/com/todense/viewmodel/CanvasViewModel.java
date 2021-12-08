@@ -13,6 +13,9 @@ import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
 
@@ -52,6 +55,8 @@ public class CanvasViewModel implements ViewModel {
     private MouseHandler mouseHandler;
     private PopOverManager popOverManager;
 
+
+
     public void initialize(){
 
         Painter painter = new Painter(animationScope);
@@ -65,16 +70,31 @@ public class CanvasViewModel implements ViewModel {
                 painter,
                 graphScope,
                 popOverManager,
-                keysScope.getPressedKeys());
+                keysScope.getPressedKeys()
+        );
 
         canvasScope.setPainter(painter);
 
         canvasScope.canvasWidthProperty().addListener((obs, oldVal, newVal) -> painter.repaint());
         canvasScope.canvasHeightProperty().addListener((obs, oldVal, newVal) -> painter.repaint());
 
+        inputScope.editLockedProperty().addListener((obs, oldVal, newVal)->{
+            if(newVal)
+                canvasCursorProperty().set(Cursor.MOVE);
+            else
+                canvasCursorProperty().set(Cursor.DEFAULT);
+        });
+
         Platform.runLater(() ->{
             LowerDrawLayer lowerDrawLayer = new LowerDrawLayer(inputScope, graphScope);
-            UpperDrawLayer upperDrawLayer = new UpperDrawLayer(graphScope, inputScope, canvasScope, backgroundScope, algorithmScope, antsScope);
+            UpperDrawLayer upperDrawLayer = new UpperDrawLayer(
+                    graphScope,
+                    inputScope,
+                    canvasScope,
+                    backgroundScope,
+                    algorithmScope,
+                    antsScope
+            );
 
             painter.addDrawLayer(lowerDrawLayer);
             painter.addDrawLayer(upperDrawLayer);
@@ -131,5 +151,10 @@ public class CanvasViewModel implements ViewModel {
 
     public BooleanProperty editLockedProperty(){
         return inputScope.editLockedProperty();
+    }
+
+
+    public ObjectProperty<Cursor> canvasCursorProperty() {
+        return inputScope.canvasCursorProperty();
     }
 }

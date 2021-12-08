@@ -2,15 +2,14 @@ package com.todense.viewmodel;
 
 import com.todense.model.graph.Graph;
 import com.todense.viewmodel.algorithm.AlgorithmTask;
-import com.todense.viewmodel.layout.LayoutTask;
-import com.todense.viewmodel.layout.task.AutoD3LayoutTask;
-import com.todense.viewmodel.layout.task.D3LayoutTask;
 import com.todense.viewmodel.file.GraphReader;
 import com.todense.viewmodel.file.format.graphml.GraphMLReader;
 import com.todense.viewmodel.file.format.mtx.MtxReader;
 import com.todense.viewmodel.file.format.ogr.OgrReader;
 import com.todense.viewmodel.file.format.tsp.TspReader;
 import com.todense.viewmodel.graph.GraphManager;
+import com.todense.viewmodel.layout.LayoutTask;
+import com.todense.viewmodel.layout.task.AutoD3LayoutTask;
 import com.todense.viewmodel.scope.*;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ScopeProvider;
@@ -103,28 +102,15 @@ public class MainViewModel implements ViewModel {
 
         notificationCenter.subscribe(TASK_STARTED, (key, payload) -> {
             AlgorithmTask task = (AlgorithmTask) payload[0];
-            String taskName = task.getAlgorithmName();
-            write(taskName + " started");
-            writeInfo("Running: "+ taskName);
-            workingProperty.set(true);
-            if (!(task instanceof LayoutTask)){
-                autoEditLockProperty.set(true);
-            }
-
-            autoLayoutOnProperty.set(false);
-            taskRunningProperty.set(true);
-            graphManager.resetGraph();
+            onTaskStarted(task);
         });
 
         notificationCenter.subscribe(TASK_FINISHED, (key, payload) -> { //payload = name, duration, result
-            write(payload[0] + " finished in "+ durationFormatter.format(payload[1]));
-            if(!((String) payload[2]).isEmpty()){
-                write((String) payload[2]); // result message
-            }
-            writeInfo("");
-            workingProperty.set(false);
-            autoEditLockProperty.set(false);
-            taskRunningProperty.set(false);
+            String name = (String) payload[0];
+            long duration = (long) payload[1];
+            String result = (String) payload[2];
+
+            onTaskFinished(name, duration, result);
         });
 
         notificationCenter.subscribe(THREAD_STARTED, (key, payload) -> {
@@ -178,6 +164,33 @@ public class MainViewModel implements ViewModel {
         canvasScope.borderColorProperty().bind(appColorProperty);
 
         appColorProperty.addListener((obs, oldVal, newVel) -> canvasScope.getPainter().repaint());
+    }
+
+    private void onTaskStarted(AlgorithmTask task){
+        String taskName = task.getAlgorithmName();
+        write(taskName + " started");
+        writeInfo("Running: "+ taskName);
+        workingProperty.set(true);
+        if (!(task instanceof LayoutTask)){
+            autoEditLockProperty.set(true);
+        }
+
+        autoLayoutOnProperty.set(false);
+        taskRunningProperty.set(true);
+        graphManager.resetGraph();
+    }
+
+    private void onTaskFinished(String name, long duration, String result){
+        if(name != null){
+            write(name + " finished in "+ durationFormatter.format(duration));
+        }
+        if(!result.isEmpty()){
+            write(result); // result message
+        }
+        writeInfo("");
+        workingProperty.set(false);
+        autoEditLockProperty.set(false);
+        taskRunningProperty.set(false);
     }
 
     private void startAutoLayout(){

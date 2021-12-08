@@ -30,28 +30,32 @@ public class D3LayoutTask extends LayoutTask {
 
     @Override
     protected void applyRepulsiveForce(Node n, Node m, boolean opposite) {
-        double dist = getDistance(n, m);
-        double rf = -repulsiveStrength * layoutScope.getD3Alpha() / Math.pow(dist, 2);
-        Point2D diff = (m.getPos().subtract(n.getPos())).multiply(rf);
-        addForce(n, diff);
+        Point2D delta = m.getPos().subtract(n.getPos());
+        double rf = -repulsiveStrength * alpha / Math.pow(delta.magnitude(), 2);
+        Point2D force = delta.multiply(rf);
+        addForce(n, force);
+
         if(opposite){
-            addForce(m, diff.multiply(-1));
+            addForce(m, force.multiply(-1));
         }
     }
 
     @Override
     protected void applyRepulsiveForce(Node node, Point2D centerOfMass, double centerDist, int cellSize) {
-        double rf = cellSize * -repulsiveStrength * layoutScope.getD3Alpha() / Math.pow(centerDist,2);
+        double rf = cellSize * -repulsiveStrength * alpha / Math.pow(centerDist,2);
         Point2D force = (centerOfMass.subtract(node.getPos())).multiply(rf);
         addForce(node, force);
     }
 
     @Override
     protected void applyAttractiveForce(Node n, Node m) {
+        Point2D mPos = m.getPos().add(getForce(m));
+        Point2D nPos = n.getPos().add(getForce(n));
         double strength = 1.0 / (Math.min(n.getDegree(), m.getDegree()) + 1);
-        double dist = getDistance(n, m);
-        double af = layoutScope.getD3Alpha() * strength * (dist - optDist) / dist;
-        Point2D force = m.getPos().add(getForce(m)).subtract((n.getPos().add(getForce(n)))).multiply(af);
+        Point2D delta = mPos.subtract(nPos);
+        double dist = delta.magnitude();
+        double af = alpha * strength * (dist - optDist) / dist;
+        Point2D force = delta.multiply(af);
         //double bias = (double)n.getDegree()/(m.getDegree()+n.getDegree());
         addForce(n, force);
         addForce(m, force.multiply(-1));
@@ -110,9 +114,9 @@ public class D3LayoutTask extends LayoutTask {
 
             Point2D force = getForce(node);
             double magnitude = force.magnitude();
-            if (magnitude > 1000.0) {
-                force = force.multiply(1000.0 / magnitude);
-            }
+            //if (magnitude > 1000.0) {
+            //    force = force.multiply(1000.0 / magnitude);
+            //}
             Point2D updatedPos = node.getPos().add(force);
             graph.setNodePosition(node, updatedPos, false);
         }

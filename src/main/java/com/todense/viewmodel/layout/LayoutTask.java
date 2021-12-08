@@ -19,7 +19,6 @@ public abstract class LayoutTask extends AlgorithmTask {
     protected LayoutScope layoutScope;
     protected GraphManager graphManager;
     private QuadTree quadTree;
-    protected double[][] distances;
     protected Point2D [] forces;
     protected Point2D [] prevForces;
     protected HashMap<Node, Integer> prevNodeIdx;
@@ -56,19 +55,17 @@ public abstract class LayoutTask extends AlgorithmTask {
 
             iterationCounter++;
             synchronized (Graph.LOCK) {
-                synchronizeGraphChanges();
+                initForces();
 
                 if(layoutScope.isBarnesHutOn()){
                     quadTree = new QuadTree(7, graph);
                 }
 
                 onIterationStart(graph);
-                calculateDistanceMatrix(graph);
                 applyForces(graph);
                 updateGraph(graph);
             }
             onIterationEnd();
-            Thread.sleep(1);
         }
         super.repaint();
     }
@@ -137,17 +134,6 @@ public abstract class LayoutTask extends AlgorithmTask {
 
     protected abstract boolean stopConditionMet();
 
-    private void calculateDistanceMatrix(Graph graph){
-        distances = new double[graph.getOrder()][graph.getOrder()];
-        for (Node n : graph.getNodes()) {
-            for (Node m : graph.getNodes()) {
-                if(n.getIndex() < m.getIndex()){
-                    distances[n.getIndex()][m.getIndex()] = n.getPos().distance(m.getPos());
-                }
-            }
-        }
-    }
-
     private void applyBarnesHutRepulsiveForces(Node node, QuadTree quadTree){
         Stack<Cell> cellStack = new Stack<>();
         cellStack.add(quadTree.getRoot());
@@ -180,7 +166,7 @@ public abstract class LayoutTask extends AlgorithmTask {
         }
     }
 
-    protected void synchronizeGraphChanges(){
+    protected void initForces(){
         prevForces = forces;
         forces = new Point2D[graph.getOrder()];
         for(Node n: graph.getNodes()){
@@ -191,12 +177,6 @@ public abstract class LayoutTask extends AlgorithmTask {
             forces[n.getIndex()] = prevForce;
             prevNodeIdx.put(n, n.getIndex());
         }
-    }
-
-    protected double getDistance(Node n, Node m) {
-        return n.getIndex() < m.getIndex()
-                ? distances[n.getIndex()][m.getIndex()]
-                : distances[m.getIndex()][n.getIndex()];
     }
 
     protected void addForce(Node n, Point2D force){

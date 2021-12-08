@@ -4,9 +4,12 @@ package com.todense.viewmodel.scope;
 import com.todense.model.graph.Node;
 import de.saxsys.mvvmfx.Scope;
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +17,8 @@ import java.util.List;
 public class InputScope implements Scope {
 
     private final BooleanProperty editLockedProperty = new SimpleBooleanProperty(false);
+
+    private ObjectProperty<Cursor> canvasCursorProperty = new SimpleObjectProperty<>();
 
     private boolean selecting = false;
     private boolean connecting = false;
@@ -87,5 +92,17 @@ public class InputScope implements Scope {
 
     public void setDummyEdgeStartNodes(List<Node> dummyEdgeStartNodes) {
         this.dummyEdgeStartNodes = dummyEdgeStartNodes;
+    }
+
+    public Cursor getCanvasCursor() {
+        return canvasCursorProperty.get();
+    }
+
+    public ObjectProperty<Cursor> canvasCursorProperty() {
+        return canvasCursorProperty;
+    }
+
+    public void setCanvasCursor(Cursor cursor) {
+        this.canvasCursorProperty.set(cursor);
     }
 }

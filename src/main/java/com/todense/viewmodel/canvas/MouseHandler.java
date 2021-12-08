@@ -10,6 +10,7 @@ import com.todense.viewmodel.scope.InputScope;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -269,6 +270,12 @@ public class MouseHandler {
                 hoverEdge.setHighlighted(true);
                 painter.repaint();
             }
+        }
+
+        if(hoverNode == null){
+            inputScope.setCanvasCursor(Cursor.DEFAULT);
+        }else{
+            inputScope.setCanvasCursor(Cursor.OPEN_HAND);
         }
     }
     

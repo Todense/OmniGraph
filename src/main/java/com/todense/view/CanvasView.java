@@ -31,13 +31,6 @@ public class CanvasView implements FxmlView<CanvasViewModel>{
         canvas.prefWidth(0);
         canvasPane.getChildren().add(canvas);
 
-        viewModel.editLockedProperty().addListener((obs, oldVal, newVal)->{
-            if(newVal)
-                canvas.setCursor(Cursor.OPEN_HAND);
-            else
-                canvas.setCursor(Cursor.DEFAULT);
-        });
-
         canvas.widthProperty().bind(canvasPane.widthProperty());
         canvas.heightProperty().bind(canvasPane.heightProperty());
 
@@ -48,6 +41,8 @@ public class CanvasView implements FxmlView<CanvasViewModel>{
         viewModel.canvasWidthProperty().bind(canvas.widthProperty());
         viewModel.canvasHeightProperty().bind(canvas.heightProperty());
 
+        viewModel.canvasCursorProperty().bindBidirectional(canvas.cursorProperty());
+
         canvas.setOnMousePressed(viewModel.getMouseHandler()::onMousePressed);
         canvas.setOnMouseClicked(viewModel.getMouseHandler()::onMouseClicked);
         canvas.setOnMouseDragged(viewModel.getMouseHandler()::onMouseDragged);
@@ -56,6 +51,7 @@ public class CanvasView implements FxmlView<CanvasViewModel>{
         canvas.setOnScroll(viewModel.getMouseHandler()::onMouseScroll);
 
         canvas.getGraphicsContext2D().setLineCap(StrokeLineCap.BUTT);
+
 
         Platform.runLater(() -> {
             viewModel.setCanvasNode(canvas);

@@ -19,6 +19,8 @@ public class YifanHuLayoutTask extends LayoutTask {
 	private double graphEnergy;
 	private int coolingCounter;
 
+	private double[][] distances;
+
 
 	public YifanHuLayoutTask(LayoutScope layoutScope, GraphManager graphManager) {
 		super(layoutScope, graphManager);
@@ -71,6 +73,8 @@ public class YifanHuLayoutTask extends LayoutTask {
 		repulsiveStrength = getRepulsiveStrength(1.0);
 		longRangeExponent = layoutScope.getLongRangeForce();
 		gravity = layoutScope.gravityPullStrength() / optDist;
+
+		calculateDistanceMatrix(graph);
 	}
 
 	@Override
@@ -83,7 +87,7 @@ public class YifanHuLayoutTask extends LayoutTask {
 	}
 
 	@Override
-	protected void synchronizeGraphChanges() {
+	protected void initForces() {
 		forces = new Point2D[graph.getOrder()];
 		Arrays.fill(forces, new Point2D(0,0));
 	}
@@ -139,5 +143,22 @@ public class YifanHuLayoutTask extends LayoutTask {
 
 	private double getRepulsiveStrength(double repulsiveness){
 		return -repulsiveness * Math.pow(layoutScope.getOptDist(), longRangeExponent);
+	}
+
+	private void calculateDistanceMatrix(Graph graph){
+		distances = new double[graph.getOrder()][graph.getOrder()];
+		for (Node n : graph.getNodes()) {
+			for (Node m : graph.getNodes()) {
+				if(n.getIndex() < m.getIndex()){
+					distances[n.getIndex()][m.getIndex()] = n.getPos().distance(m.getPos());
+				}
+			}
+		}
+	}
+
+	protected double getDistance(Node n, Node m) {
+		return n.getIndex() < m.getIndex()
+				? distances[n.getIndex()][m.getIndex()]
+				: distances[m.getIndex()][n.getIndex()];
 	}
 }
