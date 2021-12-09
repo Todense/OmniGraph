@@ -1,5 +1,6 @@
 package com.todense.view;
 
+import com.todense.view.components.ParameterHBox;
 import com.todense.viewmodel.LayoutViewModel;
 import com.todense.viewmodel.layout.LayoutAlgorithm;
 import de.saxsys.mvvmfx.FxmlView;
@@ -30,7 +31,7 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
     @FXML private ChoiceBox<LayoutAlgorithm> layoutAlgorithmChoiceBox;
     @FXML private ProgressBar alphaBar, stepSizeBar;
 
-    private HashMap<LayoutAlgorithm, List<HBox>> algorithmParametersBoxes = new HashMap<>();
+    private HashMap<LayoutAlgorithm, List<ParameterHBox>> algorithmParametersBoxes = new HashMap<>();
     private List<HBox> generalParametersHBoxes = new ArrayList<>();
 
     @InjectViewModel
@@ -48,8 +49,10 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
         multilevelToggleSwitch.selectedProperty().bindBidirectional(viewModel.getLayoutScope().multilevelOnProperty());
         barnesHutToggleSwitch.selectedProperty().bindBidirectional(viewModel.getLayoutScope().barnesHutOnProperty());
 
-        var gravityHBox = createAndSetUpParameterHBox(
-                null,
+        // GENERAL PARAMETERS
+
+        // Gravity
+        var gravityHBox = new ParameterHBox(
                 "Gravity strength",
                 viewModel.getLayoutScope().gravityStrengthProperty(),
                 2,
@@ -57,10 +60,12 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
                 0.0,
                 Double.POSITIVE_INFINITY
         );
+        generalParametersHBoxes.add(gravityHBox);
         gravityHBox.disableProperty().bind(viewModel.getLayoutScope().gravityOnProperty().not());
 
-        createAndSetUpParameterHBox(
-                null,
+
+        // Optimal distance
+        var optDistHBox = new ParameterHBox(
                 "Optimal dist",
                 viewModel.getLayoutScope().optDistProperty(),
                 1,
@@ -68,8 +73,12 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
                 0.01,
                 Double.POSITIVE_INFINITY
         );
-        createAndSetUpParameterHBox(
-                LayoutAlgorithm.YIFAN_HU,
+        generalParametersHBoxes.add(optDistHBox);
+
+
+        // ADAPTIVE COOLING PARAMETERS
+
+        var initialStepSizeHBox = new ParameterHBox(
                 "Initial Step Size",
                 viewModel.getLayoutScope().initialStepSizeProperty(),
                 1,
@@ -77,8 +86,9 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
                 0.0000001,
                 Double.POSITIVE_INFINITY
         );
-        createAndSetUpParameterHBox(
-                LayoutAlgorithm.YIFAN_HU,
+        algorithmParametersBoxes.get(LayoutAlgorithm.ADAPTIVE_COOLING).add(initialStepSizeHBox);
+
+        var toleranceHBox = new ParameterHBox(
                 "Tolerance",
                 viewModel.getLayoutScope().toleranceProperty(),
                 3,
@@ -86,8 +96,9 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
                 0.0,
                 Double.POSITIVE_INFINITY
         );
-        var coolingHBox = createAndSetUpParameterHBox(
-                LayoutAlgorithm.YIFAN_HU,
+        algorithmParametersBoxes.get(LayoutAlgorithm.ADAPTIVE_COOLING).add(toleranceHBox);
+
+        var coolingHBox = new ParameterHBox(
                 "Cooling speed",
                 viewModel.getLayoutScope().coolingSpeedProperty(),
                 3,
@@ -95,20 +106,22 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
                 0.0,
                 1.0
         );
+        algorithmParametersBoxes.get(LayoutAlgorithm.ADAPTIVE_COOLING).add(coolingHBox);
         coolingHBox.disableProperty().bind(viewModel.getLayoutScope().coolingOnProperty().not());
 
-        createAndSetUpParameterHBox(
-                LayoutAlgorithm.YIFAN_HU,
-                "Long Rep. Str.",
+        var longRepStrHBox = new ParameterHBox(
+                "Long Repulsive Str.",
                 viewModel.getLayoutScope().longRangeForceProperty(),
                 1,
                 2.0,
                 1.0,
                 3.0
         );
+        algorithmParametersBoxes.get(LayoutAlgorithm.ADAPTIVE_COOLING).add(longRepStrHBox);
 
-        createAndSetUpParameterHBox(
-                LayoutAlgorithm.D3,
+        // D3 PARAMETERS
+
+        var speedDecayHBox = new ParameterHBox(
                 "Speed Decay",
                 viewModel.getLayoutScope().d3SpeedDecayProperty(),
                 2,
@@ -116,9 +129,9 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
                 0.0,
                 0.99
         );
+        algorithmParametersBoxes.get(LayoutAlgorithm.D3).add(speedDecayHBox);
 
-        createAndSetUpParameterHBox(
-                LayoutAlgorithm.D3,
+        var minAlphaHBox = new ParameterHBox(
                 "Min Alpha",
                 viewModel.getLayoutScope().d3MinAlphaProperty(),
                 4,
@@ -126,9 +139,9 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
                 0.0,
                 1.0
         );
+        algorithmParametersBoxes.get(LayoutAlgorithm.D3).add(minAlphaHBox);
 
-        createAndSetUpParameterHBox(
-                LayoutAlgorithm.D3,
+        var alphaDecayHBox = new ParameterHBox(
                 "Alpha Decay",
                 viewModel.getLayoutScope().d3AlphaDecayProperty(),
                 3,
@@ -136,9 +149,9 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
                 0.0,
                 1.0
         );
+        algorithmParametersBoxes.get(LayoutAlgorithm.D3).add(alphaDecayHBox);
 
-        createAndSetUpParameterHBox(
-                LayoutAlgorithm.D3,
+        var repulsiveStrengthHBox = new ParameterHBox(
                 "Repulsive strength",
                 viewModel.getLayoutScope().d3RepulsiveStrengthProperty(),
                 1,
@@ -146,9 +159,9 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
                 0.0,
                 Double.POSITIVE_INFINITY
         );
+        algorithmParametersBoxes.get(LayoutAlgorithm.D3).add(repulsiveStrengthHBox);
 
-        createAndSetUpParameterHBox(
-                LayoutAlgorithm.D3,
+        var d3ToleranceHBox = new ParameterHBox(
                 "Tolerance",
                 viewModel.getLayoutScope().d3ToleranceProperty(),
                 4,
@@ -156,32 +169,33 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
                 0.0,
                 1.0
         );
+        algorithmParametersBoxes.get(LayoutAlgorithm.D3).add(d3ToleranceHBox);
 
 
         viewModel.getLayoutScope().layoutAlgorithmProperty().bindBidirectional(layoutAlgorithmChoiceBox.valueProperty());
         layoutAlgorithmChoiceBox.getItems().addAll(LayoutAlgorithm.values());
-        layoutAlgorithmChoiceBox.setValue(LayoutAlgorithm.YIFAN_HU);
+        layoutAlgorithmChoiceBox.setValue(LayoutAlgorithm.ADAPTIVE_COOLING);
 
         layoutAlgorithmChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             parametersVBox.getChildren().clear();
             parametersVBox.getChildren().addAll(generalParametersHBoxes);
             parametersVBox.getChildren().addAll(algorithmParametersBoxes.get(newVal));
 
-            coolingToggleSwitch.setVisible(newVal == LayoutAlgorithm.YIFAN_HU);
-            coolingToggleSwitch.setManaged(newVal == LayoutAlgorithm.YIFAN_HU);
+            coolingToggleSwitch.setVisible(newVal == LayoutAlgorithm.ADAPTIVE_COOLING);
+            coolingToggleSwitch.setManaged(newVal == LayoutAlgorithm.ADAPTIVE_COOLING);
 
             alphaProgressBarVBox.setVisible(newVal == LayoutAlgorithm.D3);
             alphaProgressBarVBox.setManaged(newVal == LayoutAlgorithm.D3);
 
-            stepSizeBar.setVisible(newVal == LayoutAlgorithm.YIFAN_HU);
-            stepSizeBar.setManaged(newVal == LayoutAlgorithm.YIFAN_HU);
+            stepSizeBar.setVisible(newVal == LayoutAlgorithm.ADAPTIVE_COOLING);
+            stepSizeBar.setManaged(newVal == LayoutAlgorithm.ADAPTIVE_COOLING);
 
         });
 
 
         parametersVBox.getChildren().clear();
         parametersVBox.getChildren().addAll(generalParametersHBoxes);
-        parametersVBox.getChildren().addAll(algorithmParametersBoxes.get(LayoutAlgorithm.YIFAN_HU));
+        parametersVBox.getChildren().addAll(algorithmParametersBoxes.get(LayoutAlgorithm.ADAPTIVE_COOLING));
 
         alphaBar.progressProperty().bind(viewModel.getLayoutScope().d3AlphaProperty());
         alphaProgressBarVBox.setVisible(false);
@@ -190,92 +204,6 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
         stepSizeBar.progressProperty().bind(viewModel.getLayoutScope().stepSizeProperty()
                 .divide(viewModel.getLayoutScope().initialStepSizeProperty()).divide(2)
         );
-    }
-
-    private HBox createAndSetUpParameterHBox(LayoutAlgorithm layoutAlgorithm,
-                                             String labelText,
-                                             Property<Number> property,
-                                             int precision,
-                                             double defVal,
-                                             double minVal,
-                                             double maxVal){
-        HBox hBox = (HBox) createParameterHBox(labelText);
-        Label label = (Label) hBox.getChildren().get(0);
-        TextField textField = (TextField) hBox.getChildren().get(1);
-        setUpParameterHBox(textField, label, property, precision, defVal, minVal, maxVal);
-        if(layoutAlgorithm != null){
-            this.algorithmParametersBoxes.get(layoutAlgorithm).add(hBox);
-        }else{
-            this.generalParametersHBoxes.add(hBox);
-        }
-        return hBox;
-    }
-
-    private Node createParameterHBox(String labelText){
-        HBox hBox = new HBox();
-        hBox.setPrefHeight(25);
-        hBox.setPrefWidth(190);
-        hBox.setAlignment(Pos.CENTER);
-
-        TextField textField = new TextField();
-        textField.setPrefHeight(25);
-        textField.setPrefWidth(60);
-
-        Label label = new Label();
-        label.setPrefHeight(25);
-        label.setPrefWidth(115);
-        label.setText(labelText);
-
-        hBox.getChildren().add(label);
-        hBox.getChildren().add(textField);
-
-        return hBox;
-    }
-
-    private void setUpParameterHBox(
-            TextField textField,
-            Label label,
-            Property<Number> property,
-            int precision,
-            double defVal,
-            double minVal,
-            double maxVal){
-        Pattern pattern = Pattern.compile("-?\\d+(\\.\\d*)?(E-?\\d+)?");
-        TextFormatter formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change ->
-                pattern.matcher(change.getControlNewText()).matches() ? change : null);
-
-        textField.setTextFormatter(formatter);
-        label.setOnMousePressed(mouseEvent -> previousY=mouseEvent.getY());
-        label.setOnMouseDragged(mouseEvent -> {
-            double delta = (mouseEvent.getY() - previousY) * Math.pow(10, -precision);
-            double oldValue = Double.parseDouble(textField.getText());
-            double newValue = oldValue - delta;
-            if(newValue > maxVal){
-                newValue = maxVal;
-            }else if(newValue < minVal){
-                newValue = minVal;
-            }else{
-                newValue = Precision.round(newValue, precision);
-            }
-            textField.setText(String.valueOf(newValue));
-            previousY = mouseEvent.getY();
-            label.effectProperty().set(new Bloom());
-        });
-        label.setOnMouseReleased(mouseEvent -> label.effectProperty().set(null));
-        StringConverter<Number> converter = new StringConverter<>() {
-            @Override
-            public String toString(Number n) {
-                return String.valueOf(n);
-            }
-
-            @Override
-            public Number fromString(String s) {
-                return Double.parseDouble(s);
-            }
-        };
-        Bindings.bindBidirectional(textField.textProperty(), property, converter);
-
-        property.setValue(defVal);
     }
 
     @FXML

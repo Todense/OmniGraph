@@ -30,8 +30,14 @@ public class D3LayoutTask extends LayoutTask {
 
     @Override
     protected void applyRepulsiveForce(Node n, Node m, boolean opposite) {
-        Point2D delta = m.getPos().subtract(n.getPos());
-        double rf = -repulsiveStrength * alpha / Math.pow(delta.magnitude(), 2);
+        Point2D mPos = m.getPos();
+        Point2D nPos = n.getPos();
+        if(mPos.equals(nPos)){
+            mPos = addNoise(mPos);
+        }
+        Point2D delta = mPos.subtract(nPos);
+        double dist = delta.magnitude();
+        double rf = -repulsiveStrength * alpha / Math.pow(dist, 2);
         Point2D force = delta.multiply(rf);
         addForce(n, force);
 
@@ -51,6 +57,9 @@ public class D3LayoutTask extends LayoutTask {
     protected void applyAttractiveForce(Node n, Node m) {
         Point2D mPos = m.getPos().add(getForce(m));
         Point2D nPos = n.getPos().add(getForce(n));
+        if(mPos.equals(nPos)){
+            mPos = addNoise(mPos);
+        }
         double strength = 1.0 / (Math.min(n.getDegree(), m.getDegree()) + 1);
         Point2D delta = mPos.subtract(nPos);
         double dist = delta.magnitude();
@@ -114,9 +123,9 @@ public class D3LayoutTask extends LayoutTask {
 
             Point2D force = getForce(node);
             double magnitude = force.magnitude();
-            //if (magnitude > 1000.0) {
-            //    force = force.multiply(1000.0 / magnitude);
-            //}
+            if (magnitude > 1.0e4) {
+                force = force.multiply(1.0e4 / magnitude);
+            }
             Point2D updatedPos = node.getPos().add(force);
             graph.setNodePosition(node, updatedPos, false);
         }

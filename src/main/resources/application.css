@@ -208,6 +208,10 @@
     -fx-text-fill: derive(fx-text-dark, -20%);
 }
 
+.parameterLabel{
+
+}
+
 .canvas{
     -fx-background-color: antiquewhite, white ;
     -fx-background-insets: 0, 20 ;

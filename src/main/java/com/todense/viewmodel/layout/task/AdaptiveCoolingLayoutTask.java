@@ -9,7 +9,7 @@ import javafx.geometry.Point2D;
 
 import java.util.Arrays;
 
-public class YifanHuLayoutTask extends LayoutTask {
+public class AdaptiveCoolingLayoutTask extends LayoutTask {
 
 	private double repulsiveStrength;
 	private double optDist;
@@ -19,10 +19,8 @@ public class YifanHuLayoutTask extends LayoutTask {
 	private double graphEnergy;
 	private int coolingCounter;
 
-	private double[][] distances;
 
-
-	public YifanHuLayoutTask(LayoutScope layoutScope, GraphManager graphManager) {
+	public AdaptiveCoolingLayoutTask(LayoutScope layoutScope, GraphManager graphManager) {
 		super(layoutScope, graphManager);
 		super.algorithmName = "Yifan Hu Layout";
 		layoutScope.setStepSize(layoutScope.getInitialStepSize());
@@ -35,7 +33,7 @@ public class YifanHuLayoutTask extends LayoutTask {
 
 	@Override
 	protected void applyRepulsiveForce(Node n, Node m, boolean opposite) {
-		double dist = getDistance(n, m);
+		double dist = n.getPos().distance(m.getPos());
 		if (dist > 0) {
 			double rf = repulsiveStrength / Math.pow(dist, layoutScope.getLongRangeForce());
 			Point2D diff = m.getPos().subtract(n.getPos()).multiply(rf/dist);
@@ -55,7 +53,7 @@ public class YifanHuLayoutTask extends LayoutTask {
 
 	@Override
 	protected void applyAttractiveForce(Node n, Node m) {
-		double dist = getDistance(n, m);
+		double dist = n.getPos().distance(m.getPos());
 		double af = Math.pow(dist, 2) / optDist;
 		Point2D diff = (m.getPos().subtract(n.getPos())).multiply(af/dist);
 		addForce(n, diff);
@@ -73,8 +71,6 @@ public class YifanHuLayoutTask extends LayoutTask {
 		repulsiveStrength = getRepulsiveStrength(1.0);
 		longRangeExponent = layoutScope.getLongRangeForce();
 		gravity = layoutScope.gravityPullStrength() / optDist;
-
-		calculateDistanceMatrix(graph);
 	}
 
 	@Override
@@ -143,22 +139,5 @@ public class YifanHuLayoutTask extends LayoutTask {
 
 	private double getRepulsiveStrength(double repulsiveness){
 		return -repulsiveness * Math.pow(layoutScope.getOptDist(), longRangeExponent);
-	}
-
-	private void calculateDistanceMatrix(Graph graph){
-		distances = new double[graph.getOrder()][graph.getOrder()];
-		for (Node n : graph.getNodes()) {
-			for (Node m : graph.getNodes()) {
-				if(n.getIndex() < m.getIndex()){
-					distances[n.getIndex()][m.getIndex()] = n.getPos().distance(m.getPos());
-				}
-			}
-		}
-	}
-
-	protected double getDistance(Node n, Node m) {
-		return n.getIndex() < m.getIndex()
-				? distances[n.getIndex()][m.getIndex()]
-				: distances[m.getIndex()][n.getIndex()];
 	}
 }

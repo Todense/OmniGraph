@@ -11,6 +11,7 @@ import com.todense.viewmodel.scope.LayoutScope;
 import javafx.geometry.Point2D;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Random;
 import java.util.Stack;
 
 public abstract class LayoutTask extends AlgorithmTask {
@@ -23,6 +24,7 @@ public abstract class LayoutTask extends AlgorithmTask {
     protected Point2D [] prevForces;
     protected HashMap<Node, Integer> prevNodeIdx;
     protected final double gamma = Math.sqrt(9d/4d);
+    Random rnd = new Random();
 
     public LayoutTask(LayoutScope layoutScope, GraphManager graphManager) {
         super(graphManager.getGraph());
@@ -141,6 +143,9 @@ public abstract class LayoutTask extends AlgorithmTask {
             Cell cell = cellStack.pop();
             if(cell == null || cell.getNodes().size() == 0) continue;
             Point2D centerOfMass = cell.getCenterOfMass();
+            if(centerOfMass.equals(node.getPos())){
+                centerOfMass = addNoise(centerOfMass);
+            }
             double centerDist = centerOfMass.distance(node.getPos());
             if(cell.getWidth() / centerDist < 1.2) {
                 applyRepulsiveForce(node, centerOfMass, centerDist, cell.getNodes().size());
@@ -177,6 +182,10 @@ public abstract class LayoutTask extends AlgorithmTask {
             forces[n.getIndex()] = prevForce;
             prevNodeIdx.put(n, n.getIndex());
         }
+    }
+
+    protected Point2D addNoise(Point2D p){
+        return p.add(rnd.nextDouble()*1.0e-10-0.5e-30, rnd.nextDouble()*1.0e-10-0.5e-10);
     }
 
     protected void addForce(Node n, Point2D force){

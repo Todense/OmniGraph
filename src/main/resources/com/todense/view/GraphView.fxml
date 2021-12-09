@@ -14,39 +14,10 @@
 <?import org.controlsfx.control.ToggleSwitch?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="526.0" prefWidth="220.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.GraphView">
+<VBox alignment="CENTER" fillWidth="false" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="526.0" prefWidth="220.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.GraphView">
    <Label alignment="CENTER" prefHeight="1.0" prefWidth="208.0" styleClass="darkLabel" text="Node Options" />
-   <VBox alignment="CENTER" prefHeight="149.0" prefWidth="220.0" spacing="5.0" styleClass="subsection">
+   <VBox fx:id="nodeOptionsVBox" alignment="CENTER" prefHeight="149.0" prefWidth="220.0" spacing="5.0" styleClass="subsection">
       <children>
-         <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="9.0" prefWidth="146.0">
-            <Label contentDisplay="CENTER" prefHeight="15.0" prefWidth="77.0" text="Size">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <Pane maxWidth="1.7976931348623157E308" prefHeight="15.0" HBox.hgrow="ALWAYS" />
-            <Label fx:id="nodeSizeLabel" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="15.0" prefWidth="29.0" text="0.1" textAlignment="CENTER">
-               <font>
-                  <Font name="System Bold" size="10.0" />
-               </font>
-            </Label>
-            <VBox.margin>
-               <Insets top="5.0" />
-            </VBox.margin>
-         </HBox>
-         <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="22.0" prefWidth="190.0" spacing="2.0">
-            <Button layoutX="143.0" layoutY="17.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#nodeSizeDecrementAction" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
-               </graphic>
-            </Button>
-            <JFXSlider fx:id="nodeSizeSlider" blockIncrement="0.1" majorTickUnit="0.1" min="0.1" minorTickCount="1" prefHeight="22.0" prefWidth="202.0" />
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#nodeSizeIncrementAction" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
-               </graphic>
-            </Button>
-         </HBox>
          <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0" spacing="5.0">
             <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="50.0" text="Color">
                <font>
@@ -95,38 +66,6 @@
    <Label alignment="CENTER" layoutX="16.0" layoutY="10.0" prefHeight="7.0" prefWidth="208.0" styleClass="darkLabel" text="Edge Options" />
    <VBox fx:id="edgeOptionsVBox" alignment="CENTER" prefHeight="123.0" prefWidth="220.0" spacing="5.0" styleClass="subsection">
       <children>
-         <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="11.0" prefWidth="146.0">
-            <Label contentDisplay="CENTER" prefHeight="15.0" prefWidth="98.0" text="Width">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <Pane maxWidth="1.7976931348623157E308" prefHeight="15.0" HBox.hgrow="ALWAYS" />
-            <Label fx:id="edgeWidthLabel" alignment="CENTER_RIGHT" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="28.0" prefWidth="30.0" text="60" textAlignment="CENTER">
-               <font>
-                  <Font name="System Bold" size="10.0" />
-               </font>
-            </Label>
-            <VBox.margin>
-               <Insets top="5.0" />
-            </VBox.margin>
-         </HBox>
-         <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="0.0" prefWidth="190.0" spacing="2.0">
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#edgeWidthDecrementAction" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
-               </graphic>
-            </Button>
-            <JFXSlider fx:id="edgeWidthSlider" blockIncrement="0.01" max="1.0" min="0.01" prefWidth="160.0" value="0.3" />
-            <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#edgeWidthIncrementAction" prefHeight="15.0" prefWidth="15.0">
-               <graphic>
-                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
-               </graphic>
-            </Button>
-            <VBox.margin>
-               <Insets top="3.0" />
-            </VBox.margin>
-         </HBox>
          <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0" spacing="5.0">
             <Label minWidth="-Infinity" prefHeight="25.0" prefWidth="50.0" text="Color">
                <font>

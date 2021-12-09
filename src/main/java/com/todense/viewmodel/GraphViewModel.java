@@ -64,9 +64,10 @@ public class GraphViewModel implements ViewModel {
             int sampleSize = Math.min(newGraph.getOrder() - 1, 100);
             Platform.runLater(() -> {
                 if(sampleSize > 0){
-                    graphScope.nodeSizeProperty().set((
-                            0.3 * GraphAnalyzer.getNearestNeighbourSpanningTreeLength(newGraph, sampleSize)/(sampleSize)
-                    ));
+                    double treeLength = GraphAnalyzer.getNearestNeighbourSpanningTreeLength(newGraph, sampleSize);
+                    if(treeLength > 0){
+                        graphScope.nodeSizeProperty().set(0.3 * treeLength / sampleSize);
+                    }
                 }
             });
             notificationCenter.publish(GraphViewModel.NEW_GRAPH_SET);

@@ -5,7 +5,7 @@ import com.todense.model.graph.Node;
 import com.todense.viewmodel.algorithm.AlgorithmTask;
 import com.todense.viewmodel.algorithm.AlgorithmTaskManager;
 import com.todense.viewmodel.layout.task.D3LayoutTask;
-import com.todense.viewmodel.layout.task.YifanHuLayoutTask;
+import com.todense.viewmodel.layout.task.AdaptiveCoolingLayoutTask;
 import com.todense.viewmodel.random.Generator;
 import com.todense.viewmodel.random.arrangement.generators.RandomCirclePointGenerator;
 import com.todense.viewmodel.scope.CanvasScope;
@@ -55,8 +55,8 @@ public class LayoutViewModel extends AlgorithmTaskManager implements ViewModel {
             case D3:
                 algorithmTask = new D3LayoutTask(layoutScope, GM);
                 break;
-            case YIFAN_HU:
-                algorithmTask = new YifanHuLayoutTask(layoutScope, GM);
+            case ADAPTIVE_COOLING:
+                algorithmTask = new AdaptiveCoolingLayoutTask(layoutScope, GM);
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + layoutScope.getLayoutAlgorithm());
