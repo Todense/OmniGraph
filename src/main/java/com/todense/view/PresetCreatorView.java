@@ -1,23 +1,20 @@
 package com.todense.view;
 
+import com.todense.view.components.ParameterHBox;
 import com.todense.viewmodel.PresetCreatorViewModel;
 import com.todense.viewmodel.preset.Preset;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
+import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.Spinner;
-import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+
+import java.util.Arrays;
 
 public class PresetCreatorView implements FxmlView<PresetCreatorViewModel> {
     @FXML private ChoiceBox<Preset> presetChoiceBox;
-    @FXML private VBox presetVBox;
-    @FXML private HBox param2HBox;
-    @FXML private Spinner<Integer> param1Spinner, param2Spinner;
-    @FXML private Label param1Label, param2Label;
+    @FXML private VBox parametersVBox;
 
     @InjectViewModel
     PresetCreatorViewModel viewModel;
@@ -26,34 +23,58 @@ public class PresetCreatorView implements FxmlView<PresetCreatorViewModel> {
         presetChoiceBox.valueProperty().bindBidirectional(viewModel.presetProperty());
         presetChoiceBox.getItems().addAll(Preset.values());
 
-        param1Spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 10, 1));
-        param1Spinner.getValueFactory().valueProperty().bindBidirectional(viewModel.param1ObjectProperty());
+        var gridWidthHBox = new ParameterHBox("Width", viewModel.gridWidthProperty(),
+                0, 5, 1, Double.POSITIVE_INFINITY
+        );
+        setUpParameterHBox(gridWidthHBox, Preset.GRID, Preset.KING, Preset.MAZE);
 
-        param2Spinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 10000, 10, 1));
-        param2Spinner.getValueFactory().valueProperty().bindBidirectional(viewModel.param2ObjectProperty());
+        var gridHeightHBox = new ParameterHBox("Height", viewModel.gridHeightProperty(),
+                0, 5, 1, Double.POSITIVE_INFINITY
+        );
+        setUpParameterHBox(gridHeightHBox, Preset.GRID, Preset.KING, Preset.MAZE);
 
-        presetChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> {
-            presetVBox.getChildren().remove(param2HBox);
+        var cycleSizeHBox = new ParameterHBox("Size", viewModel.cycleSizeProperty(),
+                0, 10, 3, Double.POSITIVE_INFINITY
+        );
+        setUpParameterHBox(cycleSizeHBox, Preset.CYCLE);
 
-            if(newVal != Preset.CYCLE && newVal != Preset.STAR && newVal != Preset.HEX){
-                presetVBox.getChildren().add(param2HBox);
-            }
+        var hexGridSizeHBox = new ParameterHBox("Size", viewModel.hexGridSizeProperty(),
+                0, 5, 1, Double.POSITIVE_INFINITY
+        );
+        setUpParameterHBox(hexGridSizeHBox, Preset.HEX);
 
-           switch (newVal){
-               case GRID: case MAZE:
-                   param1Label.setText("Columns");
-                   param2Label.setText("Rows"); break;
-               case CYCLE: case STAR:
-                   param1Label.setText("Nodes"); break;
-               case COMPLETE_BIPARTITE:
-                   param1Label.setText("First set size");
-                   param2Label.setText("Second set size"); break;
-               case HEX:
-                   param1Label.setText("Size");
-           }
+        var starSizeHBox = new ParameterHBox("Size", viewModel.starSizeProperty(),
+                0, 10, 1, Double.POSITIVE_INFINITY
+        );
+        setUpParameterHBox(starSizeHBox, Preset.STAR);
 
-        });
+        var bipartiteFirstSetSizeHBox = new ParameterHBox(
+                "First set size",
+                viewModel.bipartiteFirstSetSizeProperty(),
+                0, 5, 1, Double.POSITIVE_INFINITY
+        );
+        setUpParameterHBox(bipartiteFirstSetSizeHBox, Preset.COMPLETE_BIPARTITE);
+
+        var bipartiteSecondSetSizeHBox = new ParameterHBox(
+                "First set size",
+                viewModel.bipartiteSecondSetSizeProperty(),
+                0, 5, 1, Double.POSITIVE_INFINITY
+        );
+        setUpParameterHBox(bipartiteSecondSetSizeHBox, Preset.COMPLETE_BIPARTITE);
+
         presetChoiceBox.valueProperty().setValue(Preset.CYCLE);
+    }
+
+    private void setUpParameterHBox(ParameterHBox hBox, Preset... preset){
+
+        var binding = Bindings.createBooleanBinding(
+                () -> Arrays.stream(preset).anyMatch((g -> g.equals(viewModel.presetProperty().get()))),
+                viewModel.presetProperty());
+
+        hBox.managedProperty().bind(binding);
+        hBox.visibleProperty().bind(binding);
+
+        parametersVBox.getChildren().add(hBox);
     }
 
     @FXML

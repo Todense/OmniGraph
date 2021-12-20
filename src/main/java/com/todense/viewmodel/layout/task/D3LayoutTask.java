@@ -13,6 +13,7 @@ public class D3LayoutTask extends LayoutTask {
     double alpha;
     double gravity;
     double repulsiveStrength;
+    double alphaDecay;
 
     private long lastIterationStartTime;
 
@@ -21,10 +22,14 @@ public class D3LayoutTask extends LayoutTask {
         super.algorithmName = "D3 Layout";
         layoutScope.setD3Alpha(1.0);
         this.alpha = 1.0;
+        this.alphaDecay = layoutScope.getD3AlphaDecay();
     }
 
     @Override
     protected boolean stopConditionMet() {
+        if(iterationCounter < 10){
+            return false;
+        }
         return super.isCancelled() || Math.abs(alpha - layoutScope.getD3MinAlpha()) < layoutScope.getD3Tolerance();
     }
 
@@ -80,13 +85,18 @@ public class D3LayoutTask extends LayoutTask {
         lastIterationStartTime = System.currentTimeMillis();
 
         double alphaDelta = (layoutScope.getD3OptimalAlpha() - layoutScope.getD3Alpha()) *
-                layoutScope.getD3AlphaDecay();
+                alphaDecay;
         layoutScope.setD3Alpha(layoutScope.getD3Alpha() + alphaDelta);
 
-        optDist = layoutScope.getOptDist();
-        gravity = layoutScope.getD3Alpha() * layoutScope.gravityPullStrength() / optDist;
         alpha = layoutScope.getD3Alpha();
-        repulsiveStrength = layoutScope.getD3RepulsiveStrength();
+
+        if(!layoutScope.isMultilevelOn()){
+            alphaDecay = layoutScope.getD3AlphaDecay();
+            optDist = layoutScope.getD3OptDist();
+            repulsiveStrength = layoutScope.getD3RepulsiveStrength();
+        }
+
+        gravity = alpha * layoutScope.gravityPullStrength() / optDist;
 
         boolean dragging = graph.getNodes().stream().anyMatch(Node::isDragged);
         if(dragging){
@@ -123,8 +133,10 @@ public class D3LayoutTask extends LayoutTask {
 
             Point2D force = getForce(node);
             double magnitude = force.magnitude();
-            if (magnitude > 1.0e4) {
-                force = force.multiply(1.0e4 / magnitude);
+            if (magnitude > 1.0e3) {
+                Point2D cappedForce = force.multiply(1.0e3 / magnitude);
+                setForce(node, cappedForce);
+                force = cappedForce;
             }
             Point2D updatedPos = node.getPos().add(force);
             graph.setNodePosition(node, updatedPos, false);
@@ -133,6 +145,18 @@ public class D3LayoutTask extends LayoutTask {
 
     @Override
     protected void updateMultiLayoutParameters() {
-        this.alpha = 1.0;
+        layoutScope.setD3Alpha(1.0);
+        alpha = 1.0;
+        alphaDecay = alphaDecay / gamma;
+        optDist = optDist / gamma;
+        repulsiveStrength = repulsiveStrength / gamma;
+    }
+
+    @Override
+    protected void initMultilevelParameters() {
+        double multiplier = Math.pow(gamma, super.getGraphSequenceLength()-1);
+        alphaDecay = layoutScope.getD3AlphaDecay() * multiplier;
+        optDist = layoutScope.getD3OptDist() * multiplier;
+        repulsiveStrength = layoutScope.getD3RepulsiveStrength() * multiplier;
     }
 }

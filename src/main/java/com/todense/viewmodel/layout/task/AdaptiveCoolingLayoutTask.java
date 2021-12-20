@@ -28,19 +28,26 @@ public class AdaptiveCoolingLayoutTask extends LayoutTask {
 
 	@Override
 	protected boolean stopConditionMet() {
+		if(iterationCounter < 10){
+			return false;
+		}
 		return super.isCancelled() || layoutScope.getStepSize() < layoutScope.getTolerance() * optDist;
 	}
 
 	@Override
 	protected void applyRepulsiveForce(Node n, Node m, boolean opposite) {
-		double dist = n.getPos().distance(m.getPos());
-		if (dist > 0) {
-			double rf = repulsiveStrength / Math.pow(dist, layoutScope.getLongRangeForce());
-			Point2D diff = m.getPos().subtract(n.getPos()).multiply(rf/dist);
-			addForce(n, diff);
-			if(opposite){
-				addForce(m, diff.multiply(-1));
-			}
+		Point2D nPos = n.getPos();
+		Point2D mPos = m.getPos();
+		if(nPos.equals(mPos)){
+			mPos = addNoise(mPos);
+		}
+		Point2D delta = mPos.subtract(nPos);
+		double dist = delta.magnitude();
+		double rf = repulsiveStrength / Math.pow(dist, layoutScope.getLongRangeForce());
+		Point2D force = delta.multiply(rf/dist);
+		addForce(n, force);
+		if(opposite){
+			addForce(m, force.multiply(-1));
 		}
 	}
 
@@ -53,11 +60,17 @@ public class AdaptiveCoolingLayoutTask extends LayoutTask {
 
 	@Override
 	protected void applyAttractiveForce(Node n, Node m) {
-		double dist = n.getPos().distance(m.getPos());
+		Point2D nPos = n.getPos();
+		Point2D mPos = m.getPos();
+		if(nPos.equals(mPos)){
+			mPos = addNoise(mPos);
+		}
+		Point2D delta = mPos.subtract(nPos);
+		double dist = delta.magnitude();
 		double af = Math.pow(dist, 2) / optDist;
-		Point2D diff = (m.getPos().subtract(n.getPos())).multiply(af/dist);
-		addForce(n, diff);
-		addForce(m, diff.multiply(-1));
+		Point2D force = delta.multiply(af/dist);
+		addForce(n, force);
+		addForce(m, force.multiply(-1));
 	}
 
 	@Override
@@ -67,7 +80,9 @@ public class AdaptiveCoolingLayoutTask extends LayoutTask {
 
 	@Override
 	protected void onIterationStart(Graph graph) {
-		optDist = layoutScope.getOptDist();
+		if(!layoutScope.isMultilevelOn()){
+			optDist = layoutScope.getHuOptDist();
+		}
 		repulsiveStrength = getRepulsiveStrength(1.0);
 		longRangeExponent = layoutScope.getLongRangeForce();
 		gravity = layoutScope.gravityPullStrength() / optDist;
@@ -90,8 +105,13 @@ public class AdaptiveCoolingLayoutTask extends LayoutTask {
 
 	@Override
 	protected void updateMultiLayoutParameters() {
-		double stepSize = layoutScope.getInitialStepSize()/gamma;
-		layoutScope.setStepSize(stepSize);
+		optDist = optDist / gamma;
+		layoutScope.setStepSize(layoutScope.getInitialStepSize());
+	}
+
+	@Override
+	protected void initMultilevelParameters() {
+		optDist = layoutScope.getHuOptDist() * Math.pow(gamma, super.getGraphSequenceLength()-1);
 	}
 
 	@Override
@@ -138,6 +158,6 @@ public class AdaptiveCoolingLayoutTask extends LayoutTask {
 	}
 
 	private double getRepulsiveStrength(double repulsiveness){
-		return -repulsiveness * Math.pow(layoutScope.getOptDist(), longRangeExponent);
+		return -repulsiveness * Math.pow(layoutScope.getHuOptDist(), longRangeExponent);
 	}
 }

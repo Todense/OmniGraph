@@ -60,9 +60,9 @@ public class GraphDrawLayer implements DrawLayer {
         DisplayMode displayMode = graphScope.getDisplayMode();
         DisplayRule displayRule = this.getDisplayRule(displayMode);
         if(graphScope.areEdgesVisibile()){
-            graph.getEdges().stream().filter(e -> !isEdgePrimary(e) && e.isVisible()).forEach(e ->
+            graph.getEdges().stream().filter(e -> e != null && !isEdgePrimary(e) && e.isVisible()).forEach(e ->
                     drawEdge(e, gc, displayRule));
-            graph.getEdges().stream().filter(this::isEdgePrimary).forEach(e ->
+            graph.getEdges().stream().filter(e ->  e != null && isEdgePrimary(e) && e.isVisible()).forEach(e ->
                     drawEdge(e, gc, displayRule));
         }
 

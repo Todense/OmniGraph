@@ -9,6 +9,7 @@ import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
 
@@ -19,12 +20,14 @@ import java.util.concurrent.Executors;
 public class PresetCreatorViewModel implements ViewModel {
     
     private final ObjectProperty<Preset> presetProperty = new SimpleObjectProperty<>();
-
-    private final ObjectProperty<Integer> param1ObjectProperty = new SimpleObjectProperty<>(10);
-    private final IntegerProperty param1Property = IntegerProperty.integerProperty(param1ObjectProperty);
-
-    private final ObjectProperty<Integer> param2ObjectProperty = new SimpleObjectProperty<>(10);
-    private final IntegerProperty param2Property = IntegerProperty.integerProperty(param2ObjectProperty);
+    
+    private final IntegerProperty gridWidthProperty = new SimpleIntegerProperty();
+    private final IntegerProperty gridHeightProperty = new SimpleIntegerProperty();
+    private final IntegerProperty cycleSizeProperty = new SimpleIntegerProperty();
+    private final IntegerProperty hexGridSizeProperty = new SimpleIntegerProperty();
+    private final IntegerProperty starSizeProperty = new SimpleIntegerProperty();
+    private final IntegerProperty bipartiteFirstSetSizeProperty = new SimpleIntegerProperty();
+    private final IntegerProperty bipartiteSecondSetSizeProperty = new SimpleIntegerProperty();
 
     @InjectScope
     CanvasScope canvasScope;
@@ -42,19 +45,21 @@ public class PresetCreatorViewModel implements ViewModel {
 
         switch (preset) {
             case GRID:
-                presetGraph = PresetCreator.createGrid(getParam1(), getParam2(), size); break;
+                presetGraph = PresetCreator.createGrid(getGridWidth(), getGridHeight(), size); break;
             case HEX:
-                presetGraph = PresetCreator.createHexagonalGrid(getParam1(), size); break;
+                presetGraph = PresetCreator.createHexagonalGrid(getHexGridSize(), size); break;
             case KING:
-                presetGraph = PresetCreator.createKingsGraph(getParam1(), getParam2(), size); break;
+                presetGraph = PresetCreator.createKingsGraph(getGridWidth(), getGridHeight(), size); break;
             case MAZE:
-                presetGraph = PresetCreator.createMaze(getParam1(), getParam2(), size); break;
+                presetGraph = PresetCreator.createMaze(getGridWidth(), getGridHeight(), size); break;
             case CYCLE:
-                presetGraph = PresetCreator.createCycle(getParam1(), 0.8 * size.getY()); break;
+                presetGraph = PresetCreator.createCycle(getCycleSize(), 0.8 * size.getY()); break;
             case STAR:
-                presetGraph = PresetCreator.createStar(getParam1(),0.4 * size.getY()); break;
+                presetGraph = PresetCreator.createStar(getStarSize(),0.4 * size.getY()); break;
             case COMPLETE_BIPARTITE:
-                presetGraph = PresetCreator.createCompleteBipartite(getParam1(), getParam2(), size); break;
+                presetGraph = PresetCreator.createCompleteBipartite(
+                        getBipartiteFirstSetSize(), getBipartiteSecondSetSize(), size
+                );break;
         }
         return presetGraph;
     }
@@ -74,20 +79,59 @@ public class PresetCreatorViewModel implements ViewModel {
         return presetProperty;
     }
 
-    public int getParam1() {
-        return param1Property.get();
+    public int getGridWidth() {
+        return gridWidthProperty.get();
     }
 
-    public int getParam2() {
-        return param2Property.get();
+    public IntegerProperty gridWidthProperty() {
+        return gridWidthProperty;
     }
 
-    public ObjectProperty<Integer> param1ObjectProperty() {
-        return param1ObjectProperty;
+    public int getGridHeight() {
+        return gridHeightProperty.get();
     }
 
-    public ObjectProperty<Integer> param2ObjectProperty() {
-        return param2ObjectProperty;
+    public IntegerProperty gridHeightProperty() {
+        return gridHeightProperty;
     }
 
+    public int getCycleSize() {
+        return cycleSizeProperty.get();
+    }
+
+    public IntegerProperty cycleSizeProperty() {
+        return cycleSizeProperty;
+    }
+
+    public int getStarSize() {
+        return starSizeProperty.get();
+    }
+
+    public IntegerProperty starSizeProperty() {
+        return starSizeProperty;
+    }
+
+    public int getBipartiteFirstSetSize() {
+        return bipartiteFirstSetSizeProperty.get();
+    }
+
+    public IntegerProperty bipartiteFirstSetSizeProperty() {
+        return bipartiteFirstSetSizeProperty;
+    }
+
+    public int getBipartiteSecondSetSize() {
+        return bipartiteSecondSetSizeProperty.get();
+    }
+
+    public IntegerProperty bipartiteSecondSetSizeProperty() {
+        return bipartiteSecondSetSizeProperty;
+    }
+
+    public int getHexGridSize() {
+        return hexGridSizeProperty.get();
+    }
+
+    public IntegerProperty hexGridSizeProperty() {
+        return hexGridSizeProperty;
+    }
 }

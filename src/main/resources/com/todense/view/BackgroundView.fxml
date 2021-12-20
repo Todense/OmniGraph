@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXSlider?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.Label?>
@@ -9,56 +8,25 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.ToggleSwitch?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="163.0" prefWidth="220.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.BackgroundView">
-   <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="25.0" prefWidth="200.0">
-      <Label prefHeight="21.0" prefWidth="161.0" text="Background color">
+<VBox alignment="TOP_CENTER" prefWidth="250.0" spacing="3.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.BackgroundView">
+   <HBox alignment="CENTER">
+      <Label prefWidth="300.0" text="Background color">
          <font>
             <Font size="10.0" />
          </font>
       </Label>
-      <ColorPicker fx:id="backgroundColorPicker" prefHeight="25.0" prefWidth="40.0" />
+      <ColorPicker fx:id="backgroundColorPicker" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="88.0" />
    </HBox>
    <HBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0">
-      <ToggleSwitch fx:id="gridToggleSwitch" contentDisplay="TOP" graphicTextGap="0.0" prefHeight="15.0" prefWidth="200.0" text="Show Grid" textAlignment="CENTER" viewOrder="1.0">
+      <ToggleSwitch fx:id="gridToggleSwitch" contentDisplay="TOP" graphicTextGap="0.0" prefHeight="15.0" prefWidth="300.0" text="Show Grid" textAlignment="CENTER" viewOrder="1.0">
          <font>
             <Font size="10.0" />
          </font>
       </ToggleSwitch>
    </HBox>
-   <Label alignment="CENTER" prefHeight="4.0" prefWidth="187.0" styleClass="darkLabel" text="Options" />
-   <VBox fx:id="gridVBox" alignment="CENTER" styleClass="subsection">
-      <HBox alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" spacing="3.0">
-         <Label prefHeight="18.0" prefWidth="103.0" text="Grid Gap">
-            <font>
-               <Font size="10.0" />
-            </font>
-            <HBox.margin>
-               <Insets />
-            </HBox.margin>
-         </Label>
-         <JFXSlider fx:id="gridGapSlider" blockIncrement="1.0" max="500.0" min="5.0" prefHeight="14.0" prefWidth="130.0" value="50.0" />
-      </HBox>
-      <HBox alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0">
-         <Label prefHeight="18.0" prefWidth="103.0" text="Grid Width">
-            <font>
-               <Font size="10.0" />
-            </font>
-            <HBox.margin>
-               <Insets />
-            </HBox.margin>
-         </Label>
-         <JFXSlider fx:id="gridWidthSlider" blockIncrement="0.0" max="10.0" min="0.01" prefHeight="14.0" prefWidth="130.0" value="1.0" />
-      </HBox>
-      <HBox alignment="CENTER" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0">
-         <Label prefHeight="18.0" prefWidth="103.0" text="Grid Brightness">
-            <font>
-               <Font size="10.0" />
-            </font>
-            <HBox.margin>
-               <Insets />
-            </HBox.margin>
-         </Label>
-         <JFXSlider fx:id="gridBrightnessSlider" blockIncrement="1.0" max="255.0" prefHeight="14.0" prefWidth="130.0" value="50.0" />
-      </HBox>
-   </VBox>
+   <Label alignment="CENTER" prefHeight="4.0" prefWidth="187.0" styleClass="darkLabel" text="Grid Options" />
+   <VBox fx:id="gridOptionsVBox" alignment="CENTER" styleClass="subsection" />
+   <padding>
+      <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+   </padding>
 </VBox>

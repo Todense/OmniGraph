@@ -4,149 +4,61 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
-<?import org.controlsfx.control.ToggleSwitch?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="330.0" prefWidth="200.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.RandomGeneratorView">
+
+<VBox alignment="CENTER" prefWidth="250.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.todense.view.RandomGeneratorView">
    <padding>
-      <Insets top="5.0" />
+      <Insets bottom="7.0" left="7.0" right="7.0" top="7.0"/>
    </padding>
-   <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Node Positioning" textFill="#2c2c2c">
+   <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Node Positioning"
+          textFill="#2c2c2c">
       <font>
-         <Font size="9.0" />
+         <Font size="9.0"/>
       </font>
-   </Label>
-   <VBox fx:id="nodePosVBox" alignment="CENTER" prefHeight="107.0" prefWidth="200.0" spacing="7.0" style="-fx-border-color: #595959; -fx-border-radius: 5;">
-      <children>
-         <ChoiceBox fx:id="arrangementChoiceBox" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0">
-            <VBox.margin>
-               <Insets top="3.0" />
-            </VBox.margin>
-         </ChoiceBox>
-         <HBox fx:id="minDistHBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0" spacing="3.0">
-            <padding>
-               <Insets bottom="3.0" />
-            </padding>
-            <children>
-               <ToggleSwitch fx:id="minDistToggleSwitch" prefHeight="18.0" prefWidth="113.0" selected="true" text="Min. Distance">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </ToggleSwitch>
-               <Spinner fx:id="nodesMinDistSpinner" editable="true" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="73.0" />
-            </children>
-            <VBox.margin>
-               <Insets bottom="3.0" />
-            </VBox.margin>
-         </HBox>
-      </children>
       <padding>
-         <Insets bottom="3.0" />
+         <Insets bottom="2.0"/>
       </padding>
+   </Label>
+   <VBox fx:id="nodePosVBox" alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="7.0"
+         styleClass="subsection">
+      <padding>
+         <Insets bottom="3.0"/>
+      </padding>
+      <ChoiceBox fx:id="arrangementChoiceBox" maxWidth="1.7976931348623157E308" minWidth="-Infinity">
+         <VBox.margin>
+            <Insets top="3.0"/>
+         </VBox.margin>
+      </ChoiceBox>
    </VBox>
-   <Label alignment="CENTER" layoutX="18.0" layoutY="15.0" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Model" textFill="#2c2c2c">
+   <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Model" textFill="#2c2c2c">
       <font>
-         <Font size="9.0" />
+         <Font size="9.0"/>
       </font>
       <VBox.margin>
-         <Insets top="5.0" />
+         <Insets top="5.0"/>
       </VBox.margin>
    </Label>
-   <ChoiceBox fx:id="generatorChoiceBox" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0" />
-   <Label alignment="CENTER" layoutX="15.0" layoutY="15.0" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Parameters" textFill="#2c2c2c">
+   <ChoiceBox fx:id="generatorChoiceBox" maxWidth="1.7976931348623157E308" minWidth="-Infinity"/>
+   <Label alignment="CENTER" styleClass="darkLabel" text="Parameters" textFill="#2c2c2c">
       <font>
-         <Font size="9.0" />
+         <Font size="9.0"/>
       </font>
       <VBox.margin>
-         <Insets top="5.0" />
+         <Insets top="5.0"/>
       </VBox.margin>
    </Label>
-   <VBox fx:id="paramVBox" alignment="TOP_CENTER" prefHeight="30.0" prefWidth="159.0" spacing="3.0" style="-fx-border-color: #595959; -fx-border-radius: 5;">
-      <HBox fx:id="nodeCountHBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0">
-         <padding>
-            <Insets left="3.0" />
-         </padding>
-         <Label maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="117.0" text="Nodes">
-            <font>
-               <Font size="10.0" />
-            </font>
-         </Label>
-         <Spinner fx:id="nodeCountSpinner" editable="true" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="70.0">
-            <HBox.margin>
-               <Insets />
-            </HBox.margin>
-         </Spinner>
-         <VBox.margin>
-            <Insets top="3.0" />
-         </VBox.margin>
-      </HBox>
-      <HBox fx:id="doubleParamHBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0" VBox.vgrow="ALWAYS">
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-         <padding>
-            <Insets left="3.0" />
-         </padding>
-         <Label fx:id="doubleParamLabel" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="117.0" text="double param 1">
-            <font>
-               <Font size="10.0" />
-            </font>
-         </Label>
-         <Spinner fx:id="doubleParamSpinner" editable="true" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="70.0">
-            <HBox.margin>
-               <Insets />
-            </HBox.margin>
-         </Spinner>
-      </HBox>
-      <HBox fx:id="integerParam1HBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0">
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-         <padding>
-            <Insets left="3.0" />
-         </padding>
-         <Label fx:id="integerParam1Label" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="117.0" text="int param 1">
-            <font>
-               <Font size="10.0" />
-            </font>
-         </Label>
-         <Spinner fx:id="integerParam1Spinner" editable="true" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="70.0">
-            <HBox.margin>
-               <Insets />
-            </HBox.margin>
-         </Spinner>
-      </HBox>
-      <HBox fx:id="integerParam2HBox" alignment="CENTER_LEFT" layoutX="18.0" layoutY="38.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0">
-         <padding>
-            <Insets left="3.0" />
-         </padding>
-         <children>
-            <Label fx:id="integerParam2Label" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="117.0" text="int param 2">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <Spinner fx:id="integerParam2Spinner" editable="true" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="70.0">
-               <HBox.margin>
-                  <Insets />
-               </HBox.margin>
-            </Spinner>
-         </children>
-         <VBox.margin>
-            <Insets bottom="3.0" />
-         </VBox.margin>
-      </HBox>
-   </VBox>
-   <Button alignment="CENTER" mnemonicParsing="false" onAction="#randomAction" prefHeight="25.0" prefWidth="160.0" styleClass="danger" text="Generate">
+   <VBox fx:id="paramVBox" alignment="TOP_CENTER" spacing="3.0" styleClass="subsection"/>
+   <Button alignment="CENTER" mnemonicParsing="false" onAction="#randomAction" prefHeight="25.0" prefWidth="160.0"
+           styleClass="danger" text="Generate">
       <graphic>
-         <FontIcon iconColor="#08ae34" iconLiteral="fas-play" iconSize="13" styleClass="start-icon" />
+         <FontIcon iconColor="#08ae34" iconLiteral="fas-play" iconSize="13" styleClass="start-icon"/>
       </graphic>
       <VBox.margin>
-         <Insets bottom="5.0" top="5.0" />
+         <Insets bottom="5.0" top="5.0"/>
       </VBox.margin>
    </Button>
 </VBox>

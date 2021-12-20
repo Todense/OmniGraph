@@ -1,36 +1,29 @@
 package com.todense.view;
 
-import com.jfoenix.controls.JFXSlider;
 import com.todense.model.EdgeWeightMode;
 import com.todense.model.NodeLabelMode;
 import com.todense.view.components.ParameterHBox;
+import com.todense.view.components.SwitchableParameterHBox;
 import com.todense.viewmodel.GraphViewModel;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
-import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
-import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 
 public class GraphView implements FxmlView<GraphViewModel> {
-    
-    @FXML private Label edgeWidthDecayLabel, edgeOpacityDecayLabel;
-    @FXML private JFXSlider edgeWidthDecaySlider, edgeOpacityDecaySlider;
+
     @FXML private ColorPicker nodeColorPicker, edgeColorPicker, labelColorPicker, weightColorPicker;
     @FXML private ChoiceBox<NodeLabelMode> nodeLabelChoiceBox;
     @FXML private ChoiceBox<EdgeWeightMode> edgeWeightChoiceBox;
-    @FXML private ToggleSwitch nodeBorderToggleSwitch, edgeVisibilityToggleSwitch,
-            widthDecayToggleSwitch, opacityDecayToggleSwitch;
-    @FXML private VBox edgeWidthDecayVBox, edgeWidthDecayStrengthVBox, edgeOpacityDecayVBox,
-            edgeOpacityDecayStrengthVBox, nodeOptionsVBox, edgeOptionsVBox;
+    @FXML private ToggleSwitch nodeBorderToggleSwitch, edgeVisibilityToggleSwitch;
+    @FXML private VBox nodeOptionsVBox, edgeOptionsVBox;
 
     @InjectViewModel
     GraphViewModel viewModel;
@@ -69,6 +62,17 @@ public class GraphView implements FxmlView<GraphViewModel> {
         HBox.setHgrow(edgeWidthHBox, Priority.ALWAYS);
         edgeOptionsVBox.getChildren().add(0, edgeWidthHBox);
 
+        var edgeWidthDecayHBox = new SwitchableParameterHBox("Width decay",
+                viewModel.edgeWidthDecayProperty(), viewModel.edgeWidthDecayOnProperty(),
+                3, 0.1, 0.0, 1.0
+        );
+        edgeOptionsVBox.getChildren().add(edgeWidthDecayHBox);
+
+        var edgeOpacityDecayHBox = new SwitchableParameterHBox("Opacity decay",
+                viewModel.edgeOpacityDecayProperty(), viewModel.edgeOpacityDecayOnProperty(),
+                3, 0.1, 0.0, 1.0
+        );
+        edgeOptionsVBox.getChildren().add(edgeOpacityDecayHBox);
 
 
         nodeColorPicker.valueProperty().bindBidirectional(viewModel.nodeColorProperty());
@@ -77,38 +81,8 @@ public class GraphView implements FxmlView<GraphViewModel> {
         weightColorPicker.valueProperty().bindBidirectional(viewModel.edgeWeightColorProperty());
         nodeLabelChoiceBox.valueProperty().bindBidirectional(viewModel.nodeLabelModeProperty());
         edgeWeightChoiceBox.valueProperty().bindBidirectional(viewModel.edgeWeightModeProperty());
-        edgeWidthDecaySlider.valueProperty().bindBidirectional(viewModel.edgeWidthDecayProperty());
-        edgeOpacityDecaySlider.valueProperty().bindBidirectional(viewModel.edgeOpacityDecayProperty());
         nodeBorderToggleSwitch.selectedProperty().bindBidirectional(viewModel.nodeBorderProperty());
         edgeVisibilityToggleSwitch.selectedProperty().bindBidirectional(viewModel.edgeVisibilityProperty());
-        widthDecayToggleSwitch.selectedProperty().bindBidirectional(viewModel.edgeWidthDecayOnProperty());
-        opacityDecayToggleSwitch.selectedProperty().bindBidirectional(viewModel.edgeOpacityDecayOnProperty());
-
-        widthDecayToggleSwitch.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if(newVal){
-                edgeWidthDecayVBox.getChildren().add(edgeWidthDecayStrengthVBox);
-            }else{
-                edgeWidthDecayVBox.getChildren().remove(edgeWidthDecayStrengthVBox);
-            }
-        });
-
-        opacityDecayToggleSwitch.selectedProperty().addListener((obs, oldVal, newVal) -> {
-            if(newVal){
-                edgeOpacityDecayVBox.getChildren().add(edgeOpacityDecayStrengthVBox);
-            }else{
-                edgeOpacityDecayVBox.getChildren().remove(edgeOpacityDecayStrengthVBox);
-            }
-        });
-
-        edgeWidthDecayVBox.getChildren().remove(edgeWidthDecayStrengthVBox);
-        edgeOpacityDecayVBox.getChildren().remove(edgeOpacityDecayStrengthVBox);
-
-        edgeWidthDecayLabel.textProperty().bind(Bindings.createStringBinding(()->
-                String.format("%.4f",  edgeWidthDecaySlider.getValue()), edgeWidthDecaySlider.valueProperty()));
-
-        edgeOpacityDecayLabel.textProperty().bind(Bindings.createStringBinding(()->
-                String.format("%.4f",  edgeOpacityDecaySlider.getValue()), edgeOpacityDecaySlider.valueProperty()));
-
 
         nodeLabelChoiceBox.getItems().addAll(NodeLabelMode.values());
         edgeWeightChoiceBox.getItems().addAll(EdgeWeightMode.values());

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class AntsScope implements Scope {
 
-    private List<Ant> ants = new ArrayList<>();
+    private final List<Ant> ants = new ArrayList<>();
 
     ArrayList<Integer> gbCycle = new ArrayList<>(); //globally best cycle
 
@@ -21,26 +21,26 @@ public class AntsScope implements Scope {
     private double maxPheromone = 0;
 
     //PARAMETERS
-    private IntegerProperty antCountProperty = new SimpleIntegerProperty(5);
-    private IntegerProperty neighbourhoodSizeProperty = new SimpleIntegerProperty(15);
-    private IntegerProperty rankSizeProperty = new SimpleIntegerProperty(5); // number of ants in ranking that add pheromones
-    private DoubleProperty alphaProperty = new SimpleDoubleProperty(1); // pheromone influence
-    private DoubleProperty betaProperty = new SimpleDoubleProperty(2); // distance influence
-    private DoubleProperty evaporationProperty = new SimpleDoubleProperty(0.1);
-    private DoubleProperty exploitationStrengthProperty = new SimpleDoubleProperty(0.9); //exploitation strength
-    private DoubleProperty localEvaporationProperty = new SimpleDoubleProperty(0.1);
+    private final IntegerProperty antCountProperty = new SimpleIntegerProperty(5);
+    private final IntegerProperty neighbourhoodSizeProperty = new SimpleIntegerProperty(15);
+    private final IntegerProperty rankSizeProperty = new SimpleIntegerProperty(5); // number of ants in ranking that add pheromones
+    private final DoubleProperty alphaProperty = new SimpleDoubleProperty(1.0); // pheromone influence
+    private final DoubleProperty betaProperty = new SimpleDoubleProperty(2.0); // distance influence
+    private final DoubleProperty evaporationProperty = new SimpleDoubleProperty(0.1);
+    private final DoubleProperty exploitationStrengthProperty = new SimpleDoubleProperty(0.9); //exploitation strength
+    private final DoubleProperty localEvaporationProperty = new SimpleDoubleProperty(0.1);
 
     //LOCAL SEARCH
-    private BooleanProperty with2OptProperty = new SimpleBooleanProperty(true);
-    private BooleanProperty with3OptProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty with2OptProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty with3OptProperty = new SimpleBooleanProperty(false);
 
     //VISUALS
-    private BooleanProperty antsAnimationOnProperty = new SimpleBooleanProperty(true);
-    private BooleanProperty showPheromonesProperty = new SimpleBooleanProperty(true);
-    private ObjectProperty<Color> antColorProperty = new SimpleObjectProperty<>(Color.rgb(200,0,0));
-    private ObjectProperty<Color> cycleColorProperty = new SimpleObjectProperty<>(Color.rgb(210,210,30));
-    private DoubleProperty antSize = new SimpleDoubleProperty(0.25);
-    private ObjectProperty<AntColonyVariant> algorithmProperty = new SimpleObjectProperty<>();
+    private final BooleanProperty antsAnimationOnProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty showPheromonesProperty = new SimpleBooleanProperty(true);
+    private final ObjectProperty<Color> antColorProperty = new SimpleObjectProperty<>(Color.rgb(200,0,0));
+    private final ObjectProperty<Color> cycleColorProperty = new SimpleObjectProperty<>(Color.rgb(210,210,30));
+    private final DoubleProperty antSize = new SimpleDoubleProperty(0.25);
+    private final ObjectProperty<AntColonyVariant> algorithmProperty = new SimpleObjectProperty<>();
 
 
     public double getPheromone(Edge e){

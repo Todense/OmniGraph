@@ -126,8 +126,12 @@ public class MainViewModel implements ViewModel {
         });
 
         notificationCenter.subscribe(GRAPH_EDIT_REQUEST, (key, payload) -> {
-            if(!editLockedProperty.get()) {
-                Runnable runnable = (Runnable) payload[0];
+            if(!taskRunningProperty.get()) {
+                Runnable runnable = () -> {
+                    var payload_runnable = (Runnable) payload[0];
+                    payload_runnable.run();
+                    notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
+                };
                 Thread thread = new Thread(runnable);
                 thread.setPriority(Thread.MAX_PRIORITY);
                 thread.start();

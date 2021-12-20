@@ -4,29 +4,31 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.Property;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
-import javafx.scene.effect.Bloom;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
+import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import org.apache.commons.math3.util.Precision;
 
-import java.util.function.UnaryOperator;
 import java.util.regex.Pattern;
 
 
 public class ParameterHBox extends HBox {
 
-    private Label label = new Label();
-    private TextField textField = new TextField();
+    private double defVal;
+    private double minVal;
+    private double maxVal;
 
-    private Property<Number> property;
+    protected Label label = new Label();
+    protected TextField textField = new TextField();
 
     private double previousMouseY = -1.0;
+    private double previousMouseX = -1.0;
 
-    private static final StringConverter<Number> converter = new StringConverter<>() {
+    private static final StringConverter<Number> DOUBLE_CONVERTER = new StringConverter<>() {
         @Override
         public String toString(Number n) {
             return String.valueOf(n);
@@ -38,6 +40,28 @@ public class ParameterHBox extends HBox {
         }
     };
 
+    private static final StringConverter<Number> INT_CONVERTER = new StringConverter<>() {
+        @Override
+        public String toString(Number n) {
+            return String.valueOf(n);
+        }
+
+        @Override
+        public Number fromString(String s) {
+            return Integer.parseInt(s);
+        }
+    };
+
+    private static final Pattern DOUBLE_PATTERN = Pattern.compile("-?\\d+(\\.\\d*)?(E-?\\d+)?");
+    private static final Pattern INT_PATTERN = Pattern.compile("-?\\d+");
+
+    private final Pattern pattern;
+    private final boolean isInt;
+    private boolean horizontal = false;
+
+    private static final Color defaultLabelTextColor = Color.rgb(187, 187, 187);
+    private static final Color highlightLabelTextColor = defaultLabelTextColor.brighter();
+
     public ParameterHBox(
             String labelText,
             Property<Number> property,
@@ -46,54 +70,109 @@ public class ParameterHBox extends HBox {
             double minVal,
             double maxVal
     ){
-        this.property = property;
+        this.defVal = defVal;
+        this.minVal = minVal;
+        this.maxVal = maxVal;
+        this.isInt = property.getValue() instanceof Integer;
         this.label.setText(labelText);
-        this.setPrefHeight(25);
-        this.setPrefWidth(180);
-        this.setAlignment(Pos.CENTER);
+        //this.setPrefHeight(Control.USE_COMPUTED_SIZE);
+        this.setAlignment(Pos.CENTER_LEFT);
+        this.setSpacing(3);
 
         textField.setPrefHeight(25);
+        textField.setMinWidth(Control.USE_PREF_SIZE);
         textField.setPrefWidth(60);
         textField.setAlignment(Pos.CENTER);
-        HBox.setHgrow(textField, Priority.ALWAYS);
-        label.setPrefHeight(25);
-        label.setPrefWidth(125);
+
+        label.setPrefWidth(1000);
         label.setText(labelText);
 
         this.getChildren().add(label);
         this.getChildren().add(textField);
 
-        setUpMouseControls(precision, minVal, maxVal);
-        Bindings.bindBidirectional(textField.textProperty(), property, converter);
+        this.pattern = isInt ?
+                INT_PATTERN :
+                DOUBLE_PATTERN;
+
+        if(isInt)
+            precision = 0;
+
+        setUpMouseControls(precision);
         property.setValue(defVal);
+        Bindings.bindBidirectional(textField.textProperty(), property, DOUBLE_CONVERTER);
     }
 
-    private void setUpMouseControls(int precision, double minVal, double maxVal){
-        Pattern pattern = Pattern.compile("-?\\d+(\\.\\d*)?(E-?\\d+)?");
-        TextFormatter formatter = new TextFormatter((UnaryOperator<TextFormatter.Change>) change ->
+    private void setUpMouseControls(int precision){
+        TextFormatter<String> formatter = new TextFormatter<>(change ->
                 pattern.matcher(change.getControlNewText()).matches() ? change : null);
 
         textField.setTextFormatter(formatter);
-        label.setOnMousePressed(mouseEvent -> previousMouseY = mouseEvent.getY());
+        label.setOnMousePressed(mouseEvent -> {
+                previousMouseY = mouseEvent.getY();
+                previousMouseX = mouseEvent.getX();
+            }
+        );
         label.setOnMouseDragged(mouseEvent -> {
-            double delta = (mouseEvent.getY() - previousMouseY) * Math.pow(10, -precision);
-            double oldValue = Double.parseDouble(textField.getText());
-            double newValue = oldValue - delta;
-            if(newValue > maxVal){
-                newValue = maxVal;
-            }else if(newValue < minVal){
-                newValue = minVal;
-            }else{
-                newValue = Precision.round(newValue, precision);
+            double delta = horizontal? (previousMouseX - mouseEvent.getX()) : (mouseEvent.getY() - previousMouseY);
+            delta = delta * Math.pow(10, -precision);
+            Number newValue;
+            if(isInt){
+                newValue = getNewValue(delta, (int)minVal, (int)maxVal);
+            }
+            else{
+                newValue = getNewValue(delta, minVal, maxVal, precision);
             }
             textField.setText(String.valueOf(newValue));
+            previousMouseX = mouseEvent.getX();
             previousMouseY = mouseEvent.getY();
-            label.effectProperty().set(new Bloom());
+            label.textFillProperty().set(highlightLabelTextColor);
         });
 
-        label.cursorProperty().set(Cursor.N_RESIZE);
+        label.cursorProperty().set(Cursor.V_RESIZE);
         label.getStyleClass().add("parameterLabel");
 
-        label.setOnMouseReleased(mouseEvent -> label.effectProperty().set(null));
+        label.setOnMouseReleased(mouseEvent -> label.textFillProperty().set(defaultLabelTextColor));
+        label.setOnMouseEntered(mouseEvent -> label.textFillProperty().set(highlightLabelTextColor));
+        label.setOnMouseExited(mouseEvent -> label.textFillProperty().set(defaultLabelTextColor));
+    }
+
+    private double getNewValue(double delta, double minVal, double maxVal, int precision){
+        double oldValue = Double.parseDouble(textField.getText());
+        double newValue = oldValue - delta;
+        if(newValue > maxVal){
+            newValue = maxVal;
+        }else if(newValue < minVal){
+            newValue = minVal;
+        }else{
+            newValue = Precision.round(newValue, precision);
+        }
+        return newValue;
+    }
+
+    private int getNewValue(double delta, int minVal, int maxVal){
+        int oldValue = Integer.parseInt(textField.getText());
+        int newValue = oldValue - (int)delta;
+        if(newValue > maxVal){
+            newValue = maxVal;
+        }else if(newValue < minVal){
+            newValue = minVal;
+        }
+        return newValue;
+    }
+
+    public void setMinVal(double minVal) {
+        this.minVal = minVal;
+    }
+
+    public void setMaxVal(double maxVal) {
+        this.maxVal = maxVal;
+    }
+
+    public void setHorizontal(boolean horizontal) {
+        this.horizontal = horizontal;
+        if(horizontal)
+            label.cursorProperty().set(Cursor.H_RESIZE);
+        else
+            label.cursorProperty().set(Cursor.V_RESIZE);
     }
 }

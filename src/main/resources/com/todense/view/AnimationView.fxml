@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXSlider?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
@@ -12,8 +9,8 @@
 <?import org.controlsfx.control.ToggleSwitch?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<HBox alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="27.0" prefWidth="762.0" spacing="2.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.AnimationView">
-   <ToggleSwitch fx:id="animationToggleSwitch" contentDisplay="TOP" graphicTextGap="0.0" prefHeight="18.0" prefWidth="96.0" selected="true" text="Animated" textAlignment="CENTER" viewOrder="1.0">
+<HBox alignment="CENTER_LEFT" fillHeight="false" prefWidth="350.0" spacing="2.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.AnimationView">
+   <ToggleSwitch fx:id="animationToggleSwitch" contentDisplay="TOP" graphicTextGap="0.0" minWidth="-Infinity" prefHeight="18.0" prefWidth="100.0" selected="true" text="Animated" textAlignment="CENTER" viewOrder="1.0">
       <font>
          <Font name="Serif Regular" size="10.0" />
       </font>
@@ -21,7 +18,7 @@
          <Insets right="5.0" />
       </HBox.margin>
    </ToggleSwitch>
-   <HBox fx:id="animationHBox" alignment="CENTER" prefHeight="27.0" prefWidth="654.0" spacing="2.0" style="-fx-border-color: #595959; -fx-border-radius: 3;">
+   <HBox fx:id="animationHBox" alignment="CENTER" fillHeight="false" spacing="2.0" style="-fx-border-color: #595959; -fx-border-radius: 3;">
       <HBox.margin>
          <Insets right="3.0" />
       </HBox.margin>
@@ -33,7 +30,7 @@
             <FontIcon iconColor="#bfbfbf" iconLiteral="fas-pause" />
          </graphic>
          <tooltip>
-            <Tooltip text="Pause" showDelay="0.1s"  />
+            <Tooltip showDelay="0.1s" text="Pause" />
          </tooltip>
       </ToggleButton>
       <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#nextStepAction" prefHeight="22.0" prefWidth="22.0">
@@ -44,33 +41,12 @@
             <FontIcon iconColor="#bfbfbf" iconLiteral="fas-step-forward" />
          </graphic>
          <tooltip>
-            <Tooltip text="Next Step" showDelay="0.1s"  />
+            <Tooltip showDelay="0.1s" text="Next Step" />
          </tooltip>
          <HBox.margin>
-            <Insets left="3.0" />
+            <Insets left="3.0" right="10.0" />
          </HBox.margin>
       </Button>
-      <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="25.0" prefWidth="105.0" text="Step Time (ms)" textAlignment="CENTER" textFill="#808080">
-         <font>
-            <Font size="10.0" />
-         </font>
-      </Label>
-      <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stepTimeDecrementAction" prefHeight="15.0" prefWidth="15.0">
-         <graphic>
-            <FontIcon iconColor="#d0d0d0" iconLiteral="icm-minus" iconSize="7" selectionEnd="0" />
-         </graphic>
-      </Button>
-      <JFXSlider fx:id="stepTimeSlider" blockIncrement="1.0" max="500.0" prefHeight="20.0" prefWidth="375.0" value="100.0">
-         <HBox.margin>
-            <Insets right="3.0" />
-         </HBox.margin>
-      </JFXSlider>
-      <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stepTimeIncrementAction" prefHeight="15.0" prefWidth="15.0">
-         <graphic>
-            <FontIcon iconColor="#d0d0d0" iconLiteral="icm-plus" iconSize="7" />
-         </graphic>
-      </Button>
-      <TextField fx:id="sleepTimeTextField" alignment="CENTER" prefHeight="25.0" prefWidth="67.0" />
       <padding>
          <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
       </padding>

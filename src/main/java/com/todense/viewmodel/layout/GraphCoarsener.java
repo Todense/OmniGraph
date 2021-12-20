@@ -16,7 +16,8 @@ public class GraphCoarsener {
     private final Graph originalGraph;
     private final GraphManager graphManager;
     private final Stack<Graph> graphSequence = new Stack<>();
-    private final Stack<HashMap<Node, Node>> nodeMaps = new Stack<>();
+
+    private final Stack<HashMap<Node, Node>> collapseMaps = new Stack<>();
     private HashMap<Node, Integer> nodeWeights = new HashMap<>();
 
     private double reductionRate = 0;
@@ -26,16 +27,16 @@ public class GraphCoarsener {
         this.originalGraph = graphManager.getGraph().copy();
     }
 
-    public void reconstruct(double variation) {
+    public void reconstruct() {
         graphSequence.pop();
         Graph previousGraph = graphSequence.peek();
-        var mapping = nodeMaps.pop();
+        var mapping = collapseMaps.pop();
         previousGraph.getNodes().forEach(node ->{
                 double angle = Math.random() * 2 * Math.PI;
                 node.setPos(mapping.get(node).getPos().add(new Point2D(
                                 Math.cos(angle),
                                 Math.sin(angle))
-                        .multiply(variation))
+                        .multiply(1.0))
                 );
     });
         graphManager.setGraph(previousGraph);
@@ -46,21 +47,34 @@ public class GraphCoarsener {
         graphSequence.peek().getNodes().forEach(node -> nodeWeights.put(node, 1));
     }
 
+    // coarsening by collapsing edges in maximal matching
     public void coarsen(){
+
+        // last graph in sequence
         Graph graph = graphSequence.peek();
-        Graph copyGraph = graph.copy();
-        HashMap<Node, Node> nodeMap = new HashMap<>();
+
+        // isomorphic graph which will be coarsened and added to graph sequence
+        Graph isoGraph = graph.copy();
+
+        // graph -> isoGraph nodes mapping used in prolongation phase for setting positions of added nodes
+        HashMap<Node, Node> collapseMap = new HashMap<>();
+        graph.getNodes().forEach(node -> collapseMap.put(node, isoGraph.getNodes().get(node.getIndex())));
+
+        // isoGraph -> graph isomorphism
         HashMap<Node, Node> isomorphismMap = new HashMap<>();
-        copyGraph.getNodes().forEach(node -> isomorphismMap.put(node, graph.getNodes().get(node.getIndex())));
-        graph.getNodes().forEach(node -> nodeMap.put(node, copyGraph.getNodes().get(node.getIndex())));
+        isoGraph.getNodes().forEach(node -> isomorphismMap.put(node, graph.getNodes().get(node.getIndex())));
+
+        // add isoGraph nodes to nodeWeights map
         HashMap<Node, Integer> newNodeWeights = new HashMap<>();
         for (int i = 0; i < graph.getNodes().size(); i++) {
-            newNodeWeights.put(copyGraph.getNodes().get(i), nodeWeights.get(graph.getNodes().get(i)));
+            newNodeWeights.put(isoGraph.getNodes().get(i), nodeWeights.get(graph.getNodes().get(i)));
         }
         nodeWeights = newNodeWeights;
+
+        // create maximal matching in isoGraph
         List<Edge> matching = new ArrayList<>();
-        boolean[] visited = new boolean[graph.getOrder()];
-        for(Node n : copyGraph.getNodes()){
+        boolean[] visited = new boolean[isoGraph.getOrder()];
+        for(Node n : isoGraph.getNodes()){
             if(visited[n.getIndex()]) continue;
             Node bestNode = null;
             int minWeight = Integer.MAX_VALUE;
@@ -74,22 +88,30 @@ public class GraphCoarsener {
             if(bestNode != null){
                 visited[n.getIndex()] = true;
                 visited[bestNode.getIndex()] = true;
-                matching.add(copyGraph.getEdge(n ,bestNode));
+                matching.add(isoGraph.getEdge(n ,bestNode));
             }
         }
+
+        // contract edges in matching
         for(Edge edge : matching){
-            contractEdge(copyGraph, edge);
-            nodeWeights.put(edge.getN2(),
-                    nodeWeights.get(edge.getN1()) + nodeWeights.get(edge.getN2())
-            );
-            nodeMap.put(isomorphismMap.get(edge.getN1()), edge.getN2());
+            Node n1 = edge.getN1();
+            Node n2 = edge.getN2();
+            contractEdge(isoGraph, edge);
+
+            // update weight of n2
+            nodeWeights.put(n2, nodeWeights.get(n1) + nodeWeights.get(n2));
+
+            // replace collapseMap value
+            collapseMap.put(isomorphismMap.get(n1), n2);
         }
-        reductionRate = (double)copyGraph.getNodes().size()/graph.getNodes().size();
-        nodeMaps.push(nodeMap);
-        graphManager.setGraph(copyGraph);
-        graphSequence.push(copyGraph);
+
+        reductionRate = (double)isoGraph.getNodes().size()/graph.getNodes().size();
+        collapseMaps.push(collapseMap);
+        graphManager.setGraph(isoGraph);
+        graphSequence.push(isoGraph);
     }
 
+    // when contracting, node n1 is removed, node n2 is left
     public void contractEdge(Graph g, Edge e) {
         for (Node m : e.getN1().getNeighbours()) {
             if(m.equals(e.getN2()))
@@ -106,7 +128,10 @@ public class GraphCoarsener {
     }
 
     public boolean maxLevelReached() {
-         return (graphSequence.peek().getEdges().size() <= 1 || reductionRate > 0.75);
+        Graph lastGraph = graphSequence.peek();
+         return (lastGraph.getSize() <= 5 ||
+                 lastGraph.getOrder() <= 5 ||
+                 reductionRate > 0.75);
     }
 
     public Graph getOriginalGraph() {

@@ -106,11 +106,11 @@ public class AntsViewModel extends AlgorithmTaskManager implements ViewModel {
         return antsScope.evaporationProperty();
     }
 
-    public DoubleProperty q0Property() {
+    public DoubleProperty exploitationStrengthProperty() {
         return antsScope.exploitationStrengthProperty();
     }
 
-    public DoubleProperty ksiProperty() {
+    public DoubleProperty localEvaporationProperty() {
         return antsScope.localEvaporationProperty();
     }
 

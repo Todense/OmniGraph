@@ -1,5 +1,6 @@
 package com.todense.view;
 
+import com.todense.view.components.ParameterHBox;
 import com.todense.viewmodel.AnimationViewModel;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
@@ -15,8 +16,6 @@ public class AnimationView implements FxmlView<AnimationViewModel> {
 
     @FXML private HBox animationHBox;
     @FXML private ToggleSwitch animationToggleSwitch;
-    @FXML private Slider stepTimeSlider;
-    @FXML private TextField sleepTimeTextField;
     @FXML private ToggleButton pauseButton;
 
     @InjectViewModel
@@ -24,15 +23,15 @@ public class AnimationView implements FxmlView<AnimationViewModel> {
 
 
     public void initialize(){
-        stepTimeSlider.valueProperty().addListener((obs, oldVal, newVal) -> stepTimeSlider.setValue(newVal.intValue()));
-        stepTimeSlider.valueProperty().bindBidirectional(viewModel.stepTimeProperty());
-        animationToggleSwitch.selectedProperty().bindBidirectional(viewModel.animatedProperty());
-        sleepTimeTextField.textProperty().bind(Bindings.createStringBinding(() ->
-                String.valueOf(stepTimeSlider.valueProperty().intValue()),
-                stepTimeSlider.valueProperty())
-        );
         pauseButton.selectedProperty().bindBidirectional(viewModel.pausedProperty());
         animationHBox.disableProperty().bind(animationToggleSwitch.selectedProperty().not());
+        animationToggleSwitch.selectedProperty().bindBidirectional(viewModel.animatedProperty());
+
+        var stepTimeHBox = new ParameterHBox("Step time (ms)", viewModel.stepTimeProperty(),
+                0, 100, 0 , Double.POSITIVE_INFINITY
+        );
+        stepTimeHBox.setHorizontal(true);
+        animationHBox.getChildren().add(stepTimeHBox);
 
     }
 
@@ -40,16 +39,4 @@ public class AnimationView implements FxmlView<AnimationViewModel> {
     private void nextStepAction() {
         viewModel.nextStep();
     }
-
-    @FXML
-    public void stepTimeIncrementAction() {
-        stepTimeSlider.increment();
-    }
-
-    @FXML
-    public void stepTimeDecrementAction() {
-        stepTimeSlider.decrement();
-    }
-
-
 }

@@ -1,6 +1,5 @@
 package com.todense.viewmodel.canvas;
 
-import com.todense.model.graph.Graph;
 import com.todense.viewmodel.canvas.drawlayer.DrawLayer;
 import com.todense.viewmodel.scope.AnimationScope;
 import javafx.animation.AnimationTimer;
@@ -12,13 +11,13 @@ import java.util.Comparator;
 
 public class Painter {
 
-    private AnimationScope animationScope;
+    private final AnimationScope animationScope;
 
-    private ArrayList<DrawLayer> drawLayers = new ArrayList<>();
+    private final ArrayList<DrawLayer> drawLayers = new ArrayList<>();
 
     private boolean timerOn = false;
 
-    private AnimationTimer animationTimer;
+    private final AnimationTimer animationTimer;
 
     final Object lock = new Object();
 
@@ -87,8 +86,7 @@ public class Painter {
             while (animationScope.isPaused() && !animationScope.isNextStep()) {
                 try {
                     lock.wait();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                } catch (InterruptedException ignored) {
                 }
             }
             animationScope.nextStepProperty().setValue(false);
@@ -110,9 +108,5 @@ public class Painter {
 
     public boolean isAnimationOn(){
         return animationScope.isAnimated();
-    }
-
-    public boolean isTimerOn() {
-        return timerOn;
     }
 }

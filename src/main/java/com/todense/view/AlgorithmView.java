@@ -6,6 +6,7 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -15,7 +16,7 @@ import org.controlsfx.control.ToggleSwitch;
 public class AlgorithmView implements FxmlView<AlgorithmViewModel> {
 
     @FXML private ChoiceBox<Algorithm> algorithmChoiceBox;
-    @FXML private VBox algorithmsVBox;
+    @FXML private VBox optionsVBox, optionsParentVBox;
     @FXML private HBox startingNodeHBox, goalNodeHBox;
     @FXML private TextField startNodeTextField, goalNodeTextField;
     @FXML private ToggleSwitch hcConnToggleSwitch, endpointsToggleSwitch;
@@ -41,16 +42,24 @@ public class AlgorithmView implements FxmlView<AlgorithmViewModel> {
 
 
         algorithmChoiceBox.valueProperty().addListener(((obs, oldVal, newVal) -> {
-            algorithmsVBox.getChildren().clear();
-            if(newVal.isWithStart()){
-                algorithmsVBox.getChildren().add(startingNodeHBox);
-            }
-            if(newVal.isWithGoal()){
-                algorithmsVBox.getChildren().add(goalNodeHBox);
-            }
-            if(newVal == Algorithm.HCSEARCH){
-                algorithmsVBox.getChildren().add(hcConnToggleSwitch);
-            }
+
+            boolean withStart = newVal.isWithStart();
+            boolean withGoal = newVal.isWithGoal();
+
+            startingNodeHBox.visibleProperty().set(withStart);
+            startingNodeHBox.managedProperty().set(withStart);
+
+            goalNodeHBox.visibleProperty().set(withGoal);
+            goalNodeHBox.managedProperty().set(withGoal);
+
+            hcConnToggleSwitch.visibleProperty().set(newVal == Algorithm.HCSEARCH);
+            hcConnToggleSwitch.managedProperty().set(newVal == Algorithm.HCSEARCH);
+
+
+            boolean isVisibleOption = optionsVBox.getChildren().stream().anyMatch(Node::isVisible);
+            optionsParentVBox.setVisible(isVisibleOption);
+            optionsParentVBox.setManaged(isVisibleOption);
+
         }));
         algorithmChoiceBox.setValue(Algorithm.DFS);
     }

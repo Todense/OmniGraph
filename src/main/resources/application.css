@@ -29,7 +29,7 @@
 .subsection {
     -fx-border-color:  #595959;
     -fx-border-radius: 5;
-    -fx-padding: 3 3 3 3;
+    -fx-padding: 5 5 5 5;
     -fx-border-width: 1;
     -fx-background-color: derive(fx-dark, 5%);
 }
@@ -80,6 +80,10 @@
 }
 
 .choice-box > .list-cell{
+    -fx-alignment: center;
+}
+
+.choice-box > .label{
     -fx-alignment: center;
 }
 
@@ -136,6 +140,10 @@
 
 .toggle-switch  .label{
     -fx-text-fill: fx-text-dark;
+}
+
+.toggle-switch  .label{
+
 }
 
 .jfx-toggle-node:selected{
@@ -213,21 +221,10 @@
 }
 
 .canvas{
-    -fx-background-color: antiquewhite, white ;
     -fx-background-insets: 0, 20 ;
     -fx-padding: 20 ;
 }
 
-
-.split-pane:horizontal
-{
-    -fx-padding: 0;
-    -fx-box-border: transparent;
-}
-
-.split-pane:horizontal > .split-pane-divider {
-   -fx-background-color: -fx-base;
-}
 
 .tab{
     -fx-background-color: derive(fx-dark, -40%);

@@ -19,9 +19,9 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<BorderPane prefHeight="515.0" prefWidth="1600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.MainView">
+<BorderPane prefHeight="515.0" prefWidth="1119.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.MainView">
    <left>
-      <TabPane prefHeight="466.0" prefWidth="237.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+      <TabPane prefHeight="466.0" prefWidth="265.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
          <Tab text="Appearance">
             <HBox prefHeight="395.0" prefWidth="181.0">
                <ScrollBar fx:id="leftScrollBar" maxWidth="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="395.0" prefWidth="13.0" visibleAmount="90.0" />
@@ -29,7 +29,7 @@
                   <HBox.margin>
                      <Insets />
                   </HBox.margin>
-                  <VBox fx:id="appearanceVBox" alignment="TOP_CENTER" fillWidth="false" prefHeight="340.0" prefWidth="25.0">
+                  <VBox fx:id="appearanceVBox" alignment="TOP_CENTER" fillWidth="false">
                      <TitledPane animated="false" text="Graph">
                         <fx:include source="GraphView.fxml" />
                         <VBox.margin>
@@ -64,26 +64,26 @@
       </HBox>
    </top>
    <right>
-      <TabPane prefWidth="237.0" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="2000.0">
+      <TabPane prefWidth="265.0" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="200.0" tabMaxWidth="200.0" tabMinHeight="100.0" BorderPane.alignment="CENTER">
          <Tab text="Algorithms">
-            <ScrollPane fx:id="antsTabScrollPane" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS">
-               <VBox prefHeight="200.0" prefWidth="222.0">
-                  <TitledPane animated="false" expanded="false" prefHeight="26.0" prefWidth="240.0" text="Basic Algorithms">
+            <ScrollPane fx:id="antsTabScrollPane" hbarPolicy="NEVER" vbarPolicy="ALWAYS">
+               <VBox>
+                  <TitledPane animated="false" text="Basic Algorithms">
                      <fx:include source="AlgorithmView.fxml" />
                      <VBox.margin>
                         <Insets />
                      </VBox.margin>
                   </TitledPane>
-                  <TitledPane animated="false" expanded="false" prefHeight="27.0" prefWidth="220.0" text="TSP Ant Colony Optimization">
+                  <TitledPane animated="false" text="TSP Ant Colony Optimization">
                      <fx:include source="AntsView.fxml" />
                   </TitledPane>
                </VBox>
             </ScrollPane>
          </Tab>
          <Tab text="Layout">
-            <ScrollPane fx:id="performTabScrollPane" hbarPolicy="NEVER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="237.0" vbarPolicy="ALWAYS">
-               <VBox alignment="TOP_CENTER" fillWidth="false" prefHeight="475.0" prefWidth="222.0">
-                  <TitledPane animated="false" layoutX="10.0" layoutY="10.0" prefHeight="26.0" prefWidth="222.0" text="Force-Directed Layout">
+            <ScrollPane fx:id="performTabScrollPane" hbarPolicy="NEVER" vbarPolicy="ALWAYS">
+               <VBox alignment="TOP_CENTER" fillWidth="false">
+                  <TitledPane animated="false" layoutX="10.0" layoutY="10.0" text="Force-Directed Layout">
                      <fx:include source="LayoutView.fxml" />
                      <VBox.margin>
                         <Insets />
@@ -94,8 +94,8 @@
          </Tab>
          <Tab text="Create &amp; Edit">
             <ScrollPane fx:id="createTabScrollPane" hbarPolicy="NEVER" prefHeight="200.0" prefWidth="200.0" vbarPolicy="ALWAYS">
-               <VBox prefHeight="25.0" prefWidth="222.0">
-                  <TitledPane animated="false" expanded="false" prefHeight="373.0" prefWidth="231.0" text="Random">
+               <VBox prefHeight="25.0" prefWidth="255.0">
+                  <TitledPane animated="false" prefHeight="25.0" prefWidth="240.0" text="Random">
                      <fx:include source="RandomGeneratorView.fxml" />
                   </TitledPane>
                   <TitledPane animated="false" expanded="false" text="Preset">

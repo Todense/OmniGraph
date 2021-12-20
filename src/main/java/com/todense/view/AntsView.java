@@ -1,70 +1,104 @@
 package com.todense.view;
 
-import com.todense.util.Util;
+import com.todense.view.components.ParameterHBox;
 import com.todense.viewmodel.AntsViewModel;
 import com.todense.viewmodel.ants.AntColonyVariant;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class AntsView implements FxmlView<AntsViewModel> {
 
     @FXML private ChoiceBox<AntColonyVariant> algorithmChoiceBox;
     @FXML private ColorPicker antColorPicker, cycleColorPicker;
-    @FXML private ToggleSwitch twoOptToggleSwitch, threeOptToggleSwitch, animationToggleSwitch, showPheromonesToggleSwitch;
-    @FXML private TextField alphaTextField, betaTextField, evaporationTextField, q0TextField, ksiTextField,
-            antCountTextField, neighbourhoodTextField, rankTextField;
-    @FXML private Slider alphaSlider, betaSlider, evaporationSlider, q0Slider,
-            ksiSlider, antCountSlider, neighbourhoodSlider, rankSlider;
-    @FXML private Button startButton;
-    @FXML private VBox paramVBox, ksiVBox, q0VBox, rankVBox;
+    @FXML private ToggleSwitch twoOptToggleSwitch, threeOptToggleSwitch,
+            animationToggleSwitch, showPheromonesToggleSwitch;
+
+    @FXML private VBox paramVBox;
 
     @InjectViewModel
     AntsViewModel viewModel;
 
+    private final List<ParameterHBox> parameterHBoxes = new ArrayList<>();
+
     public void initialize(){
-        Util.bindSliderAndTextField(alphaSlider, alphaTextField, "###.##");
-        Util.bindSliderAndTextField(betaSlider, betaTextField, "###.##");
-        Util.bindSliderAndTextField(evaporationSlider, evaporationTextField, "###.##");
-        Util.bindSliderAndTextField(q0Slider, q0TextField, "###.##");
-        Util.bindSliderAndTextField(ksiSlider, ksiTextField, "###.##");
-        Util.bindSliderAndTextField(antCountSlider, antCountTextField, "##");
-        Util.bindSliderAndTextField(neighbourhoodSlider, neighbourhoodTextField, "###");
-        Util.bindSliderAndTextField(rankSlider, rankTextField, "###");
+
+        ParameterHBox antColonySizeHBox = new ParameterHBox(
+                "Ants",
+                viewModel.antCountProperty(),
+                0, 5, 1, Double.MAX_VALUE
+        );
+        parameterHBoxes.add(antColonySizeHBox);
+
+        ParameterHBox alphaHBox = new ParameterHBox(
+                "Pheromone influence",
+                viewModel.alphaProperty(),
+                1, 1.0, 0.0, Double.MAX_VALUE
+        );
+        parameterHBoxes.add(alphaHBox);
+
+        ParameterHBox betaHBox = new ParameterHBox(
+                "Distance influence",
+                viewModel.betaProperty(),
+                1, 1.0, 0.0, Double.MAX_VALUE
+        );
+        parameterHBoxes.add(betaHBox);
+
+        ParameterHBox evaporationHBox = new ParameterHBox(
+                "Evaporation rate",
+                viewModel.evaporationProperty(),
+                2, 0.1, 0.0, 1.0
+        );
+        parameterHBoxes.add(evaporationHBox);
+
+        ParameterHBox exploitationStrengthHBox = new ParameterHBox(
+                "Exploitation strength",
+                viewModel.exploitationStrengthProperty(),
+                2, 0.9, 0.0, 1.0
+        );
+        parameterHBoxes.add(exploitationStrengthHBox);
+        bindToVariant(exploitationStrengthHBox, AntColonyVariant.ACS);
+
+        ParameterHBox localEvaporationHBox = new ParameterHBox(
+                "Local evaporation",
+                viewModel.localEvaporationProperty(),
+                2, 0.1, 0.0, 1.0
+        );
+        parameterHBoxes.add(localEvaporationHBox);
+        bindToVariant(localEvaporationHBox, AntColonyVariant.ACS);
+
+        ParameterHBox rankSizeHBox = new ParameterHBox(
+                "Rank size",
+                viewModel.rankSizeProperty(),
+                0, 5, 1, Double.POSITIVE_INFINITY
+        );
+        parameterHBoxes.add(rankSizeHBox);
+        bindToVariant(rankSizeHBox, AntColonyVariant.RANK_AS);
+
+        ParameterHBox neighbourhoodsSizeHBox = new ParameterHBox(
+                "Neighbourhood size",
+                viewModel.neighbourhoodSizeProperty(),
+                0, 15, 1, Double.POSITIVE_INFINITY
+        );
+        parameterHBoxes.add(neighbourhoodsSizeHBox);
+
+        paramVBox.getChildren().addAll(parameterHBoxes);
 
         algorithmChoiceBox.getItems().addAll(AntColonyVariant.values());
         algorithmChoiceBox.valueProperty().bindBidirectional(viewModel.algorithmProperty());
-        algorithmChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> {
 
-            paramVBox.getChildren().clear();
-
-            if(newVal.isWithQ0()){
-                paramVBox.getChildren().add(q0VBox);
-            }
-            if(newVal.withLocalUpdate()){
-                paramVBox.getChildren().add(ksiVBox);
-            }
-            if(newVal.isRanked()){
-                paramVBox.getChildren().add(rankVBox);
-            }
-        });
         algorithmChoiceBox.setValue(AntColonyVariant.AS);
 
         antColorPicker.valueProperty().bindBidirectional(viewModel.antColorProperty());
         cycleColorPicker.valueProperty().bindBidirectional(viewModel.cycleColorProperty());
-
-        antCountSlider.valueProperty().bindBidirectional(viewModel.antCountProperty());
-        neighbourhoodSlider.valueProperty().bindBidirectional(viewModel.neighbourhoodSizeProperty());
-        alphaSlider.valueProperty().bindBidirectional(viewModel.alphaProperty());
-        betaSlider.valueProperty().bindBidirectional(viewModel.betaProperty());
-        evaporationSlider.valueProperty().bindBidirectional(viewModel.evaporationProperty());
-        ksiSlider.valueProperty().bindBidirectional(viewModel.ksiProperty());
-        q0Slider.valueProperty().bindBidirectional(viewModel.q0Property());
-        rankSlider.valueProperty().bindBidirectional(viewModel.rankSizeProperty());
 
         twoOptToggleSwitch.selectedProperty().bindBidirectional(viewModel.with2OptProperty());
         threeOptToggleSwitch.selectedProperty().bindBidirectional(viewModel.with3OptProperty());
@@ -79,99 +113,23 @@ public class AntsView implements FxmlView<AntsViewModel> {
             if(newVal) threeOptToggleSwitch.setSelected(false);
         });
 
-        rankSlider.maxProperty().bind(antCountSlider.valueProperty());
+        viewModel.antCountProperty().addListener((obs, oldVal, newVal) -> {
+                rankSizeHBox.setMaxVal((Integer) newVal);
+                if(viewModel.rankSizeProperty().get() > newVal.intValue()){
+                    viewModel.rankSizeProperty().set(newVal.intValue());
+                }
+            }
+        );
     }
 
-    private void bindLabel(Label label, Slider slider){
-        label.textProperty().bind(Bindings.createStringBinding(() ->
-                String.format("%.2f", slider.valueProperty().get()), slider.valueProperty()));
+    private void bindToVariant(ParameterHBox hBox, AntColonyVariant variant){
+        var isCurrentVariant = Bindings.createBooleanBinding(
+                () -> algorithmChoiceBox.valueProperty().isEqualTo(variant).get(),
+                algorithmChoiceBox.valueProperty()
+        );
+        hBox.visibleProperty().bind(isCurrentVariant);
+        hBox.managedProperty().bind(isCurrentVariant);
     }
-
-    private void bindIntLabel(Label label, Slider slider){
-        label.textProperty().bind(Bindings.createStringBinding(() ->
-                String.valueOf(slider.valueProperty().intValue()), slider.valueProperty()));
-    }
-
-    @FXML
-    private void alphaDecrementAction() {
-        alphaSlider.decrement();
-    }
-
-    @FXML
-    private void alphaIncrementAction() {
-        alphaSlider.increment();
-    }
-
-    @FXML
-    private void betaDecrementAction() {
-        betaSlider.decrement();
-    }
-
-    @FXML
-    private void betaIncrementAction() {
-        betaSlider.increment();
-    }
-
-    @FXML
-    private void evaporationDecrementAction() {
-        evaporationSlider.decrement();
-    }
-
-    @FXML
-    private void evaporationIncrementAction() {
-        evaporationSlider.increment();
-    }
-
-    @FXML
-    private void q0DecrementAction() {
-        q0Slider.decrement();
-    }
-
-    @FXML
-    private void q0IncrementAction() {
-        q0Slider.increment();
-    }
-
-    @FXML
-    private void ksiDecrementAction() {
-        ksiSlider.decrement();
-    }
-
-    @FXML
-    private void ksiIncrementAction() {
-        ksiSlider.increment();
-    }
-
-    @FXML
-    private void rankDecrementAction() {
-        rankSlider.decrement();
-    }
-
-    @FXML
-    private void rankIncrementAction() {
-        rankSlider.increment();
-    }
-
-    @FXML
-    private void neighbourhoodIncrementAction(){
-        neighbourhoodSlider.increment();
-    }
-
-    @FXML
-    private void neighbourhoodDecrementAction(){
-        neighbourhoodSlider.decrement();
-    }
-
-    @FXML
-    private void antCountDecrementAction(){
-        antCountSlider.decrement();
-    }
-
-    @FXML
-    private void antCountIncrementAction(){
-        antCountSlider.increment();
-    }
-
 
     @FXML
     private void startAction() {

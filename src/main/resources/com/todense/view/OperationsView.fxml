@@ -8,9 +8,9 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.ToggleSwitch?>
 
-<VBox alignment="CENTER" minHeight="-Infinity" prefHeight="139.0" prefWidth="200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.OperationsView">
+<VBox alignment="CENTER" prefWidth="250.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.OperationsView">
    <padding>
-      <Insets bottom="5.0" />
+      <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
    </padding>
    <Label styleClass="darkLabel" text="Graph Actions" textFill="#8a8a8a">
       <font>
@@ -20,26 +20,30 @@
          <Insets bottom="3.0" top="5.0" />
       </VBox.margin>
    </Label>
-   <ToggleSwitch fx:id="editSubgraphToggleSwitch" prefHeight="18.0" prefWidth="192.0" text="Edit selected subgraph only">
+   <ToggleSwitch fx:id="editSubgraphToggleSwitch" prefHeight="18.0" prefWidth="235.0" text="Edit selected subgraph only">
       <VBox.margin>
-         <Insets bottom="6.0" top="6.0" />
+         <Insets bottom="10.0" top="6.0" />
       </VBox.margin>
    </ToggleSwitch>
-   <HBox alignment="CENTER" prefHeight="100.0" spacing="3.0">
-      <children>
-         <VBox prefHeight="200.0" spacing="3.0">
-            <children>
-               <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#pathAction" prefHeight="25.0" prefWidth="95.0" text="Path" />
-               <Button contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#completeAction" prefHeight="25.0" prefWidth="95.0" styleClass="success" text="Complete" />
-               <Button contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#complementAction" prefHeight="25.0" prefWidth="95.0" styleClass="success" text="Complement" />
-            </children>
-         </VBox>
-         <VBox prefHeight="200.0" spacing="3.0">
-            <children>
-               <Button contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#subdivideAction" prefHeight="25.0" prefWidth="95.0" styleClass="success" text="Subdivide" />
-               <Button contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteEdgesAction" prefHeight="25.0" prefWidth="95.0" styleClass="success" text="Delete edges" />
-            </children>
-         </VBox>
-      </children>
+   <HBox alignment="CENTER" spacing="3.0">
+      <VBox spacing="3.0">
+         <Button alignment="CENTER" contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity"
+                 minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#pathAction"
+                 prefHeight="25.0" prefWidth="116.0" text="Create path"/>
+         <Button contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                 minWidth="-Infinity" mnemonicParsing="false" onAction="#completeAction" prefHeight="25.0"
+                 prefWidth="116.0" styleClass="success" text="Complete"/>
+         <Button contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                 minWidth="-Infinity" mnemonicParsing="false" onAction="#complementAction" prefHeight="25.0"
+                 prefWidth="116.0" styleClass="success" text="Complement"/>
+      </VBox>
+      <VBox maxWidth="1.7976931348623157E308" minWidth="-Infinity" spacing="3.0">
+         <Button contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                 minWidth="-Infinity" mnemonicParsing="false" onAction="#subdivideAction" prefHeight="25.0"
+                 prefWidth="116.0" styleClass="success" text="Subdivide edges"/>
+         <Button contentDisplay="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                 minWidth="-Infinity" mnemonicParsing="false" onAction="#deleteEdgesAction" prefHeight="25.0"
+                 prefWidth="116.0" styleClass="success" text="Delete edges"/>
+      </VBox>
    </HBox>
 </VBox>

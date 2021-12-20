@@ -12,107 +12,122 @@
 <?import org.controlsfx.control.ToggleSwitch?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="256.0" prefWidth="200.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.AlgorithmView">
-   <padding>
-      <Insets bottom="5.0" top="5.0" />
-   </padding>
-   <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Algorithm" textFill="#2c2c2c">
-      <font>
-         <Font size="9.0" />
-      </font>
-   </Label>
-   <ChoiceBox fx:id="algorithmChoiceBox" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0" />
-   <Label alignment="CENTER" layoutX="15.0" layoutY="15.0" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Options" textFill="#2c2c2c">
-      <font>
-         <Font size="9.0" />
-      </font>
-      <VBox.margin>
-         <Insets top="5.0" />
-      </VBox.margin>
-   </Label>
-   <VBox fx:id="algorithmsVBox" alignment="TOP_CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="101.0" prefWidth="202.0" spacing="3.0" styleClass="subsection">
-      <HBox fx:id="startingNodeHBox" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0" spacing="3.0">
-         <Label prefHeight="23.0" prefWidth="132.0" text="Start node">
-            <font>
-               <Font size="10.0" />
-            </font>
-         </Label>
-         <TextField fx:id="startNodeTextField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="55.0" text="Not set">
-            <font>
-               <Font size="10.0" />
-            </font>
-         </TextField>
-         <VBox.margin>
-            <Insets />
-         </VBox.margin>
-      </HBox>
-      <HBox fx:id="goalNodeHBox" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="190.0" spacing="3.0">
-         <Label prefHeight="23.0" prefWidth="132.0" text="Goal node">
-            <font>
-               <Font size="10.0" />
-            </font>
-         </Label>
-         <TextField fx:id="goalNodeTextField" alignment="CENTER" editable="false" prefHeight="55.0" prefWidth="55.0" text="Not set">
-            <font>
-               <Font size="10.0" />
-            </font>
-         </TextField>
-      </HBox>
-      <ToggleSwitch fx:id="hcConnToggleSwitch" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" prefHeight="18.0" prefWidth="190.0" selected="true" text="Check Connectivity">
+<VBox alignment="CENTER" prefWidth="250.0" spacing="3.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.AlgorithmView">
+   <children>
+      <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Algorithm" textFill="#2c2c2c">
          <font>
-            <Font size="10.0" />
+            <Font size="9.0" />
          </font>
+      </Label>
+      <ChoiceBox fx:id="algorithmChoiceBox" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity">
          <VBox.margin>
-            <Insets top="2.0" />
-         </VBox.margin>
-      </ToggleSwitch>
-   </VBox>
-   <Label alignment="CENTER" layoutX="15.0" layoutY="64.0" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Visuals" textFill="#2c2c2c">
-      <font>
-         <Font size="9.0" />
-      </font>
-      <VBox.margin>
-         <Insets top="5.0" />
-      </VBox.margin>
-   </Label>
-   <VBox fx:id="algorithmsVBox1" alignment="CENTER" layoutX="9.0" layoutY="82.0" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="202.0" styleClass="subsection">
-      <children>
-         <HBox layoutX="21.0" layoutY="62.0" maxWidth="-Infinity" prefHeight="0.0" prefWidth="200.0">
-            <children>
-               <ToggleSwitch fx:id="endpointsToggleSwitch" contentDisplay="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="18.0" prefWidth="192.0" selected="true" text="Show endpoints">
+            <Insets bottom="5.0" />
+         </VBox.margin></ChoiceBox>
+      <VBox fx:id="optionsParentVBox" alignment="CENTER">
+         <children>
+            <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Options" textFill="#2c2c2c">
+               <font>
+                  <Font size="9.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="2.0" top="5.0" />
+               </VBox.margin>
+            </Label>
+            <VBox fx:id="optionsVBox" alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" spacing="3.0" styleClass="subsection">
+               <ToggleSwitch fx:id="hcConnToggleSwitch" alignment="CENTER" contentDisplay="CENTER" graphicTextGap="0.0" maxWidth="1.7976931348623157E308" selected="true" text="Check Connectivity">
                   <font>
                      <Font size="10.0" />
                   </font>
-                  <HBox.margin>
-                     <Insets />
-                  </HBox.margin>
+                  <VBox.margin>
+                     <Insets left="5.0" right="5.0" top="2.0" />
+                  </VBox.margin>
                </ToggleSwitch>
-            </children>
-         </HBox>
-      </children>
-   </VBox>
-   <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="222.0" spacing="3.0">
-      <Button fx:id="algorithmStartButton" alignment="CENTER" mnemonicParsing="false" onAction="#startAlgorithmAction" prefHeight="25.0" prefWidth="140.0" text="Start">
-         <graphic>
-            <FontIcon iconColor="#08ae34" iconLiteral="fas-play" styleClass="start-icon" />
-         </graphic>
+            </VBox>
+         </children>
+         <VBox.margin>
+            <Insets bottom="7.0" />
+         </VBox.margin>
+      </VBox>
+      <HBox fx:id="startingNodeHBox" alignment="CENTER" maxWidth="1.7976931348623157E308" minWidth="-Infinity" spacing="3.0" VBox.vgrow="ALWAYS">
+         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" text="Start node" HBox.hgrow="ALWAYS">
+            <font>
+               <Font size="10.0" />
+            </font>
+         </Label>
+         <TextField fx:id="startNodeTextField" alignment="CENTER" editable="false" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" prefWidth="70.0" text="Not set">
+            <font>
+               <Font size="10.0" />
+            </font>
+         </TextField>
+         <VBox.margin>
+            <Insets left="5.0" right="5.0" />
+         </VBox.margin>
+      </HBox>
+      <HBox fx:id="goalNodeHBox" alignment="CENTER" minWidth="-Infinity" spacing="3.0" VBox.vgrow="ALWAYS">
+         <Label maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" text="Goal node" HBox.hgrow="ALWAYS">
+            <font>
+               <Font size="10.0" />
+            </font>
+         </Label>
+         <TextField fx:id="goalNodeTextField" alignment="CENTER" editable="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="70.0" text="Not set">
+            <font>
+               <Font size="10.0" />
+            </font>
+         </TextField>
+         <VBox.margin>
+            <Insets left="5.0" right="5.0" />
+         </VBox.margin>
+      </HBox>
+      <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Visuals" textFill="#2c2c2c">
          <font>
-            <Font size="11.0" />
+            <Font size="9.0" />
          </font>
-      </Button>
-      <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopAlgorithmAction" prefHeight="25.0" prefWidth="25.0">
-         <font>
-            <Font size="11.0" />
-         </font>
-         <graphic>
-            <FontIcon iconColor="#e14444" iconLiteral="fas-stop" iconSize="15" selectionStart="0" styleClass="stop-icon" />
-         </graphic>
-         <tooltip>
-            <Tooltip showDelay="0.1s" text="Stop" />
-         </tooltip>
-      </Button>
-      <VBox.margin>
-         <Insets top="10.0" />
-      </VBox.margin>
-   </HBox>
+         <VBox.margin>
+            <Insets top="5.0" />
+         </VBox.margin>
+      </Label>
+      <VBox fx:id="algorithmsVBox1" alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="subsection" VBox.vgrow="ALWAYS">
+         <children>
+            <HBox layoutX="21.0" layoutY="62.0" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
+               <children>
+                  <ToggleSwitch fx:id="endpointsToggleSwitch" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" minWidth="-Infinity" selected="true" text="Show endpoints" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                     <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </HBox.margin>
+                  </ToggleSwitch>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <HBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" spacing="3.0">
+         <Button fx:id="algorithmStartButton" alignment="CENTER" mnemonicParsing="false" onAction="#startAlgorithmAction" prefHeight="25.0" prefWidth="140.0" text="Start">
+            <graphic>
+               <FontIcon iconColor="#08ae34" iconLiteral="fas-play" styleClass="start-icon" />
+            </graphic>
+            <font>
+               <Font size="11.0" />
+            </font>
+         </Button>
+         <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopAlgorithmAction" prefHeight="25.0" prefWidth="25.0">
+            <font>
+               <Font size="11.0" />
+            </font>
+            <graphic>
+               <FontIcon iconColor="#e14444" iconLiteral="fas-stop" iconSize="15" selectionStart="0" styleClass="stop-icon" />
+            </graphic>
+            <tooltip>
+               <Tooltip showDelay="0.1s" text="Stop" />
+            </tooltip>
+         </Button>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+   </padding>
 </VBox>

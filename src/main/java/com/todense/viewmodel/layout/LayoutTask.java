@@ -26,6 +26,8 @@ public abstract class LayoutTask extends AlgorithmTask {
     protected final double gamma = Math.sqrt(9d/4d);
     Random rnd = new Random();
 
+    private int graphSequenceLength = 0;
+
     public LayoutTask(LayoutScope layoutScope, GraphManager graphManager) {
         super(graphManager.getGraph());
         this.layoutScope = layoutScope;
@@ -48,6 +50,7 @@ public abstract class LayoutTask extends AlgorithmTask {
     }
 
     protected void layout(Graph graph) throws InterruptedException{
+        iterationCounter = 0;
         while(!stopConditionMet()){
             try {
                 waitIfNoNodes();
@@ -73,7 +76,7 @@ public abstract class LayoutTask extends AlgorithmTask {
     }
 
     void multilevelLayout(GraphManager graphManager){
-        double optDist = layoutScope.getOptDist();
+        double optDist = layoutScope.getHuOptDist();
         GraphCoarsener graphCoarsener = new GraphCoarsener(graphManager);
         graphCoarsener.initGraphSequence();
         while(!graphCoarsener.maxLevelReached()){
@@ -86,12 +89,13 @@ public abstract class LayoutTask extends AlgorithmTask {
                 }
             }
         }
+        graphSequenceLength = graphCoarsener.getGraphSequence().size();
+        initMultilevelParameters();
         optDist = optDist * Math.pow(gamma, graphCoarsener.getGraphSequence().size()-1);
         while(graphCoarsener.getGraphSequence().size() > 1){
-
             optDist = optDist/gamma;
             updateMultiLayoutParameters();
-            graphCoarsener.reconstruct(0.3 * optDist);
+            graphCoarsener.reconstruct();
             try {
                 super.sleep();
                 layout(graphCoarsener.getGraphSequence().peek());
@@ -102,8 +106,6 @@ public abstract class LayoutTask extends AlgorithmTask {
             }
         }
     }
-
-    protected abstract void updateMultiLayoutParameters();
 
 
     void applyForces(Graph graph){
@@ -185,7 +187,7 @@ public abstract class LayoutTask extends AlgorithmTask {
     }
 
     protected Point2D addNoise(Point2D p){
-        return p.add(rnd.nextDouble()*1.0e-10-0.5e-30, rnd.nextDouble()*1.0e-10-0.5e-10);
+        return p.add(rnd.nextDouble()*1.0e-4-0.5e-4, rnd.nextDouble()*1.0e-4-0.5e-4);
     }
 
     protected void addForce(Node n, Point2D force){
@@ -218,7 +220,15 @@ public abstract class LayoutTask extends AlgorithmTask {
 
     protected abstract void updateGraph(Graph graph);
 
+    protected abstract void initMultilevelParameters();
+
+    protected abstract void updateMultiLayoutParameters();
+
     public int getIterationCounter() {
         return iterationCounter;
+    }
+
+    public int getGraphSequenceLength() {
+        return graphSequenceLength;
     }
 }

@@ -107,8 +107,6 @@ public class CanvasViewModel implements ViewModel {
         });
 
         notificationCenter.subscribe(REPAINT_REQUEST,  (key, payload) -> painter.repaint());
-        notificationCenter.subscribe(MainViewModel.GRAPH_EDIT_REQUEST,
-                (key, payload) -> painter.repaint());
 
         notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_REQUEST, (key, payload) -> {
             graphScope.displayModeProperty().set(DisplayMode.DEFAULT);

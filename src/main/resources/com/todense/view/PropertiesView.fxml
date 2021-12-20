@@ -10,181 +10,181 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox alignment="CENTER" prefHeight="308.0" prefWidth="237.0" styleClass="subsection" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.PropertiesView">
-   <HBox alignment="CENTER" prefHeight="17.0" prefWidth="148.0" spacing="3.0">
-      <children>
-         <Label alignment="CENTER" prefHeight="17.0" prefWidth="272.0" styleClass="darkLabel" text="General" />
-      </children>
-   </HBox>
+<VBox alignment="CENTER" prefWidth="250.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.PropertiesView">
+   <Label alignment="CENTER" styleClass="darkLabel" text="General" />
    <VBox prefWidth="205.0" spacing="3.0" styleClass="subsection">
-      <children>
-         <HBox alignment="CENTER" prefHeight="20.0">
-            <Label prefHeight="17.0" prefWidth="165.0" text="Nodes">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </Label>
-            <TextField fx:id="nodeCountTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity" prefHeight="18.0" prefWidth="50.0" promptText="?" style="-fx-opacity: 1;" text="?">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </TextField>
-         </HBox>
-         <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0">
-            <children>
-               <Label prefHeight="17.0" prefWidth="165.0" text="Edges">
-                  <font>
-                     <Font size="11.0" />
-                  </font>
-               </Label>
-               <TextField fx:id="edgeCountTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity" prefHeight="18.0" prefWidth="50.0" promptText="?" style="-fx-opacity: 1;" text="?">
-                  <font>
-                     <Font size="11.0" />
-                  </font>
-               </TextField>
-            </children>
-         </HBox>
-         <HBox alignment="CENTER" prefHeight="20.0" prefWidth="201.0">
-            <Label prefHeight="15.0" prefWidth="165.0" text="Connected Components">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <TextField fx:id="ccTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity" prefHeight="18.0" prefWidth="50.0" promptText="?" style="-fx-opacity: 1;" text="?">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </TextField>
-         </HBox>
-         <HBox alignment="CENTER" layoutX="14.0" layoutY="60.0" prefHeight="20.0" prefWidth="201.0">
-            <children>
-               <Label prefHeight="15.0" prefWidth="165.0" text="Density">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
-               <TextField fx:id="densityTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity" prefHeight="18.0" prefWidth="50.0" promptText="?" style="-fx-opacity: 1;" text="?">
-                  <font>
-                     <Font size="11.0" />
-                  </font>
-               </TextField>
-            </children>
-         </HBox>
-         <HBox alignment="CENTER" layoutX="14.0" layoutY="80.0" prefHeight="20.0" prefWidth="201.0">
-            <children>
-               <Label prefHeight="15.0" prefWidth="165.0" text="Clustering Coefficient">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
-               <TextField fx:id="clusterCoeffTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity" prefHeight="18.0" prefWidth="50.0" promptText="?" style="-fx-opacity: 1;" text="?">
-                  <font>
-                     <Font size="11.0" />
-                  </font>
-               </TextField>
-            </children>
-         </HBox>
-      </children>
+      <HBox alignment="CENTER" prefHeight="20.0">
+         <Label prefHeight="17.0" prefWidth="165.0" text="Nodes">
+            <font>
+               <Font size="11.0"/>
+            </font>
+         </Label>
+         <TextField fx:id="nodeCountTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity"
+                    prefHeight="18.0" prefWidth="70.0" promptText="?" style="-fx-opacity: 1;" text="?">
+            <font>
+               <Font size="11.0"/>
+            </font>
+         </TextField>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="20.0" prefWidth="200.0">
+         <Label prefHeight="17.0" prefWidth="165.0" text="Edges">
+            <font>
+               <Font size="11.0"/>
+            </font>
+         </Label>
+         <TextField fx:id="edgeCountTextField" alignment="CENTER" disable="true" editable="false"
+                    minHeight="-Infinity" prefHeight="18.0" prefWidth="70.0" promptText="?" style="-fx-opacity: 1;"
+                    text="?">
+            <font>
+               <Font size="11.0"/>
+            </font>
+         </TextField>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="20.0" prefWidth="201.0">
+         <Label prefHeight="15.0" prefWidth="165.0" text="Connected Components">
+            <font>
+               <Font size="10.0"/>
+            </font>
+         </Label>
+         <TextField fx:id="ccTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity"
+                    prefHeight="18.0" prefWidth="70.0" promptText="?" style="-fx-opacity: 1;" text="?">
+            <font>
+               <Font size="11.0"/>
+            </font>
+         </TextField>
+      </HBox>
+      <HBox alignment="CENTER" layoutX="14.0" layoutY="60.0" prefHeight="20.0" prefWidth="201.0">
+         <Label prefHeight="15.0" prefWidth="165.0" text="Density">
+            <font>
+               <Font size="10.0"/>
+            </font>
+         </Label>
+         <TextField fx:id="densityTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity"
+                    prefHeight="18.0" prefWidth="70.0" promptText="?" style="-fx-opacity: 1;" text="?">
+            <font>
+               <Font size="11.0"/>
+            </font>
+         </TextField>
+      </HBox>
+      <HBox alignment="CENTER" layoutX="14.0" layoutY="80.0" prefHeight="20.0" prefWidth="201.0">
+         <Label prefHeight="15.0" prefWidth="165.0" text="Clustering Coefficient">
+            <font>
+               <Font size="10.0"/>
+            </font>
+         </Label>
+         <TextField fx:id="clusterCoeffTextField" alignment="CENTER" disable="true" editable="false"
+                    minHeight="-Infinity" prefHeight="18.0" prefWidth="70.0" promptText="?" style="-fx-opacity: 1;"
+                    text="?">
+            <font>
+               <Font size="11.0"/>
+            </font>
+         </TextField>
+      </HBox>
    </VBox>
-   <Label alignment="CENTER" prefHeight="17.0" prefWidth="263.0" styleClass="darkLabel" text="Node Degrees">
+   <Label alignment="CENTER" styleClass="darkLabel" text="Node Degrees">
       <VBox.margin>
          <Insets top="5.0" />
       </VBox.margin>
    </Label>
    <VBox prefWidth="100.0" spacing="3.0" styleClass="subsection">
-      <children>
-         <HBox alignment="CENTER" prefHeight="20.0" prefWidth="201.0">
-            <Label prefHeight="17.0" prefWidth="165.0" text="Max Degree">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <TextField fx:id="maxDegreeTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity" prefHeight="18.0" prefWidth="50.0" promptText="?" style="-fx-opacity: 1;" text="?">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </TextField>
-         </HBox>
-         <HBox alignment="CENTER" prefHeight="20.0" prefWidth="201.0">
-            <Label prefWidth="165.0" text="Min Degree">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <TextField fx:id="minDegreeTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity" prefHeight="18.0" prefWidth="50.0" promptText="?" style="-fx-opacity: 1;" text="?">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </TextField>
-         </HBox>
-         <HBox alignment="CENTER" prefHeight="20.0" prefWidth="201.0">
-            <Label prefWidth="165.0" text="Avg Degree">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <TextField fx:id="avgDegreeTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity" prefHeight="18.0" prefWidth="50.0" promptText="?" style="-fx-opacity: 1;" text="?">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </TextField>
-         </HBox>
-      </children>
+      <HBox alignment="CENTER" prefHeight="20.0" prefWidth="201.0">
+         <Label prefHeight="17.0" prefWidth="165.0" text="Max Degree">
+            <font>
+               <Font size="10.0"/>
+            </font>
+         </Label>
+         <TextField fx:id="maxDegreeTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity"
+                    prefHeight="18.0" prefWidth="70.0" promptText="?" style="-fx-opacity: 1;" text="?">
+            <font>
+               <Font size="11.0"/>
+            </font>
+         </TextField>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="20.0" prefWidth="201.0">
+         <Label prefWidth="165.0" text="Min Degree">
+            <font>
+               <Font size="10.0"/>
+            </font>
+         </Label>
+         <TextField fx:id="minDegreeTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity"
+                    prefHeight="18.0" prefWidth="70.0" promptText="?" style="-fx-opacity: 1;" text="?">
+            <font>
+               <Font size="11.0"/>
+            </font>
+         </TextField>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="20.0" prefWidth="201.0">
+         <Label prefWidth="165.0" text="Avg Degree">
+            <font>
+               <Font size="10.0"/>
+            </font>
+         </Label>
+         <TextField fx:id="avgDegreeTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity"
+                    prefHeight="18.0" prefWidth="70.0" promptText="?" style="-fx-opacity: 1;" text="?">
+            <font>
+               <Font size="11.0"/>
+            </font>
+         </TextField>
+      </HBox>
    </VBox>
-   <Label alignment="CENTER" prefHeight="17.0" prefWidth="263.0" styleClass="darkLabel" text="Eccentricity">
+   <Label alignment="CENTER" styleClass="darkLabel" text="Eccentricity">
       <VBox.margin>
          <Insets top="5.0" />
       </VBox.margin>
    </Label>
    <VBox prefWidth="100.0" spacing="3.0" styleClass="subsection">
-      <children>
-         <HBox alignment="CENTER" prefHeight="20.0" prefWidth="201.0">
-            <Label prefWidth="165.0" text="Diameter">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <TextField fx:id="diameterTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity" prefHeight="18.0" prefWidth="50.0" promptText="?" style="-fx-opacity: 1;" text="?">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </TextField>
-         </HBox>
-         <HBox alignment="CENTER" prefHeight="20.0" prefWidth="201.0">
-            <Label prefWidth="165.0" text="Radius">
-               <font>
-                  <Font size="10.0" />
-               </font>
-            </Label>
-            <TextField fx:id="radiusTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity" prefHeight="18.0" prefWidth="50.0" promptText="?" style="-fx-opacity: 1;" text="?">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </TextField>
-         </HBox>
-      </children>
+      <HBox alignment="CENTER" prefHeight="20.0" prefWidth="201.0">
+         <Label prefWidth="165.0" text="Diameter">
+            <font>
+               <Font size="10.0"/>
+            </font>
+         </Label>
+         <TextField fx:id="diameterTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity"
+                    prefHeight="18.0" prefWidth="70.0" promptText="?" style="-fx-opacity: 1;" text="?">
+            <font>
+               <Font size="11.0"/>
+            </font>
+         </TextField>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="20.0" prefWidth="201.0">
+         <Label prefWidth="165.0" text="Radius">
+            <font>
+               <Font size="10.0"/>
+            </font>
+         </Label>
+         <TextField fx:id="radiusTextField" alignment="CENTER" disable="true" editable="false" minHeight="-Infinity"
+                    prefHeight="18.0" prefWidth="70.0" promptText="?" style="-fx-opacity: 1;" text="?">
+            <font>
+               <Font size="11.0"/>
+            </font>
+         </TextField>
+      </HBox>
    </VBox>
    <HBox alignment="CENTER" prefHeight="36.0" prefWidth="232.0" spacing="3.0">
-      <children>
-         <Button mnemonicParsing="false" onAction="#propertiesAction" prefHeight="25.0" prefWidth="104.0" text="Calculcate">
-            <graphic>
-               <FontIcon iconColor="#08ae34" iconLiteral="fas-play" styleClass="start-icon" />
-            </graphic>
-         </Button>
-         <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopAction" prefHeight="25.0" prefWidth="25.0">
-            <font>
-               <Font name="Font Awesome 5 Free Regular" size="11.0" />
-            </font>
-            <graphic>
-               <FontIcon iconColor="#e14444" iconLiteral="fas-stop" iconSize="15" selectionStart="0" styleClass="stop-icon" />
-            </graphic>
-            <tooltip>
-               <Tooltip showDelay="0.1s" text="Stop" />
-            </tooltip>
-         </Button>
-      </children>
+      <VBox.margin>
+         <Insets bottom="5.0" top="5.0"/>
+      </VBox.margin>
+      <Button mnemonicParsing="false" onAction="#propertiesAction" prefHeight="25.0" prefWidth="104.0"
+              text="Calculcate">
+         <graphic>
+            <FontIcon iconColor="#08ae34" iconLiteral="fas-play" styleClass="start-icon"/>
+         </graphic>
+      </Button>
+      <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopAction"
+              prefHeight="25.0" prefWidth="25.0">
+         <font>
+            <Font name="Font Awesome 5 Free Regular" size="11.0"/>
+         </font>
+         <graphic>
+            <FontIcon iconColor="#e14444" iconLiteral="fas-stop" iconSize="15" selectionStart="0"
+                      styleClass="stop-icon"/>
+         </graphic>
+         <tooltip>
+            <Tooltip showDelay="0.1s" text="Stop"/>
+         </tooltip>
+      </Button>
    </HBox>
    <padding>
-      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+      <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
    </padding>
 </VBox>

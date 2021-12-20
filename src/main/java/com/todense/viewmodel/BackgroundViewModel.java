@@ -24,18 +24,18 @@ public class BackgroundViewModel implements ViewModel {
 
     public void initialize(){
 
+        ChangeListener<Object> listener = (obs, oldVal, newVal) -> canvasScope.getPainter().repaint();
+
         Platform.runLater(() -> {
             BackgroundDrawLayer backgroundDrawLayer = new BackgroundDrawLayer(backgroundScope, canvasScope);
             canvasScope.getPainter().addDrawLayer(backgroundDrawLayer);
+
+            backgroundColorProperty().addListener(listener);
+            gridGapProperty().addListener(listener);
+            gridBrightnessProperty().addListener(listener);
+            gridWidthProperty().addListener(listener);
+            showingGridProperty().addListener(listener);
         });
-
-        ChangeListener<Object> listener = (obs, oldVal, newVal) -> canvasScope.getPainter().repaint();
-
-        backgroundColorProperty().addListener(listener);
-        gridGapProperty().addListener(listener);
-        gridBrightnessProperty().addListener(listener);
-        gridWidthProperty().addListener(listener);
-        showingGridProperty().addListener(listener);
     }
 
     public ObjectProperty<Color> backgroundColorProperty() {

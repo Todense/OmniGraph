@@ -28,21 +28,13 @@ public class RandomGeneratorViewModel implements ViewModel {
     private final ObjectProperty<GeneratorModel> generatorProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<NodeArrangement> nodeArrangementProperty = new SimpleObjectProperty<>();
 
-    private final ObjectProperty<Integer> nodeCountObjectProperty = new SimpleObjectProperty<>(50);
-    private final IntegerProperty nodeCountProperty = IntegerProperty.integerProperty(nodeCountObjectProperty);
+    private final IntegerProperty nodeCountProperty = new SimpleIntegerProperty(50);
+    private final DoubleProperty minNodeDistProperty = new SimpleDoubleProperty(0.1);
+    private final DoubleProperty edgeProbabilityProperty = new SimpleDoubleProperty(0.1);
+    private final DoubleProperty edgeThresholdProperty = new SimpleDoubleProperty(0.2);
+    private final IntegerProperty barabasiInitialNodesProperty = new SimpleIntegerProperty(2);
+    private final IntegerProperty barabasiConnectionsProperty = new SimpleIntegerProperty(2);
 
-    private final ObjectProperty<Double> minNodeDistObjectProperty = new SimpleObjectProperty<>(0.1);
-    private final DoubleProperty minNodeDistProperty = DoubleProperty.doubleProperty(minNodeDistObjectProperty);
-
-    private final ObjectProperty<Double> doubleParameterObjectProperty = new SimpleObjectProperty<>(0.18);
-
-    private final DoubleProperty doubleParameterProperty = DoubleProperty.doubleProperty(doubleParameterObjectProperty);
-
-    private final ObjectProperty<Integer> intParameter1ObjectProperty = new SimpleObjectProperty<>(2);
-    private final IntegerProperty intParameter1Property = IntegerProperty.integerProperty(intParameter1ObjectProperty);
-
-    private final ObjectProperty<Integer> intParameter2ObjectProperty = new SimpleObjectProperty<>(2);
-    private final IntegerProperty intParameter2Property = IntegerProperty.integerProperty(intParameter2ObjectProperty);
 
     private final BooleanProperty withMinDistProperty = new SimpleBooleanProperty(true);
     
@@ -83,25 +75,25 @@ public class RandomGeneratorViewModel implements ViewModel {
         switch (generatorProperty.get()){
             case GEOMETRIC:
                 edgeGenerator = new GeometricGenerator(
-                        doubleParameterProperty.get() * height,
+                        edgeThresholdProperty.get() * height,
                         false
                 );
                 break;
             case GEOMETRIC_RANDOMIZED:
                 edgeGenerator = new GeometricGenerator(
-                        doubleParameterProperty.get() * height,
+                        edgeProbabilityProperty.get() * height,
                         true
                 );
                 break;
             case ERDOS_RENYI:
                 edgeGenerator = new ErdosRenyiGenerator(
-                        doubleParameterProperty.get()
+                        edgeProbabilityProperty.get()
                 );
                 break;
             case BARABASI_ALBERT:
                 edgeGenerator = new BarabasiAlbertGenerator(
-                        intParameter1Property.get(),
-                        intParameter2Property.get());
+                        barabasiInitialNodesProperty.get(),
+                        barabasiConnectionsProperty.get());
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + generatorProperty.get());
@@ -132,27 +124,55 @@ public class RandomGeneratorViewModel implements ViewModel {
         return nodeArrangementProperty;
     }
 
-    public ObjectProperty<Integer> nodeCountObjectProperty() {
-        return nodeCountObjectProperty;
-    }
-
-    public ObjectProperty<Double> minNodeDistObjectProperty() {
-        return minNodeDistObjectProperty;
-    }
-
-    public ObjectProperty<Double> doubleParameterObjectProperty() {
-        return doubleParameterObjectProperty;
-    }
-
-    public ObjectProperty<Integer> intParameter1ObjectProperty() {
-        return intParameter1ObjectProperty;
-    }
-
-    public ObjectProperty<Integer> intParameter2ObjectProperty() {
-        return intParameter2ObjectProperty;
-    }
-
     public BooleanProperty withMinDistProperty() {
         return withMinDistProperty;
+    }
+
+    public double getEdgeProbability() {
+        return edgeProbabilityProperty.get();
+    }
+
+    public DoubleProperty edgeProbabilityProperty() {
+        return edgeProbabilityProperty;
+    }
+
+    public double getEdgeThreshold() {
+        return edgeThresholdProperty.get();
+    }
+
+    public DoubleProperty edgeThresholdProperty() {
+        return edgeThresholdProperty;
+    }
+
+    public int getBarabasiInitialNodes() {
+        return barabasiInitialNodesProperty.get();
+    }
+
+    public IntegerProperty barabasiInitialNodesProperty() {
+        return barabasiInitialNodesProperty;
+    }
+
+    public int getBarabasiConnections() {
+        return barabasiConnectionsProperty.get();
+    }
+
+    public IntegerProperty barabasiConnectionsProperty() {
+        return barabasiConnectionsProperty;
+    }
+
+    public int getNodeCount() {
+        return nodeCountProperty.get();
+    }
+
+    public IntegerProperty nodeCountProperty() {
+        return nodeCountProperty;
+    }
+
+    public double getMinNodeDist() {
+        return minNodeDistProperty.get();
+    }
+
+    public DoubleProperty minNodeDistProperty() {
+        return minNodeDistProperty;
     }
 }

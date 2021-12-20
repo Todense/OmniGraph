@@ -75,14 +75,14 @@ public abstract class AlgorithmTask extends Task<Void>{
 
     @Override
     protected void succeeded() {
-        //painter.stopAnimationTimer();
+        painter.stopAnimationTimer();
         painter.repaint();
     }
 
     @Override
     protected void cancelled() {
         cancelled = true;
-        //painter.stopAnimationTimer();
+        painter.stopAnimationTimer();
         painter.repaint();
     }
 

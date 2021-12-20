@@ -4,23 +4,21 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Spinner?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox alignment="TOP_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="200.0" spacing="3.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.PresetCreatorView">
+<VBox alignment="TOP_CENTER" maxWidth="-Infinity" prefWidth="250.0" spacing="3.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.PresetCreatorView">
    <padding>
-      <Insets bottom="5.0" top="5.0" />
+      <Insets bottom="5.0" left="7.0" right="7.0" top="5.0" />
    </padding>
    <Label alignment="CENTER" layoutX="16.0" layoutY="55.0" prefHeight="15.0" prefWidth="190.0" styleClass="darkLabel" text="Preset" textFill="#2c2c2c">
       <font>
          <Font size="9.0" />
       </font>
    </Label>
-   <ChoiceBox fx:id="presetChoiceBox" prefHeight="25.0" prefWidth="190.0" />
-   <Label alignment="CENTER" layoutX="15.0" layoutY="15.0" prefHeight="15.0" prefWidth="190.0" styleClass="darkLabel" text="Parameters" textFill="#2c2c2c">
+   <ChoiceBox fx:id="presetChoiceBox" maxWidth="1.7976931348623157E308" />
+   <Label alignment="CENTER" layoutX="15.0" layoutY="15.0" styleClass="darkLabel" text="Parameters" textFill="#2c2c2c">
       <font>
          <Font size="9.0" />
       </font>
@@ -28,32 +26,7 @@
          <Insets top="10.0" />
       </VBox.margin>
    </Label>
-   <VBox fx:id="presetVBox" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="137.0" prefWidth="190.0" spacing="3.0" styleClass="subsection">
-      <HBox fx:id="param1HBox" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="160.0">
-         <Label fx:id="param1Label" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="90.0" text="first param">
-            <font>
-               <Font size="10.0" />
-            </font>
-         </Label>
-         <Spinner fx:id="param1Spinner" editable="true" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="70.0">
-            <HBox.margin>
-               <Insets />
-            </HBox.margin>
-         </Spinner>
-      </HBox>
-      <HBox fx:id="param2HBox" alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="160.0">
-         <Label fx:id="param2Label" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="90.0" text="second param">
-            <font>
-               <Font size="10.0" />
-            </font>
-         </Label>
-         <Spinner fx:id="param2Spinner" editable="true" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="70.0">
-            <HBox.margin>
-               <Insets />
-            </HBox.margin>
-         </Spinner>
-      </HBox>
-   </VBox>
+   <VBox fx:id="parametersVBox" alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="3.0" styleClass="subsection" />
    <Button alignment="CENTER" mnemonicParsing="false" onAction="#presetAction" prefHeight="25.0" prefWidth="140.0" styleClass="danger" text="Create Preset" textFill="#434343">
       <graphic>
          <FontIcon iconColor="#08ae34" iconLiteral="fas-play" styleClass="start-icon" />

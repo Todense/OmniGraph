@@ -7,8 +7,6 @@ import javafx.beans.value.ChangeListener;
 
 public class LayoutScope implements Scope {
 
-    public boolean paused = false;
-
     private final ObjectProperty<LayoutAlgorithm> layoutAlgorithm = new SimpleObjectProperty<>();
 
     // General Parameters
@@ -16,10 +14,11 @@ public class LayoutScope implements Scope {
     private final BooleanProperty gravityOnProperty = new SimpleBooleanProperty(true);
     private final DoubleProperty gravityStrengthProperty = new SimpleDoubleProperty(0.1);
     private final BooleanProperty multilevelOnProperty = new SimpleBooleanProperty(false);
-    private final DoubleProperty optDistProperty = new SimpleDoubleProperty(50.0);
+    private final DoubleProperty d3OptDistProperty = new SimpleDoubleProperty(50.0);
 
     // Yifan Hu Layout Parameters
     private final DoubleProperty initialStepSizeProperty = new SimpleDoubleProperty(5.0);
+    private final DoubleProperty huOptDistProperty = new SimpleDoubleProperty(200.0);
     private final DoubleProperty stepSizeProperty = new SimpleDoubleProperty(5.0);
     private final DoubleProperty toleranceProperty = new SimpleDoubleProperty(0.01);
     private final BooleanProperty coolingOnProperty = new SimpleBooleanProperty(true);
@@ -32,7 +31,7 @@ public class LayoutScope implements Scope {
     private final DoubleProperty d3MinAlphaProperty = new SimpleDoubleProperty(0.1);
     private final DoubleProperty d3AlphaDecayProperty = new SimpleDoubleProperty(0.001);
     private final DoubleProperty d3SpeedDecayProperty = new SimpleDoubleProperty(0.7);
-    private final DoubleProperty d3RepulsiveStrengthProperty = new SimpleDoubleProperty(50);
+    private final DoubleProperty d3RepulsiveStrengthProperty = new SimpleDoubleProperty(50.0);
     private final DoubleProperty d3ToleranceProperty = new SimpleDoubleProperty(0.001);
 
     public LayoutScope(){
@@ -41,16 +40,16 @@ public class LayoutScope implements Scope {
         d3RepulsiveStrengthProperty.addListener(d3ParamListener);
         gravityOnProperty.addListener(d3ParamListener);
         gravityStrengthProperty.addListener(d3ParamListener);
-        optDistProperty.addListener(d3ParamListener);
+        huOptDistProperty.addListener(d3ParamListener);
     }
 
 
-    public double getOptDist() {
-        return optDistProperty.get();
+    public double getHuOptDist() {
+        return huOptDistProperty.get();
     }
 
-    public DoubleProperty optDistProperty() {
-        return optDistProperty;
+    public DoubleProperty huOptDistProperty() {
+        return huOptDistProperty;
     }
 
     public double getInitialStepSize() {
@@ -208,5 +207,13 @@ public class LayoutScope implements Scope {
 
     public void setStepSize(double stepSizeProperty) {
         this.stepSizeProperty.set(stepSizeProperty);
+    }
+
+    public double getD3OptDist() {
+        return d3OptDistProperty.get();
+    }
+
+    public DoubleProperty d3OptDistProperty() {
+        return d3OptDistProperty;
     }
 }

@@ -79,20 +79,23 @@ public class GraphViewModel implements ViewModel {
 
         ChangeListener<Object> listener = (obs, oldVal, newVal) -> canvasScope.getPainter().repaint();
 
-        nodeSizeProperty().addListener(listener);
-        nodeColorProperty().addListener(listener);
-        edgeWidthProperty().addListener(listener);
-        edgeColorProperty().addListener(listener);
-        edgeWeightColorProperty().addListener(listener);
-        nodeLabelColorProperty().addListener(listener);
-        nodeLabelModeProperty().addListener(listener);
-        edgeWeightModeProperty().addListener(listener);
-        nodeBorderProperty().addListener(listener);
-        edgeVisibilityProperty().addListener(listener);
-        edgeWidthDecayProperty().addListener(listener);
-        edgeOpacityDecayProperty().addListener(listener);
-        edgeWidthDecayOnProperty().addListener(listener);
-        edgeOpacityDecayOnProperty().addListener(listener);
+        Platform.runLater(() ->{
+            nodeSizeProperty().addListener(listener);
+            nodeColorProperty().addListener(listener);
+            edgeWidthProperty().addListener(listener);
+            edgeColorProperty().addListener(listener);
+            edgeWeightColorProperty().addListener(listener);
+            nodeLabelColorProperty().addListener(listener);
+            nodeLabelModeProperty().addListener(listener);
+            edgeWeightModeProperty().addListener(listener);
+            nodeBorderProperty().addListener(listener);
+            edgeVisibilityProperty().addListener(listener);
+            edgeWidthDecayProperty().addListener(listener);
+            edgeOpacityDecayProperty().addListener(listener);
+            edgeWidthDecayOnProperty().addListener(listener);
+            edgeOpacityDecayOnProperty().addListener(listener);
+        });
+
     }
 
     public void applyColorToNodes() {
