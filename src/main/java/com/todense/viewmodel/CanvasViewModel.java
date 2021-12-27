@@ -75,9 +75,9 @@ public class CanvasViewModel implements ViewModel {
 
         canvasScope.setPainter(painter);
 
-        canvasScope.canvasWidthProperty().addListener((obs, oldVal, newVal) -> painter.repaint());
-        canvasScope.canvasHeightProperty().addListener((obs, oldVal, newVal) -> painter.repaint());
-
+        //canvasScope.canvasWidthProperty().addListener((obs, oldVal, newVal) -> painter.repaint());
+        //canvasScope.canvasWidthProperty().addListener((obs, oldVal, newVal) -> System.out.println(canvasScope.canvasWidthProperty().get()));
+        //canvasScope.canvasHeightProperty().addListener((obs, oldVal, newVal) -> painter.repaint());
         inputScope.editLockedProperty().addListener((obs, oldVal, newVal)->{
             if(newVal)
                 canvasCursorProperty().set(Cursor.MOVE);

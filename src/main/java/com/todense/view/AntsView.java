@@ -91,6 +91,7 @@ public class AntsView implements FxmlView<AntsViewModel> {
         parameterHBoxes.add(neighbourhoodsSizeHBox);
 
         paramVBox.getChildren().addAll(parameterHBoxes);
+        parameterHBoxes.forEach(box->box.setLabelWidth(140));
 
         algorithmChoiceBox.getItems().addAll(AntColonyVariant.values());
         algorithmChoiceBox.valueProperty().bindBidirectional(viewModel.algorithmProperty());

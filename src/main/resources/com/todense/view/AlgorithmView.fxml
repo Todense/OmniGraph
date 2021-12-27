@@ -54,7 +54,7 @@
                <Font size="10.0" />
             </font>
          </Label>
-         <TextField fx:id="startNodeTextField" alignment="CENTER" editable="false" maxHeight="1.7976931348623157E308" maxWidth="-Infinity" minHeight="-Infinity" prefWidth="70.0" text="Not set">
+         <TextField fx:id="startNodeTextField" alignment="CENTER" editable="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefWidth="20.0" text="Not set" HBox.hgrow="ALWAYS">
             <font>
                <Font size="10.0" />
             </font>
@@ -69,7 +69,7 @@
                <Font size="10.0" />
             </font>
          </Label>
-         <TextField fx:id="goalNodeTextField" alignment="CENTER" editable="false" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="70.0" text="Not set">
+         <TextField fx:id="goalNodeTextField" alignment="CENTER" editable="false" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefWidth="20.0" text="Not set" HBox.hgrow="ALWAYS">
             <font>
                <Font size="10.0" />
             </font>

@@ -8,31 +8,46 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox alignment="TOP_CENTER" maxWidth="-Infinity" prefWidth="250.0" spacing="3.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.PresetCreatorView">
+<VBox alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" prefWidth="250.0" spacing="3.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.PresetCreatorView">
    <padding>
       <Insets bottom="5.0" left="7.0" right="7.0" top="5.0" />
    </padding>
-   <Label alignment="CENTER" layoutX="16.0" layoutY="55.0" prefHeight="15.0" prefWidth="190.0" styleClass="darkLabel" text="Preset" textFill="#2c2c2c">
-      <font>
-         <Font size="9.0" />
-      </font>
-   </Label>
-   <ChoiceBox fx:id="presetChoiceBox" maxWidth="1.7976931348623157E308" />
-   <Label alignment="CENTER" layoutX="15.0" layoutY="15.0" styleClass="darkLabel" text="Parameters" textFill="#2c2c2c">
+   <Label alignment="BOTTOM_LEFT" maxWidth="1.7976931348623157E308" prefHeight="18.0" prefWidth="227.0" style="-fx-font-size: 14;" styleClass="bigLabel" text="Preset" textFill="#2c2c2c">
       <font>
          <Font size="9.0" />
       </font>
       <VBox.margin>
-         <Insets top="10.0" />
+         <Insets left="5.0" />
       </VBox.margin>
    </Label>
-   <VBox fx:id="parametersVBox" alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="3.0" styleClass="subsection" />
-   <Button alignment="CENTER" mnemonicParsing="false" onAction="#presetAction" prefHeight="25.0" prefWidth="140.0" styleClass="danger" text="Create Preset" textFill="#434343">
-      <graphic>
-         <FontIcon iconColor="#08ae34" iconLiteral="fas-play" styleClass="start-icon" />
-      </graphic>
-      <VBox.margin>
-         <Insets top="10.0" />
-      </VBox.margin>
-   </Button>
+   <VBox alignment="CENTER" styleClass="subsection">
+      <children>
+         <Label alignment="CENTER" prefHeight="15.0" prefWidth="190.0" styleClass="darkLabel" text="Graph Type" textFill="#2c2c2c">
+            <font>
+               <Font size="9.0" />
+            </font>
+            <VBox.margin>
+               <Insets bottom="2.0" />
+            </VBox.margin>
+         </Label>
+         <ChoiceBox fx:id="presetChoiceBox" maxWidth="1.7976931348623157E308" />
+         <Label alignment="CENTER" styleClass="darkLabel" text="Parameters" textFill="#2c2c2c">
+            <font>
+               <Font size="9.0" />
+            </font>
+            <VBox.margin>
+               <Insets bottom="2.0" top="10.0" />
+            </VBox.margin>
+         </Label>
+         <VBox fx:id="parametersVBox" alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="3.0" styleClass="subsection" />
+         <Button alignment="CENTER" mnemonicParsing="false" onAction="#presetAction" prefHeight="25.0" prefWidth="140.0" styleClass="danger" text="Create Preset" textFill="#434343">
+            <graphic>
+               <FontIcon iconColor="#08ae34" iconLiteral="fas-play" styleClass="start-icon" />
+            </graphic>
+            <VBox.margin>
+               <Insets top="10.0" />
+            </VBox.margin>
+         </Button>
+      </children>
+   </VBox>
 </VBox>

@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.paint.Color;
 import javafx.util.StringConverter;
 import org.apache.commons.math3.util.Precision;
@@ -75,16 +76,16 @@ public class ParameterHBox extends HBox {
         this.maxVal = maxVal;
         this.isInt = property.getValue() instanceof Integer;
         this.label.setText(labelText);
-        //this.setPrefHeight(Control.USE_COMPUTED_SIZE);
         this.setAlignment(Pos.CENTER_LEFT);
         this.setSpacing(3);
 
         textField.setPrefHeight(25);
-        textField.setMinWidth(Control.USE_PREF_SIZE);
-        textField.setPrefWidth(60);
+        textField.setPrefWidth(40);
+        textField.setMaxWidth(Double.MAX_VALUE);
+        HBox.setHgrow(textField, Priority.ALWAYS);
         textField.setAlignment(Pos.CENTER);
 
-        label.setPrefWidth(1000);
+        label.setPrefWidth(100);
         label.setText(labelText);
 
         this.getChildren().add(label);
@@ -174,5 +175,9 @@ public class ParameterHBox extends HBox {
             label.cursorProperty().set(Cursor.H_RESIZE);
         else
             label.cursorProperty().set(Cursor.V_RESIZE);
+    }
+
+    public void setLabelWidth(double width){
+        label.setPrefWidth(width);
     }
 }

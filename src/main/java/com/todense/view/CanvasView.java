@@ -6,11 +6,13 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectContext;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
-import javafx.scene.Cursor;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.StrokeLineCap;
+import javafx.scene.transform.Transform;
 
 public class CanvasView implements FxmlView<CanvasViewModel>{
 
@@ -27,9 +29,14 @@ public class CanvasView implements FxmlView<CanvasViewModel>{
     public void initialize(){
 
         canvas = new Canvas();
-        canvas.prefHeight(0);
-        canvas.prefWidth(0);
         canvasPane.getChildren().add(canvas);
+
+        canvas.localToSceneTransformProperty().addListener(new ChangeListener<Transform>() {
+            @Override
+            public void changed(ObservableValue<? extends Transform> observableValue, Transform transform, Transform t1) {
+                System.out.println(t1);
+            }
+        });
 
         canvas.widthProperty().bind(canvasPane.widthProperty());
         canvas.heightProperty().bind(canvasPane.heightProperty());

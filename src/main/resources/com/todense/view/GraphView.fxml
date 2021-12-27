@@ -12,57 +12,53 @@
 <?import org.controlsfx.control.ToggleSwitch?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="250.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.GraphView">
+<VBox alignment="CENTER" prefWidth="250.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.GraphView">
    <Label alignment="CENTER" styleClass="darkLabel" text="Node Options">
       <VBox.margin>
          <Insets bottom="2.0" />
       </VBox.margin></Label>
-   <VBox fx:id="nodeOptionsVBox" alignment="CENTER" spacing="5.0" styleClass="subsection">
+   <VBox fx:id="nodeOptionsVBox" alignment="CENTER_LEFT" spacing="5.0" styleClass="subsection">
       <VBox.margin>
-         <Insets/>
+         <Insets />
       </VBox.margin>
-      <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="5.0">
-         <Label prefWidth="200.0" text="Color">
+      <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="3.0">
+         <Label prefWidth="100.0" text="Color">
             <font>
-               <Font size="10.0"/>
+               <Font size="10.0" />
             </font>
          </Label>
-         <ColorPicker fx:id="nodeColorPicker" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity"
-                      prefHeight="25.0" prefWidth="100.0">
+         <ColorPicker fx:id="nodeColorPicker" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="84.0" HBox.hgrow="ALWAYS">
             <HBox.margin>
-               <Insets/>
+               <Insets />
             </HBox.margin>
          </ColorPicker>
-         <Button alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
-                 onAction="#changeNodesColorAction" prefHeight="25.0" prefWidth="30.0">
+         <Button alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#changeNodesColorAction" prefHeight="25.0" prefWidth="30.0">
             <graphic>
-               <FontIcon iconColor="#d0d0d0" iconLiteral="fa-paint-brush" iconSize="15"/>
+               <FontIcon iconColor="#d0d0d0" iconLiteral="fa-paint-brush" iconSize="15" />
             </graphic>
             <tooltip>
-               <Tooltip showDelay="0.1s" text="Apply to all nodes"/>
+               <Tooltip showDelay="0.1s" text="Apply to all nodes" />
             </tooltip>
          </Button>
          <VBox.margin>
-            <Insets/>
+            <Insets />
          </VBox.margin>
       </HBox>
-      <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="5.0">
-         <Label prefWidth="200.0" text="Label">
+      <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308" spacing="3.0">
+         <Label prefWidth="100.0" text="Label">
             <font>
-               <Font size="10.0"/>
+               <Font size="10.0" />
             </font>
          </Label>
-         <ChoiceBox fx:id="nodeLabelChoiceBox" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0"
-                    prefWidth="100.0"/>
-         <ColorPicker fx:id="labelColorPicker" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0"
-                      prefWidth="30.0"/>
+         <ChoiceBox fx:id="nodeLabelChoiceBox" maxWidth="1.7976931348623157E308" prefHeight="25.0" HBox.hgrow="ALWAYS" />
+         <ColorPicker fx:id="labelColorPicker" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="30.0" />
       </HBox>
-      <ToggleSwitch fx:id="nodeBorderToggleSwitch" alignment="CENTER" prefHeight="25.0" prefWidth="400.0" text="Border">
+      <ToggleSwitch fx:id="nodeBorderToggleSwitch" alignment="CENTER" maxWidth="1.7976931348623157E308" text="Border">
          <font>
-            <Font size="16.0"/>
+            <Font size="16.0" />
          </font>
          <VBox.margin>
-            <Insets top="2.0"/>
+            <Insets top="2.0" />
          </VBox.margin>
       </ToggleSwitch>
    </VBox>
@@ -72,52 +68,49 @@
       </VBox.margin></Label>
    <VBox fx:id="edgeOptionsVBox" alignment="CENTER" spacing="5.0" styleClass="subsection">
       <VBox.margin>
-         <Insets/>
+         <Insets />
       </VBox.margin>
-      <HBox alignment="CENTER" spacing="5.0">
-         <Label prefHeight="15.0" prefWidth="200.0" text="Color">
+      <HBox alignment="CENTER_LEFT" spacing="3.0">
+         <Label prefWidth="100.0" text="Color">
             <font>
-               <Font size="10.0"/>
+               <Font size="10.0" />
             </font>
          </Label>
-         <ColorPicker fx:id="edgeColorPicker" minWidth="-Infinity" prefHeight="25.0" prefWidth="90.0">
+         <ColorPicker fx:id="edgeColorPicker" maxWidth="1.7976931348623157E308" prefHeight="25.0" prefWidth="84.0" HBox.hgrow="ALWAYS">
             <HBox.margin>
-               <Insets/>
+               <Insets />
             </HBox.margin>
          </ColorPicker>
-         <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
-                 onAction="#changeEdgesColorAction" prefHeight="25.0" prefWidth="30.0">
+         <Button alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#changeEdgesColorAction" prefHeight="25.0" prefWidth="30.0">
             <font>
-               <Font size="9.0"/>
+               <Font size="9.0" />
             </font>
             <graphic>
-               <FontIcon iconColor="#d0d0d0" iconLiteral="fa-paint-brush" iconSize="15"/>
+               <FontIcon iconColor="#d0d0d0" iconLiteral="fa-paint-brush" iconSize="15" />
             </graphic>
             <tooltip>
-               <Tooltip showDelay="0.1s" text="Apply to all edges"/>
+               <Tooltip showDelay="0.1s" text="Apply to all edges" />
             </tooltip>
          </Button>
          <VBox.margin>
-            <Insets/>
+            <Insets />
          </VBox.margin>
       </HBox>
-      <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" spacing="5.0">
-         <Label prefHeight="25.0" prefWidth="200.0" text="Weight">
+      <HBox alignment="CENTER_LEFT" spacing="3.0">
+         <Label prefHeight="25.0" prefWidth="100.0" text="Weight">
             <font>
-               <Font size="10.0"/>
+               <Font size="10.0" />
             </font>
          </Label>
-         <ChoiceBox fx:id="edgeWeightChoiceBox" minWidth="-Infinity" prefHeight="25.0" prefWidth="113.0"/>
-         <ColorPicker fx:id="weightColorPicker" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-                      prefHeight="25.0" prefWidth="30.0"/>
+         <ChoiceBox fx:id="edgeWeightChoiceBox" maxWidth="1.7976931348623157E308" prefHeight="25.0" HBox.hgrow="ALWAYS" />
+         <ColorPicker fx:id="weightColorPicker" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="30.0" />
          <VBox.margin>
-            <Insets bottom="5.0"/>
+            <Insets bottom="5.0" />
          </VBox.margin>
       </HBox>
-      <ToggleSwitch fx:id="edgeVisibilityToggleSwitch" alignment="CENTER" maxHeight="-Infinity" minHeight="-Infinity"
-                    prefHeight="25.0" prefWidth="300.0" selected="true" text="Visible">
+      <ToggleSwitch fx:id="edgeVisibilityToggleSwitch" alignment="CENTER" maxWidth="10000.0" selected="true" text="Visible">
          <font>
-            <Font size="16.0"/>
+            <Font size="16.0" />
          </font>
       </ToggleSwitch>
    </VBox>

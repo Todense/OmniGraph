@@ -21,10 +21,10 @@ import javafx.scene.text.TextAlignment;
 
 public class GraphDrawLayer implements DrawLayer {
 
-    private GraphScope graphScope;
-    private BackgroundScope backgroundScope;
-    private AntsScope antsScope;
-    private InputScope inputScope;
+    private final GraphScope graphScope;
+    private final BackgroundScope backgroundScope;
+    private final AntsScope antsScope;
+    private final InputScope inputScope;
 
     public GraphDrawLayer(GraphScope graphScope, BackgroundScope backgroundScope,
                           AntsScope antsScope, InputScope inputScope){

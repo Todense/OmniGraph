@@ -5,15 +5,16 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="nodeVBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="130.0" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.BackgroundPopOverView">
+<VBox fx:id="nodeVBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity"
+      prefWidth="130.0" spacing="5.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.todense.view.BackgroundPopOverView">
    <padding>
-      <Insets bottom="5.0" top="5.0" />
+      <Insets bottom="5.0" top="5.0"/>
    </padding>
-   <children>
-      <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#pasteAction" prefHeight="25.0" prefWidth="120.0" text="Paste Subgraph">
-         <font>
-            <Font size="10.0" />
-         </font>
-      </Button>
-   </children>
+   <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+           onAction="#pasteAction" prefHeight="25.0" prefWidth="120.0" text="Paste Subgraph">
+      <font>
+         <Font size="10.0"/>
+      </font>
+   </Button>
 </VBox>

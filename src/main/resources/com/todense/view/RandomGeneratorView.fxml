@@ -8,57 +8,67 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-
-<VBox alignment="CENTER" prefWidth="250.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="com.todense.view.RandomGeneratorView">
+<VBox alignment="CENTER" prefWidth="250.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.RandomGeneratorView">
    <padding>
-      <Insets bottom="7.0" left="7.0" right="7.0" top="7.0"/>
+      <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
    </padding>
-   <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Node Positioning"
-          textFill="#2c2c2c">
+   <Label maxWidth="1.7976931348623157E308" style="-fx-font-size: 14;" styleClass="bigLabel" text="Random" textFill="#2c2c2c">
       <font>
-         <Font size="9.0"/>
+         <Font size="31.0" />
       </font>
       <padding>
-         <Insets bottom="2.0"/>
+         <Insets bottom="2.0" />
       </padding>
+      <VBox.margin>
+         <Insets left="5.0" />
+      </VBox.margin>
    </Label>
-   <VBox fx:id="nodePosVBox" alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="7.0"
-         styleClass="subsection">
-      <padding>
-         <Insets bottom="3.0"/>
-      </padding>
-      <ChoiceBox fx:id="arrangementChoiceBox" maxWidth="1.7976931348623157E308" minWidth="-Infinity">
-         <VBox.margin>
-            <Insets top="3.0"/>
-         </VBox.margin>
-      </ChoiceBox>
+   <VBox alignment="CENTER" styleClass="subsection">
+      <children>
+         <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Node Positioning" textFill="#2c2c2c">
+            <font>
+               <Font size="9.0" />
+            </font>
+            <padding>
+               <Insets bottom="2.0" />
+            </padding>
+         </Label>
+         <VBox fx:id="nodePosVBox" alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="7.0" styleClass="subsection">
+            <padding>
+               <Insets bottom="3.0" />
+            </padding>
+            <ChoiceBox fx:id="arrangementChoiceBox" maxWidth="1.7976931348623157E308" minWidth="-Infinity">
+               <VBox.margin>
+                  <Insets top="3.0" />
+               </VBox.margin>
+            </ChoiceBox>
+         </VBox>
+         <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Model" textFill="#2c2c2c">
+            <font>
+               <Font size="9.0" />
+            </font>
+            <VBox.margin>
+               <Insets top="5.0" />
+            </VBox.margin>
+         </Label>
+         <ChoiceBox fx:id="generatorChoiceBox" maxWidth="1.7976931348623157E308" minWidth="-Infinity" />
+         <Label alignment="CENTER" styleClass="darkLabel" text="Parameters" textFill="#2c2c2c">
+            <font>
+               <Font size="9.0" />
+            </font>
+            <VBox.margin>
+               <Insets top="5.0" />
+            </VBox.margin>
+         </Label>
+         <VBox fx:id="paramVBox" alignment="TOP_CENTER" spacing="3.0" styleClass="subsection" />
+         <Button alignment="CENTER" mnemonicParsing="false" onAction="#randomAction" prefHeight="25.0" prefWidth="160.0" styleClass="danger" text="Generate">
+            <graphic>
+               <FontIcon iconColor="#08ae34" iconLiteral="fas-play" iconSize="13" styleClass="start-icon" />
+            </graphic>
+            <VBox.margin>
+               <Insets bottom="5.0" top="5.0" />
+            </VBox.margin>
+         </Button>
+      </children>
    </VBox>
-   <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Model" textFill="#2c2c2c">
-      <font>
-         <Font size="9.0"/>
-      </font>
-      <VBox.margin>
-         <Insets top="5.0"/>
-      </VBox.margin>
-   </Label>
-   <ChoiceBox fx:id="generatorChoiceBox" maxWidth="1.7976931348623157E308" minWidth="-Infinity"/>
-   <Label alignment="CENTER" styleClass="darkLabel" text="Parameters" textFill="#2c2c2c">
-      <font>
-         <Font size="9.0"/>
-      </font>
-      <VBox.margin>
-         <Insets top="5.0"/>
-      </VBox.margin>
-   </Label>
-   <VBox fx:id="paramVBox" alignment="TOP_CENTER" spacing="3.0" styleClass="subsection"/>
-   <Button alignment="CENTER" mnemonicParsing="false" onAction="#randomAction" prefHeight="25.0" prefWidth="160.0"
-           styleClass="danger" text="Generate">
-      <graphic>
-         <FontIcon iconColor="#08ae34" iconLiteral="fas-play" iconSize="13" styleClass="start-icon"/>
-      </graphic>
-      <VBox.margin>
-         <Insets bottom="5.0" top="5.0"/>
-      </VBox.margin>
-   </Button>
 </VBox>

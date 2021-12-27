@@ -9,7 +9,7 @@
 <?import org.controlsfx.control.ToggleSwitch?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<HBox alignment="CENTER_LEFT" fillHeight="false" prefWidth="350.0" spacing="2.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.AnimationView">
+<HBox alignment="CENTER" fillHeight="false" prefWidth="350.0" spacing="2.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.AnimationView">
    <ToggleSwitch fx:id="animationToggleSwitch" contentDisplay="TOP" graphicTextGap="0.0" minWidth="-Infinity" prefHeight="18.0" prefWidth="100.0" selected="true" text="Animated" textAlignment="CENTER" viewOrder="1.0">
       <font>
          <Font name="Serif Regular" size="10.0" />

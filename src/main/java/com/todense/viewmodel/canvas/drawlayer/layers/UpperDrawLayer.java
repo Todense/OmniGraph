@@ -139,7 +139,7 @@ public class UpperDrawLayer implements DrawLayer {
         }
 
         //border
-        drawBorder(gc);
+        //drawBorder(gc);
     }
 
 
