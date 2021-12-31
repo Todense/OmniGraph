@@ -12,7 +12,7 @@
 <?import org.controlsfx.control.ToggleSwitch?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox alignment="CENTER" prefWidth="250.0" spacing="3.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.AlgorithmView">
+<VBox alignment="CENTER" minWidth="0.0" prefWidth="250.0" spacing="3.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.AlgorithmView">
    <children>
       <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Algorithm" textFill="#2c2c2c">
          <font>

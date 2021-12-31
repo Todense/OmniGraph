@@ -5,20 +5,25 @@ import com.todense.viewmodel.MainViewModel;
 import com.todense.viewmodel.SaveViewModel;
 import de.saxsys.mvvmfx.*;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.*;
+import javafx.stage.FileChooser;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import org.kordamp.ikonli.javafx.FontIcon;
 
-import javax.tools.Tool;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -38,10 +43,12 @@ public class MainView implements FxmlView<MainViewModel> {
     @FXML private Button stopButton;
     @FXML private ColorPicker appColorPicker;
     @FXML private VBox leftSideMenuContentBox, rightSideMenuContentBox;
-    @FXML private SplitPane mainSplitPane;
     @FXML private VBox graphAppearanceView, backgroundAppearanceView, propertiesView, operationsView,
             randomGeneratorView, presetGeneratorView, basicAlgorithmsView, tspView, layoutView;
     @FXML private ScrollPane leftSideMenuContentScrollPane, rightSideMenuContentScrollPane;
+    @FXML private AnchorPane mainAnchor;
+    @FXML private HBox mainBox, leftContentHBox, rightContentHBox;
+    @FXML private Pane leftResizeHandle, rightResizeHandle;
 
     @InjectViewModel
     MainViewModel viewModel;
@@ -53,17 +60,11 @@ public class MainView implements FxmlView<MainViewModel> {
     private Stage saveStage;
     private Stage analysisStage;
 
-    private double lastLeftDividerPosition = 0.2;
-    private double lastRightDividerPosition = 0.8;
 
     public void initialize(){
 
-        //Image icon = new Image(getClass().getResource("/myicon.png").toExternalForm());
-        //ImageView view = new ImageView(icon);
-        //view.setFitHeight(80);
-        //view.setPreserveRatio(true);
-//
-        //layoutMenuButton.setGraphic(view);
+        HBox.setHgrow(mainAnchor, Priority.ALWAYS);
+        VBox.setVgrow(mainAnchor, Priority.ALWAYS);
 
         textArea.textProperty().bindBidirectional(viewModel.textProperty());
         infoTextField.textProperty().bindBidirectional(viewModel.infoTextProperty());
@@ -130,28 +131,6 @@ public class MainView implements FxmlView<MainViewModel> {
         ToggleGroup leftSideMenuButtons = new ToggleGroup();
         leftSideMenuButtons.getToggles().addAll(graphAppearanceMenuButton, operationsMenuButton, propertiesMenuButton, generateGraphMenuButton);
 
-        leftSideMenuButtons.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
-            if(oldVal == null && newVal != null){
-                mainSplitPane.getItems().add(0, leftSideMenuContentScrollPane);
-                mainSplitPane.getDividers().get(0).setPosition(lastLeftDividerPosition);
-            }else if(newVal == null){
-                lastLeftDividerPosition = mainSplitPane.getDividerPositions()[0];
-                if(mainSplitPane.getDividers().size() > 1){
-                    //var rightDivider = mainSplitPane.getDividers().get(1);
-                    //rightDivider.setPosition(rightDivider.getPosition()+mainSplitPane);
-                    lastRightDividerPosition = mainSplitPane.getDividerPositions()[1];
-                }
-                mainSplitPane.getItems().remove(leftSideMenuContentScrollPane);
-                if(mainSplitPane.getDividers().size() > 0){
-                    mainSplitPane.setDividerPositions(lastRightDividerPosition);
-                }
-            }
-
-            //System.out.println(lastRightDividerPosition);
-            //System.out.println(Arrays.toString(mainSplitPane.getDividerPositions()));
-        });
-        mainSplitPane.getItems().remove(leftSideMenuContentScrollPane);
-
         setUpSideMenuButton(basicAlgorithmsMenuButton, "Basic Algorithms", false, basicAlgorithmsView);
         setUpSideMenuButton(tspMenuButton, "Travelling Salesman Problem", false, tspView);
         setUpSideMenuButton(layoutMenuButton, "Layout", false, layoutView);
@@ -159,16 +138,87 @@ public class MainView implements FxmlView<MainViewModel> {
         ToggleGroup rightSideMenuButtons = new ToggleGroup();
         rightSideMenuButtons.getToggles().addAll(basicAlgorithmsMenuButton, tspMenuButton, layoutMenuButton);
 
-        rightSideMenuButtons.selectedToggleProperty().addListener((obs, oldVal, newVal) -> {
-            if(oldVal == null && newVal != null){
-                mainSplitPane.getItems().add(rightSideMenuContentScrollPane);
-                mainSplitPane.getDividers().get(mainSplitPane.getDividers().size()-1).setPosition(lastRightDividerPosition);
-            }else if(newVal == null){
-                lastRightDividerPosition = mainSplitPane.getDividerPositions()[mainSplitPane.getDividers().size()-1];
-                mainSplitPane.getItems().remove(rightSideMenuContentScrollPane);
+        leftSideMenuButtons.selectedToggleProperty().addListener(new ChangeListener<>() {
+            double lastWidth = 250;
+
+            @Override
+            public void changed(ObservableValue<? extends Toggle> obs, Toggle oldVal, Toggle newVal) {
+                if(oldVal == null && newVal != null){
+                    leftContentHBox.setVisible(true);
+                    leftContentHBox.prefWidthProperty().set(lastWidth);
+                }else if(newVal == null){
+                    lastWidth = leftContentHBox.getWidth();
+                    leftContentHBox.prefWidthProperty().set(0.0);
+                    leftContentHBox.setVisible(false);
+
+                }
             }
         });
-        mainSplitPane.getItems().remove(rightSideMenuContentScrollPane);
+
+        rightSideMenuButtons.selectedToggleProperty().addListener(new ChangeListener<>() {
+            double lastWidth = 250;
+
+            @Override
+            public void changed(ObservableValue<? extends Toggle> obs, Toggle oldVal, Toggle newVal) {
+                if (oldVal == null && newVal != null) {
+                    rightContentHBox.setVisible(true);
+                    rightContentHBox.prefWidthProperty().set(lastWidth);
+                } else if (newVal == null) {
+                    lastWidth = rightContentHBox.getWidth();
+                    rightContentHBox.prefWidthProperty().set(0.0);
+                    rightContentHBox.setVisible(false);
+                }
+            }
+        });
+
+        leftResizeHandle.setOnMouseDragged(event -> {
+            Node parent = leftContentHBox.getParent();
+            Bounds boundsInScene = parent.localToScene(parent.getBoundsInLocal());
+
+            double width = event.getSceneX()-boundsInScene.getMinX();
+
+            leftContentHBox.setPrefWidth(width > 0 ? width : 0);
+
+        });
+
+        rightResizeHandle.setOnMouseDragged(event -> {
+            Node parent = rightContentHBox.getParent();
+            Bounds boundsInScene = parent.localToScene(parent.getBoundsInLocal());
+
+            double width = boundsInScene.getMaxX()-event.getSceneX();
+
+            rightContentHBox.setPrefWidth(width > 0 ? width : 0);
+
+        });
+
+        rightContentHBox.boundsInParentProperty().addListener((obs, oldVal, newVal) ->
+                leftContentHBox.maxWidthProperty().set(newVal.getMinX())
+        );
+
+        leftContentHBox.boundsInParentProperty().addListener((obs, oldVal, newVal) -> {
+            Region parent = (Region) rightContentHBox.getParent();
+            rightContentHBox.maxWidthProperty().set(parent.getWidth() - newVal.getWidth());
+        });
+
+
+        leftSideMenuContentScrollPane.widthProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal.doubleValue() < 15){
+                leftSideMenuContentScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            }else{
+                leftSideMenuContentScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            }
+        });
+
+        rightSideMenuContentScrollPane.widthProperty().addListener((obs, oldVal, newVal) -> {
+            if(newVal.doubleValue() < 15){
+                rightSideMenuContentScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            }else{
+                rightSideMenuContentScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            }
+        });
+
+        leftResizeHandle.setCursor(Cursor.E_RESIZE);
+        rightResizeHandle.setCursor(Cursor.E_RESIZE);
 
 
         initSaveStage();

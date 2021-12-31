@@ -10,7 +10,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.scene.shape.StrokeLineCap;
 import javafx.scene.transform.Transform;
 
@@ -31,15 +31,22 @@ public class CanvasView implements FxmlView<CanvasViewModel>{
         canvas = new Canvas();
         canvasPane.getChildren().add(canvas);
 
-        canvas.localToSceneTransformProperty().addListener(new ChangeListener<Transform>() {
-            @Override
-            public void changed(ObservableValue<? extends Transform> observableValue, Transform transform, Transform t1) {
-                System.out.println(t1);
-            }
-        });
-
         canvas.widthProperty().bind(canvasPane.widthProperty());
         canvas.heightProperty().bind(canvasPane.heightProperty());
+
+        Platform.runLater(()->{
+            AnchorPane anchorPane = (AnchorPane) canvasPane.getParent();
+            canvasPane.prefWidthProperty().bind(anchorPane.widthProperty());
+            canvasPane.prefHeightProperty().bind(anchorPane.heightProperty());
+            canvasPane.minWidthProperty().bind(anchorPane.widthProperty());
+            canvasPane.minHeightProperty().bind(anchorPane.heightProperty());
+            canvasPane.maxWidthProperty().bind(anchorPane.widthProperty());
+            canvasPane.maxHeightProperty().bind(anchorPane.heightProperty());
+        });
+
+
+        //HBox.setHgrow(canvasPane, Priority.ALWAYS);
+        //VBox.setVgrow(canvasPane, Priority.ALWAYS);
 
         viewModel.canvasWidthProperty().bind(canvas.widthProperty());
         viewModel.canvasHeightProperty().bind(canvas.heightProperty());

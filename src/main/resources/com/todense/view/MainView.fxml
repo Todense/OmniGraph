@@ -10,22 +10,25 @@
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
-<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.Tooltip?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<BorderPane prefHeight="515.0" prefWidth="1119.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.MainView">
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.MainView">
    <bottom>
       <HBox alignment="CENTER" prefHeight="58.0" prefWidth="1355.0" spacing="3.0" BorderPane.alignment="CENTER">
-         <TextArea fx:id="textArea" editable="false" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="560.0" scrollLeft="10.0" scrollTop="10.0" wrapText="true">
+         <TextArea fx:id="textArea" editable="false" maxWidth="-Infinity" minWidth="0.0" prefHeight="200.0" prefWidth="560.0" scrollLeft="10.0" scrollTop="10.0" wrapText="true">
             <opaqueInsets>
                <Insets />
             </opaqueInsets>
@@ -264,39 +267,67 @@
       </VBox>
    </right>
    <center>
-      <SplitPane fx:id="mainSplitPane" dividerPositions="0.20016339869281047, 0.5" prefWidth="0.0" BorderPane.alignment="CENTER">
-         <items>
-            <ScrollPane fx:id="leftSideMenuContentScrollPane" fitToWidth="true" minWidth="0.0">
-               <content>
-                  <VBox fx:id="leftSideMenuContentBox" alignment="TOP_CENTER" minWidth="0.0" spacing="10.0">
-                     <children>
-                        <fx:include fx:id="graphAppearanceView" source="GraphView.fxml" />
-                        <fx:include fx:id="backgroundAppearanceView" source="BackgroundView.fxml" />
-                        <fx:include fx:id="propertiesView" source="PropertiesView.fxml" />
-                        <fx:include fx:id="operationsView" source="OperationsView.fxml" />
-                        <fx:include fx:id="randomGeneratorView" source="RandomGeneratorView.fxml" />
-                        <fx:include fx:id="presetGeneratorView" source="PresetCreatorView.fxml" />
-                     </children>
-                  </VBox>
-               </content>
-            </ScrollPane>
-            <HBox alignment="CENTER" style="-fx-border-color: #37557DFF; -fx-border-width: 3;">
+      <GridPane BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <AnchorPane fx:id="mainAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="0.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
                <children>
                   <fx:include source="CanvasView.fxml" />
-               </children>
-            </HBox>
-            <ScrollPane fx:id="rightSideMenuContentScrollPane" fitToWidth="true" minWidth="0.0">
-               <content>
-                  <VBox fx:id="rightSideMenuContentBox" alignment="TOP_CENTER" minWidth="0.0">
+                  <HBox fx:id="leftContentHBox" alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
-                        <fx:include fx:id="basicAlgorithmsView" source="AlgorithmView.fxml" />
-                        <fx:include fx:id="tspView" source="AntsView.fxml" />
-                        <fx:include fx:id="layoutView" source="LayoutView.fxml" />
+                        <ScrollPane fx:id="leftSideMenuContentScrollPane" fitToWidth="true" minWidth="0.0" HBox.hgrow="ALWAYS">
+                           <content>
+                              <VBox fx:id="leftSideMenuContentBox" alignment="TOP_CENTER" minWidth="0.0" spacing="10.0">
+                                 <children>
+                                    <fx:include fx:id="graphAppearanceView" source="GraphView.fxml" />
+                                    <fx:include fx:id="backgroundAppearanceView" source="BackgroundView.fxml" />
+                                    <fx:include fx:id="propertiesView" source="PropertiesView.fxml" />
+                                    <fx:include fx:id="operationsView" source="OperationsView.fxml" />
+                                    <fx:include fx:id="randomGeneratorView" source="RandomGeneratorView.fxml" />
+                                    <fx:include fx:id="presetGeneratorView" source="PresetCreatorView.fxml" />
+                                 </children>
+                              </VBox>
+                           </content>
+                           <padding>
+                              <Insets right="-1.0" />
+                           </padding>
+                        </ScrollPane>
+                        <Pane fx:id="leftResizeHandle" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="4.0" style="-fx-background-color: fx-darker;" />
                      </children>
-                  </VBox>
-               </content>
-            </ScrollPane>
-         </items>
-      </SplitPane>
+                     <padding>
+                        <Insets bottom="-1.0" left="-1.0" right="-1.0" top="-1.0" />
+                     </padding>
+                  </HBox>
+                  <HBox fx:id="rightContentHBox" alignment="CENTER_RIGHT" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <Pane fx:id="rightResizeHandle" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="5.0" style="-fx-background-color: fx-darker;" />
+                        <ScrollPane fx:id="rightSideMenuContentScrollPane" fitToWidth="true" minWidth="0.0" prefHeight="432.0" prefWidth="252.0" HBox.hgrow="ALWAYS">
+                           <content>
+                              <VBox fx:id="rightSideMenuContentBox" alignment="TOP_CENTER" minWidth="0.0">
+                                 <children>
+                                    <fx:include fx:id="basicAlgorithmsView" source="AlgorithmView.fxml" />
+                                    <fx:include fx:id="tspView" source="AntsView.fxml" />
+                                    <fx:include fx:id="layoutView" source="LayoutView.fxml" />
+                                 </children>
+                              </VBox>
+                           </content>
+                           <padding>
+                              <Insets left="-1.0" />
+                           </padding>
+                        </ScrollPane>
+                     </children>
+                     <padding>
+                        <Insets bottom="-1.0" left="-1.0" right="-1.0" top="-1.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </AnchorPane>
+         </children>
+      </GridPane>
    </center>
 </BorderPane>
