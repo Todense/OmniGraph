@@ -17,10 +17,7 @@ import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
@@ -55,8 +52,10 @@ public class MainViewModel implements ViewModel {
     private final BooleanProperty manualEditLockProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty autoEditLockProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty editLockedProperty = new SimpleBooleanProperty(false);
-
     private final BooleanProperty autoLayoutOnProperty = new SimpleBooleanProperty(false);
+
+    private final DoubleProperty leftPanelWidthProperty = new SimpleDoubleProperty();
+    private final DoubleProperty rightPanelWidthProperty = new SimpleDoubleProperty();
 
     private final DateFormat durationFormatter = new SimpleDateFormat("mm:ss:SSS");
     private final DateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
@@ -258,7 +257,7 @@ public class MainViewModel implements ViewModel {
 
             if(keysScope.getPressedKeys().contains(KeyCode.CONTROL)) {
                 if (keyEvent.getCode() == KeyCode.R) {
-                    notificationCenter.publish("RANDOM");
+                    resetGraph();
                 } else if (keyEvent.getCode() == KeyCode.DELETE) {
                     deleteGraph();
                 } else if (keyEvent.getCode() == KeyCode.P) {
@@ -267,10 +266,12 @@ public class MainViewModel implements ViewModel {
                     notificationCenter.publish(GRAPH_EDIT_REQUEST, (Runnable)() -> graphManager.createCompleteGraph());
                 } else if(keyEvent.getCode() == KeyCode.L){
                     notificationCenter.publish("LAYOUT");
-                } else if(keyEvent.getCode() == KeyCode.Q){
+                } else if(keyEvent.getCode() == KeyCode.J){
                     adjustCameraToGraph();
                 }  else if(keyEvent.getCode() == KeyCode.E){
                     notificationCenter.publish("PRESET");
+                } else if(keyEvent.getCode() == KeyCode.Q){
+                    notificationCenter.publish("RANDOM");
                 }
             }
         });
@@ -307,7 +308,7 @@ public class MainViewModel implements ViewModel {
     }
 
     public void adjustCameraToGraph() {
-        notificationCenter.publish("ADJUST");
+        notificationCenter.publish("ADJUST", leftPanelWidthProperty.get(), rightPanelWidthProperty.get());
         notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
     }
 
@@ -366,5 +367,21 @@ public class MainViewModel implements ViewModel {
 
     public void setAutoLayoutOnProperty(boolean autoLayoutOnProperty) {
         this.autoLayoutOnProperty.set(autoLayoutOnProperty);
+    }
+
+    public double getLeftPanelWidthProperty() {
+        return leftPanelWidthProperty.get();
+    }
+
+    public DoubleProperty leftPanelWidthProperty() {
+        return leftPanelWidthProperty;
+    }
+
+    public double getRightPanelWidth() {
+        return rightPanelWidthProperty.get();
+    }
+
+    public DoubleProperty rightPanelWidthProperty() {
+        return rightPanelWidthProperty;
     }
 }

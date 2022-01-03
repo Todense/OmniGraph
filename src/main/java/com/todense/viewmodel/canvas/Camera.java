@@ -25,21 +25,29 @@ public class Camera {
         affine.appendScale(z,z, p.getX(), p.getY());
     }
 
-    public void adjustToGraph(Graph graph,  double canvasWidth, double canvasHeight, double nodeSize){
+    public void adjustToGraph(Graph graph, double canvasWidth, double canvasHeight,
+                              double leftOffset, double rightOffset, double nodeSize){
 
         if(graph.getNodes().size() == 0) return;
+
+        double visibleWidth = canvasWidth - leftOffset - rightOffset;
+        if(visibleWidth <= 0.0){
+            visibleWidth = 1.0;
+        }
 
         Rectangle2D graphBounds = GraphAnalyzer.getGraphBounds(graph);
 
         Point2D center = new Point2D(graphBounds.getMinX()+graphBounds.getWidth()/2,
                 graphBounds.getMinY()+graphBounds.getHeight()/2);
 
-        double d = Math.max((graphBounds.getMaxX()-graphBounds.getMinX()+nodeSize)/(0.9 * canvasWidth),
-                (graphBounds.getMaxY()-graphBounds.getMinY()+nodeSize)/(0.9 * canvasHeight));
+        double d = Math.max(
+                (graphBounds.getMaxX()-graphBounds.getMinX()+nodeSize)/(0.9 * visibleWidth),
+                (graphBounds.getMaxY()-graphBounds.getMinY()+nodeSize)/(0.9 * canvasHeight)
+        );
 
         affine = new Affine();
 
-        Point2D translation = new Point2D(canvasWidth/2, canvasHeight/2).subtract(center);
+        Point2D translation = new Point2D(leftOffset+visibleWidth/2, canvasHeight/2).subtract(center);
 
         affine.appendTranslation(translation.getX(), translation.getY());
         affine.appendScale(1/d, 1/d, center);

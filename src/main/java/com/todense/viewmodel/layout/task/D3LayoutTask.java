@@ -78,6 +78,7 @@ public class D3LayoutTask extends LayoutTask {
     @Override
     protected void applyGravity(Node n) {
         addForce(n, n.getPos().multiply(-gravity));
+        //addForce(n, new Point2D(0, -1).multiply(-gravity));
     }
 
     @Override

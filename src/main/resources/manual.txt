@@ -18,7 +18,7 @@ OmniGraph
 2. Keyboard shortcuts
 
 CTRL + DEL - delete graph
-CTRL + Q - adjust camera to graph
+CTRL + J - adjust camera to graph
 CTRL + R - create random graph
 CTRL + E - create preset graph
 CTRL + L - start graph layout

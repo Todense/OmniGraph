@@ -12,131 +12,116 @@
 <?import org.controlsfx.control.ToggleSwitch?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox fx:id="rootVBox" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="0.0" prefWidth="250.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.LayoutView">
-   <padding>
-      <Insets bottom="5.0" top="5.0" />
-   </padding>
-   <VBox alignment="CENTER" spacing="3.0">
+
+<VBox alignment="CENTER" spacing="3.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.LayoutView">
+   <Label alignment="CENTER" styleClass="darkLabel" text="Layout Algorithm" textFill="#2c2c2c">
+      <font>
+         <Font size="9.0" />
+      </font>
+   </Label>
+   <ChoiceBox fx:id="layoutAlgorithmChoiceBox" maxWidth="1.7976931348623157E308" />
+   <Label alignment="CENTER" styleClass="darkLabel" text="Options" textFill="#2c2c2c">
+      <font>
+         <Font size="9.0" />
+      </font>
       <VBox.margin>
-         <Insets left="7.0" right="7.0"/>
+         <Insets top="10.0" />
       </VBox.margin>
-      <Label alignment="CENTER" styleClass="darkLabel" text="Layout Algorithm" textFill="#2c2c2c">
+   </Label>
+   <VBox fx:id="optionsVBox" alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" minWidth="-Infinity" spacing="3.0" styleClass="subsection">
+      <ToggleSwitch fx:id="multilevelToggleSwitch" contentDisplay="CENTER" maxWidth="1.7976931348623157E308" selected="true" text="Multilevel ">
          <font>
-            <Font size="9.0"/>
-         </font>
-      </Label>
-      <ChoiceBox fx:id="layoutAlgorithmChoiceBox" maxWidth="1.7976931348623157E308"/>
-      <Label alignment="CENTER" styleClass="darkLabel" text="Options" textFill="#2c2c2c">
-         <font>
-            <Font size="9.0"/>
+            <Font size="10.0" />
          </font>
          <VBox.margin>
-            <Insets top="10.0"/>
+            <Insets top="3.0" />
          </VBox.margin>
-      </Label>
-      <VBox fx:id="optionsVBox" alignment="TOP_CENTER" maxWidth="1.7976931348623157E308" minWidth="-Infinity"
-            spacing="3.0" styleClass="subsection">
-         <ToggleSwitch fx:id="multilevelToggleSwitch" contentDisplay="CENTER" maxWidth="1.7976931348623157E308"
-                       selected="true" text="Multilevel ">
-            <font>
-               <Font size="10.0"/>
-            </font>
-            <VBox.margin>
-               <Insets top="3.0"/>
-            </VBox.margin>
-            <tooltip>
-               <Tooltip text=" "/>
-            </tooltip>
-         </ToggleSwitch>
-         <ToggleSwitch fx:id="barnesHutToggleSwitch" contentDisplay="CENTER" layoutX="51.0" layoutY="56.0"
-                       maxWidth="1.7976931348623157E308" selected="true" text="Barnes-Hut Calculations">
-            <font>
-               <Font size="10.0"/>
-            </font>
-            <tooltip>
-               <Tooltip showDelay="0.1s" text="Faster, but less accurate repulsive forces calculations"/>
-            </tooltip>
-         </ToggleSwitch>
-      </VBox>
-      <Label alignment="CENTER" prefHeight="13.0" styleClass="darkLabel" text="Parameters" textFill="#2c2c2c">
+         <tooltip>
+            <Tooltip text=" " />
+         </tooltip>
+      </ToggleSwitch>
+      <ToggleSwitch fx:id="barnesHutToggleSwitch" contentDisplay="CENTER" layoutX="51.0" layoutY="56.0" maxWidth="1.7976931348623157E308" selected="true" text="Barnes-Hut Calculations">
          <font>
-            <Font size="9.0"/>
+            <Font size="10.0" />
          </font>
-      </Label>
-      <VBox fx:id="parametersVBox" alignment="TOP_CENTER" spacing="5.0" styleClass="subsection">
-         <padding>
-            <Insets bottom="3.0" top="3.0"/>
-         </padding>
-      </VBox>
-      <VBox fx:id="alphaProgressBarVBox" alignment="CENTER" spacing="5.0">
-         <padding>
-            <Insets top="3.0"/>
-         </padding>
-         <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Activity (Alpha)"
-                textFill="#2c2c2c">
-            <font>
-               <Font size="9.0"/>
-            </font>
-         </Label>
-         <ProgressBar fx:id="alphaBar" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity"
-                      prefHeight="15.0" progress="0.25">
-            <VBox.margin>
-               <Insets left="7.0" right="7.0"/>
-            </VBox.margin>
-         </ProgressBar>
-      </VBox>
-      <VBox fx:id="stepSizeProgressBarVBox" alignment="CENTER" prefHeight="0.0" prefWidth="100.0" spacing="3.0">
-         <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Step SIze"
-                textFill="#2c2c2c">
-            <font>
-               <Font size="9.0"/>
-            </font>
-         </Label>
-         <ProgressBar fx:id="stepSizeProgressBar" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
-                      minWidth="-Infinity" prefHeight="15.0" progress="0.0">
-            <VBox.margin>
-               <Insets left="7.0" right="7.0"/>
-            </VBox.margin>
-         </ProgressBar>
-      </VBox>
-      <HBox alignment="CENTER" prefHeight="25.0" prefWidth="190.0" spacing="3.0">
-         <Button fx:id="startButton" alignment="CENTER" mnemonicParsing="false" onAction="#dynamicLayoutAction"
-                 prefHeight="25.0" prefWidth="108.0" styleClass="danger" text="Start Layout">
-            <graphic>
-               <FontIcon iconColor="#08ae34" iconLiteral="fas-play" styleClass="start-icon"/>
-            </graphic>
-            <font>
-               <Font size="11.0"/>
-            </font>
-         </Button>
-         <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopAlgorithmAction"
-                 prefHeight="25.0" prefWidth="25.0">
-            <font>
-               <Font size="11.0"/>
-            </font>
-            <graphic>
-               <FontIcon iconColor="#e14444" iconLiteral="fas-stop" iconSize="15" selectionStart="0"
-                         styleClass="stop-icon"/>
-            </graphic>
-            <tooltip>
-               <Tooltip text="Stop all"/>
-            </tooltip>
-         </Button>
-         <Button layoutX="153.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
-                 onAction="#randomLayoutAction" prefHeight="25.0" prefWidth="25.0">
-            <font>
-               <Font size="11.0"/>
-            </font>
-            <tooltip>
-               <Tooltip text="New random layout"/>
-            </tooltip>
-            <graphic>
-               <FontIcon iconLiteral="fas-dice" iconSize="15"/>
-            </graphic>
-         </Button>
-         <VBox.margin>
-            <Insets top="10.0"/>
-         </VBox.margin>
-      </HBox>
+         <tooltip>
+            <Tooltip showDelay="0.1s" text="Faster, but less accurate repulsive forces calculations" />
+         </tooltip>
+      </ToggleSwitch>
    </VBox>
+   <Label alignment="CENTER" prefHeight="13.0" styleClass="darkLabel" text="Parameters" textFill="#2c2c2c">
+      <font>
+         <Font size="9.0" />
+      </font>
+   </Label>
+   <VBox fx:id="parametersVBox" alignment="TOP_CENTER" spacing="5.0" styleClass="subsection">
+      <padding>
+         <Insets bottom="3.0" top="3.0" />
+      </padding>
+   </VBox>
+   <VBox fx:id="alphaProgressBarVBox" alignment="CENTER" spacing="5.0">
+      <padding>
+         <Insets top="3.0" />
+      </padding>
+      <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Activity (Alpha)" textFill="#2c2c2c">
+         <font>
+            <Font size="9.0" />
+         </font>
+      </Label>
+      <ProgressBar fx:id="alphaBar" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" progress="0.25">
+         <VBox.margin>
+            <Insets left="7.0" right="7.0" />
+         </VBox.margin>
+      </ProgressBar>
+   </VBox>
+   <VBox fx:id="stepSizeProgressBarVBox" alignment="CENTER" prefHeight="0.0" prefWidth="100.0" spacing="3.0">
+      <Label alignment="CENTER" prefHeight="13.0" prefWidth="190.0" styleClass="darkLabel" text="Step SIze" textFill="#2c2c2c">
+         <font>
+            <Font size="9.0" />
+         </font>
+      </Label>
+      <ProgressBar fx:id="stepSizeProgressBar" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" progress="0.0">
+         <VBox.margin>
+            <Insets left="7.0" right="7.0" />
+         </VBox.margin>
+      </ProgressBar>
+   </VBox>
+   <HBox alignment="CENTER" prefHeight="25.0" prefWidth="190.0" spacing="3.0">
+      <Button fx:id="startButton" alignment="CENTER" mnemonicParsing="false" onAction="#dynamicLayoutAction" prefHeight="25.0" prefWidth="108.0" styleClass="danger" text="Start Layout">
+         <graphic>
+            <FontIcon iconColor="#08ae34" iconLiteral="fas-play" styleClass="start-icon" />
+         </graphic>
+         <font>
+            <Font size="11.0" />
+         </font>
+      </Button>
+      <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopAlgorithmAction" prefHeight="25.0" prefWidth="25.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+         <graphic>
+            <FontIcon iconColor="#e14444" iconLiteral="fas-stop" iconSize="15" selectionStart="0" styleClass="stop-icon" />
+         </graphic>
+         <tooltip>
+            <Tooltip text="Stop all" />
+         </tooltip>
+      </Button>
+      <Button layoutX="153.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#randomLayoutAction" prefHeight="25.0" prefWidth="25.0">
+         <font>
+            <Font size="11.0" />
+         </font>
+         <tooltip>
+            <Tooltip text="New random layout" />
+         </tooltip>
+         <graphic>
+            <FontIcon iconLiteral="fas-dice" iconSize="15" />
+         </graphic>
+      </Button>
+      <VBox.margin>
+         <Insets top="10.0" />
+      </VBox.margin>
+   </HBox>
+   <padding>
+      <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+   </padding>
 </VBox>

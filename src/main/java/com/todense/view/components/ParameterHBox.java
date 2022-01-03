@@ -180,4 +180,8 @@ public class ParameterHBox extends HBox {
     public void setLabelWidth(double width){
         label.setPrefWidth(width);
     }
+
+    public TextField getTextField() {
+        return textField;
+    }
 }

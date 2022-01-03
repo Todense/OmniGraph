@@ -113,14 +113,18 @@ public class CanvasViewModel implements ViewModel {
             painter.repaint();
         });
 
-        notificationCenter.subscribe("ADJUST", (key, payload) ->
-                canvasScope.getCamera().adjustToGraph(
-                        graphScope.getGraphManager().getGraph(),
-                        canvasScope.getCanvasWidth(),
-                        canvasScope.getCanvasHeight(),
-                        graphScope.getNodeSize()
-                )
-        );
+        notificationCenter.subscribe("ADJUST", (key, payload) -> {
+            double leftPanelWidth = (double) payload[0];
+            double rightPanelWidth = (double) payload[1];
+            canvasScope.getCamera().adjustToGraph(
+                    graphScope.getGraphManager().getGraph(),
+                    canvasScope.getCanvasWidth(),
+                    canvasScope.getCanvasHeight(),
+                    leftPanelWidth,
+                    rightPanelWidth,
+                    graphScope.getNodeSize()
+            );
+        });
     }
 
     public DoubleProperty canvasWidthProperty() {

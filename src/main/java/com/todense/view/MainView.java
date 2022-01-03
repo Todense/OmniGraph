@@ -34,21 +34,20 @@ public class MainView implements FxmlView<MainViewModel> {
 
     @FXML private TextArea textArea;
     @FXML private ProgressIndicator progressIndicator;
-    @FXML private ScrollPane antsTabScrollPane, performTabScrollPane, createTabScrollPane;
-    @FXML private TextField infoTextField;
     @FXML private FontIcon lockIcon;
     @FXML private ToggleButton lockToggleButton, autoLayoutToggleButton, graphAppearanceMenuButton,
                     propertiesMenuButton, operationsMenuButton, generateGraphMenuButton,
                     basicAlgorithmsMenuButton, tspMenuButton, layoutMenuButton;
     @FXML private Button stopButton;
-    @FXML private ColorPicker appColorPicker;
     @FXML private VBox leftSideMenuContentBox, rightSideMenuContentBox;
     @FXML private VBox graphAppearanceView, backgroundAppearanceView, propertiesView, operationsView,
             randomGeneratorView, presetGeneratorView, basicAlgorithmsView, tspView, layoutView;
     @FXML private ScrollPane leftSideMenuContentScrollPane, rightSideMenuContentScrollPane;
     @FXML private AnchorPane mainAnchor;
-    @FXML private HBox mainBox, leftContentHBox, rightContentHBox;
+    @FXML private HBox leftContentHBox, rightContentHBox;
     @FXML private Pane leftResizeHandle, rightResizeHandle;
+    @FXML private Label infoLabel;
+    @FXML private ColorPicker appColorPicker;
 
     @InjectViewModel
     MainViewModel viewModel;
@@ -67,7 +66,10 @@ public class MainView implements FxmlView<MainViewModel> {
         VBox.setVgrow(mainAnchor, Priority.ALWAYS);
 
         textArea.textProperty().bindBidirectional(viewModel.textProperty());
-        infoTextField.textProperty().bindBidirectional(viewModel.infoTextProperty());
+        infoLabel.textProperty().bindBidirectional(viewModel.infoTextProperty());
+
+        viewModel.leftPanelWidthProperty().bind(leftContentHBox.widthProperty());
+        viewModel.rightPanelWidthProperty().bind(rightContentHBox.widthProperty());
 
         //fixes not scrolling down bug
         viewModel.textProperty().addListener((observableValue, s, t1) -> {
@@ -154,6 +156,8 @@ public class MainView implements FxmlView<MainViewModel> {
                 }
             }
         });
+        leftContentHBox.prefWidthProperty().set(0.0);
+        leftContentHBox.setVisible(false);
 
         rightSideMenuButtons.selectedToggleProperty().addListener(new ChangeListener<>() {
             double lastWidth = 250;
@@ -170,6 +174,8 @@ public class MainView implements FxmlView<MainViewModel> {
                 }
             }
         });
+        rightContentHBox.prefWidthProperty().set(0.0);
+        rightContentHBox.setVisible(false);
 
         leftResizeHandle.setOnMouseDragged(event -> {
             Node parent = leftContentHBox.getParent();
@@ -347,8 +353,6 @@ public class MainView implements FxmlView<MainViewModel> {
 
     @FXML
     private void adjustAction() {
-        //initAnalysisStage();
-        //analysisStage.show();
         viewModel.adjustCameraToGraph();
     }
 

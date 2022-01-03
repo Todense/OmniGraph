@@ -106,6 +106,10 @@
     -fx-background-color: transparent;
 }
 
+.app-color-picker{
+    -fx-background-color: fx-darker;
+}
+
 .choice-box{
     -fx-text-fill: fx-text-dark;
     -fx-background-color: fx-light;
@@ -315,11 +319,6 @@
 }
 
 
-.text-area .scroll-bar:vertical {
-    -fx-pref-width: 1;
-    -fx-opacity: 0;
-}
-
 
 .text-area {
     text-area-background: derive(fx-dark, 7%), -fx-control-inner-background;
@@ -366,7 +365,7 @@
 }
 
 .progress-indicator:indeterminate > .spinner{
-     -fx-background-color: fx-dark;
+     -fx-background-color: fx-darker;
 }
 
 .progress-bar{
@@ -392,7 +391,7 @@
 }
 
 .menu-bar {
-    -fx-background-color: fx-dark ;
+    -fx-background-color: fx-darker ;
 }
 
 .tooltip {

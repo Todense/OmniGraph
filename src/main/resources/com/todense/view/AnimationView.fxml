@@ -6,21 +6,20 @@
 <?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
-<?import org.controlsfx.control.ToggleSwitch?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<HBox alignment="CENTER" fillHeight="false" prefWidth="350.0" spacing="2.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.AnimationView">
-   <ToggleSwitch fx:id="animationToggleSwitch" contentDisplay="TOP" graphicTextGap="0.0" minWidth="-Infinity" prefHeight="18.0" prefWidth="100.0" selected="true" text="Animated" textAlignment="CENTER" viewOrder="1.0">
-      <font>
-         <Font name="Serif Regular" size="10.0" />
-      </font>
+<HBox alignment="CENTER" fillHeight="false" spacing="2.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.AnimationView">
+   <ToggleButton fx:id="animationToggleButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="40.0">
+      <graphic>
+         <FontIcon iconLiteral="fas-film" iconSize="18" selectionEnd="1" wrappingWidth="15.5" />
+      </graphic>
+      <tooltip>
+         <Tooltip text="Show Animations" />
+      </tooltip>
+   </ToggleButton>
+   <HBox fx:id="animationHBox" alignment="CENTER" fillHeight="false" spacing="2.0">
       <HBox.margin>
-         <Insets right="5.0" />
-      </HBox.margin>
-   </ToggleSwitch>
-   <HBox fx:id="animationHBox" alignment="CENTER" fillHeight="false" spacing="2.0" style="-fx-border-color: #595959; -fx-border-radius: 3;">
-      <HBox.margin>
-         <Insets right="3.0" />
+         <Insets />
       </HBox.margin>
       <ToggleButton fx:id="pauseButton" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0" textAlignment="CENTER">
          <font>
@@ -44,11 +43,11 @@
             <Tooltip showDelay="0.1s" text="Next Step" />
          </tooltip>
          <HBox.margin>
-            <Insets left="3.0" right="10.0" />
+            <Insets right="10.0" />
          </HBox.margin>
       </Button>
-      <padding>
-         <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
-      </padding>
    </HBox>
+   <padding>
+      <Insets left="2.0" right="2.0" />
+   </padding>
 </HBox>

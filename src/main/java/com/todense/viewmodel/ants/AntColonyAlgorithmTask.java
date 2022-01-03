@@ -384,6 +384,10 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
                 e.setStatus(EDGE_ON_CYCLE);
             }
         }
+
+        for (Edge e : graph.getEdges()) {
+            e.setVisible(isImportant[e.getN1().getIndex()][e.getN2().getIndex()] || e.getStatus() == EDGE_ON_CYCLE);
+        }
     }
 
     void setPheromone(int i, int j, double amount){
