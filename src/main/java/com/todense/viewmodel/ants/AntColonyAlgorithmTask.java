@@ -31,14 +31,13 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
     final AntsScope antsScope;
     final AlgorithmScope algorithmScope;
 
-    private DoubleProperty bestSolutionLength = new SimpleDoubleProperty(Double.POSITIVE_INFINITY); //global best cycle length
+    private final DoubleProperty bestSolutionLength = new SimpleDoubleProperty(Double.POSITIVE_INFINITY); //global best cycle length
     
     protected int graphOrder;
     
     private int iterationCounter = 0;
     private int explorationCounter = 0;
     private double explorationRate = 0;
-    private double explorationRateSum = 0;
 
     double[][] dist;
     protected boolean[][] isImportant;
@@ -50,9 +49,9 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
     private double minSolution = -1;
     private double maxIterations = Double.POSITIVE_INFINITY;
 
-    private HashMap<Integer, List<Integer>> neighbourhoods = new HashMap<>();
-    private LocalSearcher localSearcher = new LocalSearcher();
-    private Random rnd = new Random();
+    private final HashMap<Integer, List<Integer>> neighbourhoods = new HashMap<>();
+    private final LocalSearcher localSearcher = new LocalSearcher();
+    private final Random rnd = new Random();
     private final Object lock = new Object();
     UniformRandomProvider randomProvider;  //faster than EnumeratedDistribution
 
@@ -91,7 +90,6 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
     }
 
     protected void init(){
-        long initStart = System.currentTimeMillis();
         dist = new double[graphOrder][graphOrder];
         isImportant = new boolean[graphOrder][graphOrder];
 
@@ -307,7 +305,6 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
         }
 
         explorationRate = (double)explorationCounter/(graphOrder * antsScope.getAntCount());
-        explorationRateSum += explorationRate;
         explorationCounter = 0;
     }
 

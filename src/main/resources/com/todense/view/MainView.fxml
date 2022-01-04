@@ -352,6 +352,7 @@
       </SplitPane>
       <HBox alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="1357.0" spacing="3.0" style="-fx-background-color: fx-darker; -fx-border-width: 1 0 0 0; -fx-border-color: fx-light;">
          <children>
+            <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
             <ProgressIndicator fx:id="progressIndicator" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="15.0" progress="0.0" visible="false" />
             <Label fx:id="infoLabel">
                <HBox.margin>
