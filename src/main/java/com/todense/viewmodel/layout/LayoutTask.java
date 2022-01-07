@@ -110,9 +110,11 @@ public abstract class LayoutTask extends AlgorithmTask {
 
     void applyForces(Graph graph){
         if(layoutScope.isBarnesHutOn()){
-            for (int i = 0; i < graph.getOrder(); i++) {
-                Node n = graph.getNodes().get(i);
-                applyBarnesHutRepulsiveForces(n, quadTree);
+            if(graph.getOrder() > 1){
+                for (int i = 0; i < graph.getOrder(); i++) {
+                    Node n = graph.getNodes().get(i);
+                    applyBarnesHutRepulsiveForces(n, quadTree);
+                }
             }
         }else{
             for (int i = 0; i < graph.getOrder(); i++) {

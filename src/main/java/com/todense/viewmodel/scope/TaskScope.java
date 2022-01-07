@@ -1,6 +1,7 @@
 package com.todense.viewmodel.scope;
 
 import com.todense.viewmodel.algorithm.AlgorithmTask;
+import com.todense.viewmodel.layout.task.AutoD3LayoutTask;
 import de.saxsys.mvvmfx.Scope;
 
 import java.util.concurrent.ExecutorService;
@@ -28,7 +29,7 @@ public class TaskScope implements Scope {
     }
 
     public void stopTask(){
-        if(task != null && task.isRunning()){
+        if(task != null && task.isRunning() && !(task instanceof AutoD3LayoutTask)){
             task.cancel();
         }
     }

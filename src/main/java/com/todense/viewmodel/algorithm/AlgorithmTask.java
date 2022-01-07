@@ -20,7 +20,7 @@ public abstract class AlgorithmTask extends Task<Void>{
     protected double result = 0;
 
     protected double startTime;
-    private boolean cancelled = false;
+    protected boolean cancelled = false;
     private boolean connectedToUI = false;
 
     public AlgorithmTask(Graph graph){

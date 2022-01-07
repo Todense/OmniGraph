@@ -81,7 +81,7 @@ public class RandomGeneratorViewModel implements ViewModel {
                 break;
             case GEOMETRIC_RANDOMIZED:
                 edgeGenerator = new GeometricGenerator(
-                        edgeProbabilityProperty.get() * height,
+                        edgeThresholdProperty.get() * height,
                         true
                 );
                 break;

@@ -19,11 +19,6 @@ public class GraphManager {
         setGraph(new Graph());
     }
 
-    public void clearGraph() {
-        setGraph(new Graph());
-        System.gc();
-    }
-
     public void resetGraph() {
         for (Node n : graph.getNodes()) {
             n.setSelected(false);

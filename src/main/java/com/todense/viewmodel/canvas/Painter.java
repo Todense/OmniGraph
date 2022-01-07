@@ -52,11 +52,6 @@ public class Painter {
         }
     }
 
-    public void clear(){
-        var c = gc.getCanvas();
-        gc.clearRect(0,0, c.getWidth(), c.getHeight());
-    }
-
     public void repaint(){
         if(timerOn && isAnimationOn()) return;
         Platform.runLater(this::draw);

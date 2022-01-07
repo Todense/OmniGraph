@@ -149,12 +149,11 @@ public class MainViewModel implements ViewModel {
                 startAutoLayout();
             }else {
                 stopAutoLayout();
+                canvasScope.getPainter().stopAnimationTimer();
             }
         });
 
-        notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_REQUEST, (key, payload) -> {
-            stopAutoLayout();
-        });
+        notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_REQUEST, (key, payload) -> stopAutoLayout());
 
         notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_SET, (key, payload) -> {
             if(isAutoLayoutOn()) {
@@ -294,10 +293,7 @@ public class MainViewModel implements ViewModel {
     }
 
     public void deleteGraph() {
-        notificationCenter.publish(GRAPH_EDIT_REQUEST, (Runnable)() -> {
-            graphManager.clearGraph();
-        });
-        notificationCenter.publish(GraphViewModel.NEW_GRAPH_SET);
+        notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, new Graph());
     }
 
     public void resetGraph(){

@@ -35,9 +35,10 @@ public class LayoutScope implements Scope {
     private final DoubleProperty d3ToleranceProperty = new SimpleDoubleProperty(0.001);
 
     public LayoutScope(){
-        ChangeListener d3ParamListener = (obs, oldVal, newVal) -> d3AlphaProperty.set(1.0);
+        ChangeListener<Object> d3ParamListener = (obs, oldVal, newVal) -> d3AlphaProperty.set(1.0);
 
         d3RepulsiveStrengthProperty.addListener(d3ParamListener);
+        d3OptDistProperty.addListener(d3ParamListener);
         gravityOnProperty.addListener(d3ParamListener);
         gravityStrengthProperty.addListener(d3ParamListener);
         huOptDistProperty.addListener(d3ParamListener);

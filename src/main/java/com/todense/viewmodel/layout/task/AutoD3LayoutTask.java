@@ -16,6 +16,17 @@ public class AutoD3LayoutTask extends D3LayoutTask{
     }
 
     @Override
+    protected void succeeded() { // doesn't stop animation timer
+        painter.repaint();
+    }
+
+    @Override
+    protected void cancelled() { // doesn't stop animation timer
+        cancelled = true;
+        painter.repaint();
+    }
+
+    @Override
     protected boolean stopConditionMet() {
         return super.isCancelled();
     }

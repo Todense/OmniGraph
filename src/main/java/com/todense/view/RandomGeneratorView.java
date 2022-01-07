@@ -8,6 +8,8 @@ import com.todense.viewmodel.random.arrangement.NodeArrangement;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.beans.binding.Bindings;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.layout.VBox;
@@ -45,12 +47,12 @@ public class RandomGeneratorView implements FxmlView<RandomGeneratorViewModel> {
 
         ParameterHBox barabasiInitialNodesHBox = new ParameterHBox(
                 "Initial nodes", viewModel.barabasiInitialNodesProperty(),
-                0, 2, 1, Double.POSITIVE_INFINITY
+                0, 2, 1, viewModel.nodeCountProperty().get()
         );
         setUpParameterHBox(barabasiInitialNodesHBox, GeneratorModel.BARABASI_ALBERT);
 
         ParameterHBox barabasiConnectionsNodesHBox = new ParameterHBox(
-                "Connections", viewModel.barabasiInitialNodesProperty(),
+                "Connections", viewModel.barabasiConnectionsProperty(),
                 0, 2, 1, Double.POSITIVE_INFINITY
         );
         setUpParameterHBox(barabasiConnectionsNodesHBox, GeneratorModel.BARABASI_ALBERT);
@@ -59,6 +61,11 @@ public class RandomGeneratorView implements FxmlView<RandomGeneratorViewModel> {
                 "Minimum distance", viewModel.minNodeDistProperty(), viewModel.withMinDistProperty(),
                 2, 0.05, 0.0, 1.0
         );
+
+        viewModel.nodeCountProperty().addListener((obs, oldVal, newVal) ->
+                barabasiInitialNodesHBox.setMaxVal((Integer) newVal)
+        );
+
         var nonCircularLayout = viewModel.nodeArrangementProperty().isNotEqualTo(NodeArrangement.CIRCULAR);
         minDistHBox.visibleProperty().bind(nonCircularLayout);
         minDistHBox.managedProperty().bind(nonCircularLayout);

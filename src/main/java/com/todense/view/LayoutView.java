@@ -21,7 +21,6 @@ import java.util.List;
 
 public class LayoutView implements FxmlView<LayoutViewModel> {
     @FXML private ToggleSwitch multilevelToggleSwitch, barnesHutToggleSwitch;
-    @FXML private Button startButton;
     @FXML private VBox optionsVBox, parametersVBox, alphaProgressBarVBox, stepSizeProgressBarVBox;
     @FXML private ChoiceBox<LayoutAlgorithm> layoutAlgorithmChoiceBox;
     @FXML private ProgressBar alphaBar, stepSizeProgressBar;
@@ -32,7 +31,6 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
     @InjectViewModel
     LayoutViewModel viewModel;
 
-    private double previousY = -1.0;
 
     public void initialize(){
         for(var alg: LayoutAlgorithm.values()){
@@ -196,9 +194,9 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
         parametersVBox.getChildren().addAll(algorithmParametersBoxes.get(LayoutAlgorithm.ADAPTIVE_COOLING));
 
         //alphaBar.progressProperty().bind(viewModel.getLayoutScope().d3AlphaProperty());
-        viewModel.getLayoutScope().d3AlphaProperty().addListener((obs, newVal, oldVal) ->{
-            Platform.runLater(() -> alphaBar.progressProperty().set((Double) newVal));
-        });
+        viewModel.getLayoutScope().d3AlphaProperty().addListener((obs, newVal, oldVal) ->
+                Platform.runLater(() -> alphaBar.progressProperty().set((Double) newVal))
+        );
         alphaProgressBarVBox.setVisible(false);
         alphaProgressBarVBox.setManaged(false);
 

@@ -204,6 +204,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
                 }
             }
         }
+        painter.pauseCheck();
     }
     
     protected void moveAnt(Ant ant){
