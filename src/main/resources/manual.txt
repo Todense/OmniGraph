@@ -14,6 +14,7 @@ OmniGraph
 - Copy selected subgraph: CTRL+C+left mouse click one of selected nodes or right click on one of selected nodes -> copy subgraph
 - Paste copied graph: CTRL+V+left mouse click on background or right click on background -> paste subgraph
 
+Press X to enter erase mode (delete nodes and edges by mouse drag)
 
 2. Keyboard shortcuts
 

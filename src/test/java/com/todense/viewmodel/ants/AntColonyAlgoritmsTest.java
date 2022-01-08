@@ -4,9 +4,16 @@ import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.file.format.tsp.TspReader;
 import com.todense.viewmodel.graph.GraphManager;
+import com.todense.viewmodel.preset.PresetCreator;
 import com.todense.viewmodel.scope.AlgorithmScope;
 import com.todense.viewmodel.scope.AntsScope;
+import com.todense.viewmodel.scope.GraphScope;
 import javafx.geometry.Point2D;
+import org.apache.commons.math3.distribution.EnumeratedDistribution;
+import org.apache.commons.math3.util.Pair;
+import org.apache.commons.rng.UniformRandomProvider;
+import org.apache.commons.rng.sampling.distribution.GuideTableDiscreteSampler;
+import org.apache.commons.rng.sampling.distribution.SharedStateDiscreteSampler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -15,6 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.DoubleStream;
 
 
@@ -71,6 +79,138 @@ class AntColonyAlgoritmsTest {
         }
 
     }
+
+    @Test
+    @Disabled
+    void gridTest() {
+        Graph graph = PresetCreator.createHexagonalGrid(5, new Point2D(1,1));
+        GraphScope graphScope = new GraphScope();
+        graphScope.getGraphManager().setGraph(graph);
+        graphScope.getGraphManager().createCompleteGraph();
+        AntsScope antScope = new AntsScope();
+        AlgorithmScope algorithmScope = new AlgorithmScope();
+        AntColonySystemTask antAlgorithm = new AntColonySystemTask(graphScope.getGraphManager().getGraph(), antScope, algorithmScope);
+        antAlgorithm.setMaxTimeSec(10);
+        antAlgorithm.perform();
+        System.out.println(antAlgorithm.getIterationCounter());
+    }
+
+    class Distribution{
+        double[] cumulativeProbs;
+        double sumProb;
+        Random rand = new Random();
+
+        Distribution(double[] probabilities){
+            cumulativeProbs = new double[probabilities.length];
+            for (int i = 0; i < probabilities.length; i++) {
+                sumProb += probabilities[i];
+                this.cumulativeProbs[i] = sumProb;
+            }
+        }
+
+        public int sample(){
+            double prob = rand.nextDouble()*sumProb;
+            return Arrays.binarySearch(cumulativeProbs, prob);
+        }
+    }
+
+    @Test
+    @Disabled
+    void apacheDistributionsTest(){
+        long startTime = System.nanoTime();
+        for (int i = 0; i < 1000000; i++) {
+            ArrayList<Pair<Integer, Double>> probabilities = new ArrayList<>();
+            for (int j = 0; j < 20; j++) {
+                probabilities.add(Pair.create(j, (double)j));
+            }
+            EnumeratedDistribution<Integer> enumeratedDistribution = new EnumeratedDistribution<>(probabilities);
+            enumeratedDistribution.sample();
+        }
+        long duration = (System.nanoTime()-startTime)/1000000;
+        System.out.println(duration);
+    }
+
+    @Test
+    @Disabled
+    void customDistributionsTest(){
+        long startTime = System.nanoTime();
+        for (int i = 0; i < 100000; i++) {
+            double[] probabilities = new double[100];
+            for (int j = 0; j < 100; j++) {
+                probabilities[j] = j;
+            }
+            Distribution distribution = new Distribution(probabilities);
+            for (int j = 0; j < 10000; j++) {
+                distribution.sample();
+            }
+        }
+        long duration = (System.nanoTime()-startTime)/1000000;
+        System.out.println(duration);
+    }
+
+    @Test
+    @Disabled
+    void guideTableDistributionsTest(){
+        long startTime = System.nanoTime();
+        UniformRandomProvider provider = new UniformRandomProvider() {
+            Random random = new Random();
+            @Override
+            public void nextBytes(byte[] bytes) {
+
+            }
+
+            @Override
+            public void nextBytes(byte[] bytes, int i, int i1) {
+
+            }
+
+            @Override
+            public int nextInt() {
+                return 0;
+            }
+
+            @Override
+            public int nextInt(int i) {
+                return 0;
+            }
+
+            @Override
+            public long nextLong() {
+                return 0;
+            }
+
+            @Override
+            public long nextLong(long l) {
+                return 0;
+            }
+
+            @Override
+            public boolean nextBoolean() {
+                return false;
+            }
+
+            @Override
+            public float nextFloat() {
+                return 0;
+            }
+
+            @Override
+            public double nextDouble() {
+                return random.nextDouble();
+            }
+        };
+        for (int i = 0; i < 1000000; i++) {
+            double[] probabilities = new double[20];
+            for (int j = 0; j < 20; j++) {
+                probabilities[j] = j;
+            }
+            SharedStateDiscreteSampler sampler = GuideTableDiscreteSampler.of(provider, probabilities);
+            sampler.sample();
+        }
+        long duration = (System.nanoTime()-startTime)/1000000;
+        System.out.println(duration);
+    }
+
 
     @Test
     void cycleLengthTest(){

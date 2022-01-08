@@ -18,7 +18,7 @@ public class InputScope implements Scope {
 
     private final BooleanProperty editLockedProperty = new SimpleBooleanProperty(false);
 
-    private ObjectProperty<Cursor> canvasCursorProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Cursor> canvasCursorProperty = new SimpleObjectProperty<>();
 
     private boolean selecting = false;
     private boolean connecting = false;

@@ -1,17 +1,16 @@
 package com.todense.viewmodel.scope;
 
-import de.saxsys.mvvmfx.Scope;
-import javafx.scene.input.KeyCode;
 
-import java.util.HashSet;
-import java.util.Set;
+import de.saxsys.mvvmfx.Scope;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
+import javafx.scene.input.KeyCode;
 
 public class KeysScope implements Scope {
 
-    private final Set<KeyCode> pressedKeys = new HashSet<>();
+    private final ObservableSet<KeyCode> pressedKeys = FXCollections.observableSet();
 
-
-    public Set<KeyCode> getPressedKeys() {
+    public ObservableSet<KeyCode> getPressedKeys() {
         return pressedKeys;
     }
 }

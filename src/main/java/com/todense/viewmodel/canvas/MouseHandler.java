@@ -8,9 +8,13 @@ import com.todense.viewmodel.popover.PopOverManager;
 import com.todense.viewmodel.scope.GraphScope;
 import com.todense.viewmodel.scope.InputScope;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
+import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -18,9 +22,12 @@ import javafx.scene.input.ScrollEvent;
 import org.controlsfx.control.PopOver;
 
 import java.util.ArrayList;
-import java.util.Set;
+import java.util.Objects;
 
 public class MouseHandler {
+
+    private final ImageCursor ERASE_CURSOR = new ImageCursor(
+            new Image(Objects.requireNonNull(getClass().getResource("/trash.png")).toExternalForm()));
 
     private final GraphManager GM;
     private final GraphScope graphScope;
@@ -45,11 +52,12 @@ public class MouseHandler {
     private Edge hoverEdge; //edge under mouse
 
     private boolean dragging = false;
+    private boolean eraseMode = false;
     private boolean draggingNode = false;
 
     private final ArrayList<Edge> selectedEdges = new ArrayList<>();
 
-    private Set<KeyCode> pressedKeys;
+    private final ObservableSet<KeyCode> pressedKeys;
 
     public MouseHandler(Camera camera,
                         NotificationCenter notificationCenter,
@@ -57,7 +65,7 @@ public class MouseHandler {
                         Painter painter,
                         GraphScope graphScope,
                         PopOverManager popOverManager,
-                        Set<KeyCode> pressedKeys){
+                        ObservableSet<KeyCode> pressedKeys){
         this.camera = camera;
         this.notificationCenter = notificationCenter;
         this.inputScope = inputScope;
@@ -66,6 +74,17 @@ public class MouseHandler {
         this.GM = graphScope.getGraphManager();
         this.popOverManager = popOverManager;
         this.pressedKeys = pressedKeys;
+
+        pressedKeys.addListener((SetChangeListener<KeyCode>) keys -> {
+            eraseMode = keys.getSet().contains(KeyCode.X) && keys.getSet().size() == 1;
+            if(!inputScope.isEditLocked()){
+                if(eraseMode){
+                    inputScope.setCanvasCursor(ERASE_CURSOR);
+                }else{
+                    inputScope.setCanvasCursor(Cursor.DEFAULT);
+                }
+            }
+        });
     }
 
     //-----------------------------------------------------
@@ -87,6 +106,15 @@ public class MouseHandler {
 
 
         if(event.getButton() == MouseButton.PRIMARY){
+            if(eraseMode){
+                if(clickedNode != null){
+                    GM.getGraph().removeNode(clickedNode);
+                    clickedNode = null;
+                }else if(clickedEdge != null){
+                    GM.getGraph().removeEdge(clickedEdge);
+                    clickedEdge = null;
+                }
+            }
             if(clickedNode != null){
                 draggingNode = true;
             }
@@ -123,7 +151,7 @@ public class MouseHandler {
 
     public void onMouseClicked(MouseEvent event) {
 
-        if(inputScope.isEditLocked()) return;
+        if(inputScope.isEditLocked() || eraseMode) return;
 
         if(event.getButton() == MouseButton.PRIMARY && !dragging) {  // LEFT MOUSE BUTTON
             if(!pressedKeys.contains(KeyCode.SHIFT)){
@@ -133,8 +161,7 @@ public class MouseHandler {
                         GM.addSubgraph(transPt);
                     }
                     else{
-                        Thread thread = new Thread(() -> GM.getGraph().addNode(camera.inverse(mousePressPt)));
-                        thread.start();
+                        GM.getGraph().addNode(camera.inverse(mousePressPt));
                     }
 
                 }
@@ -271,11 +298,12 @@ public class MouseHandler {
                 painter.repaint();
             }
         }
-
-        if(hoverNode == null){
-            inputScope.setCanvasCursor(Cursor.DEFAULT);
-        }else{
-            inputScope.setCanvasCursor(Cursor.OPEN_HAND);
+        if(!eraseMode){
+            if(hoverNode == null){
+                inputScope.setCanvasCursor(Cursor.DEFAULT);
+            }else{
+                inputScope.setCanvasCursor(Cursor.OPEN_HAND);
+            }
         }
     }
     
@@ -302,8 +330,24 @@ public class MouseHandler {
         }
 
         if(event.getButton() == MouseButton.PRIMARY){
-
-            if((pressedKeys.contains(KeyCode.SHIFT) || dragging) && !draggingNode){
+            if(eraseMode){
+                Node node = getNodeFromPoint(mouseDragPt);
+                if (node != null) {
+                    synchronized (Graph.LOCK){
+                        GM.getGraph().removeNode(node);
+                    }
+                    painter.repaint();
+                } else {
+                    Edge edge = getEdgeFromPoint(mouseDragPt);
+                    if (edge != null) {
+                        synchronized (Graph.LOCK){
+                            GM.getGraph().removeEdge(edge);
+                        }
+                        painter.repaint();
+                    }
+                }
+            }
+            else if((pressedKeys.contains(KeyCode.SHIFT) || dragging) && !draggingNode){
                 camera.translate(delta);
                 currentMousePt = new Point2D(event.getX(),event.getY());
             }
@@ -386,7 +430,7 @@ public class MouseHandler {
     //-----------------------------------------------------
 
 
-    public Node getNodeFromPoint(Point2D point){
+    private Node getNodeFromPoint(Point2D point){
         double nodeSize = graphScope.getNodeSize();
         Point2D invPoint = camera.inverse(point);
         for (Node n : GM.getGraph().getNodes()) {
