@@ -34,10 +34,10 @@ public class MainView implements FxmlView<MainViewModel> {
 
     @FXML private TextArea textArea;
     @FXML private ProgressIndicator progressIndicator;
-    @FXML private FontIcon lockIcon;
+    @FXML private FontIcon lockIcon, fullScreenIcon;
     @FXML private ToggleButton lockToggleButton, autoLayoutToggleButton, graphAppearanceMenuButton,
                     propertiesMenuButton, operationsMenuButton, generateGraphMenuButton,
-                    basicAlgorithmsMenuButton, tspMenuButton, layoutMenuButton;
+                    basicAlgorithmsMenuButton, tspMenuButton, layoutMenuButton, eraseModeToggleButton;
     @FXML private Button stopButton;
     @FXML private VBox leftSideMenuContentBox, rightSideMenuContentBox;
     @FXML private VBox graphAppearanceView, backgroundAppearanceView, propertiesView, operationsView,
@@ -48,6 +48,7 @@ public class MainView implements FxmlView<MainViewModel> {
     @FXML private Pane leftResizeHandle, rightResizeHandle;
     @FXML private Label infoLabel;
     @FXML private ColorPicker appColorPicker;
+    @FXML MenuItem fullScreenItem;
 
     @InjectViewModel
     MainViewModel viewModel;
@@ -106,6 +107,9 @@ public class MainView implements FxmlView<MainViewModel> {
 
         autoLayoutToggleButton.selectedProperty().bindBidirectional(viewModel.autoLayoutOnProperty());
         autoLayoutToggleButton.disableProperty().bind(viewModel.taskRunningProperty());
+
+        eraseModeToggleButton.selectedProperty().bindBidirectional(viewModel.eraseModeOnProperty());
+        eraseModeToggleButton.disableProperty().bind(lockToggleButton.selectedProperty());
 
         double scrollSpeed = 0.005;
         //setScrollSpeed(scrollSpeed, antsTabScrollPane);
@@ -390,7 +394,17 @@ public class MainView implements FxmlView<MainViewModel> {
 
     @FXML
     private void fullScreenAction(){
-        mainStage.setFullScreen(true);
+        if(mainStage.isFullScreen()){
+            mainStage.setFullScreen(false);
+            fullScreenIcon.setIconLiteral("fas-expand-arrows-alt");
+            fullScreenItem.setText("Fullscreen");
+        }
+        else{
+            mainStage.setFullScreen(true);
+            fullScreenIcon.setIconLiteral("fas-compress-arrows-alt");
+            fullScreenItem.setText("Exit fullscreen");
+        }
+
     }
 
     private String toRGBCode(Color color) {

@@ -3,7 +3,6 @@ package com.todense.viewmodel.scope;
 import com.todense.viewmodel.canvas.Camera;
 import com.todense.viewmodel.canvas.Painter;
 import de.saxsys.mvvmfx.Scope;
-import javafx.animation.AnimationTimer;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
@@ -17,7 +16,6 @@ public class CanvasScope implements Scope {
     private final DoubleProperty canvasHeightProperty = new SimpleDoubleProperty(0.0);
     private final ObjectProperty<Color> borderColorProperty = new SimpleObjectProperty<>(Color.WHITE);
 
-    private double lastWidth = canvasWidthProperty.get();
 
     private Painter painter;
 

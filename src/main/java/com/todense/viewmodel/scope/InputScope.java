@@ -7,16 +7,29 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableSet;
+import javafx.collections.SetChangeListener;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
+import javafx.scene.ImageCursor;
+import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class InputScope implements Scope {
 
+    private final ImageCursor ERASE_CURSOR = new ImageCursor(
+            new Image(Objects.requireNonNull(getClass().getResource("/trash.png")).toExternalForm()));
+
+    private final ObservableSet<KeyCode> pressedKeys = FXCollections.observableSet();
+
     private final BooleanProperty editLockedProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty eraseModeOnProperty = new SimpleBooleanProperty(false);
 
     private final ObjectProperty<Cursor> canvasCursorProperty = new SimpleObjectProperty<>();
 
@@ -29,6 +42,34 @@ public class InputScope implements Scope {
 
     private List<Node> dummyEdgeStartNodes = new ArrayList<>();
     private Point2D dummyEdgeEnd = new Point2D(0,0);
+
+    public InputScope(){
+        eraseModeOnProperty.addListener((obs, oldVal, newVal)->{
+            if(!isEditLocked()){
+                if(newVal){
+                    setCanvasCursor(ERASE_CURSOR);
+                }else{
+                    setCanvasCursor(Cursor.DEFAULT);
+                }
+            }
+        });
+
+        pressedKeys.addListener((SetChangeListener<KeyCode>) change -> {
+            if(!isEditLocked()) {
+                if (change.getSet().size() == 1 && change.wasAdded() && change.getElementAdded().equals(KeyCode.X)) {
+                    setEraseModeOn(true);
+                } else if (change.wasRemoved() && change.getElementRemoved().equals(KeyCode.X)) {
+                    setEraseModeOn(false);
+                }
+            }
+        });
+
+        editLockedProperty.addListener((obs, oldVal, newVal)->{
+            if(newVal){
+                setEraseModeOn(false);
+            }
+        });
+    }
 
     public double getRectStartX() {
         return rectStartX;
@@ -86,6 +127,18 @@ public class InputScope implements Scope {
         return editLockedProperty;
     }
 
+    public boolean isEraseModeOn() {
+        return eraseModeOnProperty.get();
+    }
+
+    public BooleanProperty eraseModeOnProperty() {
+        return eraseModeOnProperty;
+    }
+
+    public void setEraseModeOn(boolean eraseModeOn) {
+        this.eraseModeOnProperty.set(eraseModeOn);
+    }
+
     public List<Node> getDummyEdgeStartNodes() {
         return dummyEdgeStartNodes;
     }
@@ -104,5 +157,9 @@ public class InputScope implements Scope {
 
     public void setCanvasCursor(Cursor cursor) {
         this.canvasCursorProperty.set(cursor);
+    }
+
+    public ObservableSet<KeyCode> getPressedKeys() {
+        return pressedKeys;
     }
 }

@@ -17,7 +17,7 @@ public class DefaultDisplayRule implements DisplayRule{
     @Override
     public Color getNodeColor(Node node) {
         Color color = node.getColor();
-        return color != null ? color : graphScope.getNodeColor();
+        return color != null ? color : getDefaultNodeColor();
     }
 
     @Override
@@ -29,7 +29,7 @@ public class DefaultDisplayRule implements DisplayRule{
     public Color getEdgeColor(Edge edge) {
         Color color = edge.getColor();
         if(color == null){
-            color = graphScope.getEdgeColor();
+            color = getDefaultEdgeColor();
         }
         if(graphScope.isEdgeOpacityDecayOn()){
             double decay = getDecayedValue(edge, graphScope.getEdgeOpacityDecay(), graphScope.getNodeSize() * 2);
@@ -61,5 +61,13 @@ public class DefaultDisplayRule implements DisplayRule{
         Point2D p2 = edge.getN2().getPos();
         double exponent = decay*(p1.distance(p2)-maximum);
         return  2 - 2 * (Math.pow(Math.E, exponent)/(1+Math.pow(Math.E, exponent)));
+    }
+
+    protected final Color getDefaultNodeColor(){
+        return graphScope.getNodeColor();
+    }
+
+    protected final Color getDefaultEdgeColor(){
+        return graphScope.getEdgeColor();
     }
 }

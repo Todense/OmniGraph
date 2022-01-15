@@ -29,7 +29,7 @@ public class TaskScope implements Scope {
     }
 
     public void stopTask(){
-        if(task != null && task.isRunning() && !(task instanceof AutoD3LayoutTask)){
+        if(task != null && task.isRunning()){
             task.cancel();
         }
     }

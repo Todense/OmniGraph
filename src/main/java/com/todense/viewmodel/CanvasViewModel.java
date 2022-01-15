@@ -44,9 +44,6 @@ public class CanvasViewModel implements ViewModel {
     AntsScope antsScope;
 
     @InjectScope
-    KeysScope keysScope;
-
-    @InjectScope
     InputScope inputScope;
 
     @Inject
@@ -69,8 +66,7 @@ public class CanvasViewModel implements ViewModel {
                 inputScope,
                 painter,
                 graphScope,
-                popOverManager,
-                keysScope.getPressedKeys()
+                popOverManager
         );
 
         canvasScope.setPainter(painter);

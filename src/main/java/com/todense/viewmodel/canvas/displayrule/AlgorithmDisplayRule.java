@@ -23,6 +23,18 @@ public class AlgorithmDisplayRule extends ResponsiveDisplayRule{
     }
 
     @Override
+    public Color getNodeBorderColor(Node node) {
+        Color displayColor = super.getDefaultEdgeColor();
+        if(node.getStatus() == 0){
+            displayColor = Util.getFaintColor(displayColor, backgroundScope.getBackgroundColor());
+        }
+        else{
+            displayColor = displayColor.brighter().brighter();
+        }
+        return displayColor;
+    }
+
+    @Override
     public Color getEdgeColor(Edge edge) {
         Color displayColor = super.getEdgeColor(edge);
         if(edge.getStatus() == 0){

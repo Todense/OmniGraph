@@ -6,13 +6,11 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectContext;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.layout.*;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.shape.StrokeLineCap;
-import javafx.scene.transform.Transform;
 
 public class CanvasView implements FxmlView<CanvasViewModel>{
 
@@ -31,6 +29,9 @@ public class CanvasView implements FxmlView<CanvasViewModel>{
         canvas = new Canvas();
         canvasPane.getChildren().add(canvas);
 
+        // unfocus textfields so that all key shortcuts are accepted
+        canvas.setOnMouseEntered(mouseEvent -> canvas.requestFocus());
+
         canvas.widthProperty().bind(canvasPane.widthProperty());
         canvas.heightProperty().bind(canvasPane.heightProperty());
 
@@ -43,10 +44,6 @@ public class CanvasView implements FxmlView<CanvasViewModel>{
             canvasPane.maxWidthProperty().bind(anchorPane.widthProperty());
             canvasPane.maxHeightProperty().bind(anchorPane.heightProperty());
         });
-
-
-        //HBox.setHgrow(canvasPane, Priority.ALWAYS);
-        //VBox.setVgrow(canvasPane, Priority.ALWAYS);
 
         viewModel.canvasWidthProperty().bind(canvas.widthProperty());
         viewModel.canvasHeightProperty().bind(canvas.heightProperty());

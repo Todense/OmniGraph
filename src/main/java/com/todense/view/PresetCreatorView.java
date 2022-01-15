@@ -43,6 +43,11 @@ public class PresetCreatorView implements FxmlView<PresetCreatorViewModel> {
         );
         setUpParameterHBox(hexGridSizeHBox, Preset.HEX);
 
+        var triangularGridSizeHBox = new ParameterHBox("Size", viewModel.triangularGridSizeProperty(),
+                0, 5, 1, Double.POSITIVE_INFINITY
+        );
+        setUpParameterHBox(triangularGridSizeHBox, Preset.TRIANGULAR);
+
         var starSizeHBox = new ParameterHBox("Size", viewModel.starSizeProperty(),
                 0, 10, 1, Double.POSITIVE_INFINITY
         );

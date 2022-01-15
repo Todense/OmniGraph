@@ -14,7 +14,7 @@
    </padding>
    <Label maxWidth="1.7976931348623157E308" style="-fx-font-size: 14;" styleClass="bigLabel" text="Random" textFill="#2c2c2c">
       <font>
-         <Font size="31.0" />
+         <Font size="15.0" />
       </font>
       <padding>
          <Insets bottom="2.0" />

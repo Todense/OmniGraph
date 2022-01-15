@@ -9,12 +9,9 @@ import com.todense.viewmodel.scope.GraphScope;
 import com.todense.viewmodel.scope.InputScope;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 import javafx.collections.ObservableSet;
-import javafx.collections.SetChangeListener;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
-import javafx.scene.ImageCursor;
-import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -22,12 +19,8 @@ import javafx.scene.input.ScrollEvent;
 import org.controlsfx.control.PopOver;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class MouseHandler {
-
-    private final ImageCursor ERASE_CURSOR = new ImageCursor(
-            new Image(Objects.requireNonNull(getClass().getResource("/trash.png")).toExternalForm()));
 
     private final GraphManager GM;
     private final GraphScope graphScope;
@@ -52,7 +45,6 @@ public class MouseHandler {
     private Edge hoverEdge; //edge under mouse
 
     private boolean dragging = false;
-    private boolean eraseMode = false;
     private boolean draggingNode = false;
 
     private final ArrayList<Edge> selectedEdges = new ArrayList<>();
@@ -64,8 +56,7 @@ public class MouseHandler {
                         InputScope inputScope,
                         Painter painter,
                         GraphScope graphScope,
-                        PopOverManager popOverManager,
-                        ObservableSet<KeyCode> pressedKeys){
+                        PopOverManager popOverManager){
         this.camera = camera;
         this.notificationCenter = notificationCenter;
         this.inputScope = inputScope;
@@ -73,18 +64,7 @@ public class MouseHandler {
         this.graphScope = graphScope;
         this.GM = graphScope.getGraphManager();
         this.popOverManager = popOverManager;
-        this.pressedKeys = pressedKeys;
-
-        pressedKeys.addListener((SetChangeListener<KeyCode>) keys -> {
-            eraseMode = keys.getSet().contains(KeyCode.X) && keys.getSet().size() == 1;
-            if(!inputScope.isEditLocked()){
-                if(eraseMode){
-                    inputScope.setCanvasCursor(ERASE_CURSOR);
-                }else{
-                    inputScope.setCanvasCursor(Cursor.DEFAULT);
-                }
-            }
-        });
+        this.pressedKeys = inputScope.getPressedKeys();
     }
 
     //-----------------------------------------------------
@@ -106,12 +86,26 @@ public class MouseHandler {
 
 
         if(event.getButton() == MouseButton.PRIMARY){
-            if(eraseMode){
+            if(inputScope.isEraseModeOn()){
                 if(clickedNode != null){
-                    GM.getGraph().removeNode(clickedNode);
+                    synchronized (Graph.LOCK){
+                        if(clickedNode.isSelected()){
+                            Graph graph = GM.getGraph();
+                            for(Node n: GM.getSelectedNodes()){
+                               graph.removeNode(n);
+                            }
+                            GM.getSelectedNodes().clear();
+                        }
+                        else{
+                            GM.getGraph().removeNode(clickedNode);
+                        }
+                    }
                     clickedNode = null;
-                }else if(clickedEdge != null){
-                    GM.getGraph().removeEdge(clickedEdge);
+                }
+                else if(clickedEdge != null){
+                    synchronized (GM.getGraph()){
+                        GM.getGraph().removeEdge(clickedEdge);
+                    }
                     clickedEdge = null;
                 }
             }
@@ -151,7 +145,7 @@ public class MouseHandler {
 
     public void onMouseClicked(MouseEvent event) {
 
-        if(inputScope.isEditLocked() || eraseMode) return;
+        if(inputScope.isEditLocked() || inputScope.isEraseModeOn()) return;
 
         if(event.getButton() == MouseButton.PRIMARY && !dragging) {  // LEFT MOUSE BUTTON
             if(!pressedKeys.contains(KeyCode.SHIFT)){
@@ -298,7 +292,7 @@ public class MouseHandler {
                 painter.repaint();
             }
         }
-        if(!eraseMode){
+        if(!inputScope.isEraseModeOn()){
             if(hoverNode == null){
                 inputScope.setCanvasCursor(Cursor.DEFAULT);
             }else{
@@ -330,7 +324,7 @@ public class MouseHandler {
         }
 
         if(event.getButton() == MouseButton.PRIMARY){
-            if(eraseMode){
+            if(inputScope.isEraseModeOn()){
                 Node node = getNodeFromPoint(mouseDragPt);
                 if (node != null) {
                     synchronized (Graph.LOCK){

@@ -54,6 +54,16 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
         );
         generalParametersHBoxes.add(gravityHBox);
 
+        var stepTimeHBox = new ParameterHBox(
+                "Step time",
+                viewModel.getLayoutScope().stepTimeProperty(),
+                0,
+                7,
+                0,
+                Double.POSITIVE_INFINITY
+        );
+        generalParametersHBoxes.add(stepTimeHBox);
+
 
         // ADAPTIVE COOLING PARAMETERS
 

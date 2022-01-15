@@ -141,6 +141,38 @@ public class PresetCreator {
         return g;
     }
 
+    public static Graph createTriangularGrid(int gridSize, Point2D rect){
+        double width = rect.getX() * 0.85;
+        double height = rect.getY() * 0.85;
+        double a = Math.min(width/gridSize, 2*height/(gridSize*Math.sqrt(3)));
+        double h = Math.sqrt(3)*a/2;
+        Point2D v = new Point2D(-a/2, h);
+        Graph g = new Graph();
+        Point2D start = new Point2D(0,-h*gridSize/2);
+        g.addNode(start);
+        for (int i = 0; i < gridSize; i++) {
+            start = start.add(v);
+            for (int j = 0; j < i+2; j++) {
+                Point2D p = new Point2D(start.getX()+j*a, start.getY());
+                Node n = g.addNode(p);
+                if(j != 0)
+                    g.addEdge(n, g.getNodes().get(g.getNodes().size()-2));
+            }
+        }
+        int index = 0;
+        for (int i = 0; i < gridSize; i++) {
+           index += i;
+            for (int j = 0; j < i+1; j++) {
+                Node n = g.getNodes().get(index+j);
+                g.addEdge(n, g.getNodes().get(index+j+i+1));
+                g.addEdge(n, g.getNodes().get(index+j+i+2));
+            }
+        }
+
+
+        return g;
+    }
+
 
     public static Graph createKingsGraph(int columns, int rows, Point2D center){
         Graph g = createGrid(columns, rows, center);

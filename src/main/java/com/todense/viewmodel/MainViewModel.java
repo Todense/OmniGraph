@@ -31,8 +31,8 @@ import java.text.SimpleDateFormat;
 
 @ScopeProvider(scopes = {AlgorithmScope.class, GraphScope.class,
         BackgroundScope.class, CanvasScope.class,
-        AnimationScope.class, KeysScope.class,
-        AntsScope.class, TaskScope.class, InputScope.class, LayoutScope.class})
+        AnimationScope.class, AntsScope.class, TaskScope.class,
+        InputScope.class, LayoutScope.class})
 public class MainViewModel implements ViewModel {
 
     public final static String TASK_STARTED = "TASK_STARTED";
@@ -65,9 +65,6 @@ public class MainViewModel implements ViewModel {
 
     @Inject
     NotificationCenter notificationCenter;
-
-    @InjectScope
-    KeysScope keysScope;
 
     @InjectScope
     GraphScope graphScope;
@@ -251,10 +248,10 @@ public class MainViewModel implements ViewModel {
 
     public void setKeyInput(Scene scene){
         scene.setOnKeyPressed(keyEvent -> {
-            keysScope.getPressedKeys().add(keyEvent.getCode());
+            inputScope.getPressedKeys().add(keyEvent.getCode());
             keyEvent.consume();
 
-            if(keysScope.getPressedKeys().contains(KeyCode.CONTROL)) {
+            if(inputScope.getPressedKeys().contains(KeyCode.CONTROL)) {
                 if (keyEvent.getCode() == KeyCode.R) {
                     resetGraph();
                 } else if (keyEvent.getCode() == KeyCode.DELETE) {
@@ -275,7 +272,7 @@ public class MainViewModel implements ViewModel {
             }
         });
 
-        scene.setOnKeyReleased(keyEvent -> keysScope.getPressedKeys().remove(keyEvent.getCode()));
+        scene.setOnKeyReleased(keyEvent -> inputScope.getPressedKeys().remove(keyEvent.getCode()));
     }
 
     public void write(String s){
@@ -379,5 +376,9 @@ public class MainViewModel implements ViewModel {
 
     public DoubleProperty rightPanelWidthProperty() {
         return rightPanelWidthProperty;
+    }
+
+    public BooleanProperty eraseModeOnProperty(){
+        return inputScope.eraseModeOnProperty();
     }
 }

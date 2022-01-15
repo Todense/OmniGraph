@@ -114,9 +114,9 @@ public class D3LayoutTask extends LayoutTask {
     @Override
     protected void onIterationEnd() {
         long iterTime = System.currentTimeMillis()-lastIterationStartTime;
-        if(iterTime < 7){
+        if(iterTime < layoutScope.getStepTime()){
             try {
-                super.sleep((int) (7-iterTime));
+                super.sleep((int) (layoutScope.getStepTime()-iterTime));
             } catch (InterruptedException ignored) {
             }
         }

@@ -78,9 +78,9 @@
                         </Menu>
                         <Menu mnemonicParsing="false" text="View">
                            <items>
-                              <MenuItem mnemonicParsing="false" onAction="#fullScreenAction" text="Fullscreen">
+                              <MenuItem fx:id="fullScreenItem" mnemonicParsing="false" onAction="#fullScreenAction" text="Fullscreen">
                                  <graphic>
-                                    <FontIcon iconColor="#d0d0d0" iconLiteral="eli-fullscreen" iconSize="15" />
+                                    <FontIcon fx:id="fullScreenIcon" iconColor="#d0d0d0" iconLiteral="fas-expand-arrows-alt" iconSize="15" />
                                  </graphic>
                               </MenuItem>
                            </items>
@@ -289,16 +289,15 @@
                <children>
                   <SplitPane dividerPositions="0.31411677753141165" prefHeight="160.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
                      <items>
-                        <TextArea fx:id="textArea" editable="false" scrollLeft="10.0" scrollTop="10.0" wrapText="true">
+                        <TextArea fx:id="textArea" editable="false" focusTraversable="false" scrollLeft="10.0" scrollTop="10.0" wrapText="true">
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
                         </TextArea>
-                        <HBox alignment="TOP_RIGHT" fillHeight="false" prefWidth="925.0">
+                        <HBox alignment="TOP_CENTER" fillHeight="false" prefWidth="925.0">
                            <children>
-                              <HBox alignment="CENTER" fillHeight="false" prefHeight="21.0" prefWidth="875.0" style="-fx-border-insets: 1 1 1 1; -fx-border-color: fx-light; -fx-border-width: 0 1 1 1; -fx-border-radius: 2;" HBox.hgrow="ALWAYS">
+                              <HBox alignment="CENTER" fillHeight="false" style="-fx-border-insets: 1 1 1 1; -fx-border-color: fx-light; -fx-border-width: 0 1 1 1; -fx-border-radius: 2;" HBox.hgrow="NEVER">
                                  <children>
-                                    <HBox fillHeight="false" />
                                     <fx:include source="AnimationView.fxml" />
                                     <HBox alignment="TOP_RIGHT" minWidth="-Infinity" spacing="2.0">
                                        <children>
@@ -328,6 +327,14 @@
                                              <HBox.margin>
                                                 <Insets />
                                              </HBox.margin>
+                                          </ToggleButton>
+                                          <ToggleButton fx:id="eraseModeToggleButton" layoutX="126.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0">
+                                             <graphic>
+                                                <FontIcon fx:id="lockIcon1" iconColor="#d0d0d0" iconLiteral="fas-trash-alt" iconSize="16" />
+                                             </graphic>
+                                             <tooltip>
+                                                <Tooltip showDelay="0.1s" text="Erase Mode" />
+                                             </tooltip>
                                           </ToggleButton>
                                        </children>
                                     </HBox>

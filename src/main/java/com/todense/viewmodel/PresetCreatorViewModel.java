@@ -25,6 +25,7 @@ public class PresetCreatorViewModel implements ViewModel {
     private final IntegerProperty gridHeightProperty = new SimpleIntegerProperty();
     private final IntegerProperty cycleSizeProperty = new SimpleIntegerProperty();
     private final IntegerProperty hexGridSizeProperty = new SimpleIntegerProperty();
+    private final IntegerProperty triangularGridSizeProperty = new SimpleIntegerProperty();
     private final IntegerProperty starSizeProperty = new SimpleIntegerProperty();
     private final IntegerProperty bipartiteFirstSetSizeProperty = new SimpleIntegerProperty();
     private final IntegerProperty bipartiteSecondSetSizeProperty = new SimpleIntegerProperty();
@@ -48,6 +49,8 @@ public class PresetCreatorViewModel implements ViewModel {
                 presetGraph = PresetCreator.createGrid(getGridWidth(), getGridHeight(), size); break;
             case HEX:
                 presetGraph = PresetCreator.createHexagonalGrid(getHexGridSize(), size); break;
+            case TRIANGULAR:
+                presetGraph = PresetCreator.createTriangularGrid(getTriangularGridSize(), size); break;
             case KING:
                 presetGraph = PresetCreator.createKingsGraph(getGridWidth(), getGridHeight(), size); break;
             case MAZE:
@@ -133,5 +136,13 @@ public class PresetCreatorViewModel implements ViewModel {
 
     public IntegerProperty hexGridSizeProperty() {
         return hexGridSizeProperty;
+    }
+
+    public int getTriangularGridSize() {
+        return triangularGridSizeProperty.get();
+    }
+
+    public IntegerProperty triangularGridSizeProperty() {
+        return triangularGridSizeProperty;
     }
 }

@@ -9,6 +9,10 @@ public class LayoutScope implements Scope {
 
     private final ObjectProperty<LayoutAlgorithm> layoutAlgorithm = new SimpleObjectProperty<>();
 
+    // General Options
+    private final IntegerProperty stepTimeProperty = new SimpleIntegerProperty(7);
+
+
     // General Parameters
     private final BooleanProperty barnesHutOnProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty gravityOnProperty = new SimpleBooleanProperty(true);
@@ -216,5 +220,13 @@ public class LayoutScope implements Scope {
 
     public DoubleProperty d3OptDistProperty() {
         return d3OptDistProperty;
+    }
+
+    public int getStepTime() {
+        return stepTimeProperty.get();
+    }
+
+    public IntegerProperty stepTimeProperty() {
+        return stepTimeProperty;
     }
 }
