@@ -19,6 +19,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.paint.Color;
+import org.apache.commons.math3.util.Precision;
 
 import javax.inject.Inject;
 
@@ -61,15 +62,20 @@ public class GraphViewModel implements ViewModel {
             GM.setGraph(newGraph);
 
             //auto node size
-            int sampleSize = Math.min(newGraph.getOrder() - 1, 100);
-            Platform.runLater(() -> {
-                if(sampleSize > 0){
-                    double treeLength = GraphAnalyzer.getNearestNeighbourSpanningTreeLength(newGraph, sampleSize);
-                    if(treeLength > 0){
-                        graphScope.nodeSizeProperty().set(0.3 * treeLength / sampleSize);
+            if(graphScope.isNodeAutoSize()) {
+                int sampleSize = Math.min(newGraph.getOrder() - 1, 100);
+                Platform.runLater(() -> {
+                    if (sampleSize > 0) {
+                        double treeLength = GraphAnalyzer.getNearestNeighbourSpanningTreeLength(newGraph, sampleSize);
+                        if (treeLength > 0) {
+                            double newSize = 0.3 * treeLength / sampleSize;
+                            int scale = newSize > 5 ? 1 : 3;
+                            newSize = Precision.round(newSize, scale);
+                            graphScope.nodeSizeProperty().set(newSize);
+                        }
                     }
-                }
-            });
+                });
+            }
             notificationCenter.publish(GraphViewModel.NEW_GRAPH_SET);
 
         });
@@ -167,5 +173,9 @@ public class GraphViewModel implements ViewModel {
 
     public BooleanProperty edgeOpacityDecayOnProperty() {
         return graphScope.edgeOpacityDecayOnProperty();
+    }
+
+    public BooleanProperty nodeAutoSizeProperty() {
+        return graphScope.nodeAutoSizeProperty();
     }
 }

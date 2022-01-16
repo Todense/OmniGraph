@@ -5,19 +5,20 @@ import com.todense.model.NodeLabelMode;
 import com.todense.view.components.ParameterHBox;
 import com.todense.view.components.SwitchableParameterHBox;
 import com.todense.viewmodel.GraphViewModel;
-import de.saxsys.mvvmfx.Context;
 import de.saxsys.mvvmfx.FxmlView;
-import de.saxsys.mvvmfx.InjectContext;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
+import org.kordamp.ikonli.javafx.FontIcon;
 
 public class GraphView implements FxmlView<GraphViewModel> {
 
@@ -41,8 +42,20 @@ public class GraphView implements FxmlView<GraphViewModel> {
                 0.0001,
                 Double.POSITIVE_INFINITY
         );
-        nodeSizeHBox.setPrefWidth(190);
-        nodeSizeHBox.setPrefHeight(25);
+
+        ToggleButton adjustButton = new ToggleButton();
+        Tooltip adjustTooltip = new Tooltip("Adjust new graph node size");
+        FontIcon adjustIcon = new FontIcon("fas-compress-alt");
+        adjustIcon.setIconSize(17);
+        adjustButton.setGraphic(adjustIcon);
+        adjustButton.setTooltip(adjustTooltip);
+        adjustButton.prefHeight(25);
+        adjustButton.prefWidth(30);
+        adjustButton.setSelected(true);
+        nodeSizeHBox.getChildren().add(adjustButton);
+
+        adjustButton.selectedProperty().bindBidirectional(viewModel.nodeAutoSizeProperty());
+
         nodeSizeHBox.setAlignment(Pos.CENTER_LEFT);
         VBox.setMargin(nodeSizeHBox, new Insets(5,0,0,0));
         HBox.setHgrow(nodeSizeHBox, Priority.ALWAYS);

@@ -7,10 +7,8 @@ import com.todense.viewmodel.canvas.DisplayMode;
 import com.todense.viewmodel.graph.GraphManager;
 import de.saxsys.mvvmfx.Scope;
 import javafx.beans.property.*;
-import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
-import java.util.Random;
 import java.util.function.Function;
 
 public class GraphScope implements Scope {
@@ -23,6 +21,7 @@ public class GraphScope implements Scope {
     private final DoubleProperty edgeWidthDecayProperty = new SimpleDoubleProperty(0.06);
     private final DoubleProperty edgeOpacityDecayProperty = new SimpleDoubleProperty(0.06);
     private final BooleanProperty nodeBorderProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty nodeAutoSizeProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty edgeVisibilityProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty edgeWidthDecayOnProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty edgeOpacityDecayOnProperty = new SimpleBooleanProperty(false);
@@ -168,5 +167,13 @@ public class GraphScope implements Scope {
 
     public BooleanProperty edgeOpacityDecayOnProperty() {
         return edgeOpacityDecayOnProperty;
+    }
+
+    public boolean isNodeAutoSize() {
+        return nodeAutoSizeProperty.get();
+    }
+
+    public BooleanProperty nodeAutoSizeProperty() {
+        return nodeAutoSizeProperty;
     }
 }
