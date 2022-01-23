@@ -8,6 +8,7 @@ import com.todense.viewmodel.file.format.mtx.MtxReader;
 import com.todense.viewmodel.file.format.ogr.OgrReader;
 import com.todense.viewmodel.file.format.tsp.TspReader;
 import com.todense.viewmodel.graph.GraphManager;
+import com.todense.viewmodel.graph.GraphOperation;
 import com.todense.viewmodel.layout.LayoutTask;
 import com.todense.viewmodel.layout.task.AutoD3LayoutTask;
 import com.todense.viewmodel.scope.*;
@@ -123,14 +124,8 @@ public class MainViewModel implements ViewModel {
 
         notificationCenter.subscribe(GRAPH_EDIT_REQUEST, (key, payload) -> {
             if(!taskRunningProperty.get()) {
-                Runnable runnable = () -> {
-                    var payload_runnable = (Runnable) payload[0];
-                    payload_runnable.run();
-                    notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
-                };
-                Thread thread = new Thread(runnable);
-                thread.setPriority(Thread.MAX_PRIORITY);
-                thread.start();
+                GraphOperation operation = ((GraphOperation) payload[0]);
+                graphManager.performOperation(operation);
             }
         });
 
@@ -257,9 +252,9 @@ public class MainViewModel implements ViewModel {
                 } else if (keyEvent.getCode() == KeyCode.DELETE) {
                     deleteGraph();
                 } else if (keyEvent.getCode() == KeyCode.P) {
-                    notificationCenter.publish(GRAPH_EDIT_REQUEST, (Runnable)() -> graphManager.createPath());
+                    notificationCenter.publish(GRAPH_EDIT_REQUEST, (GraphOperation)() -> graphManager.createPath());
                 } else if (keyEvent.getCode() == KeyCode.K) {
-                    notificationCenter.publish(GRAPH_EDIT_REQUEST, (Runnable)() -> graphManager.createCompleteGraph());
+                    notificationCenter.publish(GRAPH_EDIT_REQUEST, (GraphOperation)() -> graphManager.createCompleteGraph());
                 } else if(keyEvent.getCode() == KeyCode.L){
                     notificationCenter.publish("LAYOUT");
                 } else if(keyEvent.getCode() == KeyCode.J){
@@ -294,10 +289,8 @@ public class MainViewModel implements ViewModel {
     }
 
     public void resetGraph(){
-        notificationCenter.publish(GRAPH_EDIT_REQUEST, (Runnable)() -> {
-            graphManager.resetGraph();
-            notificationCenter.publish(MainViewModel.RESET);
-        });
+        graphManager.resetGraph();
+        notificationCenter.publish(MainViewModel.RESET);
     }
 
     public void adjustCameraToGraph() {

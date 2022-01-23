@@ -127,7 +127,7 @@ public class AdaptiveCoolingLayoutTask extends LayoutTask {
 			Point2D forceStepSize = force.normalize().multiply(stepSize);
 			Point2D updatedPos = node.getPos().add(forceStepSize);
 			if (!node.isDragged() && !node.isPinned()) {
-				graph.setNodePosition(node, updatedPos, false);
+				graph.setNodePosition(node, updatedPos);
 			}
 		}
 	}

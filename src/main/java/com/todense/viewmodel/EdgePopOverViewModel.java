@@ -1,8 +1,10 @@
 package com.todense.viewmodel;
 
 import com.todense.model.graph.Edge;
+import com.todense.model.graph.Graph;
 import com.todense.util.Util;
 import com.todense.viewmodel.graph.GraphManager;
+import com.todense.viewmodel.graph.GraphOperation;
 import com.todense.viewmodel.scope.GraphScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
@@ -49,16 +51,18 @@ public class EdgePopOverViewModel implements ViewModel {
     }
 
     public void deleteEdges() {
-        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable)() ->{
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (GraphOperation)() ->{
+            var GM = graphScope.getGraphManager();
+            Graph graph = GM.getGraph();
             for (Edge edge : edges) {
-                graphManager.getGraph().removeEdge(edge);
+                graph.removeEdge(edge);
             }
         });
         notificationCenter.publish("HIDE");
     }
 
     public void subdivideEdges(){
-        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable)() ->{
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (GraphOperation)() ->{
             for (Edge edge : edges) {
                 graphManager.subdivideEdge(edge);
             }
@@ -67,7 +71,7 @@ public class EdgePopOverViewModel implements ViewModel {
     }
 
     public void contractEdges() {
-        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable)() ->{
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (GraphOperation)() ->{
             for (Edge edge : edges) {
                 if(graphManager.getGraph().getEdge(edge.getN1(), edge.getN2()) != null){
                     graphManager.contractEdge(edge);

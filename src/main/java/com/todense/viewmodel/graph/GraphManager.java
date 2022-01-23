@@ -5,9 +5,7 @@ import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
 import javafx.geometry.Point2D;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class GraphManager {
 
@@ -15,30 +13,55 @@ public class GraphManager {
 
     private Graph clipboardGraph;
 
+    private boolean queueGraphOperationsOn = false;
+    public Queue<GraphOperation> operationQueue = new LinkedList<>();
+
     public GraphManager(){
         setGraph(new Graph());
     }
 
-    public void resetGraph() {
-        for (Node n : graph.getNodes()) {
-            n.setSelected(false);
-            n.setStatus(0);
+    public void performOperation(GraphOperation operation){
+        if(queueGraphOperationsOn){
+            operationQueue.add(operation);
         }
-        for (Edge e : graph.getEdges()) {
-            e.setMarked(false);
-            e.setVisible(true);
+        else {
+            operation.perform();
+        }
+    }
+
+    public boolean performQueuedOperations(){
+        if(operationQueue.isEmpty())
+            return false;
+
+        synchronized (Graph.LOCK) {
+            while(!operationQueue.isEmpty()){
+                var operation = operationQueue.poll();
+                operation.perform();
+            }
+        }
+        return true;
+    }
+
+    public void resetGraph() {
+        synchronized (Graph.LOCK) {
+            for (Node n : graph.getNodes()) {
+                n.setSelected(false);
+                n.setStatus(0);
+            }
+            for (Edge e : graph.getEdges()) {
+                e.setMarked(false);
+                e.setVisible(true);
+            }
         }
         selectedNodes = new ArrayList<>();
     }
 
     public void createPath(List<Node> nodes){
-        synchronized (Graph.LOCK) {
-            for (int i = 0; i < nodes.size() - 1; i++) {
-                Node n1 = nodes.get(i);
-                Node n2 = nodes.get(i + 1);
-                if (!isEdgeBetween(n1, n2)) {
-                    graph.addEdge(n1, n2);
-                }
+        for (int i = 0; i < nodes.size() - 1; i++) {
+            Node n1 = nodes.get(i);
+            Node n2 = nodes.get(i + 1);
+            if (!isEdgeBetween(n1, n2)) {
+                graph.addEdge(n1, n2);
             }
         }
     }
@@ -48,12 +71,10 @@ public class GraphManager {
     }
 
     public void createCompleteGraph(List<Node> nodes){
-        synchronized (Graph.LOCK) {
-            graph.applyToAllPairOfNodes(nodes, (n, m) -> {
-                if (!isEdgeBetween(n, m))
-                    graph.addEdge(n, m);
-            });
-        }
+        graph.applyToAllPairOfNodes(nodes, (n, m) -> {
+            if (!isEdgeBetween(n, m))
+                graph.addEdge(n, m);
+        });
     }
 
     public void createCompleteGraph(){
@@ -61,14 +82,12 @@ public class GraphManager {
     }
 
     public void createComplementGraph(List<Node> nodes) {
-        synchronized (Graph.LOCK) {
-            graph.applyToAllPairOfNodes(nodes, (n, m) -> {
-                if (!isEdgeBetween(n, m))
-                    graph.addEdge(n, m);
-                else
-                    graph.removeEdge(n, m);
-            });
-        }
+        graph.applyToAllPairOfNodes(nodes, (n, m) -> {
+            if (!isEdgeBetween(n, m))
+                graph.addEdge(n, m);
+            else
+                graph.removeEdge(n, m);
+        });
     }
 
     public void createComplementGraph() {
@@ -87,16 +106,14 @@ public class GraphManager {
     }
 
     public void subdivideEdges(List<Node> nodes) {
-        synchronized (Graph.LOCK) {
-            ArrayList<Node> nodesCopy = new ArrayList<>(nodes);
-            graph.applyToAllConnectedPairOfNodes(nodesCopy, (n, m) -> {
-                Point2D midpoint = n.getPos().midpoint(m.getPos());
-                Node k = graph.addNode(midpoint);
-                graph.removeEdge(n, m);
-                graph.addEdge(n, k);
-                graph.addEdge(m, k);
-            });
-        }
+        ArrayList<Node> nodesCopy = new ArrayList<>(nodes);
+        graph.applyToAllConnectedPairOfNodes(nodesCopy, (n, m) -> {
+            Point2D midpoint = n.getPos().midpoint(m.getPos());
+            Node k = graph.addNode(midpoint);
+            graph.removeEdge(n, m);
+            graph.addEdge(n, k);
+            graph.addEdge(m, k);
+        });
     }
 
     public void subdivideEdges() {
@@ -120,15 +137,20 @@ public class GraphManager {
         Point2D change = center.subtract(subgraphCenter);
         HashMap<Node, Node> isomorphismMap = new HashMap<>();
 
-        synchronized (Graph.LOCK) {
-            for (Node node : clipboardGraph.getNodes()) {
+        for (Node node : clipboardGraph.getNodes()) {
+            GraphOperation operation = () -> {
                 Node newNode = graph.addNode(node.getPos().add(change), node.getColor());
                 isomorphismMap.put(node, newNode);
-            }
+            };
+            performOperation(operation);
+        }
 
-            for (Edge edge : clipboardGraph.getEdges()) {
-                graph.addEdge(isomorphismMap.get(edge.getN1()), isomorphismMap.get(edge.getN2()), edge.getColor());
-            }
+        for (Edge edge : clipboardGraph.getEdges()) {
+            performOperation(() -> graph.addEdge(
+                        isomorphismMap.get(edge.getN1()),
+                        isomorphismMap.get(edge.getN2()), edge.getColor()
+                    )
+            );
         }
     }
 
@@ -185,6 +207,26 @@ public class GraphManager {
         }
     }
 
+    public GraphOperation edgeDeletionOperation(Edge e){
+        return () -> graph.removeEdge(e);
+    }
+
+    public GraphOperation edgeDeletionOperation(Node n, Node m){
+        return () -> graph.removeEdge(n, m);
+    }
+
+    public GraphOperation edgeAdditionOperation(Node n, Node m){
+        return () -> graph.addEdge(n, m);
+    }
+
+    public GraphOperation nodeAdditionOperation(Point2D p){
+        return () -> graph.addNode(p);
+    }
+
+    public GraphOperation nodeDeletionOperation(Node n){
+        return () -> graph.removeNode(n);
+    }
+
     public void setGraph(Graph graph) {
         this.graph = graph;
         this.selectedNodes = new ArrayList<>();
@@ -194,8 +236,7 @@ public class GraphManager {
         return graph;
     }
 
-    public void setClipboardGraph(Graph clipboardGraph) {
-        this.clipboardGraph = clipboardGraph;
+    public void setQueueGraphOperationsOn(boolean queueGraphOperationsOn) {
+        this.queueGraphOperationsOn = queueGraphOperationsOn;
     }
-
 }

@@ -103,9 +103,8 @@ public class D3LayoutTask extends LayoutTask {
         if(dragging){
             layoutScope.setD3OptimalAlpha(0.7);
         }else{
-            if(graph.isTopologyChanged()){
+            if(topologyChanged){
                 layoutScope.setD3Alpha(0.5);
-                graph.setTopologyChanged(false);
             }
             layoutScope.setD3OptimalAlpha(layoutScope.getD3MinAlpha());
         }
@@ -140,7 +139,7 @@ public class D3LayoutTask extends LayoutTask {
                 force = cappedForce;
             }
             Point2D updatedPos = node.getPos().add(force);
-            graph.setNodePosition(node, updatedPos, false);
+            graph.setNodePosition(node, updatedPos);
         }
     }
 

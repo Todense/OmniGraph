@@ -24,6 +24,7 @@ public abstract class LayoutTask extends AlgorithmTask {
     protected Point2D [] prevForces;
     protected HashMap<Node, Integer> prevNodeIdx;
     protected final double gamma = Math.sqrt(9d/4d);
+    protected boolean topologyChanged = false;
     Random rnd = new Random();
 
     private int graphSequenceLength = 0;
@@ -37,6 +38,7 @@ public abstract class LayoutTask extends AlgorithmTask {
 
     @Override
     public void perform() throws InterruptedException {
+        graphManager.setQueueGraphOperationsOn(true);
         if(layoutScope.isMultilevelOn()){
             multilevelLayout(graphManager);
         }else{
@@ -46,7 +48,7 @@ public abstract class LayoutTask extends AlgorithmTask {
 
     @Override
     protected void onFinished() {
-
+        graphManager.setQueueGraphOperationsOn(false);
     }
 
     protected void layout(Graph graph) throws InterruptedException{
@@ -59,18 +61,16 @@ public abstract class LayoutTask extends AlgorithmTask {
             }
 
             iterationCounter++;
-            synchronized (Graph.LOCK) {
-                initForces();
+            initForces();
 
-                if(layoutScope.isBarnesHutOn()){
-                    quadTree = new QuadTree(7, graph);
-                }
-
-                onIterationStart(graph);
-                applyForces(graph);
-                updateGraph(graph);
+            if(layoutScope.isBarnesHutOn()){
+                quadTree = new QuadTree(7, graph);
             }
+            onIterationStart(graph);
+            applyForces(graph);
+            updateGraph(graph);
             onIterationEnd();
+            topologyChanged = graphManager.performQueuedOperations();
         }
         super.repaint();
     }
@@ -172,6 +172,7 @@ public abstract class LayoutTask extends AlgorithmTask {
     private void waitIfNoNodes() throws InterruptedException {
         while (graph.getOrder() == 0){
             super.sleep(100);
+            topologyChanged = graphManager.performQueuedOperations();
         }
     }
 

@@ -12,6 +12,7 @@ public class AutoD3LayoutTask extends D3LayoutTask{
 
     @Override
     public void perform() throws InterruptedException {
+        graphManager.setQueueGraphOperationsOn(true);
         layout(graph);
     }
 

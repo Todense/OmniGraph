@@ -2,6 +2,8 @@ package com.todense.viewmodel;
 
 import com.todense.model.graph.Graph;
 import com.todense.model.graph.Node;
+import com.todense.viewmodel.graph.GraphManager;
+import com.todense.viewmodel.graph.GraphOperation;
 import com.todense.viewmodel.scope.GraphScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
@@ -54,12 +56,12 @@ public class NodePopOverViewModel implements ViewModel {
     }
 
     public void deleteNodes(){
-        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable)() ->{
-            synchronized (Graph.LOCK) {
-                Graph graph =  graphScope.getGraphManager().getGraph();
-                for (Node node : nodes) {
-                    graph.removeNode(node);
-                }
+        GraphManager GM =  graphScope.getGraphManager();
+        Graph graph = GM.getGraph();
+
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (GraphOperation)() ->{
+            for (Node node : nodes) {
+                graph.removeNode(node);
             }
         });
         notificationCenter.publish("HIDE");

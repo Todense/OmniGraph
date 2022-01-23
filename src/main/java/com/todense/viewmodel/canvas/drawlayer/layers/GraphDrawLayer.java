@@ -19,6 +19,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
+import java.util.ConcurrentModificationException;
+
 public class GraphDrawLayer implements DrawLayer {
 
     private final GraphScope graphScope;
@@ -59,15 +61,18 @@ public class GraphDrawLayer implements DrawLayer {
         Graph graph = graphScope.getGraphManager().getGraph();
         DisplayMode displayMode = graphScope.getDisplayMode();
         DisplayRule displayRule = this.getDisplayRule(displayMode);
-        if(graphScope.areEdgesVisibile()){
-            graph.getEdges().stream().filter(e -> e != null && !isEdgePrimary(e) && e.isVisible()).forEach(e ->
-                    drawEdge(e, gc, displayRule));
-            graph.getEdges().stream().filter(e ->  e != null && isEdgePrimary(e) && e.isVisible()).forEach(e ->
-                    drawEdge(e, gc, displayRule));
-        }
 
-        graph.getNodes().forEach(n ->
-                drawNode(n, gc, displayRule));
+        synchronized (Graph.LOCK) {
+            if (graphScope.areEdgesVisibile()) {
+                graph.getEdges().stream().filter(e -> e != null && !isEdgePrimary(e) && e.isVisible()).forEach(e ->
+                        drawEdge(e, gc, displayRule));
+                graph.getEdges().stream().filter(e -> e != null && isEdgePrimary(e) && e.isVisible()).forEach(e ->
+                        drawEdge(e, gc, displayRule));
+            }
+
+            graph.getNodes().forEach(n ->
+                    drawNode(n, gc, displayRule));
+        }
     }
 
     private boolean isEdgePrimary(Edge e){

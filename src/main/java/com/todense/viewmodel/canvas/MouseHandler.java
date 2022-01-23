@@ -19,6 +19,7 @@ import javafx.scene.input.ScrollEvent;
 import org.controlsfx.control.PopOver;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 
 public class MouseHandler {
 
@@ -88,24 +89,19 @@ public class MouseHandler {
         if(event.getButton() == MouseButton.PRIMARY){
             if(inputScope.isEraseModeOn()){
                 if(clickedNode != null){
-                    synchronized (Graph.LOCK){
-                        if(clickedNode.isSelected()){
-                            Graph graph = GM.getGraph();
-                            for(Node n: GM.getSelectedNodes()){
-                               graph.removeNode(n);
-                            }
-                            GM.getSelectedNodes().clear();
+                    if(clickedNode.isSelected()){
+                        for(Node n: GM.getSelectedNodes()){
+                            GM.performOperation(GM.nodeDeletionOperation(n));
                         }
-                        else{
-                            GM.getGraph().removeNode(clickedNode);
-                        }
+                        GM.getSelectedNodes().clear();
+                    }
+                    else{
+                        GM.performOperation(GM.nodeDeletionOperation(clickedNode));
                     }
                     clickedNode = null;
                 }
                 else if(clickedEdge != null){
-                    synchronized (GM.getGraph()){
-                        GM.getGraph().removeEdge(clickedEdge);
-                    }
+                    GM.performOperation(GM.edgeDeletionOperation(clickedEdge));
                     clickedEdge = null;
                 }
             }
@@ -134,10 +130,10 @@ public class MouseHandler {
 
         if(event.getButton() == MouseButton.MIDDLE) {   // MIDDLE MOUSE BUTTON
             if(clickedNode != null){
-                GM.getGraph().removeNode(clickedNode);
+                GM.performOperation(GM.nodeDeletionOperation(clickedNode));
             }
             else if(clickedEdge != null){
-                GM.getGraph().removeEdge(clickedEdge);
+                GM.performOperation(GM.edgeDeletionOperation(clickedEdge));
             }
         }
         painter.repaint();
@@ -155,7 +151,7 @@ public class MouseHandler {
                         GM.addSubgraph(transPt);
                     }
                     else{
-                        GM.getGraph().addNode(camera.inverse(mousePressPt));
+                        GM.performOperation(GM.nodeAdditionOperation(camera.inverse(mousePressPt)));
                     }
 
                 }
@@ -199,9 +195,9 @@ public class MouseHandler {
                         if(n.equals(releaseNode))
                             continue;
                         if (!GM.isEdgeBetween(releaseNode, n)) {
-                            GM.getGraph().addEdge(releaseNode, n);
+                            GM.performOperation(GM.edgeAdditionOperation(releaseNode, n));
                         } else {
-                            GM.getGraph().removeEdge(releaseNode, n);
+                            GM.performOperation(GM.edgeDeletionOperation(releaseNode, n));
                         }
                         n.setHighlighted(false);
                     }
@@ -327,16 +323,12 @@ public class MouseHandler {
             if(inputScope.isEraseModeOn()){
                 Node node = getNodeFromPoint(mouseDragPt);
                 if (node != null) {
-                    synchronized (Graph.LOCK){
-                        GM.getGraph().removeNode(node);
-                    }
+                    GM.performOperation(GM.nodeDeletionOperation(node));
                     painter.repaint();
                 } else {
                     Edge edge = getEdgeFromPoint(mouseDragPt);
                     if (edge != null) {
-                        synchronized (Graph.LOCK){
-                            GM.getGraph().removeEdge(edge);
-                        }
+                        GM.performOperation(GM.edgeDeletionOperation(edge));
                         painter.repaint();
                     }
                 }
@@ -427,22 +419,33 @@ public class MouseHandler {
     private Node getNodeFromPoint(Point2D point){
         double nodeSize = graphScope.getNodeSize();
         Point2D invPoint = camera.inverse(point);
-        for (Node n : GM.getGraph().getNodes()) {
-            if (n.getPos().distance(invPoint) < nodeSize/2) {
-                return n;
+        try {
+            for (Node n : GM.getGraph().getNodes()) {
+                if(n == null)
+                    continue;
+                if (n.getPos().distance(invPoint) < nodeSize/2) {
+                    return n;
+                }
             }
+        } catch (ConcurrentModificationException e) {
+            return null;
         }
         return null;
     }
 
     private Edge getEdgeFromPoint(Point2D pt){
         double threshold = graphScope.getNodeSize() * graphScope.getEdgeWidth();
-        for(Edge edge : GM.getGraph().getEdges()){
-            if(isPointNearEdge(camera.inverse(pt), edge, threshold/2)) {
-                if (distK(camera.inverse(pt), edge.getN1(), edge.getN2()) < threshold) {
-                    return edge;
+
+        try {
+            for(Edge edge : GM.getGraph().getEdges()){
+                if(isPointNearEdge(camera.inverse(pt), edge, threshold/2)) {
+                    if (distK(camera.inverse(pt), edge.getN1(), edge.getN2()) < threshold) {
+                        return edge;
+                    }
                 }
             }
+        } catch (ConcurrentModificationException ignored) {
+            return null;
         }
         return null;
     }
@@ -488,7 +491,7 @@ public class MouseHandler {
     }
 
     public void clearSelection(){
-        synchronized (Graph.LOCK) {
+        synchronized (Graph.LOCK){
             for (Edge edge : selectedEdges) {
                 edge.setSelected(false);
             }
@@ -499,9 +502,9 @@ public class MouseHandler {
             for (Node node : GM.getSelectedNodes()) {
                 node.setSelected(false);
             }
+            GM.getSelectedNodes().clear();
+            selectedEdges.clear();
         }
-        GM.getSelectedNodes().clear();
-        selectedEdges.clear();
     }
 
     private Rectangle2D setSelectRectangle(Point2D mousePt){

@@ -2,6 +2,7 @@ package com.todense.viewmodel;
 
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.graph.GraphManager;
+import com.todense.viewmodel.graph.GraphOperation;
 import com.todense.viewmodel.scope.GraphScope;
 import com.todense.viewmodel.scope.TaskScope;
 import de.saxsys.mvvmfx.InjectScope;
@@ -18,9 +19,6 @@ public class OperationsViewModel implements ViewModel {
     @InjectScope
     GraphScope graphScope;
 
-    @InjectScope
-    TaskScope taskScope;
-
     @Inject
     NotificationCenter notificationCenter;
 
@@ -33,27 +31,27 @@ public class OperationsViewModel implements ViewModel {
     }
 
     public void createPath() {
-        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable) () -> graphManager.createPath(getEditedNodes()));
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (GraphOperation) () -> graphManager.createPath(getEditedNodes()));
     }
 
 
 
     public void createCompleteGraph() {
-        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable) () -> graphManager.createCompleteGraph(getEditedNodes()));
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (GraphOperation) () -> graphManager.createCompleteGraph(getEditedNodes()));
 
     }
 
     public void createComplementGraph() {
-        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable) () -> graphManager.createComplementGraph(getEditedNodes()));
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (GraphOperation) () -> graphManager.createComplementGraph(getEditedNodes()));
 
     }
 
     public void subdivideEdges() {
-        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable) () -> graphManager.subdivideEdges(getEditedNodes()));
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (GraphOperation) () -> graphManager.subdivideEdges(getEditedNodes()));
     }
 
     public void deleteEdges() {
-        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (Runnable) () -> graphManager.deleteEdges(getEditedNodes()));
+        notificationCenter.publish(MainViewModel.GRAPH_EDIT_REQUEST, (GraphOperation) () -> graphManager.deleteEdges(getEditedNodes()));
     }
 
     public boolean isEditSubgraphOn() {
