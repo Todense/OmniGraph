@@ -28,6 +28,8 @@ public class InputScope implements Scope {
 
     private final ObservableSet<KeyCode> pressedKeys = FXCollections.observableSet();
 
+    private final ObjectProperty<Point2D> mousePositionProperty = new SimpleObjectProperty<>(new Point2D(0, 0));
+
     private final BooleanProperty editLockedProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty eraseModeOnProperty = new SimpleBooleanProperty(false);
 
@@ -161,5 +163,13 @@ public class InputScope implements Scope {
 
     public ObservableSet<KeyCode> getPressedKeys() {
         return pressedKeys;
+    }
+
+    public Point2D getMousePosition() {
+        return mousePositionProperty.get();
+    }
+
+    public ObjectProperty<Point2D> mousePositionProperty() {
+        return mousePositionProperty;
     }
 }

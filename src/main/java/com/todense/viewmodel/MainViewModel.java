@@ -48,6 +48,7 @@ public class MainViewModel implements ViewModel {
     private final ObjectProperty<String> textProperty = new SimpleObjectProperty<>("");
     private final ObjectProperty<String> infoTextProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<Color> appColorProperty = new SimpleObjectProperty<>(Color.rgb(55,85,125));
+    private final ObjectProperty<Point2D> mousePositionProperty = new SimpleObjectProperty<>(new Point2D(0,0));
     private final BooleanProperty workingProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty taskRunningProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty manualEditLockProperty = new SimpleBooleanProperty(false);
@@ -81,6 +82,9 @@ public class MainViewModel implements ViewModel {
 
     @InjectScope
     LayoutScope layoutScope;
+
+    @InjectScope
+    AnimationScope animationScope;
 
     private GraphManager graphManager;
 
@@ -155,7 +159,14 @@ public class MainViewModel implements ViewModel {
         });
 
         inputScope.editLockedProperty().bind(editLockedProperty);
+        mousePositionProperty.bind(inputScope.mousePositionProperty());
         canvasScope.borderColorProperty().bind(appColorProperty);
+
+        // unlock graph operations when layout is paused
+        animationScope.pausedProperty().addListener((obs, oldVal, newVal) ->{
+            if(!taskRunningProperty.get())
+                graphManager.setQueueGraphOperationsOn(!newVal);
+        });
 
         appColorProperty.addListener((obs, oldVal, newVel) -> canvasScope.getPainter().repaint());
     }
@@ -263,6 +274,10 @@ public class MainViewModel implements ViewModel {
                     notificationCenter.publish("PRESET");
                 } else if(keyEvent.getCode() == KeyCode.Q){
                     notificationCenter.publish("RANDOM");
+                } else if(keyEvent.getCode() == KeyCode.SPACE){
+                    animationScope.setPaused(!animationScope.isPaused());
+                } else if(keyEvent.getCode() == KeyCode.RIGHT){
+                    animationScope.nextStepProperty().set(true);
                 }
             }
         });
@@ -289,8 +304,12 @@ public class MainViewModel implements ViewModel {
     }
 
     public void resetGraph(){
-        graphManager.resetGraph();
-        notificationCenter.publish(MainViewModel.RESET);
+        if(!taskRunningProperty.get()){
+            graphManager.resetGraph();
+            notificationCenter.publish(MainViewModel.RESET);
+            notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
+        }
+
     }
 
     public void adjustCameraToGraph() {
@@ -351,20 +370,8 @@ public class MainViewModel implements ViewModel {
         return autoLayoutOnProperty;
     }
 
-    public void setAutoLayoutOnProperty(boolean autoLayoutOnProperty) {
-        this.autoLayoutOnProperty.set(autoLayoutOnProperty);
-    }
-
-    public double getLeftPanelWidthProperty() {
-        return leftPanelWidthProperty.get();
-    }
-
     public DoubleProperty leftPanelWidthProperty() {
         return leftPanelWidthProperty;
-    }
-
-    public double getRightPanelWidth() {
-        return rightPanelWidthProperty.get();
     }
 
     public DoubleProperty rightPanelWidthProperty() {
@@ -373,5 +380,9 @@ public class MainViewModel implements ViewModel {
 
     public BooleanProperty eraseModeOnProperty(){
         return inputScope.eraseModeOnProperty();
+    }
+
+    public ObjectProperty<Point2D> mousePositionProperty() {
+        return mousePositionProperty;
     }
 }

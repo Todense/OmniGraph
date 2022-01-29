@@ -1,8 +1,8 @@
 package com.todense.viewmodel.layout;
 
 public enum LayoutAlgorithm {
-    ADAPTIVE_COOLING("Adaptive Cooling Layout"),
-    D3("D3 Layout");
+    D3("D3-Force Layout"),
+    ADAPTIVE_COOLING("Adaptive Cooling Layout");
     private final String name;
 
     LayoutAlgorithm(String name){

@@ -20,7 +20,7 @@ public class BackgroundPopOverViewModel implements ViewModel {
 
     public void pasteSubgraph() {
         graphScope.getGraphManager().addSubgraph(clickPoint);
-        notificationCenter.publish("HIDE");
+        notificationCenter.publish(CanvasViewModel.HIDE_POPOVER);
         notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
     }
 

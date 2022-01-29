@@ -21,8 +21,8 @@ import java.util.ArrayList;
 public class EdgePopOverViewModel implements ViewModel {
 
     public static final String EDGES = "EDGES";
-    private ObjectProperty<Color> edgeColorProperty = new SimpleObjectProperty<>();
-    private StringProperty edgeWeightProperty = new SimpleStringProperty();
+    private ObjectProperty<Color> edgeColorProperty = new SimpleObjectProperty<>(Edge.DEFAULT_COLOR);
+    private final StringProperty edgeWeightProperty = new SimpleStringProperty();
 
     private ArrayList<Edge> edges;
 
@@ -47,6 +47,12 @@ public class EdgePopOverViewModel implements ViewModel {
                 });
                 notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
         });
+
+        Color firstEdgeColor = edges.get(0).getColor();
+        if (edges.stream().allMatch(edge -> edge.getColor().equals(firstEdgeColor))){
+            edgeColorProperty.set(firstEdgeColor);
+        }
+
         publish(EDGES, edges);
     }
 
@@ -58,7 +64,7 @@ public class EdgePopOverViewModel implements ViewModel {
                 graph.removeEdge(edge);
             }
         });
-        notificationCenter.publish("HIDE");
+        notificationCenter.publish(CanvasViewModel.HIDE_POPOVER);
     }
 
     public void subdivideEdges(){
@@ -67,7 +73,7 @@ public class EdgePopOverViewModel implements ViewModel {
                 graphManager.subdivideEdge(edge);
             }
         });
-        notificationCenter.publish("HIDE");
+        notificationCenter.publish(CanvasViewModel.HIDE_POPOVER);
     }
 
     public void contractEdges() {
@@ -78,7 +84,7 @@ public class EdgePopOverViewModel implements ViewModel {
                 }
             }
         });
-        notificationCenter.publish("HIDE");
+        notificationCenter.publish(CanvasViewModel.HIDE_POPOVER);
     }
 
     public ObjectProperty<Color> edgeColorProperty() {

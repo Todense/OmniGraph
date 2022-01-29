@@ -13,22 +13,19 @@ import javafx.scene.transform.Affine;
 
 public class UpperDrawLayer implements DrawLayer {
 
-    private GraphScope graphScope;
-    private InputScope inputScope;
-    private CanvasScope canvasScope;
-    private BackgroundScope backgroundScope;
-    private AlgorithmScope algorithmScope;
-    private AntsScope antsScope;
+    private final GraphScope graphScope;
+    private final InputScope inputScope;
+    private final BackgroundScope backgroundScope;
+    private final AlgorithmScope algorithmScope;
+    private final AntsScope antsScope;
 
     public UpperDrawLayer(GraphScope graphScope,
                           InputScope inputScope,
-                          CanvasScope canvasScope,
                           BackgroundScope backgroundScope,
                           AlgorithmScope algorithmScope,
                           AntsScope antsScope){
         this.graphScope = graphScope;
         this.inputScope = inputScope;
-        this.canvasScope = canvasScope;
         this.backgroundScope = backgroundScope;
         this.algorithmScope = algorithmScope;
         this.antsScope = antsScope;
@@ -70,50 +67,6 @@ public class UpperDrawLayer implements DrawLayer {
             if (algorithmScope.getAlgorithm().isWithGoal() && goalNode != null) {
                 drawMarker(gc, goalNode, lineWidth, triangleSize, 1);
             }
-
-            /*
-            // quad tree debugger
-
-            Graph graph = graphScope.getGraphManager().getGraph();
-
-            if(graph.getNodes().size() < 2) return;
-
-            gc.setStroke(Color.RED);
-            gc.setFill(Color.BLUE);
-
-            double edgeSize = 4 * graphScope.getEdgeWidth() * graphScope.getNodeSize();
-
-            QuadTree quadTree = new QuadTree(9, graph);
-            Stack<Cell> cellStack = new Stack<>();
-            cellStack.add(quadTree.getRoot());
-            while (!cellStack.isEmpty()){
-                Cell cell = cellStack.pop();
-                if(cell == null)
-                    continue;
-                if(cell.getNodes().size() == 0) continue;
-                Point2D centerOfMass = cell.getCenterOfMass();
-                if(cell.getWidth()/centerOfMass.distance(graph.getNodes().get(0).getPos()) < 1.2) {
-                    Point2D center = cell.getCenter();
-                    double w = cell.getWidth();
-                    gc.setStroke(Color.RED);
-                    gc.strokeRect(center.getX() - w/2, center.getY() - w/2, w, w);
-                    gc.fillOval(centerOfMass.getX() - edgeSize/2,
-                            centerOfMass.getY() - edgeSize/2,
-                            edgeSize,
-                            edgeSize
-                    );
-                }else{
-                    if(cell.getChildren()[0] != null)
-                        cellStack.addAll(Arrays.asList(cell.getChildren()));
-                    else{
-                        gc.setStroke(Color.GREEN);
-                        cell.getNodes().forEach(node -> gc.strokeLine(node.getPos().getX(), node.getPos().getY(),
-                                graph.getNodes().get(0).getPos().getX(), graph.getNodes().get(0).getPos().getY()));
-                    }
-                }
-            }
-
-             */
         }
 
         if(graphScope.getDisplayMode() == DisplayMode.ANT_COLONY){
@@ -137,9 +90,6 @@ public class UpperDrawLayer implements DrawLayer {
         if (inputScope.isSelecting()) {
             drawSelectRect(gc);
         }
-
-        //border
-        //drawBorder(gc);
     }
 
 
@@ -171,18 +121,6 @@ public class UpperDrawLayer implements DrawLayer {
         gc.setStroke(rectColor.darker().darker());
         gc.setLineWidth(0.3);
         gc.strokeRect(rect.getMinX(), rect.getMinY(), rect.getWidth(), rect.getHeight());
-    }
-
-    private void drawBorder(GraphicsContext gc){
-        int borderWidth = 3;
-        double width = canvasScope.getCanvasWidth();
-        double height = canvasScope.getCanvasHeight();
-
-        gc.setFill(canvasScope.getBorderColor());
-        gc.fillRect(0,0, borderWidth, height);
-        gc.fillRect(width-borderWidth, 0, borderWidth, height);
-        gc.fillRect(0, 0, width, borderWidth);
-        gc.fillRect(0, height-borderWidth, width, borderWidth);
     }
 
     @Override

@@ -26,347 +26,355 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox alignment="CENTER" prefHeight="617.0" prefWidth="1357.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.MainView">
-   <children>
-      <VBox>
-         <children>
-            <HBox alignment="CENTER" style="-fx-background-color: fx-darker; -fx-border-width: 0 0 1 0; -fx-border-color: fx-light;">
-               <children>
-                  <MenuBar>
-                     <menus>
-                        <Menu mnemonicParsing="false" text="File">
-                           <items>
-                              <MenuItem mnemonicParsing="false" onAction="#openAction" text="Open graph">
-                                 <graphic>
-                                    <FontIcon iconColor="#d0d0d0" iconLiteral="fas-folder-open" iconSize="15" />
-                                 </graphic>
-                              </MenuItem>
-                              <MenuItem mnemonicParsing="false" onAction="#saveAction" text="Save graph">
-                                 <graphic>
-                                    <FontIcon iconColor="#d0d0d0" iconLiteral="fas-save" iconSize="15" />
-                                 </graphic>
-                              </MenuItem>
-                           </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Graph">
-                           <items>
-                              <MenuItem mnemonicParsing="false" onAction="#resetAction" text="Reset">
-                                 <graphic>
-                                    <FontIcon iconColor="#d0d0d0" iconLiteral="icm-loop2" iconSize="15" />
-                                 </graphic>
-                                 <accelerator>
-                                    <KeyCodeCombination alt="UP" code="R" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                                 </accelerator>
-                              </MenuItem>
-                              <MenuItem mnemonicParsing="false" onAction="#deleteAction" text="Delete">
-                                 <graphic>
-                                    <FontIcon iconColor="#d0d0d0" iconLiteral="icm-bin" iconSize="15" />
-                                 </graphic>
-                                 <accelerator>
-                                    <KeyCodeCombination alt="UP" code="DELETE" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                                 </accelerator>
-                              </MenuItem>
-                              <MenuItem mnemonicParsing="false" onAction="#adjustAction" text="Adjust camera to graph">
-                                 <graphic>
-                                    <FontIcon iconColor="#d0d0d0" iconLiteral="fa-crosshairs" iconSize="15" />
-                                 </graphic>
-                                 <accelerator>
-                                    <KeyCodeCombination alt="UP" code="J" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-                                 </accelerator>
-                              </MenuItem>
-                           </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="View">
-                           <items>
-                              <MenuItem fx:id="fullScreenItem" mnemonicParsing="false" onAction="#fullScreenAction" text="Fullscreen">
-                                 <graphic>
-                                    <FontIcon fx:id="fullScreenIcon" iconColor="#d0d0d0" iconLiteral="fas-expand-arrows-alt" iconSize="15" />
-                                 </graphic>
-                              </MenuItem>
-                           </items>
-                        </Menu>
-                        <Menu mnemonicParsing="false" text="Help">
-                           <items>
-                              <MenuItem mnemonicParsing="false" onAction="#helpAction" text="User Guide">
-                                 <graphic>
-                                    <FontIcon iconColor="#d0d0d0" iconLiteral="fa-question" iconSize="15" />
-                                 </graphic>
-                              </MenuItem>
-                           </items>
-                        </Menu>
-                     </menus>
-                  </MenuBar>
-                  <HBox HBox.hgrow="ALWAYS" />
-                  <ColorPicker fx:id="appColorPicker" prefHeight="22.0" prefWidth="31.0" styleClass="app-color-picker">
-                     <HBox.margin>
-                        <Insets right="2.0" />
-                     </HBox.margin>
-                     <tooltip>
-                        <Tooltip text="App Theme" />
-                     </tooltip>
-                  </ColorPicker>
-               </children>
-            </HBox>
-         </children>
-      </VBox>
-      <SplitPane dividerPositions="0.99" orientation="VERTICAL" VBox.vgrow="ALWAYS">
-         <items>
-            <HBox alignment="CENTER">
-               <children>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="50.0" spacing="3.0" style="-fx-background-color: fx-darker;">
-                     <children>
-                        <ToggleButton fx:id="graphAppearanceMenuButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="sidemenu-button">
-                           <graphic>
-                              <FontIcon iconColor="#d0d0d0" iconLiteral="fas-palette" iconSize="20" />
-                           </graphic>
-                           <font>
-                              <Font size="6.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets left="5.0" right="5.0" />
-                           </VBox.margin>
-                        </ToggleButton>
-                        <Separator prefWidth="200.0">
-                           <VBox.margin>
-                              <Insets left="10.0" right="10.0" />
-                           </VBox.margin>
-                        </Separator>
-                        <ToggleButton fx:id="generateGraphMenuButton" layoutX="17.0" layoutY="253.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="sidemenu-button">
-                           <graphic>
-                              <FontIcon iconColor="#d0d0d0" iconLiteral="ci-development" iconSize="23" />
-                           </graphic>
-                           <font>
-                              <Font size="6.0" />
-                           </font>
-                        </ToggleButton>
-                        <Separator layoutX="20.0" layoutY="408.0" prefWidth="200.0">
-                           <VBox.margin>
-                              <Insets left="10.0" right="10.0" />
-                           </VBox.margin>
-                        </Separator>
-                        <ToggleButton fx:id="operationsMenuButton" layoutX="17.0" layoutY="165.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="sidemenu-button">
-                           <graphic>
-                              <FontIcon iconColor="#d0d0d0" iconLiteral="fas-tools" iconSize="20" />
-                           </graphic>
-                           <font>
-                              <Font size="6.0" />
-                           </font>
-                        </ToggleButton>
-                        <Separator layoutX="20.0" layoutY="228.0" prefWidth="200.0">
-                           <VBox.margin>
-                              <Insets left="10.0" right="10.0" />
-                           </VBox.margin>
-                        </Separator>
-                        <ToggleButton fx:id="propertiesMenuButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="sidemenu-button">
-                           <graphic>
-                              <FontIcon iconColor="#d0d0d0" iconLiteral="icm-stats-bars" iconSize="20" />
-                           </graphic>
-                           <VBox.margin>
-                              <Insets left="5.0" right="5.0" />
-                           </VBox.margin>
-                        </ToggleButton>
-                     </children>
-                  </VBox>
-                  <GridPane prefHeight="181.0" prefWidth="790.0" HBox.hgrow="ALWAYS">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                     </columnConstraints>
-                     <rowConstraints>
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                     </rowConstraints>
-                     <children>
-                        <AnchorPane fx:id="mainAnchor" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="0.0" prefWidth="0.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
-                           <children>
-                              <fx:include source="CanvasView.fxml" />
-                              <HBox fx:id="leftContentHBox" alignment="CENTER" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <children>
-                                    <ScrollPane fx:id="leftSideMenuContentScrollPane" fitToWidth="true" minWidth="0.0" HBox.hgrow="ALWAYS">
-                                       <content>
-                                          <VBox fx:id="leftSideMenuContentBox" alignment="TOP_CENTER" minWidth="0.0" spacing="10.0">
-                                             <children>
-                                                <fx:include fx:id="graphAppearanceView" source="GraphView.fxml" />
-                                                <fx:include fx:id="backgroundAppearanceView" source="BackgroundView.fxml" />
-                                                <fx:include fx:id="propertiesView" source="PropertiesView.fxml" />
-                                                <fx:include fx:id="operationsView" source="OperationsView.fxml" />
-                                                <fx:include fx:id="randomGeneratorView" source="RandomGeneratorView.fxml" />
-                                                <fx:include fx:id="presetGeneratorView" source="PresetCreatorView.fxml" />
-                                             </children>
-                                          </VBox>
-                                       </content>
-                                       <padding>
-                                          <Insets right="-1.0" />
-                                       </padding>
-                                    </ScrollPane>
-                                    <Pane fx:id="leftResizeHandle" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="4.0" style="-fx-background-color: fx-darker;" />
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="-1.0" left="-1.0" right="-1.0" top="-1.0" />
-                                 </padding>
-                              </HBox>
-                              <HBox fx:id="rightContentHBox" alignment="CENTER_RIGHT" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <children>
-                                    <Pane fx:id="rightResizeHandle" maxWidth="-Infinity" minWidth="-Infinity" prefWidth="5.0" style="-fx-background-color: fx-darker;" />
-                                    <ScrollPane fx:id="rightSideMenuContentScrollPane" fitToWidth="true" minWidth="0.0" prefHeight="432.0" prefWidth="252.0" HBox.hgrow="ALWAYS">
-                                       <content>
-                                          <VBox fx:id="rightSideMenuContentBox" alignment="TOP_CENTER" minWidth="0.0">
-                                             <children>
-                                                <fx:include fx:id="basicAlgorithmsView" source="AlgorithmView.fxml" />
-                                                <fx:include fx:id="tspView" source="AntsView.fxml" />
-                                                <fx:include fx:id="layoutView" source="LayoutView.fxml" />
-                                             </children>
-                                          </VBox>
-                                       </content>
-                                       <padding>
-                                          <Insets left="-1.0" />
-                                       </padding>
-                                    </ScrollPane>
-                                 </children>
-                                 <padding>
-                                    <Insets bottom="-1.0" left="-1.0" right="-1.0" top="-1.0" />
-                                 </padding>
-                              </HBox>
-                           </children>
-                        </AnchorPane>
-                     </children>
-                  </GridPane>
-                  <VBox alignment="CENTER" prefWidth="50.0" style="-fx-background-color: fx-darker;">
-                     <children>
-                        <ToggleButton fx:id="basicAlgorithmsMenuButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="sidemenu-button">
-                           <graphic>
-                              <FontIcon iconColor="#d0d0d0" iconLiteral="fas-shapes" iconSize="20" />
-                           </graphic>
-                           <font>
-                              <Font size="6.0" />
-                           </font>
-                        </ToggleButton>
-                        <Separator layoutX="20.0" layoutY="248.0" prefWidth="200.0">
-                           <VBox.margin>
-                              <Insets left="10.0" right="10.0" top="5.0" />
-                           </VBox.margin>
-                        </Separator>
-                        <ToggleButton fx:id="tspMenuButton" layoutX="17.0" layoutY="206.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="sidemenu-button">
-                           <font>
-                              <Font size="6.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets bottom="5.0" top="5.0" />
-                           </VBox.margin>
-                           <graphic>
-                              <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="22.0">
-                                 <styleClass>
-                                    <String fx:value="tsp-icon" />
-                                    <String fx:value="custom-icon" />
-                                 </styleClass>
-                              </Pane>
-                           </graphic>
-                        </ToggleButton>
-                        <Separator layoutX="20.0" layoutY="205.0" prefWidth="200.0">
-                           <VBox.margin>
-                              <Insets left="10.0" right="10.0" />
-                           </VBox.margin>
-                        </Separator>
-                        <ToggleButton fx:id="layoutMenuButton" layoutX="17.0" layoutY="166.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" styleClass="sidemenu-button">
-                           <font>
-                              <Font size="6.0" />
-                           </font>
-                           <VBox.margin>
-                              <Insets top="5.0" />
-                           </VBox.margin>
-                           <graphic>
-                              <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="22.0">
-                                 <styleClass>
-                                    <String fx:value="layout-icon" />
-                                    <String fx:value="custom-icon" />
-                                 </styleClass>
-                              </Pane>
-                           </graphic>
-                        </ToggleButton>
-                     </children>
-                  </VBox>
-               </children>
-            </HBox>
-            <HBox alignment="CENTER" spacing="3.0" SplitPane.resizableWithParent="false">
-               <children>
-                  <SplitPane dividerPositions="0.31411677753141165" prefHeight="160.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
-                     <items>
-                        <TextArea fx:id="textArea" editable="false" focusTraversable="false" scrollLeft="10.0" scrollTop="10.0" wrapText="true">
-                           <opaqueInsets>
-                              <Insets />
-                           </opaqueInsets>
-                        </TextArea>
-                        <HBox alignment="TOP_CENTER" fillHeight="false" prefWidth="925.0">
-                           <children>
-                              <HBox alignment="CENTER" fillHeight="false" style="-fx-border-insets: 1 1 1 1; -fx-border-color: fx-light; -fx-border-width: 0 1 1 1; -fx-border-radius: 2;" HBox.hgrow="NEVER">
-                                 <children>
-                                    <fx:include source="AnimationView.fxml" />
-                                    <HBox alignment="TOP_RIGHT" minWidth="-Infinity" spacing="2.0">
-                                       <children>
-                                          <Button fx:id="stopButton" disable="true" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#stopAction" prefHeight="22.0" prefWidth="22.0">
-                                             <font>
-                                                <Font name="Font Awesome 5 Free Regular" size="11.0" />
-                                             </font>
-                                             <graphic>
-                                                <FontIcon iconColor="#e14444" iconLiteral="fas-stop" iconSize="15" selectionStart="0" styleClass="stop-icon" />
-                                             </graphic>
-                                             <tooltip>
-                                                <Tooltip showDelay="0.1s" text="Stop all" />
-                                             </tooltip>
-                                          </Button>
-                                          <ToggleButton fx:id="autoLayoutToggleButton" maxHeight="-Infinity" minHeight="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="90.0" text="Auto Layout">
-                                             <HBox.margin>
-                                                <Insets />
-                                             </HBox.margin>
-                                          </ToggleButton>
-                                          <ToggleButton fx:id="lockToggleButton" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0">
-                                             <graphic>
-                                                <FontIcon fx:id="lockIcon" iconColor="#d0d0d0" iconLiteral="fa-unlock" iconSize="18" />
-                                             </graphic>
-                                             <tooltip>
-                                                <Tooltip showDelay="0.1s" text="Lock graph edit" />
-                                             </tooltip>
-                                             <HBox.margin>
-                                                <Insets />
-                                             </HBox.margin>
-                                          </ToggleButton>
-                                          <ToggleButton fx:id="eraseModeToggleButton" layoutX="126.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0" prefWidth="22.0">
-                                             <graphic>
-                                                <FontIcon fx:id="lockIcon1" iconColor="#d0d0d0" iconLiteral="fas-trash-alt" iconSize="16" />
-                                             </graphic>
-                                             <tooltip>
-                                                <Tooltip showDelay="0.1s" text="Erase Mode" />
-                                             </tooltip>
-                                          </ToggleButton>
-                                       </children>
-                                    </HBox>
-                                 </children>
-                                 <HBox.margin>
-                                    <Insets top="-2.0" />
-                                 </HBox.margin>
-                                 <padding>
-                                    <Insets bottom="3.0" right="3.0" top="3.0" />
-                                 </padding>
-                              </HBox>
-                           </children>
-                           <padding>
-                              <Insets right="50.0" />
-                           </padding>
-                        </HBox>
-                     </items>
-                  </SplitPane>
-               </children>
-            </HBox>
-         </items>
-      </SplitPane>
-      <HBox alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="1357.0" spacing="3.0" style="-fx-background-color: fx-darker; -fx-border-width: 1 0 0 0; -fx-border-color: fx-light;">
-         <children>
-            <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
-            <ProgressIndicator fx:id="progressIndicator" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="15.0" prefWidth="15.0" progress="0.0" visible="false" />
-            <Label fx:id="infoLabel">
-               <HBox.margin>
-                  <Insets bottom="1.0" right="3.0" top="1.0" />
-               </HBox.margin>
-            </Label>
-         </children>
+<VBox alignment="CENTER" prefHeight="617.0" prefWidth="1357.0" xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.MainView">
+   <VBox>
+      <HBox alignment="CENTER"
+            style="-fx-background-color: fx-darker; -fx-border-width: 0 0 1 0; -fx-border-color: fx-light;">
+         <MenuBar>
+            <Menu mnemonicParsing="false" text="File">
+               <MenuItem mnemonicParsing="false" onAction="#openAction" text="Open graph">
+                  <graphic>
+                     <FontIcon iconColor="#d0d0d0" iconLiteral="fas-folder-open" iconSize="15"/>
+                  </graphic>
+               </MenuItem>
+               <MenuItem mnemonicParsing="false" onAction="#saveAction" text="Save graph">
+                  <graphic>
+                     <FontIcon iconColor="#d0d0d0" iconLiteral="fas-save" iconSize="15"/>
+                  </graphic>
+               </MenuItem>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Graph">
+               <MenuItem mnemonicParsing="false" onAction="#resetAction" text="Reset">
+                  <graphic>
+                     <FontIcon iconColor="#d0d0d0" iconLiteral="icm-loop2" iconSize="15"/>
+                  </graphic>
+                  <accelerator>
+                     <KeyCodeCombination alt="UP" code="R" control="DOWN" meta="UP" shift="UP"
+                                         shortcut="UP"/>
+                  </accelerator>
+               </MenuItem>
+               <MenuItem mnemonicParsing="false" onAction="#deleteAction" text="Delete">
+                  <graphic>
+                     <FontIcon iconColor="#d0d0d0" iconLiteral="icm-bin" iconSize="15"/>
+                  </graphic>
+                  <accelerator>
+                     <KeyCodeCombination alt="UP" code="DELETE" control="DOWN" meta="UP" shift="UP"
+                                         shortcut="UP"/>
+                  </accelerator>
+               </MenuItem>
+               <MenuItem mnemonicParsing="false" onAction="#adjustAction" text="Adjust camera to graph">
+                  <graphic>
+                     <FontIcon iconColor="#d0d0d0" iconLiteral="fa-crosshairs" iconSize="15"/>
+                  </graphic>
+                  <accelerator>
+                     <KeyCodeCombination alt="UP" code="J" control="DOWN" meta="UP" shift="UP"
+                                         shortcut="UP"/>
+                  </accelerator>
+               </MenuItem>
+            </Menu>
+            <Menu mnemonicParsing="false" text="View">
+               <MenuItem fx:id="fullScreenItem" mnemonicParsing="false" onAction="#fullScreenAction"
+                         text="Fullscreen">
+                  <graphic>
+                     <FontIcon fx:id="fullScreenIcon" iconColor="#d0d0d0"
+                               iconLiteral="fas-expand-arrows-alt" iconSize="15"/>
+                  </graphic>
+               </MenuItem>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+               <MenuItem mnemonicParsing="false" onAction="#helpAction" text="User Guide">
+                  <graphic>
+                     <FontIcon iconColor="#d0d0d0" iconLiteral="fa-question" iconSize="15"/>
+                  </graphic>
+               </MenuItem>
+            </Menu>
+         </MenuBar>
+         <HBox HBox.hgrow="ALWAYS"/>
+         <ColorPicker fx:id="appColorPicker" prefHeight="22.0" prefWidth="31.0" styleClass="app-color-picker">
+            <HBox.margin>
+               <Insets right="2.0"/>
+            </HBox.margin>
+            <tooltip>
+               <Tooltip text="App Theme"/>
+            </tooltip>
+         </ColorPicker>
       </HBox>
-   </children>
+   </VBox>
+   <SplitPane dividerPositions="0.99" orientation="VERTICAL" VBox.vgrow="ALWAYS">
+      <HBox alignment="CENTER">
+         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="50.0" spacing="3.0"
+               style="-fx-background-color: fx-darker;">
+            <ToggleButton fx:id="graphAppearanceMenuButton" maxHeight="-Infinity" maxWidth="-Infinity"
+                          minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0"
+                          prefWidth="40.0" styleClass="sidemenu-button">
+               <graphic>
+                  <FontIcon iconColor="#d0d0d0" iconLiteral="fas-palette" iconSize="20"/>
+               </graphic>
+               <font>
+                  <Font size="6.0"/>
+               </font>
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0"/>
+               </VBox.margin>
+            </ToggleButton>
+            <Separator prefWidth="200.0">
+               <VBox.margin>
+                  <Insets left="10.0" right="10.0"/>
+               </VBox.margin>
+            </Separator>
+            <ToggleButton fx:id="generateGraphMenuButton" layoutX="17.0" layoutY="253.0" maxHeight="-Infinity"
+                          maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                          mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0"
+                          styleClass="sidemenu-button">
+               <graphic>
+                  <FontIcon iconColor="#d0d0d0" iconLiteral="ci-development" iconSize="23"/>
+               </graphic>
+               <font>
+                  <Font size="6.0"/>
+               </font>
+            </ToggleButton>
+            <Separator layoutX="20.0" layoutY="408.0" prefWidth="200.0">
+               <VBox.margin>
+                  <Insets left="10.0" right="10.0"/>
+               </VBox.margin>
+            </Separator>
+            <ToggleButton fx:id="operationsMenuButton" layoutX="17.0" layoutY="165.0" maxHeight="-Infinity"
+                          maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                          mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0"
+                          styleClass="sidemenu-button">
+               <graphic>
+                  <FontIcon iconColor="#d0d0d0" iconLiteral="fas-tools" iconSize="20"/>
+               </graphic>
+               <font>
+                  <Font size="6.0"/>
+               </font>
+            </ToggleButton>
+            <Separator layoutX="20.0" layoutY="228.0" prefWidth="200.0">
+               <VBox.margin>
+                  <Insets left="10.0" right="10.0"/>
+               </VBox.margin>
+            </Separator>
+            <ToggleButton fx:id="propertiesMenuButton" maxHeight="-Infinity" maxWidth="-Infinity"
+                          minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0"
+                          prefWidth="40.0" styleClass="sidemenu-button">
+               <graphic>
+                  <FontIcon iconColor="#d0d0d0" iconLiteral="icm-stats-bars" iconSize="20"/>
+               </graphic>
+               <VBox.margin>
+                  <Insets left="5.0" right="5.0"/>
+               </VBox.margin>
+            </ToggleButton>
+         </VBox>
+         <GridPane prefHeight="181.0" prefWidth="790.0" HBox.hgrow="ALWAYS">
+            <columnConstraints>
+               <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            </columnConstraints>
+            <rowConstraints>
+               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            </rowConstraints>
+            <AnchorPane fx:id="mainAnchor" maxHeight="1.7976931348623157E308"
+                        maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefHeight="0.0"
+                        prefWidth="0.0" GridPane.hgrow="ALWAYS" GridPane.vgrow="ALWAYS">
+               <fx:include source="CanvasView.fxml"/>
+               <HBox fx:id="leftContentHBox" alignment="CENTER" AnchorPane.bottomAnchor="0.0"
+                     AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <padding>
+                     <Insets bottom="-1.0" left="-1.0" right="-1.0" top="-1.0"/>
+                  </padding>
+                  <ScrollPane fx:id="leftSideMenuContentScrollPane" fitToWidth="true" minWidth="0.0"
+                              HBox.hgrow="ALWAYS">
+                     <padding>
+                        <Insets right="-1.0"/>
+                     </padding>
+                     <VBox fx:id="leftSideMenuContentBox" alignment="TOP_CENTER" minWidth="0.0"
+                           spacing="10.0">
+                        <fx:include fx:id="graphAppearanceView" source="GraphView.fxml"/>
+                        <fx:include fx:id="backgroundAppearanceView" source="BackgroundView.fxml"/>
+                        <fx:include fx:id="propertiesView" source="PropertiesView.fxml"/>
+                        <fx:include fx:id="operationsView" source="OperationsView.fxml"/>
+                        <fx:include fx:id="randomGeneratorView" source="RandomGeneratorView.fxml"/>
+                        <fx:include fx:id="presetGeneratorView" source="PresetCreatorView.fxml"/>
+                     </VBox>
+                  </ScrollPane>
+                  <Pane fx:id="leftResizeHandle" maxWidth="-Infinity" minWidth="-Infinity"
+                        prefWidth="4.0" style="-fx-background-color: fx-darker;"/>
+               </HBox>
+               <HBox fx:id="rightContentHBox" alignment="CENTER_RIGHT" AnchorPane.bottomAnchor="0.0"
+                     AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <padding>
+                     <Insets bottom="-1.0" left="-1.0" right="-1.0" top="-1.0"/>
+                  </padding>
+                  <Pane fx:id="rightResizeHandle" maxWidth="-Infinity" minWidth="-Infinity"
+                        prefWidth="5.0" style="-fx-background-color: fx-darker;"/>
+                  <ScrollPane fx:id="rightSideMenuContentScrollPane" fitToWidth="true" minWidth="0.0"
+                              prefHeight="432.0" prefWidth="252.0" HBox.hgrow="ALWAYS">
+                     <padding>
+                        <Insets left="-1.0"/>
+                     </padding>
+                     <VBox fx:id="rightSideMenuContentBox" alignment="TOP_CENTER" minWidth="0.0">
+                        <fx:include fx:id="basicAlgorithmsView" source="AlgorithmView.fxml"/>
+                        <fx:include fx:id="tspView" source="AntsView.fxml"/>
+                        <fx:include fx:id="layoutView" source="LayoutView.fxml"/>
+                     </VBox>
+                  </ScrollPane>
+               </HBox>
+            </AnchorPane>
+         </GridPane>
+         <VBox alignment="CENTER" prefWidth="50.0" style="-fx-background-color: fx-darker;">
+            <ToggleButton fx:id="basicAlgorithmsMenuButton" maxHeight="-Infinity" maxWidth="-Infinity"
+                          minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="40.0"
+                          prefWidth="40.0" styleClass="sidemenu-button">
+               <graphic>
+                  <FontIcon iconColor="#d0d0d0" iconLiteral="fas-shapes" iconSize="20"/>
+               </graphic>
+               <font>
+                  <Font size="6.0"/>
+               </font>
+            </ToggleButton>
+            <Separator layoutX="20.0" layoutY="248.0" prefWidth="200.0">
+               <VBox.margin>
+                  <Insets left="10.0" right="10.0" top="5.0"/>
+               </VBox.margin>
+            </Separator>
+            <ToggleButton fx:id="tspMenuButton" layoutX="17.0" layoutY="206.0" maxHeight="-Infinity"
+                          maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                          mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0"
+                          styleClass="sidemenu-button">
+               <font>
+                  <Font size="6.0"/>
+               </font>
+               <VBox.margin>
+                  <Insets bottom="5.0" top="5.0"/>
+               </VBox.margin>
+               <graphic>
+                  <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                        prefHeight="25.0" prefWidth="22.0">
+                     <styleClass>
+                        <String fx:value="tsp-icon"/>
+                        <String fx:value="custom-icon"/>
+                     </styleClass>
+                  </Pane>
+               </graphic>
+            </ToggleButton>
+            <Separator layoutX="20.0" layoutY="205.0" prefWidth="200.0">
+               <VBox.margin>
+                  <Insets left="10.0" right="10.0"/>
+               </VBox.margin>
+            </Separator>
+            <ToggleButton fx:id="layoutMenuButton" layoutX="17.0" layoutY="166.0" maxHeight="-Infinity"
+                          maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                          mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0"
+                          styleClass="sidemenu-button">
+               <font>
+                  <Font size="6.0"/>
+               </font>
+               <VBox.margin>
+                  <Insets top="5.0"/>
+               </VBox.margin>
+               <graphic>
+                  <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                        prefHeight="25.0" prefWidth="22.0">
+                     <styleClass>
+                        <String fx:value="layout-icon"/>
+                        <String fx:value="custom-icon"/>
+                     </styleClass>
+                  </Pane>
+               </graphic>
+            </ToggleButton>
+         </VBox>
+      </HBox>
+      <HBox alignment="CENTER" spacing="3.0" SplitPane.resizableWithParent="false">
+         <SplitPane dividerPositions="0.31411677753141165" prefHeight="160.0" prefWidth="200.0"
+                    HBox.hgrow="ALWAYS">
+            <TextArea fx:id="textArea" editable="false" focusTraversable="false" scrollLeft="10.0"
+                      scrollTop="10.0" wrapText="true">
+               <opaqueInsets>
+                  <Insets/>
+               </opaqueInsets>
+            </TextArea>
+            <HBox alignment="TOP_CENTER" fillHeight="false" prefWidth="925.0">
+               <padding>
+                  <Insets right="50.0"/>
+               </padding>
+               <HBox alignment="CENTER" fillHeight="false"
+                     style="-fx-border-insets: 1 1 1 1; -fx-border-color: fx-light; -fx-border-width: 0 1 1 1; -fx-border-radius: 2;"
+                     HBox.hgrow="NEVER">
+                  <HBox.margin>
+                     <Insets top="-2.0"/>
+                  </HBox.margin>
+                  <padding>
+                     <Insets bottom="3.0" right="3.0" top="3.0"/>
+                  </padding>
+                  <fx:include source="AnimationView.fxml"/>
+                  <HBox alignment="TOP_RIGHT" minWidth="-Infinity" spacing="2.0">
+                     <Button fx:id="stopButton" disable="true" minHeight="-Infinity"
+                             minWidth="-Infinity" mnemonicParsing="false" onAction="#stopAction"
+                             prefHeight="22.0" prefWidth="22.0">
+                        <font>
+                           <Font name="Font Awesome 5 Free Regular" size="11.0"/>
+                        </font>
+                        <graphic>
+                           <FontIcon iconColor="#e14444" iconLiteral="fas-stop" iconSize="15"
+                                     selectionStart="0" styleClass="stop-icon"/>
+                        </graphic>
+                        <tooltip>
+                           <Tooltip showDelay="0.1s" text="Stop all"/>
+                        </tooltip>
+                     </Button>
+                     <ToggleButton fx:id="autoLayoutToggleButton" maxHeight="-Infinity"
+                                   minHeight="-Infinity" mnemonicParsing="false" prefHeight="22.0"
+                                   prefWidth="90.0" text="Auto Layout">
+                        <HBox.margin>
+                           <Insets/>
+                        </HBox.margin>
+                     </ToggleButton>
+                     <ToggleButton fx:id="lockToggleButton" maxHeight="-Infinity" maxWidth="-Infinity"
+                                   minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
+                                   prefHeight="22.0" prefWidth="22.0">
+                        <graphic>
+                           <FontIcon fx:id="lockIcon" iconColor="#d0d0d0" iconLiteral="fa-unlock"
+                                     iconSize="18"/>
+                        </graphic>
+                        <tooltip>
+                           <Tooltip showDelay="0.1s" text="Lock graph edit"/>
+                        </tooltip>
+                        <HBox.margin>
+                           <Insets/>
+                        </HBox.margin>
+                     </ToggleButton>
+                     <ToggleButton fx:id="eraseModeToggleButton" layoutX="126.0" layoutY="10.0"
+                                   maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                                   minWidth="-Infinity" mnemonicParsing="false" prefHeight="22.0"
+                                   prefWidth="22.0">
+                        <graphic>
+                           <FontIcon fx:id="lockIcon1" iconColor="#d0d0d0" iconLiteral="fas-trash-alt"
+                                     iconSize="16"/>
+                        </graphic>
+                        <tooltip>
+                           <Tooltip showDelay="0.1s" text="Erase Mode"/>
+                        </tooltip>
+                     </ToggleButton>
+                  </HBox>
+               </HBox>
+            </HBox>
+         </SplitPane>
+      </HBox>
+   </SplitPane>
+   <HBox alignment="CENTER_RIGHT" prefHeight="15.0" prefWidth="1357.0" spacing="3.0"
+         style="-fx-background-color: fx-darker; -fx-border-width: 1 0 0 0; -fx-border-color: fx-light;">
+      <HBox prefHeight="100.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
+         <HBox.margin>
+            <Insets left="5.0"/>
+         </HBox.margin>
+         <Label fx:id="mousePositionLabel"/>
+      </HBox>
+      <ProgressIndicator fx:id="progressIndicator" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                         minWidth="-Infinity" prefHeight="15.0" prefWidth="15.0" progress="0.0" visible="false"/>
+      <Label fx:id="infoLabel">
+         <HBox.margin>
+            <Insets bottom="1.0" right="3.0" top="1.0"/>
+         </HBox.margin>
+      </Label>
+   </HBox>
 </VBox>

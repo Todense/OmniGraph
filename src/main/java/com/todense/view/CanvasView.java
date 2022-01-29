@@ -29,9 +29,6 @@ public class CanvasView implements FxmlView<CanvasViewModel>{
         canvas = new Canvas();
         canvasPane.getChildren().add(canvas);
 
-        // unfocus textfields so that all key shortcuts are accepted
-        canvas.setOnMouseEntered(mouseEvent -> canvas.requestFocus());
-
         canvas.widthProperty().bind(canvasPane.widthProperty());
         canvas.heightProperty().bind(canvasPane.heightProperty());
 

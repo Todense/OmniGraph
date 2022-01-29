@@ -3,7 +3,6 @@ package com.todense.viewmodel;
 import com.todense.viewmodel.canvas.DisplayMode;
 import com.todense.viewmodel.canvas.MouseHandler;
 import com.todense.viewmodel.canvas.Painter;
-import com.todense.viewmodel.canvas.drawlayer.layers.LowerDrawLayer;
 import com.todense.viewmodel.canvas.drawlayer.layers.UpperDrawLayer;
 import com.todense.viewmodel.popover.PopOverManager;
 import com.todense.viewmodel.scope.*;
@@ -14,7 +13,6 @@ import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.canvas.GraphicsContext;
@@ -24,6 +22,7 @@ import javax.inject.Inject;
 public class CanvasViewModel implements ViewModel {
 
     public final static String REPAINT_REQUEST = "REPAINT";
+    public final static String HIDE_POPOVER = "HIDE_POPOVER";
 
     @InjectScope
     GraphScope graphScope;
@@ -62,7 +61,6 @@ public class CanvasViewModel implements ViewModel {
 
         mouseHandler = new MouseHandler(
                 canvasScope.getCamera(),
-                notificationCenter,
                 inputScope,
                 painter,
                 graphScope,
@@ -71,9 +69,6 @@ public class CanvasViewModel implements ViewModel {
 
         canvasScope.setPainter(painter);
 
-        //canvasScope.canvasWidthProperty().addListener((obs, oldVal, newVal) -> painter.repaint());
-        //canvasScope.canvasWidthProperty().addListener((obs, oldVal, newVal) -> System.out.println(canvasScope.canvasWidthProperty().get()));
-        //canvasScope.canvasHeightProperty().addListener((obs, oldVal, newVal) -> painter.repaint());
         inputScope.editLockedProperty().addListener((obs, oldVal, newVal)->{
             if(newVal)
                 canvasCursorProperty().set(Cursor.MOVE);
@@ -82,24 +77,21 @@ public class CanvasViewModel implements ViewModel {
         });
 
         Platform.runLater(() ->{
-            LowerDrawLayer lowerDrawLayer = new LowerDrawLayer(inputScope, graphScope);
             UpperDrawLayer upperDrawLayer = new UpperDrawLayer(
                     graphScope,
                     inputScope,
-                    canvasScope,
                     backgroundScope,
                     algorithmScope,
                     antsScope
             );
-
-            painter.addDrawLayer(lowerDrawLayer);
             painter.addDrawLayer(upperDrawLayer);
             painter.repaint();
         });
 
-        notificationCenter.subscribe("HIDE", (key, payload) -> {
+        notificationCenter.subscribe(CanvasViewModel.HIDE_POPOVER, (key, payload) -> {
             mouseHandler.hidePopOver();
             mouseHandler.clearSelection();
+            painter.repaint();
         });
 
         notificationCenter.subscribe(REPAINT_REQUEST,  (key, payload) -> painter.repaint());

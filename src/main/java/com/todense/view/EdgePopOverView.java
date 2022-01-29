@@ -28,9 +28,7 @@ public class EdgePopOverView implements FxmlView<EdgePopOverViewModel> {
 
             if(edges.size() == 1){
                 Edge edge = edges.get(0);
-                Color pickerColor = edge.getColor() != null ?
-                        edge.getColor() :
-                        viewModel.getGraphScope().getEdgeColor();
+                Color pickerColor = edge.getColor();
                 colorPicker.valueProperty().set(pickerColor);
                 textField.setText(String.valueOf(edge.getWeight()));
             }

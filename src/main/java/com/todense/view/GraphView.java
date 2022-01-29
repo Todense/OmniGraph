@@ -79,13 +79,13 @@ public class GraphView implements FxmlView<GraphViewModel> {
 
         var edgeWidthDecayHBox = new SwitchableParameterHBox("Width decay",
                 viewModel.edgeWidthDecayProperty(), viewModel.edgeWidthDecayOnProperty(),
-                3, 0.1, 0.0, 1.0
+                3, 0.03, 0.0, 1.0
         );
         edgeOptionsVBox.getChildren().add(edgeWidthDecayHBox);
 
         var edgeOpacityDecayHBox = new SwitchableParameterHBox("Opacity decay",
                 viewModel.edgeOpacityDecayProperty(), viewModel.edgeOpacityDecayOnProperty(),
-                3, 0.1, 0.0, 1.0
+                3, 0.03, 0.0, 1.0
         );
         edgeOptionsVBox.getChildren().add(edgeOpacityDecayHBox);
 

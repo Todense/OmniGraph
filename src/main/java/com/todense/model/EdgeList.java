@@ -14,13 +14,13 @@ public class EdgeList extends ArrayList<Edge> {
     public boolean add(Edge edge) {
         edge.getN1().getNeighbours().add(edge.getN2());
         edge.getN2().getNeighbours().add(edge.getN1());
-        edgeMap.put(edge.getID(), edge);
+        edgeMap.put(edge.getId(), edge);
         return super.add(edge);
     }
 
     @Override
     public Edge remove(int index) {
-        edgeMap.remove(this.get(index).getID());
+        edgeMap.remove(this.get(index).getId());
         return super.remove(index);
     }
 
@@ -31,12 +31,12 @@ public class EdgeList extends ArrayList<Edge> {
     @Override
     public boolean remove(Object o) {
         Edge e = (Edge)o;
-        if(e == null || !edgeMap.containsKey(e.getID())){
+        if(e == null || !edgeMap.containsKey(e.getId())){
             return false;
         }
         e.getN1().getNeighbours().remove(e.getN2());
         e.getN2().getNeighbours().remove(e.getN1());
-        edgeMap.remove(e.getID());
+        edgeMap.remove(e.getId());
         return super.remove(o);
     }
 

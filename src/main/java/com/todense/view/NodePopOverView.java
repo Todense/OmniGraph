@@ -43,11 +43,7 @@ public class NodePopOverView implements FxmlView<NodePopOverViewModel> {
                     nodeVBox.getChildren().remove(unpinButton);
                 }
                 nodeLabelTextField.setText(node.getLabelText());
-                if(node.getColor() != null){
-                    editNodeColorPicker.valueProperty().set(node.getColor());
-                }else{
-                    editNodeColorPicker.valueProperty().set(viewModel.getGraphScope().getNodeColor());
-                }
+                editNodeColorPicker.valueProperty().set(node.getColor());
             }else{
                 nodeVBox.getChildren().remove(startNodeButton);
                 nodeVBox.getChildren().remove(goalNodeButton);

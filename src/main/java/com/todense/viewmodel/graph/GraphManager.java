@@ -10,7 +10,6 @@ import java.util.*;
 public class GraphManager {
 
     private Graph graph;
-
     private Graph clipboardGraph;
 
     private boolean queueGraphOperationsOn = false;

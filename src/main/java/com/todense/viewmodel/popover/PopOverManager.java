@@ -22,20 +22,21 @@ public class PopOverManager {
 
     private javafx.scene.Node owner;
     private Context context;
+    private PopOver currentPopOver;
 
-    public PopOver createNodePopOver(Node clickedNode, List<Node> nodes, double x, double y){
+    public void showNodePopOver(Point2D clickPoint, List<Node> nodes, double x, double y){
         final ViewTuple<NodePopOverView, NodePopOverViewModel> viewTuple =
                 FluentViewLoader.fxmlView(NodePopOverView.class).context(context).load();
 
         PopOver popOver = new PopOver(viewTuple.getView());
-        viewTuple.getViewModel().bindToNodes(clickedNode, nodes);
+        viewTuple.getViewModel().bindToNodes(clickPoint, nodes);
         popOver.animatedProperty().set(false);
         popOver.detachableProperty().set(false);
         popOver.show(owner, x, y);
-        return popOver;
+        currentPopOver = popOver;
     }
 
-    public PopOver createEdgePopOver(GraphManager graphManager, ArrayList<Edge> edges, double x, double y) {
+    public void showEdgePopOver(GraphManager graphManager, ArrayList<Edge> edges, double x, double y) {
         final ViewTuple<EdgePopOverView, EdgePopOverViewModel> viewTuple =
                 FluentViewLoader.fxmlView(EdgePopOverView.class).context(context).load();
         PopOver popOver = new PopOver(viewTuple.getView());
@@ -44,10 +45,10 @@ public class PopOverManager {
         popOver.animatedProperty().set(false);
         popOver.detachableProperty().set(false);
         popOver.show(owner, x, y);
-        return popOver;
+        currentPopOver = popOver;
     }
 
-    public PopOver createBackgroundPopOver(double clickX, double clickY, Point2D subgraphCenter){
+    public void showBackgroundPopOver(double clickX, double clickY, Point2D subgraphCenter){
         final ViewTuple<BackgroundPopOverView, BackgroundPopOverViewModel> viewTuple =
                 FluentViewLoader.fxmlView(BackgroundPopOverView.class).context(context).load();
         PopOver popOver = new PopOver(viewTuple.getView());
@@ -55,7 +56,7 @@ public class PopOverManager {
         popOver.animatedProperty().set(false);
         popOver.detachableProperty().set(false);
         popOver.show(owner, clickX, clickY);
-        return popOver;
+        currentPopOver = popOver;
     }
 
     public void setOwner(javafx.scene.Node node){
@@ -64,5 +65,9 @@ public class PopOverManager {
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+    public PopOver getCurrentPopOver() {
+        return currentPopOver;
     }
 }

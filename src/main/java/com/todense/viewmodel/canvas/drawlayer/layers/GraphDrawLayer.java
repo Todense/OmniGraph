@@ -19,8 +19,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 
-import java.util.ConcurrentModificationException;
-
 public class GraphDrawLayer implements DrawLayer {
 
     private final GraphScope graphScope;
@@ -68,6 +66,10 @@ public class GraphDrawLayer implements DrawLayer {
                         drawEdge(e, gc, displayRule));
                 graph.getEdges().stream().filter(e -> e != null && isEdgePrimary(e) && e.isVisible()).forEach(e ->
                         drawEdge(e, gc, displayRule));
+            }
+
+            if(inputScope.isConnecting()){
+                drawDummyEdge(gc, graphScope.getEdgeColor().darker());
             }
 
             graph.getNodes().forEach(n ->
@@ -205,6 +207,20 @@ public class GraphDrawLayer implements DrawLayer {
         gc.setFill(graphScope.getEdgeWeightColor());
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText(weight, midPoint.getX(), midPoint.getY() + fontSize/3);
+    }
+
+    private void drawDummyEdge(GraphicsContext gc, Color dummyColor){
+        gc.setStroke(dummyColor);
+        gc.setFill(dummyColor);
+        gc.setLineWidth(graphScope.getEdgeWidth() * graphScope.getNodeSize());
+
+        double circleSize = graphScope.getNodeSize() * 0.5;
+        Point2D endPoint = inputScope.getDummyEdgeEnd();
+        for(Node node : inputScope.getDummyEdgeStartNodes()){
+            Point2D startPoint = node.getPos();
+            gc.strokeLine(startPoint.getX(), startPoint.getY(), endPoint.getX(), endPoint.getY());
+        }
+        gc.fillOval(endPoint.getX()-circleSize/2, endPoint.getY()-circleSize/2, circleSize,circleSize);
     }
 
 

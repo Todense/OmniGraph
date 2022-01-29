@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 public class Node{
 
+    public static final Color DEFAULT_COLOR = Color.rgb(50,90,170);
+
     private final int ID;
 
     private int index;
@@ -85,7 +87,7 @@ public class Node{
     }
 
     public Color getColor() {
-        return color;
+        return color == null ? DEFAULT_COLOR : color;
     }
 
     public String toString(){

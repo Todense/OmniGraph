@@ -2,6 +2,7 @@ package com.todense.viewmodel.scope;
 
 import com.todense.model.EdgeWeightMode;
 import com.todense.model.NodeLabelMode;
+import com.todense.model.graph.Edge;
 import com.todense.model.graph.Node;
 import com.todense.viewmodel.canvas.DisplayMode;
 import com.todense.viewmodel.graph.GraphManager;
@@ -13,20 +14,17 @@ import java.util.function.Function;
 
 public class GraphScope implements Scope {
 
-    private Color INITIAL_NODE_COLOR = Color.rgb(50,90,170);
-    private Color INITIAL_EDGE_COLOR = Color.rgb(120,160,200);
-
     private final DoubleProperty nodeSizeProperty = new SimpleDoubleProperty(30d);
     private final DoubleProperty edgeWidthProperty = new SimpleDoubleProperty(0.15);
-    private final DoubleProperty edgeWidthDecayProperty = new SimpleDoubleProperty(0.06);
-    private final DoubleProperty edgeOpacityDecayProperty = new SimpleDoubleProperty(0.06);
+    private final DoubleProperty edgeWidthDecayProperty = new SimpleDoubleProperty(0.01);
+    private final DoubleProperty edgeOpacityDecayProperty = new SimpleDoubleProperty(0.01);
     private final BooleanProperty nodeBorderProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty nodeAutoSizeProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty edgeVisibilityProperty = new SimpleBooleanProperty(true);
     private final BooleanProperty edgeWidthDecayOnProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty edgeOpacityDecayOnProperty = new SimpleBooleanProperty(false);
-    private final ObjectProperty<Color> nodeColorProperty = new SimpleObjectProperty<>(INITIAL_NODE_COLOR);
-    private final ObjectProperty<Color> edgeColorProperty = new SimpleObjectProperty<>(INITIAL_EDGE_COLOR);
+    private final ObjectProperty<Color> nodeColorProperty = new SimpleObjectProperty<>(Node.DEFAULT_COLOR);
+    private final ObjectProperty<Color> edgeColorProperty = new SimpleObjectProperty<>(Edge.DEFAULT_COLOR);
     private final ObjectProperty<Color> nodeLabelColorProperty = new SimpleObjectProperty<>(Color.WHITE);
     private final ObjectProperty<Color> edgeWeightColorProperty = new SimpleObjectProperty<>(Color.WHITE);
     private final ObjectProperty<NodeLabelMode> nodeLabelModeProperty = new SimpleObjectProperty<>(NodeLabelMode.NONE);

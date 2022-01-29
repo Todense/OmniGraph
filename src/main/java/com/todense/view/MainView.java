@@ -46,7 +46,7 @@ public class MainView implements FxmlView<MainViewModel> {
     @FXML private AnchorPane mainAnchor;
     @FXML private HBox leftContentHBox, rightContentHBox;
     @FXML private Pane leftResizeHandle, rightResizeHandle;
-    @FXML private Label infoLabel;
+    @FXML private Label infoLabel, mousePositionLabel;
     @FXML private ColorPicker appColorPicker;
     @FXML MenuItem fullScreenItem;
 
@@ -115,6 +115,11 @@ public class MainView implements FxmlView<MainViewModel> {
         //setScrollSpeed(scrollSpeed, antsTabScrollPane);
         //setScrollSpeed(scrollSpeed, createTabScrollPane);
         //setScrollSpeed(scrollSpeed, performTabScrollPane);
+
+        viewModel.mousePositionProperty().addListener((obs, oldVal, newVal) -> {
+                    mousePositionLabel.setText("X: " + String.format("%.3f",newVal.getX()) + " Y: " + String.format("%.3f",newVal.getY()));
+                }
+        );
 
         Platform.runLater(() -> {
             viewModel.setKeyInput(mainStage.getScene());

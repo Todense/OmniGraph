@@ -34,6 +34,10 @@ public class AnimationScope implements Scope {
         return pausedProperty.get();
     }
 
+    public void setPaused(boolean paused){
+        pausedProperty.set(paused);
+    }
+
     public BooleanProperty pausedProperty() {
         return pausedProperty;
     }

@@ -25,8 +25,8 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
     @FXML private ChoiceBox<LayoutAlgorithm> layoutAlgorithmChoiceBox;
     @FXML private ProgressBar alphaBar, stepSizeProgressBar;
 
-    private HashMap<LayoutAlgorithm, List<ParameterHBox>> algorithmParametersBoxes = new HashMap<>();
-    private List<HBox> generalParametersHBoxes = new ArrayList<>();
+    private final HashMap<LayoutAlgorithm, List<ParameterHBox>> algorithmParametersBoxes = new HashMap<>();
+    private List<ParameterHBox> generalParametersHBoxes = new ArrayList<>();
 
     @InjectViewModel
     LayoutViewModel viewModel;
@@ -109,7 +109,7 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
         algorithmParametersBoxes.get(LayoutAlgorithm.ADAPTIVE_COOLING).add(coolingHBox);
 
         var longRepStrHBox = new ParameterHBox(
-                "Long Repulsive Force Str.",
+                "Long range force \ndecay rate",
                 viewModel.getLayoutScope().longRangeForceProperty(),
                 1,
                 2.0,
@@ -180,10 +180,17 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
         );
         algorithmParametersBoxes.get(LayoutAlgorithm.D3).add(d3ToleranceHBox);
 
+        for(var key: algorithmParametersBoxes.keySet()){
+            for(var box: algorithmParametersBoxes.get(key)){
+                box.setLabelWidth(120);
+            }
+        }
+        for(var box: generalParametersHBoxes){
+            box.setLabelWidth(120);
+        }
 
         viewModel.getLayoutScope().layoutAlgorithmProperty().bindBidirectional(layoutAlgorithmChoiceBox.valueProperty());
         layoutAlgorithmChoiceBox.getItems().addAll(LayoutAlgorithm.values());
-        layoutAlgorithmChoiceBox.setValue(LayoutAlgorithm.ADAPTIVE_COOLING);
 
         layoutAlgorithmChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> {
             parametersVBox.getChildren().clear();
@@ -198,17 +205,17 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
 
         });
 
+        layoutAlgorithmChoiceBox.setValue(LayoutAlgorithm.D3);
 
         parametersVBox.getChildren().clear();
         parametersVBox.getChildren().addAll(generalParametersHBoxes);
-        parametersVBox.getChildren().addAll(algorithmParametersBoxes.get(LayoutAlgorithm.ADAPTIVE_COOLING));
+        parametersVBox.getChildren().addAll(algorithmParametersBoxes.get(LayoutAlgorithm.D3));
 
-        //alphaBar.progressProperty().bind(viewModel.getLayoutScope().d3AlphaProperty());
         viewModel.getLayoutScope().d3AlphaProperty().addListener((obs, newVal, oldVal) ->
                 Platform.runLater(() -> alphaBar.progressProperty().set((Double) newVal))
         );
-        alphaProgressBarVBox.setVisible(false);
-        alphaProgressBarVBox.setManaged(false);
+        stepSizeProgressBarVBox.setVisible(false);
+        stepSizeProgressBarVBox.setManaged(false);
 
         stepSizeProgressBar.progressProperty().bind(viewModel.getLayoutScope().stepSizeProperty()
                 .divide(viewModel.getLayoutScope().initialStepSizeProperty()).divide(2)

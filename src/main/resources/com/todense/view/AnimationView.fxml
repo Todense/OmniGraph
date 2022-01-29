@@ -29,7 +29,7 @@
             <FontIcon iconColor="#bfbfbf" iconLiteral="fas-pause" />
          </graphic>
          <tooltip>
-            <Tooltip showDelay="0.1s" text="Pause" />
+            <Tooltip showDelay="0.1s" text="Pause (Ctrl+Space)" />
          </tooltip>
       </ToggleButton>
       <Button minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#nextStepAction" prefHeight="22.0" prefWidth="22.0">
@@ -40,7 +40,7 @@
             <FontIcon iconColor="#bfbfbf" iconLiteral="fas-step-forward" />
          </graphic>
          <tooltip>
-            <Tooltip showDelay="0.1s" text="Next Step" />
+            <Tooltip showDelay="0.1s" text="Next Step (Ctrl+Right)" />
          </tooltip>
          <HBox.margin>
             <Insets right="10.0" />

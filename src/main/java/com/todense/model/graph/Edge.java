@@ -4,10 +4,12 @@ import javafx.scene.paint.Color;
 
 public class Edge {
 
-    private final String ID;
+    public static final Color DEFAULT_COLOR = Color.rgb(120,160,200);
 
-    private Node n1;
-    private Node n2;
+    private final String id;
+
+    private final Node n1;
+    private final Node n2;
 
     private Color color;
 
@@ -26,7 +28,7 @@ public class Edge {
         }
         this.n1 = n1;
         this.n2 = n2;
-        ID = n1.getID() < n2.getID() ?
+        id = n1.getID() < n2.getID() ?
                 n1.getID()+"-"+n2.getID() :
                 n2.getID()+"-"+n1.getID();
     }
@@ -48,7 +50,7 @@ public class Edge {
     }
 
     public Color getColor() {
-        return color;
+        return color == null ? DEFAULT_COLOR : color;
     }
 
     public double calcLength() {
@@ -97,11 +99,11 @@ public class Edge {
     }
 
     public String toString(){
-        return ID;
+        return id;
     }
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return id;
     }
 
     public int getStatus() {

@@ -118,6 +118,8 @@ public class D3LayoutTask extends LayoutTask {
                 super.sleep((int) (layoutScope.getStepTime()-iterTime));
             } catch (InterruptedException ignored) {
             }
+        } else{
+            painter.pauseCheck();
         }
         lastIterationStartTime = System.currentTimeMillis();
     }

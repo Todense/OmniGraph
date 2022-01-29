@@ -12,6 +12,7 @@ import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 
 import javax.inject.Inject;
@@ -21,9 +22,9 @@ public class NodePopOverViewModel implements ViewModel {
 
     public static String NODES = "NODES";
     
-    private ObjectProperty<Color> nodeColorProperty = new SimpleObjectProperty<>(Color.WHITE);
-    private ObjectProperty<String> labelProperty = new SimpleObjectProperty<>("");
-    private DoubleProperty rotationProperty = new SimpleDoubleProperty(0d);
+    private final ObjectProperty<Color> nodeColorProperty = new SimpleObjectProperty<>(Node.DEFAULT_COLOR);
+    private final ObjectProperty<String> labelProperty = new SimpleObjectProperty<>("");
+    private final DoubleProperty rotationProperty = new SimpleDoubleProperty(0d);
     private List<Node> nodes;
 
     @InjectScope
@@ -32,7 +33,7 @@ public class NodePopOverViewModel implements ViewModel {
     @Inject
     NotificationCenter notificationCenter;
 
-    public void bindToNodes(Node clickedNode, List<Node> nodes){
+    public void bindToNodes(Point2D clickPoint, List<Node> nodes){
         this.nodes = nodes;
         this.nodeColorProperty.addListener((obs, oldVal, newVal) -> {
                 nodes.forEach((node -> node.setColor(nodeColorProperty.get())));
@@ -46,10 +47,15 @@ public class NodePopOverViewModel implements ViewModel {
             var GM = graphScope.getGraphManager();
             double angle = Math.toRadians(newVal.doubleValue() - oldVal.doubleValue());
             for(Node n : nodes){
-                GM.rotateNode(n, clickedNode.getPos(), angle);
+                GM.rotateNode(n, clickPoint, angle);
             }
             notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
         });
+
+        Color firstNodeColor = nodes.get(0).getColor();
+        if (nodes.stream().allMatch(node -> node.getColor().equals(firstNodeColor))){
+            nodeColorProperty.set(firstNodeColor);
+        }
 
         //remove buttons if more than one node is selected
         publish(NODES, nodes);
@@ -64,48 +70,48 @@ public class NodePopOverViewModel implements ViewModel {
                 graph.removeNode(node);
             }
         });
-        notificationCenter.publish("HIDE");
+        notificationCenter.publish(CanvasViewModel.HIDE_POPOVER);
     }
 
     public void pinNode() {
         this.nodes.get(0).setPinned(true);
-        notificationCenter.publish("HIDE");
+        notificationCenter.publish(CanvasViewModel.HIDE_POPOVER);
     }
 
     public void unpinNode() {
         this.nodes.get(0).setPinned(false);
-        notificationCenter.publish("HIDE");
+        notificationCenter.publish(CanvasViewModel.HIDE_POPOVER);
     }
 
     public void pinSelectedNodes() {
         for (Node node : nodes) {
             node.setPinned(true);
         }
-        notificationCenter.publish("HIDE");
+        notificationCenter.publish(CanvasViewModel.HIDE_POPOVER);
     }
 
     public void unpinSelectedNodes() {
         for (Node node : nodes) {
             node.setPinned(false);
         }
-        notificationCenter.publish("HIDE");
+        notificationCenter.publish(CanvasViewModel.HIDE_POPOVER);
     }
 
     public void setStartNode() {
         notificationCenter.publish("SET_START", this.nodes.get(0));
-        notificationCenter.publish("HIDE");
+        notificationCenter.publish(CanvasViewModel.HIDE_POPOVER);
         notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
     }
 
     public void setGoalNode() {
         notificationCenter.publish("SET_GOAL", this.nodes.get(0));
-        notificationCenter.publish("HIDE");
+        notificationCenter.publish(CanvasViewModel.HIDE_POPOVER);
         notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
     }
 
     public void copySubgraph(){
         graphScope.getGraphManager().copySelectedSubgraph();
-        notificationCenter.publish("HIDE");
+        notificationCenter.publish(CanvasViewModel.HIDE_POPOVER);
         notificationCenter.publish(MainViewModel.WRITE, "Subgraph copied");
     }
 
@@ -119,10 +125,6 @@ public class NodePopOverViewModel implements ViewModel {
 
     public ObjectProperty<String> labelProperty() {
         return labelProperty;
-    }
-
-    public double getRotationProperty() {
-        return rotationProperty.get();
     }
 
     public DoubleProperty rotationProperty() {
