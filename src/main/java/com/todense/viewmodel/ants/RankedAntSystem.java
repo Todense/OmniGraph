@@ -32,7 +32,7 @@ public class RankedAntSystem extends AntColonyAlgorithmTask {
             for (int j = 0; j < a.getCycle().size(); j++) {
                 int i1 = a.getCycle().get(j);
                 int i2 = a.getCycle().get((j + 1) % graphOrder);
-                if(super.isImportant[i1][i2]) {
+                if(super.isInNeighbourhood[i1][i2]) {
                     addPheromone(i1, i2, (rankNumber - i) / a.getCycleLength());
                 }
             }

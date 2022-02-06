@@ -9,13 +9,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" prefHeight="226.0" prefWidth="294.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.SaveView">
+<VBox alignment="CENTER" prefHeight="226.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.SaveView">
    <Label alignment="CENTER" contentDisplay="RIGHT" layoutX="15.0" layoutY="45.0" prefHeight="2.0" prefWidth="130.0" styleClass="darkLabel" text="File Format" textAlignment="CENTER" textFill="#949494">
       <font>
          <Font size="13.0" />
       </font>
    </Label>
-   <ChoiceBox fx:id="formatChoiceBox" prefHeight="30.0" prefWidth="215.0" />
+   <ChoiceBox fx:id="formatChoiceBox" prefHeight="30.0" prefWidth="200.0" />
    <Label alignment="CENTER" prefHeight="14.0" prefWidth="58.0" styleClass="darkLabel" text="Name">
       <font>
          <Font size="15.0" />
@@ -24,11 +24,10 @@
          <Insets top="10.0" />
       </VBox.margin>
    </Label>
-   <HBox alignment="CENTER" prefHeight="35.0" prefWidth="294.0">
-      <TextField fx:id="nameTextField" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="32.0"
-                 prefWidth="280.0">
+   <HBox alignment="CENTER" prefHeight="30.0" prefWidth="330.0">
+      <TextField fx:id="nameTextField" alignment="CENTER" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="32.0" prefWidth="330.0" HBox.hgrow="ALWAYS">
          <font>
-            <Font size="14.0"/>
+            <Font size="14.0" />
          </font>
       </TextField>
    </HBox>
@@ -40,30 +39,22 @@
          <Insets top="10.0" />
       </VBox.margin>
    </Label>
-   <HBox alignment="CENTER" layoutX="10.0" layoutY="97.0" prefHeight="35.0" prefWidth="294.0" spacing="3.0">
-      <padding>
-         <Insets left="3.0" right="3.0"/>
-      </padding>
-      <TextField fx:id="directoryTextField" alignment="CENTER" editable="false" maxWidth="-Infinity"
-                 minWidth="-Infinity" prefHeight="32.0" prefWidth="220.0"/>
-      <Button mnemonicParsing="false" onAction="#browseAction" prefHeight="32.0" prefWidth="57.0" text="Browse"/>
+   <HBox alignment="CENTER" layoutX="10.0" layoutY="97.0" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="35.0" prefWidth="330.0" spacing="3.0">
+      <TextField fx:id="directoryTextField" alignment="CENTER" editable="false" prefHeight="30.0" HBox.hgrow="ALWAYS" />
+      <Button mnemonicParsing="false" onAction="#browseAction" prefHeight="30.0" prefWidth="72.0" text="Browse" />
    </HBox>
-   <HBox alignment="CENTER" prefHeight="46.0" prefWidth="294.0" spacing="40.0">
+   <HBox alignment="CENTER" prefHeight="46.0" prefWidth="294.0" spacing="20.0">
       <VBox.margin>
-         <Insets/>
+         <Insets top="10.0" />
       </VBox.margin>
-      <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-              mnemonicParsing="false" onAction="#saveAction" prefHeight="30.0" prefWidth="100.0"
-              style="-fx-font-size: 15;" text="Save">
+      <Button defaultButton="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#saveAction" prefHeight="30.0" prefWidth="100.0" style="-fx-font-size: 15;" text="Save">
          <font>
-            <Font size="18.0"/>
+            <Font size="18.0" />
          </font>
       </Button>
-      <Button layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-              minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelAction" prefHeight="30.0" prefWidth="100.0"
-              style="-fx-font-size: 15;" text="Cancel">
+      <Button cancelButton="true" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cancelAction" prefHeight="30.0" prefWidth="100.0" style="-fx-font-size: 15;" text="Cancel">
          <font>
-            <Font size="18.0"/>
+            <Font size="18.0" />
          </font>
       </Button>
    </HBox>

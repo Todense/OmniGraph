@@ -53,7 +53,12 @@ public class GraphViewModel implements ViewModel {
         GM = graphScope.getGraphManager();
 
         Platform.runLater(() -> {
-            GraphDrawLayer graphDrawLayer = new GraphDrawLayer(graphScope, backgroundScope, antsScope, inputScope);
+            GraphDrawLayer graphDrawLayer = new GraphDrawLayer(
+                    graphScope,
+                    backgroundScope,
+                    antsScope,
+                    inputScope
+            );
             canvasScope.getPainter().addDrawLayer(graphDrawLayer);
         });
 

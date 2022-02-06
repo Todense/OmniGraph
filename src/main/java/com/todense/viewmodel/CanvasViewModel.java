@@ -82,8 +82,8 @@ public class CanvasViewModel implements ViewModel {
                     inputScope,
                     backgroundScope,
                     algorithmScope,
-                    antsScope
-            );
+                    antsScope,
+                    animationScope);
             painter.addDrawLayer(upperDrawLayer);
             painter.repaint();
         });

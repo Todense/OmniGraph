@@ -35,10 +35,10 @@ public class AntsScope implements Scope {
     private final BooleanProperty with3OptProperty = new SimpleBooleanProperty(false);
 
     //VISUALS
-    private final BooleanProperty antsAnimationOnProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty antsAnimationOnProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty showPheromonesProperty = new SimpleBooleanProperty(true);
-    private final ObjectProperty<Color> antColorProperty = new SimpleObjectProperty<>(Color.rgb(200,0,0));
-    private final ObjectProperty<Color> cycleColorProperty = new SimpleObjectProperty<>(Color.rgb(210,210,30));
+    private final ObjectProperty<Color> antColorProperty = new SimpleObjectProperty<>(Color.rgb(205,50,50));
+    private final ObjectProperty<Color> cycleColorProperty = new SimpleObjectProperty<>(Color.rgb(230,180,80));
     private final DoubleProperty antSize = new SimpleDoubleProperty(0.25);
     private final ObjectProperty<AntColonyVariant> algorithmProperty = new SimpleObjectProperty<>();
 

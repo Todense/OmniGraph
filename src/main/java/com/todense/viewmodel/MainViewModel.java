@@ -51,6 +51,7 @@ public class MainViewModel implements ViewModel {
     private final ObjectProperty<Point2D> mousePositionProperty = new SimpleObjectProperty<>(new Point2D(0,0));
     private final BooleanProperty workingProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty taskRunningProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty layoutRunningProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty manualEditLockProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty autoEditLockProperty = new SimpleBooleanProperty(false);
     private final BooleanProperty editLockedProperty = new SimpleBooleanProperty(false);
@@ -99,6 +100,7 @@ public class MainViewModel implements ViewModel {
             workingProperty.set(false);
             autoEditLockProperty.set(false);
             taskRunningProperty.set(false);
+            layoutRunningProperty.set(false);
         });
 
         notificationCenter.subscribe(TASK_STARTED, (key, payload) -> {
@@ -130,6 +132,7 @@ public class MainViewModel implements ViewModel {
             if(!taskRunningProperty.get()) {
                 GraphOperation operation = ((GraphOperation) payload[0]);
                 graphManager.performOperation(operation);
+                canvasScope.getPainter().repaint();
             }
         });
 
@@ -160,7 +163,6 @@ public class MainViewModel implements ViewModel {
 
         inputScope.editLockedProperty().bind(editLockedProperty);
         mousePositionProperty.bind(inputScope.mousePositionProperty());
-        canvasScope.borderColorProperty().bind(appColorProperty);
 
         // unlock graph operations when layout is paused
         animationScope.pausedProperty().addListener((obs, oldVal, newVal) ->{
@@ -168,6 +170,7 @@ public class MainViewModel implements ViewModel {
                 graphManager.setQueueGraphOperationsOn(!newVal);
         });
 
+        animationScope.animatedProperty().addListener((obs, oldVal, newVel) -> canvasScope.getPainter().repaint());
         appColorProperty.addListener((obs, oldVal, newVel) -> canvasScope.getPainter().repaint());
     }
 
@@ -178,6 +181,8 @@ public class MainViewModel implements ViewModel {
         workingProperty.set(true);
         if (!(task instanceof LayoutTask)){
             autoEditLockProperty.set(true);
+        } else{
+            layoutRunningProperty.set(true);
         }
 
         autoLayoutOnProperty.set(false);
@@ -196,6 +201,7 @@ public class MainViewModel implements ViewModel {
         workingProperty.set(false);
         autoEditLockProperty.set(false);
         taskRunningProperty.set(false);
+        layoutRunningProperty.set(false);
     }
 
     private void startAutoLayout(){
@@ -203,12 +209,18 @@ public class MainViewModel implements ViewModel {
         autoLayout.setPainter(canvasScope.getPainter());
         Thread thread = new Thread(autoLayout);
         thread.start();
+        layoutRunningProperty.set(true);
     }
 
     private void stopAutoLayout(){
         if (autoLayout != null) {
             autoLayout.cancel();
+            layoutRunningProperty.set(false);
         }
+    }
+
+    public void nextStep() {
+        animationScope.nextStepProperty().setValue(true);
     }
 
     public void openGraph(File file) {
@@ -267,7 +279,7 @@ public class MainViewModel implements ViewModel {
                 } else if (keyEvent.getCode() == KeyCode.K) {
                     notificationCenter.publish(GRAPH_EDIT_REQUEST, (GraphOperation)() -> graphManager.createCompleteGraph());
                 } else if(keyEvent.getCode() == KeyCode.L){
-                    notificationCenter.publish("LAYOUT");
+                    notificationCenter.publish(LayoutViewModel.LAYOUT_START);
                 } else if(keyEvent.getCode() == KeyCode.J){
                     adjustCameraToGraph();
                 }  else if(keyEvent.getCode() == KeyCode.E){
@@ -278,6 +290,8 @@ public class MainViewModel implements ViewModel {
                     animationScope.setPaused(!animationScope.isPaused());
                 } else if(keyEvent.getCode() == KeyCode.RIGHT){
                     animationScope.nextStepProperty().set(true);
+                } else if(keyEvent.getCode() == KeyCode.BACK_SPACE){
+                    stopAll();
                 }
             }
         });
@@ -384,5 +398,29 @@ public class MainViewModel implements ViewModel {
 
     public ObjectProperty<Point2D> mousePositionProperty() {
         return mousePositionProperty;
+    }
+
+    public IntegerProperty stepTimeProperty() {
+        return animationScope.stepTimeProperty();
+    }
+
+    public BooleanProperty animatedProperty() {
+        return animationScope.animatedProperty();
+    }
+
+    public BooleanProperty pausedProperty() {
+        return animationScope.pausedProperty();
+    }
+
+    public BooleanProperty nextStepProperty() {
+        return animationScope.nextStepProperty();
+    }
+
+    public LayoutScope getLayoutScope() {
+        return layoutScope;
+    }
+
+    public BooleanProperty layoutRunningProperty() {
+        return layoutRunningProperty;
     }
 }

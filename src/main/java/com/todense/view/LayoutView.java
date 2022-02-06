@@ -8,10 +8,8 @@ import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ProgressBar;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.controlsfx.control.ToggleSwitch;
 
@@ -53,17 +51,6 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
                 Double.POSITIVE_INFINITY
         );
         generalParametersHBoxes.add(gravityHBox);
-
-        var stepTimeHBox = new ParameterHBox(
-                "Step time",
-                viewModel.getLayoutScope().stepTimeProperty(),
-                0,
-                7,
-                0,
-                Double.POSITIVE_INFINITY
-        );
-        generalParametersHBoxes.add(stepTimeHBox);
-
 
         // ADAPTIVE COOLING PARAMETERS
 

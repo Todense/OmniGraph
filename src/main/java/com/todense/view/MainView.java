@@ -1,5 +1,6 @@
 package com.todense.view;
 
+import com.todense.view.components.ParameterHBox;
 import com.todense.viewmodel.AnalysisViewModel;
 import com.todense.viewmodel.MainViewModel;
 import com.todense.viewmodel.SaveViewModel;
@@ -10,6 +11,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -44,11 +46,17 @@ public class MainView implements FxmlView<MainViewModel> {
             randomGeneratorView, presetGeneratorView, basicAlgorithmsView, tspView, layoutView;
     @FXML private ScrollPane leftSideMenuContentScrollPane, rightSideMenuContentScrollPane;
     @FXML private AnchorPane mainAnchor;
-    @FXML private HBox leftContentHBox, rightContentHBox;
+    @FXML private HBox leftContentHBox, rightContentHBox, layoutMenuHBox;
     @FXML private Pane leftResizeHandle, rightResizeHandle;
     @FXML private Label infoLabel, mousePositionLabel;
     @FXML private ColorPicker appColorPicker;
     @FXML MenuItem fullScreenItem;
+
+    @FXML private HBox animationHBox;
+    @FXML private ToggleButton animationToggleButton;
+    @FXML private ToggleButton pauseButton;
+
+    private String previousDirectory = "";
 
     @InjectViewModel
     MainViewModel viewModel;
@@ -111,10 +119,8 @@ public class MainView implements FxmlView<MainViewModel> {
         eraseModeToggleButton.selectedProperty().bindBidirectional(viewModel.eraseModeOnProperty());
         eraseModeToggleButton.disableProperty().bind(lockToggleButton.selectedProperty());
 
-        double scrollSpeed = 0.005;
-        //setScrollSpeed(scrollSpeed, antsTabScrollPane);
-        //setScrollSpeed(scrollSpeed, createTabScrollPane);
-        //setScrollSpeed(scrollSpeed, performTabScrollPane);
+        setScrollSpeed(0.005, leftSideMenuContentScrollPane);
+        setScrollSpeed(0.005, rightSideMenuContentScrollPane);
 
         viewModel.mousePositionProperty().addListener((obs, oldVal, newVal) -> {
                     mousePositionLabel.setText("X: " + String.format("%.3f",newVal.getX()) + " Y: " + String.format("%.3f",newVal.getY()));
@@ -235,6 +241,33 @@ public class MainView implements FxmlView<MainViewModel> {
         leftResizeHandle.setCursor(Cursor.E_RESIZE);
         rightResizeHandle.setCursor(Cursor.E_RESIZE);
 
+        ParameterHBox layoutStepTimeHBox = new ParameterHBox(
+                "Iteration time (ms)",
+                viewModel.getLayoutScope().stepTimeProperty(),
+                0, 5, 0, Double.POSITIVE_INFINITY
+        );
+        layoutStepTimeHBox.setHorizontal(true);
+        layoutStepTimeHBox.getLabel().alignmentProperty().set(Pos.CENTER_RIGHT);
+        layoutStepTimeHBox.setLabelWidth(130);
+
+        layoutMenuHBox.getChildren().add(layoutStepTimeHBox);
+
+
+        pauseButton.selectedProperty().bindBidirectional(viewModel.pausedProperty());
+        animationHBox.disableProperty().bind(animationToggleButton.selectedProperty().not());
+        animationToggleButton.selectedProperty().bindBidirectional(viewModel.animatedProperty());
+
+        var stepTimeHBox = new ParameterHBox("Step time (ms)", viewModel.stepTimeProperty(),
+                0, 100, 0 , Double.POSITIVE_INFINITY
+        );
+        stepTimeHBox.setHorizontal(true);
+        stepTimeHBox.getLabel().alignmentProperty().set(Pos.CENTER_RIGHT);
+        stepTimeHBox.getTextField().setPrefHeight(22);
+        stepTimeHBox.getTextField().setPrefWidth(70);
+
+        animationHBox.getChildren().add(stepTimeHBox);
+        animationHBox.disableProperty().bind(viewModel.layoutRunningProperty());
+
 
         initSaveStage();
         initAnalysisStage();
@@ -245,17 +278,11 @@ public class MainView implements FxmlView<MainViewModel> {
 
         VBox contentBox = leftSide? leftSideMenuContentBox: rightSideMenuContentBox;
 
-        button.setOnMouseEntered(mouseEvent -> {
-            showSideMenuTooltip(button, tooltip, leftSide);
-        });
+        button.setOnMouseEntered(mouseEvent -> showSideMenuTooltip(button, tooltip, leftSide));
 
-        button.setOnMouseMoved(mouseEvent -> {
-            showSideMenuTooltip(button, tooltip, leftSide);
-        });
+        button.setOnMouseMoved(mouseEvent -> showSideMenuTooltip(button, tooltip, leftSide));
 
-        button.setOnMouseExited(mouseEvent -> {
-            tooltip.hide();
-        });
+        button.setOnMouseExited(mouseEvent -> tooltip.hide());
 
         button.selectedProperty().addListener((obs, oldVal, newVal) -> {
             contentBox.getChildren().forEach((node -> {
@@ -298,6 +325,8 @@ public class MainView implements FxmlView<MainViewModel> {
         final ViewTuple<SaveView, SaveViewModel> saveViewTuple =
                 FluentViewLoader.fxmlView(SaveView.class).context(context).load();
         final Parent root = saveViewTuple.getView();
+        SaveView saveView = saveViewTuple.getCodeBehind();
+        saveView.setInitialDirectory(previousDirectory);
         Scene scene = new Scene(root);
         scene.getStylesheets().add(
                 Objects.requireNonNull(getClass()
@@ -313,6 +342,11 @@ public class MainView implements FxmlView<MainViewModel> {
         saveStage.setIconified(false);
         saveStage.setResizable(false);
         saveStage.initModality(Modality.WINDOW_MODAL);
+
+        Platform.runLater(()->{
+            String appThemeColor = toRGBCode(viewModel.getAppColor());
+            saveStage.getScene().getRoot().setStyle("fx-theme: "+appThemeColor+";");
+        });
     }
 
     private void initAnalysisStage(){
@@ -343,10 +377,13 @@ public class MainView implements FxmlView<MainViewModel> {
                 new FileChooser.ExtensionFilter(
                         "Graph Files", "*.ogr", "*.mtx", "*.tsp", "*.graphml");
         FileChooser fileChooser = new FileChooser();
+        if(!previousDirectory.isEmpty())
+            fileChooser.setInitialDirectory(new File(previousDirectory));
         fileChooser.getExtensionFilters().add(fileExtensions);
         File file = fileChooser.showOpenDialog(mainStage);
         if(file != null){
             viewModel.openGraph(file);
+            previousDirectory = file.getParent();
         }
     }
 
@@ -366,6 +403,11 @@ public class MainView implements FxmlView<MainViewModel> {
     }
 
     @FXML
+    private void nextStepAction() {
+        viewModel.nextStep();
+    }
+
+    @FXML
     private void stopAction(){
         viewModel.stopAll();
     }
@@ -382,7 +424,7 @@ public class MainView implements FxmlView<MainViewModel> {
         textArea.setFont(Font.font ("Verdana", 15));
         textArea.setWrapText(true);
         InputStream is = MainView.class.getResourceAsStream("/manual.txt");
-        Scanner s = new Scanner(is);
+        Scanner s = new Scanner(Objects.requireNonNull(is));
         while(s.hasNextLine()){
             textArea.appendText(s.nextLine()+"\n");
         }

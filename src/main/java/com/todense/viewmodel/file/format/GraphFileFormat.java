@@ -1,6 +1,6 @@
 package com.todense.viewmodel.file.format;
 
-public enum Format {
+public enum GraphFileFormat {
     OGR("OmniGraph Format", "ogr"),
     TSP("TSP format", "tsp"),
     MTX("Matrix market format", "mtx"),
@@ -9,13 +9,13 @@ public enum Format {
     private final String name;
     private final String extension;
 
-    Format(String name, String extension){
+    GraphFileFormat(String name, String extension){
         this.name = name;
         this.extension = extension;
     }
 
     public final String toString(){
-        return name+"(."+extension+")";
+        return name+" (."+extension+")";
     }
 
     public String getExtension(){

@@ -17,7 +17,7 @@ public class Painter {
 
     private boolean timerOn = false;
 
-    private final AnimationTimer animationTimer;
+    private boolean animationRequest = false;
 
     final Object lock = new Object();
 
@@ -36,14 +36,23 @@ public class Painter {
             }
         });
 
-        animationTimer = new AnimationTimer() {
+        AnimationTimer animationTimer = new AnimationTimer() {
             @Override
-            public void handle(long l) {
-                if(animationScope.isAnimated()) {
-                    draw();
+            public void handle(long now) {
+                if (timerOn) {
+                    if (animationScope.isAnimated()) {
+                        draw();
+                    }
+
+                } else {
+                    if (animationRequest) {
+                        draw();
+                        animationRequest = false;
+                    }
                 }
             }
         };
+        animationTimer.start();
     }
 
     private void draw(){
@@ -53,6 +62,7 @@ public class Painter {
     }
 
     public void repaint(){
+        animationRequest = true;
         if(timerOn && isAnimationOn()) return;
         Platform.runLater(this::draw);
     }
@@ -71,12 +81,12 @@ public class Painter {
     }
 
     public synchronized void startAnimationTimer(){
-        animationTimer.start();
+        //animationTimer.start();
         timerOn = true;
     }
 
     public synchronized void stopAnimationTimer(){
-        animationTimer.stop();
+        //animationTimer.stop();
         timerOn = false;
     }
 

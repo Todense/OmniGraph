@@ -18,17 +18,19 @@ public class UpperDrawLayer implements DrawLayer {
     private final BackgroundScope backgroundScope;
     private final AlgorithmScope algorithmScope;
     private final AntsScope antsScope;
+    private final AnimationScope animationScope;
 
     public UpperDrawLayer(GraphScope graphScope,
                           InputScope inputScope,
                           BackgroundScope backgroundScope,
                           AlgorithmScope algorithmScope,
-                          AntsScope antsScope){
+                          AntsScope antsScope, AnimationScope animationScope){
         this.graphScope = graphScope;
         this.inputScope = inputScope;
         this.backgroundScope = backgroundScope;
         this.algorithmScope = algorithmScope;
         this.antsScope = antsScope;
+        this.animationScope = animationScope;
     }
 
 
@@ -69,8 +71,12 @@ public class UpperDrawLayer implements DrawLayer {
             }
         }
 
+        // ants
         if(graphScope.getDisplayMode() == DisplayMode.ANT_COLONY){
-            if (antsScope.isAntsAnimationOn()) {
+            boolean showAnts = animationScope.isAnimated()
+                            && antsScope.isAntsAnimationOn()
+                            && animationScope.getStepTime() > 0;
+            if (showAnts) {
                 gc.setFill(antsScope.getAntColor());
                 double size = antsScope.getAntSize() * graphScope.getNodeSize();
                 for(WalkingAgent agent: algorithmScope.getWalkingAgents()) {

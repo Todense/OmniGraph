@@ -4,7 +4,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.Property;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
@@ -53,7 +52,7 @@ public class ParameterHBox extends HBox {
         }
     };
 
-    private static final Pattern DOUBLE_PATTERN = Pattern.compile("-?\\d+(\\.\\d*)?(E-?\\d+)?");
+    private static final Pattern DOUBLE_PATTERN = Pattern.compile("-?\\d*(\\.\\d*)?(E-?\\d+)?");
     private static final Pattern INT_PATTERN = Pattern.compile("-?\\d+");
 
     private final Pattern pattern;
@@ -105,10 +104,35 @@ public class ParameterHBox extends HBox {
     }
 
     private void setUpMouseControls(int precision){
-        TextFormatter<String> formatter = new TextFormatter<>(change ->
-                pattern.matcher(change.getControlNewText()).matches() ? change : null);
+        TextFormatter<String> formatter = new TextFormatter<>(change -> {
+            String newText = change.getControlNewText();
+            if (newText.isEmpty() || newText.equals(".")) {
+                change.setText(String.valueOf(minVal));
+            }
+            return pattern.matcher(change.getControlNewText()).matches() ? change : null;
+        });
+
 
         textField.setTextFormatter(formatter);
+
+        textField.setOnKeyTyped(keyEvent -> {
+            double oldVal = Double.parseDouble(textField.getText());
+            double newVal = oldVal;
+            if(newVal > maxVal){
+                newVal = maxVal;
+            }else if (newVal < minVal){
+                newVal = minVal;
+            }
+            if(newVal != oldVal){
+                if(isInt){
+                    textField.setText(String.valueOf((int)newVal));
+                }else{
+                    textField.setText(String.valueOf(newVal));
+                }
+
+            }
+        });
+
         label.setOnMousePressed(mouseEvent -> {
                 previousMouseY = mouseEvent.getY();
                 previousMouseX = mouseEvent.getX();
@@ -184,5 +208,9 @@ public class ParameterHBox extends HBox {
 
     public TextField getTextField() {
         return textField;
+    }
+
+    public Label getLabel() {
+        return label;
     }
 }

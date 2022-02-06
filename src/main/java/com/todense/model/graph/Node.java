@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Node{
 
-    public static final Color DEFAULT_COLOR = Color.rgb(50,90,170);
+    public static Color DEFAULT_COLOR = Color.rgb(50,90,170);
 
     private final int ID;
 
@@ -22,7 +22,7 @@ public class Node{
     private boolean dragged = false;
     private int status = 0;
 
-    private ArrayList<Node> neighbours = new ArrayList<>();
+    private final ArrayList<Node> neighbours = new ArrayList<>();
 
     protected Node(Point2D pos, int index, int id) {
         this.pos = pos;

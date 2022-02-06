@@ -3,7 +3,7 @@ package com.todense.viewmodel;
 import com.google.inject.Inject;
 import com.todense.model.graph.Graph;
 import com.todense.viewmodel.file.GraphWriter;
-import com.todense.viewmodel.file.format.Format;
+import com.todense.viewmodel.file.format.GraphFileFormat;
 import com.todense.viewmodel.file.format.graphml.GraphMLWriter;
 import com.todense.viewmodel.file.format.mtx.MtxWriter;
 import com.todense.viewmodel.file.format.ogr.OgrWriter;
@@ -25,12 +25,12 @@ public class SaveViewModel implements ViewModel {
 
     private File initialDirectory;
 
-    public void saveGraph(Format format, String name, File directory) {
+    public void saveGraph(GraphFileFormat graphFileFormat, String name, File directory) {
         Graph graph = graphScope.getGraphManager().getGraph();
         graph.setName(name);
-        File file = new File(directory+File.separator+graph.toString()+"."+format.getExtension());
+        File file = new File(directory+File.separator+graph.toString()+"."+ graphFileFormat.getExtension());
         GraphWriter graphWriter = null;
-        switch (format){
+        switch (graphFileFormat){
             case OGR: graphWriter = new OgrWriter();break;
             case TSP: graphWriter = new TspWriter(); break;
             case MTX: graphWriter = new MtxWriter(); break;

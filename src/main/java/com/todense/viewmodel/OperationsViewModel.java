@@ -4,7 +4,6 @@ import com.todense.model.graph.Node;
 import com.todense.viewmodel.graph.GraphManager;
 import com.todense.viewmodel.graph.GraphOperation;
 import com.todense.viewmodel.scope.GraphScope;
-import com.todense.viewmodel.scope.TaskScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
@@ -22,7 +21,7 @@ public class OperationsViewModel implements ViewModel {
     @Inject
     NotificationCenter notificationCenter;
 
-    private BooleanProperty editSubgraphProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty editSubgraphProperty = new SimpleBooleanProperty(false);
 
     GraphManager graphManager;
 

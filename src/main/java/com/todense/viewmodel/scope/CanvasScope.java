@@ -4,17 +4,13 @@ import com.todense.viewmodel.canvas.Camera;
 import com.todense.viewmodel.canvas.Painter;
 import de.saxsys.mvvmfx.Scope;
 import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Point2D;
-import javafx.scene.paint.Color;
 
 public class CanvasScope implements Scope {
 
     private final DoubleProperty canvasWidthProperty = new SimpleDoubleProperty(0.0);
     private final DoubleProperty canvasHeightProperty = new SimpleDoubleProperty(0.0);
-    private final ObjectProperty<Color> borderColorProperty = new SimpleObjectProperty<>(Color.WHITE);
 
 
     private Painter painter;
@@ -59,13 +55,5 @@ public class CanvasScope implements Scope {
 
     public Camera getCamera() {
         return camera;
-    }
-
-    public Color getBorderColor() {
-        return borderColorProperty.get();
-    }
-
-    public ObjectProperty<Color> borderColorProperty() {
-        return borderColorProperty;
     }
 }

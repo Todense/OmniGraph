@@ -1,7 +1,7 @@
 package com.todense.view;
 
 import com.todense.viewmodel.SaveViewModel;
-import com.todense.viewmodel.file.format.Format;
+import com.todense.viewmodel.file.format.GraphFileFormat;
 import de.saxsys.mvvmfx.FxmlView;
 import de.saxsys.mvvmfx.InjectViewModel;
 import javafx.fxml.FXML;
@@ -15,7 +15,7 @@ import java.io.File;
 public class SaveView implements FxmlView<SaveViewModel> {
 
     @FXML
-    private ChoiceBox<Format> formatChoiceBox;
+    private ChoiceBox<GraphFileFormat> formatChoiceBox;
 
     @FXML
     private TextField nameTextField, directoryTextField;
@@ -25,9 +25,13 @@ public class SaveView implements FxmlView<SaveViewModel> {
 
     public void initialize(){
         nameTextField.setText(viewModel.getGraphName());
-        formatChoiceBox.getItems().addAll(Format.values());
+        formatChoiceBox.getItems().addAll(GraphFileFormat.values());
         formatChoiceBox.setStyle("-fx-font-size: 16px");
-        formatChoiceBox.setValue(Format.OGR);
+        formatChoiceBox.setValue(GraphFileFormat.OGR);
+    }
+
+    public void setInitialDirectory(String directory){
+        directoryTextField.setText(directory);
     }
 
     @FXML

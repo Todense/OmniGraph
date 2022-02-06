@@ -18,7 +18,7 @@
 
 
 .root {
-    fx-theme: #447885;
+    fx-theme: rgb(55,85,125);
     -fx-base: fx-dark;
     -fx-control-inner-background: fx-medium;
     -fx-background-color: fx-dark;

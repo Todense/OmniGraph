@@ -91,10 +91,6 @@ public class AdaptiveCoolingLayoutTask extends LayoutTask {
 	@Override
 	protected void onIterationEnd() {
 		updateStepSize();
-		try {
-			super.sleep(1);
-		} catch (InterruptedException ignored) {
-		}
 	}
 
 	@Override
@@ -105,13 +101,13 @@ public class AdaptiveCoolingLayoutTask extends LayoutTask {
 
 	@Override
 	protected void updateMultiLayoutParameters() {
-		optDist = optDist / gamma;
+		optDist = optDist / GAMMA;
 		layoutScope.setStepSize(layoutScope.getInitialStepSize());
 	}
 
 	@Override
 	protected void initMultilevelParameters() {
-		optDist = layoutScope.getHuOptDist() * Math.pow(gamma, super.getGraphSequenceLength()-1);
+		optDist = layoutScope.getHuOptDist() * Math.pow(GAMMA, super.getGraphSequenceLength()-1);
 	}
 
 	@Override

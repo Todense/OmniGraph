@@ -6,6 +6,7 @@ import com.todense.model.graph.Node;
 import com.todense.viewmodel.algorithm.AlgorithmTask;
 import com.todense.viewmodel.graph.GraphManager;
 import com.todense.viewmodel.layout.barnesHut.Cell;
+import com.todense.viewmodel.layout.barnesHut.IncorrectGraphBoundaryException;
 import com.todense.viewmodel.layout.barnesHut.QuadTree;
 import com.todense.viewmodel.scope.LayoutScope;
 import javafx.geometry.Point2D;
@@ -16,6 +17,8 @@ import java.util.Stack;
 
 public abstract class LayoutTask extends AlgorithmTask {
 
+    protected final double GAMMA = Math.sqrt(9d/4d);  // scales optimum distance between multilevel steps
+
     protected int iterationCounter = 0;
     protected LayoutScope layoutScope;
     protected GraphManager graphManager;
@@ -23,11 +26,12 @@ public abstract class LayoutTask extends AlgorithmTask {
     protected Point2D [] forces;
     protected Point2D [] prevForces;
     protected HashMap<Node, Integer> prevNodeIdx;
-    protected final double gamma = Math.sqrt(9d/4d);
     protected boolean topologyChanged = false;
+    private long lastIterationStartTime;
     Random rnd = new Random();
 
     private int graphSequenceLength = 0;
+    private boolean quadTreeBuild;
 
     public LayoutTask(LayoutScope layoutScope, GraphManager graphManager) {
         super(graphManager.getGraph());
@@ -55,7 +59,7 @@ public abstract class LayoutTask extends AlgorithmTask {
         iterationCounter = 0;
         while(!stopConditionMet()){
             try {
-                waitIfNoNodes();
+                waitForNodes();
             } catch (InterruptedException e){
                 break;
             }
@@ -63,16 +67,40 @@ public abstract class LayoutTask extends AlgorithmTask {
             iterationCounter++;
             initForces();
 
+            quadTreeBuild = true;
             if(layoutScope.isBarnesHutOn()){
-                quadTree = new QuadTree(7, graph);
+                try{
+                    quadTree = new QuadTree(7, graph);
+                } catch (IncorrectGraphBoundaryException e){
+                    quadTreeBuild = false;
+                } finally {
+                    if(!quadTreeBuild){
+
+                    }
+                }
+
             }
             onIterationStart(graph);
             applyForces(graph);
             updateGraph(graph);
             onIterationEnd();
             topologyChanged = graphManager.performQueuedOperations();
+            sleepIfNeeded();
         }
         super.repaint();
+    }
+
+    private void sleepIfNeeded(){
+        long iterationDuration = System.currentTimeMillis()-lastIterationStartTime;
+        if(iterationDuration < layoutScope.getStepTime()){
+            try {
+                super.sleep((int) (layoutScope.getStepTime()-iterationDuration));
+            } catch (InterruptedException ignored) {
+            }
+        } else{
+            painter.pauseCheck();
+        }
+        lastIterationStartTime = System.currentTimeMillis();
     }
 
     void multilevelLayout(GraphManager graphManager){
@@ -91,9 +119,9 @@ public abstract class LayoutTask extends AlgorithmTask {
         }
         graphSequenceLength = graphCoarsener.getGraphSequence().size();
         initMultilevelParameters();
-        optDist = optDist * Math.pow(gamma, graphCoarsener.getGraphSequence().size()-1);
+        optDist = optDist * Math.pow(GAMMA, graphCoarsener.getGraphSequence().size()-1);
         while(graphCoarsener.getGraphSequence().size() > 1){
-            optDist = optDist/gamma;
+            optDist = optDist / GAMMA;
             updateMultiLayoutParameters();
             graphCoarsener.reconstruct();
             try {
@@ -109,7 +137,7 @@ public abstract class LayoutTask extends AlgorithmTask {
 
 
     void applyForces(Graph graph){
-        if(layoutScope.isBarnesHutOn()){
+        if(layoutScope.isBarnesHutOn() && quadTreeBuild){
             if(graph.getOrder() > 1){
                 for (int i = 0; i < graph.getOrder(); i++) {
                     Node n = graph.getNodes().get(i);
@@ -169,7 +197,7 @@ public abstract class LayoutTask extends AlgorithmTask {
         }
     }
 
-    private void waitIfNoNodes() throws InterruptedException {
+    private void waitForNodes() throws InterruptedException {
         while (graph.getOrder() == 0){
             super.sleep(100);
             topologyChanged = graphManager.performQueuedOperations();

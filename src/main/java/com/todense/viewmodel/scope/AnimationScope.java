@@ -8,11 +8,10 @@ import javafx.beans.property.SimpleIntegerProperty;
 
 public class AnimationScope implements Scope {
 
-    private IntegerProperty stepTimeProperty = new SimpleIntegerProperty(100);
-    private BooleanProperty animatedProperty = new SimpleBooleanProperty(true);
-    private BooleanProperty pausedProperty = new SimpleBooleanProperty(false);
-    private BooleanProperty nextStepProperty = new SimpleBooleanProperty(false);
-
+    private final IntegerProperty stepTimeProperty = new SimpleIntegerProperty(100);
+    private final BooleanProperty animatedProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty pausedProperty = new SimpleBooleanProperty(false);
+    private final BooleanProperty nextStepProperty = new SimpleBooleanProperty(false);
     public int getStepTime() {
         return stepTimeProperty.get();
     }

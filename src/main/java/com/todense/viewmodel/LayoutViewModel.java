@@ -21,6 +21,8 @@ import javax.inject.Inject;
 
 public class LayoutViewModel extends AlgorithmTaskManager implements ViewModel {
 
+    public final static String LAYOUT_START = "LAYOUT_START";
+
     @InjectScope
     GraphScope graphScope;
 
@@ -38,7 +40,7 @@ public class LayoutViewModel extends AlgorithmTaskManager implements ViewModel {
 
 
     public void initialize(){
-        notificationCenter.subscribe("LAYOUT", (key, payload) -> startTask());
+        notificationCenter.subscribe(LayoutViewModel.LAYOUT_START, (key, payload) -> startTask());
         super.initialize(taskScope, canvasScope, notificationCenter);
     }
 

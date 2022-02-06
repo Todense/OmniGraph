@@ -31,7 +31,8 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
     final AntsScope antsScope;
     final AlgorithmScope algorithmScope;
 
-    private final DoubleProperty bestSolutionLength = new SimpleDoubleProperty(Double.POSITIVE_INFINITY); //global best cycle length
+    //global best cycle length
+    private final DoubleProperty bestSolutionLength = new SimpleDoubleProperty(Double.POSITIVE_INFINITY);
     
     protected int graphOrder;
     
@@ -40,7 +41,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
     private double explorationRate = 0;
 
     double[][] dist;
-    protected boolean[][] isImportant;
+    protected boolean[][] isInNeighbourhood;
 
     double maxPheromone = 1;
     double minPheromone = 0.00001;
@@ -91,7 +92,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
 
     protected void init(){
         dist = new double[graphOrder][graphOrder];
-        isImportant = new boolean[graphOrder][graphOrder];
+        isInNeighbourhood = new boolean[graphOrder][graphOrder];
 
         for(int i = 0; i < graphOrder; i++){
             Node n1 = graph.getNodes().get(i);
@@ -114,8 +115,8 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
         for (int i = 0; i < this.graphOrder; i++) {
             for (int j = 0; j < this.graphOrder; j++) {
                 if(neighbourhoods.get(i).contains(j)){
-                    isImportant[i][j] = true;
-                    isImportant[j][i] = true;
+                    isInNeighbourhood[i][j] = true;
+                    isInNeighbourhood[j][i] = true;
                 }
             }
         }
@@ -128,7 +129,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
             int i = e.getN1().getIndex();
             int j = e.getN2().getIndex();
             e.setStatus(EDGE_OUTSIDE_CYCLE);
-            e.setVisible(isImportant[i][j]);
+            e.setVisible(isInNeighbourhood[i][j]);
         }
     }
 
@@ -156,7 +157,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
                 double oldLength = Double.POSITIVE_INFINITY;
                 while (oldLength > ant.getCycleLength()) {
                     oldLength = ant.getCycleLength();
-                    localSearcher.threeOpt(ant, graphOrder, dist, isImportant);
+                    localSearcher.threeOpt(ant, graphOrder, dist, isInNeighbourhood);
                 }
             }
         }
@@ -166,7 +167,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
                 double oldLength = Double.POSITIVE_INFINITY;
                 while (oldLength > ant.getCycleLength()) {
                     oldLength = ant.getCycleLength();
-                    localSearcher.twoOpt(ant, graphOrder, dist, isImportant);
+                    localSearcher.twoOpt(ant, graphOrder, dist, isInNeighbourhood);
                 }
             }
         }
@@ -180,7 +181,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
         }
         if(!super.isConnectedToUI())
             return;
-        if(painter.isAnimationOn() && antsScope.isAntsAnimationOn()){
+        if(antsScope.isAntsAnimationOn() && painter.isAnimationOn()){
             ParallelTransition transition = new ParallelTransition();
             for (Ant ant : antsScope.getAnts()) {
                 transition.getChildren().add(antMoveTimeline(ant));
@@ -384,7 +385,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
         }
 
         for (Edge e : graph.getEdges()) {
-            e.setVisible(isImportant[e.getN1().getIndex()][e.getN2().getIndex()] || e.getStatus() == EDGE_ON_CYCLE);
+            e.setVisible(isInNeighbourhood[e.getN1().getIndex()][e.getN2().getIndex()] || e.getStatus() == EDGE_ON_CYCLE);
         }
     }
 

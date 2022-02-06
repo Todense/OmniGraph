@@ -444,11 +444,13 @@ public class MouseHandler {
 
     private Edge getEdgeFromPoint(Point2D pt){
         double threshold = graphScope.getNodeSize() * graphScope.getEdgeWidth();
-
+        Point2D invPt = camera.inverse(pt);
         try {
             for(Edge edge : GM.getGraph().getEdges()){
-                if(isPointNearEdge(camera.inverse(pt), edge, threshold/2)) {
-                    if (distK(camera.inverse(pt), edge.getN1(), edge.getN2()) < threshold) {
+                boolean nearEdge = isPointNearEdge(invPt, edge, threshold/2);
+                if(nearEdge) {
+                    boolean found = distK(invPt, edge.getN1(), edge.getN2()) < threshold;
+                    if (found) {
                         return edge;
                     }
                 }

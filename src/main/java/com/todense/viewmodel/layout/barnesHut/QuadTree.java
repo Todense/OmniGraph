@@ -52,7 +52,14 @@ public class QuadTree {
             if(y < yMin) yMin = y;
             if(y > yMax) yMax = y;
         }
+
         double squareLength = Math.max(xMax-xMin, yMax-yMin);
+
+        if(Double.isInfinite(squareLength)){
+            throw new IncorrectGraphBoundaryException("Infinite boundary width");
+        }else if(squareLength <= 0){
+            throw new IncorrectGraphBoundaryException("Non positive boundary width");
+        }
         return new Rectangle2D(xMin, yMin, squareLength, squareLength);
     }
 
