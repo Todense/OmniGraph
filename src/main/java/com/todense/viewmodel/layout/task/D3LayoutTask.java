@@ -121,12 +121,22 @@ public class D3LayoutTask extends LayoutTask {
             Point2D force = getForce(node);
             double magnitude = force.magnitude();
 
-            if (magnitude > 1.0e3) {
-                Point2D cappedForce = force.multiply(1.0e3 / magnitude);
+            boolean invalidForce = Double.isNaN(force.getX()) ||
+                    Double.isNaN(force.getY()) ||
+                    Double.isInfinite(force.getX()) ||
+                    Double.isInfinite(force.getY());
+
+            if(invalidForce){
+                setForce(node, addNoise(new Point2D(0,0)));
+                return;
+            }
+            else if (magnitude > 1.0e3) {
+                Point2D cappedForce = force.multiply(1.0e3/magnitude);
                 setForce(node, cappedForce);
                 force = cappedForce;
             }
             Point2D updatedPos = node.getPos().add(force);
+
             graph.setNodePosition(node, updatedPos);
         }
     }

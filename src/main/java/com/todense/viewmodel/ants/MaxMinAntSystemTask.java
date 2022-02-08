@@ -25,7 +25,7 @@ public class MaxMinAntSystemTask extends AntColonyAlgorithmTask {
     }
 
     private void updatePheromoneBounds(){
-        super.maxPheromone = (1 / super.antsScope.getEvaporation()) * (1 / super.getBestSolutionLength());
+        super.maxPheromone = (1 / (super.antsScope.getEvaporation()+1e-10)) * (1 / super.getBestSolutionLength());
         super.minPheromone = super.maxPheromone / (2 * super.graphOrder);
     }
 

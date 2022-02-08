@@ -8,6 +8,7 @@ import com.todense.viewmodel.file.format.graphml.GraphMLWriter;
 import com.todense.viewmodel.file.format.mtx.MtxWriter;
 import com.todense.viewmodel.file.format.ogr.OgrWriter;
 import com.todense.viewmodel.file.format.tsp.TspWriter;
+import com.todense.viewmodel.scope.FileScope;
 import com.todense.viewmodel.scope.GraphScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
@@ -20,15 +21,16 @@ public class SaveViewModel implements ViewModel {
     @InjectScope
     GraphScope graphScope;
 
+    @InjectScope
+    FileScope fileScope;
+
     @Inject
     NotificationCenter notificationCenter;
-
-    private File initialDirectory;
 
     public void saveGraph(GraphFileFormat graphFileFormat, String name, File directory) {
         Graph graph = graphScope.getGraphManager().getGraph();
         graph.setName(name);
-        File file = new File(directory+File.separator+graph.toString()+"."+ graphFileFormat.getExtension());
+        File file = new File(directory+File.separator+graph +"."+ graphFileFormat.getExtension());
         GraphWriter graphWriter = null;
         switch (graphFileFormat){
             case OGR: graphWriter = new OgrWriter();break;
@@ -37,19 +39,15 @@ public class SaveViewModel implements ViewModel {
             case GRAPHML: graphWriter = new GraphMLWriter(); break;
         }
         graphWriter.writeGraph(graph, file);
+        fileScope.setInitialDirectory(directory.getAbsolutePath());
         notificationCenter.publish(MainViewModel.WRITE, "Graph saved");
-    }
-
-    public File getInitialDirectory() {
-        return initialDirectory;
-    }
-
-    public void setInitialDirectory(File initialDirectory) {
-        this.initialDirectory = initialDirectory;
     }
 
     public String getGraphName() {
         return graphScope.getGraphManager().getGraph().toString();
     }
 
+    public FileScope getFileScope() {
+        return fileScope;
+    }
 }

@@ -165,12 +165,13 @@ public class ParameterHBox extends HBox {
     private double getNewValue(double delta, double minVal, double maxVal, int precision){
         double oldValue = Double.parseDouble(textField.getText());
         double newValue = oldValue - delta;
+
+        newValue = Precision.round(newValue, precision);
+
         if(newValue > maxVal){
             newValue = maxVal;
         }else if(newValue < minVal){
             newValue = minVal;
-        }else{
-            newValue = Precision.round(newValue, precision);
         }
         return newValue;
     }

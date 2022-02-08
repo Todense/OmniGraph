@@ -56,7 +56,6 @@ public class MainView implements FxmlView<MainViewModel> {
     @FXML private ToggleButton animationToggleButton;
     @FXML private ToggleButton pauseButton;
 
-    private String previousDirectory = "";
 
     @InjectViewModel
     MainViewModel viewModel;
@@ -126,19 +125,6 @@ public class MainView implements FxmlView<MainViewModel> {
                     mousePositionLabel.setText("X: " + String.format("%.3f",newVal.getX()) + " Y: " + String.format("%.3f",newVal.getY()));
                 }
         );
-
-        Platform.runLater(() -> {
-            viewModel.setKeyInput(mainStage.getScene());
-            saveStage.initOwner(mainStage.getOwner());
-
-            appColorPicker.valueProperty().addListener((obs, oldVal, newVal)->{
-                String colorText = toRGBCode(newVal);
-                mainStage.getScene().getRoot().setStyle("fx-theme: "+colorText+";");
-            });
-            appColorPicker.valueProperty().bindBidirectional(viewModel.appColorProperty());
-
-        });
-
 
         setUpSideMenuButton(graphAppearanceMenuButton, "Appearance", true, graphAppearanceView, backgroundAppearanceView);
         setUpSideMenuButton(operationsMenuButton, "Graph Operations", true, operationsView);
@@ -268,9 +254,18 @@ public class MainView implements FxmlView<MainViewModel> {
         animationHBox.getChildren().add(stepTimeHBox);
         animationHBox.disableProperty().bind(viewModel.layoutRunningProperty());
 
-
-        initSaveStage();
         initAnalysisStage();
+
+        Platform.runLater(() -> {
+            viewModel.setKeyInput(mainStage.getScene());
+
+            appColorPicker.valueProperty().addListener((obs, oldVal, newVal)->{
+                String colorText = toRGBCode(newVal);
+                mainStage.getScene().getRoot().setStyle("fx-theme: "+colorText+";");
+            });
+            appColorPicker.valueProperty().bindBidirectional(viewModel.appColorProperty());
+
+        });
     }
 
     private void setUpSideMenuButton(ToggleButton button, String tooltipText, boolean leftSide,Node... menuNodes){
@@ -326,7 +321,8 @@ public class MainView implements FxmlView<MainViewModel> {
                 FluentViewLoader.fxmlView(SaveView.class).context(context).load();
         final Parent root = saveViewTuple.getView();
         SaveView saveView = saveViewTuple.getCodeBehind();
-        saveView.setInitialDirectory(previousDirectory);
+
+        saveView.setInitialDirectory(viewModel.getFileScope().getInitialDirectory());
         Scene scene = new Scene(root);
         scene.getStylesheets().add(
                 Objects.requireNonNull(getClass()
@@ -377,13 +373,15 @@ public class MainView implements FxmlView<MainViewModel> {
                 new FileChooser.ExtensionFilter(
                         "Graph Files", "*.ogr", "*.mtx", "*.tsp", "*.graphml");
         FileChooser fileChooser = new FileChooser();
-        if(!previousDirectory.isEmpty())
-            fileChooser.setInitialDirectory(new File(previousDirectory));
+        String initialDirectory = viewModel.getFileScope().getInitialDirectory();
+        if(!initialDirectory.isEmpty())
+            fileChooser.setInitialDirectory(new File(initialDirectory));
+
         fileChooser.getExtensionFilters().add(fileExtensions);
         File file = fileChooser.showOpenDialog(mainStage);
         if(file != null){
             viewModel.openGraph(file);
-            previousDirectory = file.getParent();
+            viewModel.getFileScope().setInitialDirectory(file.getParent());
         }
     }
 

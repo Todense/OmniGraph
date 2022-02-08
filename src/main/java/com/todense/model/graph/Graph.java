@@ -10,6 +10,8 @@ import java.util.function.BiConsumer;
 
 public class Graph {
 
+    private final double MAX_NODE_POSITION_MAGNITUDE =  1e20;
+
     private int idCounter = 0;
 
     private final List<Node> nodes = new ArrayList<>();
@@ -78,6 +80,8 @@ public class Graph {
     }
 
     public void setNodePosition(Node n, Point2D p){
+        if(p.magnitude() > MAX_NODE_POSITION_MAGNITUDE)
+            return;
         n.setPos(p);
     }
 

@@ -244,7 +244,15 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
             double dist = this.dist[start][i];
             probabilities[j++] = Math.pow(ph, antsScope.getAlpha()) * Math.pow(1/dist, antsScope.getBeta());
         }
+        double sumOfProbabilities = Arrays.stream(probabilities).sum();
+
+        if(Double.isInfinite(sumOfProbabilities) || sumOfProbabilities == 0.0){
+            int randomIndex = rnd.nextInt(availableNeighbours.size());
+            return availableNeighbours.get(randomIndex);
+        }
+
         SharedStateDiscreteSampler distribution = GuideTableDiscreteSampler.of(randomProvider, probabilities);
+
         return availableNeighbours.get(distribution.sample());
     }
 

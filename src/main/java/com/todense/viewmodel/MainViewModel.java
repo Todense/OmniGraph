@@ -33,7 +33,7 @@ import java.text.SimpleDateFormat;
 @ScopeProvider(scopes = {AlgorithmScope.class, GraphScope.class,
         BackgroundScope.class, CanvasScope.class,
         AnimationScope.class, AntsScope.class, TaskScope.class,
-        InputScope.class, LayoutScope.class})
+        InputScope.class, LayoutScope.class, FileScope.class})
 public class MainViewModel implements ViewModel {
 
     public final static String TASK_STARTED = "TASK_STARTED";
@@ -86,6 +86,9 @@ public class MainViewModel implements ViewModel {
 
     @InjectScope
     AnimationScope animationScope;
+
+    @InjectScope
+    FileScope fileScope;
 
     private GraphManager graphManager;
 
@@ -418,6 +421,10 @@ public class MainViewModel implements ViewModel {
 
     public LayoutScope getLayoutScope() {
         return layoutScope;
+    }
+
+    public FileScope getFileScope() {
+        return fileScope;
     }
 
     public BooleanProperty layoutRunningProperty() {

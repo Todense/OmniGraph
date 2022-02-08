@@ -33,11 +33,10 @@ public class GraphCoarsener {
         var mapping = collapseMaps.pop();
         previousGraph.getNodes().forEach(node ->{
                 double angle = Math.random() * 2 * Math.PI;
-                node.setPos(mapping.get(node).getPos().add(new Point2D(
+                Point2D newPosition = mapping.get(node).getPos().add(new Point2D(
                                 Math.cos(angle),
-                                Math.sin(angle))
-                        .multiply(1.0))
-                );
+                                Math.sin(angle)));
+                previousGraph.setNodePosition(node, newPosition);
     });
         graphManager.setGraph(previousGraph);
     }

@@ -50,9 +50,11 @@ public class SaveView implements FxmlView<SaveViewModel> {
     @FXML
     private void browseAction(){
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        if(viewModel.getInitialDirectory() != null){
-            directoryChooser.setInitialDirectory(viewModel.getInitialDirectory());
+        String initialDirectory = viewModel.getFileScope().getInitialDirectory();
+        if(!initialDirectory.isEmpty()){
+            directoryChooser.setInitialDirectory(new File(initialDirectory));
         }
+
         File selectedDirectory = directoryChooser.showDialog(formatChoiceBox.getScene().getWindow());
         if(selectedDirectory != null){
             directoryTextField.setText(selectedDirectory.getAbsolutePath());
