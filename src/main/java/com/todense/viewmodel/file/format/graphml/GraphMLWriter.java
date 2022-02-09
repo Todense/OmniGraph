@@ -22,7 +22,7 @@ import java.io.File;
 public class GraphMLWriter implements GraphWriter {
 
     @Override
-    public void writeGraph(Graph graph, File file)  {
+    public void writeGraph(Graph graph, File file)  throws TransformerException{
         DocumentBuilderFactory dbFactory =
                 DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = null;
@@ -70,17 +70,12 @@ public class GraphMLWriter implements GraphWriter {
 
 
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer;
-        try {
-            transformer = transformerFactory.newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-            DOMSource source = new DOMSource(doc);
-            StreamResult result = new StreamResult(file);
-            transformer.transform(source, result);
-        } catch (TransformerException e) {
-            e.printStackTrace();
-        }
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(file);
+        transformer.transform(source, result);
     }
 
     private void addNode(Node node, Element graphElement, Document doc){

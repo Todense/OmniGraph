@@ -11,18 +11,14 @@ import java.io.IOException;
 public class MtxWriter implements GraphWriter {
 
     @Override
-    public void writeGraph(Graph graph, File file) {
+    public void writeGraph(Graph graph, File file) throws IOException{
         FileWriter fileWriter;
-        try {
-            fileWriter = new FileWriter(file);
-            fileWriter.write("%%MatrixMarket matrix coordinate pattern symmetric\n");
-            fileWriter.write(graph.getNodes().size()+" "+graph.getNodes().size()+" "+graph.getEdges().size()+"\n");
-            for(Edge edge : graph.getEdges()){
-                fileWriter.write((edge.getN1().getIndex()+1)+" "+(edge.getN2().getIndex()+1)+"\n");
-            }
-            fileWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        fileWriter = new FileWriter(file);
+        fileWriter.write("%%MatrixMarket matrix coordinate pattern symmetric\n");
+        fileWriter.write(graph.getNodes().size()+" "+graph.getNodes().size()+" "+graph.getEdges().size()+"\n");
+        for(Edge edge : graph.getEdges()){
+            fileWriter.write((edge.getN1().getIndex()+1)+" "+(edge.getN2().getIndex()+1)+"\n");
         }
+        fileWriter.close();
     }
 }
