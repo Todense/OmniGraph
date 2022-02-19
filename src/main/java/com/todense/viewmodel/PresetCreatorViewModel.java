@@ -18,7 +18,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class PresetCreatorViewModel implements ViewModel {
-    
+
+    public final static String PRESET_GRAPH_REQUEST = "PRESET_GRAPH_REQUEST";
+
+
     private final ObjectProperty<Preset> presetProperty = new SimpleObjectProperty<>();
     
     private final IntegerProperty gridWidthProperty = new SimpleIntegerProperty();
@@ -37,7 +40,7 @@ public class PresetCreatorViewModel implements ViewModel {
     NotificationCenter notificationCenter;
 
     public void initialize(){
-        notificationCenter.subscribe("PRESET", (key, payload) -> createPreset());
+        notificationCenter.subscribe(PRESET_GRAPH_REQUEST, (key, payload) -> createPreset());
     }
 
     private Graph create(Preset preset, Point2D size) {

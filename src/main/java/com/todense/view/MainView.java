@@ -113,7 +113,7 @@ public class MainView implements FxmlView<MainViewModel> {
         });
 
         autoLayoutToggleButton.selectedProperty().bindBidirectional(viewModel.autoLayoutOnProperty());
-        autoLayoutToggleButton.disableProperty().bind(viewModel.taskRunningProperty());
+        layoutMenuHBox.disableProperty().bind(viewModel.taskRunningProperty());
 
         eraseModeToggleButton.selectedProperty().bindBidirectional(viewModel.eraseModeOnProperty());
         eraseModeToggleButton.disableProperty().bind(lockToggleButton.selectedProperty());
@@ -122,21 +122,31 @@ public class MainView implements FxmlView<MainViewModel> {
         setScrollSpeed(0.005, rightSideMenuContentScrollPane);
 
         viewModel.mousePositionProperty().addListener((obs, oldVal, newVal) -> {
-                    mousePositionLabel.setText("X: " + String.format("%.3f",newVal.getX()) + " Y: " + String.format("%.3f",newVal.getY()));
-                }
-        );
+            var xString = String.format("%.3f",newVal.getX());
+            var yString = String.format("%.3f",newVal.getY());
+            mousePositionLabel.setText("X: " + xString + " Y: " + yString);
+        });
 
-        setUpSideMenuButton(graphAppearanceMenuButton, "Appearance", true, graphAppearanceView, backgroundAppearanceView);
-        setUpSideMenuButton(operationsMenuButton, "Graph Operations", true, operationsView);
-        setUpSideMenuButton(propertiesMenuButton, "Graph Properties", true, propertiesView);
-        setUpSideMenuButton(generateGraphMenuButton, "Generate Graph", true, randomGeneratorView, presetGeneratorView);
+        setUpSideMenuButton(graphAppearanceMenuButton, "Appearance",
+                true, graphAppearanceView, backgroundAppearanceView);
+        setUpSideMenuButton(operationsMenuButton, "Graph Operations",
+                true, operationsView);
+        setUpSideMenuButton(propertiesMenuButton, "Graph Properties",
+                true, propertiesView);
+        setUpSideMenuButton(generateGraphMenuButton, "Generate Graph",
+                true, randomGeneratorView, presetGeneratorView);
 
         ToggleGroup leftSideMenuButtons = new ToggleGroup();
-        leftSideMenuButtons.getToggles().addAll(graphAppearanceMenuButton, operationsMenuButton, propertiesMenuButton, generateGraphMenuButton);
+        leftSideMenuButtons.getToggles().addAll(
+                graphAppearanceMenuButton, operationsMenuButton, propertiesMenuButton, generateGraphMenuButton
+        );
 
-        setUpSideMenuButton(basicAlgorithmsMenuButton, "Basic Algorithms", false, basicAlgorithmsView);
-        setUpSideMenuButton(tspMenuButton, "Travelling Salesman Problem", false, tspView);
-        setUpSideMenuButton(layoutMenuButton, "Layout", false, layoutView);
+        setUpSideMenuButton(basicAlgorithmsMenuButton, "Basic Algorithms",
+                false, basicAlgorithmsView);
+        setUpSideMenuButton(tspMenuButton, "Travelling Salesman Problem",
+                false, tspView);
+        setUpSideMenuButton(layoutMenuButton, "Layout",
+                false, layoutView);
 
         ToggleGroup rightSideMenuButtons = new ToggleGroup();
         rightSideMenuButtons.getToggles().addAll(basicAlgorithmsMenuButton, tspMenuButton, layoutMenuButton);
@@ -265,6 +275,16 @@ public class MainView implements FxmlView<MainViewModel> {
             });
             appColorPicker.valueProperty().bindBidirectional(viewModel.appColorProperty());
 
+            mainStage.fullScreenProperty().addListener((obs, oldVal, newVal) -> {
+                if(newVal){
+                    fullScreenIcon.setIconLiteral("fas-compress-arrows-alt");
+                    fullScreenItem.setText("Exit fullscreen");
+                }else{
+                    fullScreenIcon.setIconLiteral("fas-expand-arrows-alt");
+                    fullScreenItem.setText("Fullscreen");
+
+                }
+            });
         });
     }
 
@@ -411,6 +431,16 @@ public class MainView implements FxmlView<MainViewModel> {
     }
 
     @FXML
+    private void randomGraphAction(){
+        viewModel.generateRandomGraph();
+    }
+
+    @FXML
+    private void presetGraphAction(){
+        viewModel.createPresetGraph();
+    }
+
+    @FXML
     private void helpAction() {
         Pane pane = new Pane();
         pane.setPrefWidth(700);
@@ -439,17 +469,7 @@ public class MainView implements FxmlView<MainViewModel> {
 
     @FXML
     private void fullScreenAction(){
-        if(mainStage.isFullScreen()){
-            mainStage.setFullScreen(false);
-            fullScreenIcon.setIconLiteral("fas-expand-arrows-alt");
-            fullScreenItem.setText("Fullscreen");
-        }
-        else{
-            mainStage.setFullScreen(true);
-            fullScreenIcon.setIconLiteral("fas-compress-arrows-alt");
-            fullScreenItem.setText("Exit fullscreen");
-        }
-
+        mainStage.setFullScreen(!mainStage.isFullScreen());
     }
 
     private String toRGBCode(Color color) {

@@ -34,7 +34,7 @@ public class BackgroundView implements FxmlView<BackgroundViewModel> {
         gridOptionsVBox.getChildren().add(gridWidthVBox);
 
         var gridBrightnessVBox = new ParameterHBox("Brightness", viewModel.gridBrightnessProperty(),
-                0, 50, 0, 255
+                0, 45, 0, 255
         );
         gridOptionsVBox.getChildren().add(gridBrightnessVBox);
     }

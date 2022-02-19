@@ -150,16 +150,11 @@ public class MouseHandler {
 
                 }
                 else if(pressedKeys.contains(KeyCode.CONTROL)){
-                    if(pressedKeys.contains(KeyCode.C)){
-                        graphScope.getGraphManager().copySelectedSubgraph();
+                    if(clickedNode != null){
+                        reverseSelection(clickedNode);
                     }
                     else{
-                        if(clickedNode != null){
-                            reverseSelection(clickedNode);
-                        }
-                        else{
-                            reverseSelection(clickedEdge);
-                        }
+                        reverseSelection(clickedEdge);
                     }
                 }
             }

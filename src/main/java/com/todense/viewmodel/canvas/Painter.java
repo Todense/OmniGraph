@@ -81,12 +81,10 @@ public class Painter {
     }
 
     public synchronized void startAnimationTimer(){
-        //animationTimer.start();
         timerOn = true;
     }
 
     public synchronized void stopAnimationTimer(){
-        //animationTimer.stop();
         timerOn = false;
     }
 

@@ -56,16 +56,6 @@ public class InputScope implements Scope {
             }
         });
 
-        pressedKeys.addListener((SetChangeListener<KeyCode>) change -> {
-            if(!isEditLocked()) {
-                if (change.getSet().size() == 1 && change.wasAdded() && change.getElementAdded().equals(KeyCode.X)) {
-                    setEraseModeOn(true);
-                } else if (change.wasRemoved() && change.getElementRemoved().equals(KeyCode.X)) {
-                    setEraseModeOn(false);
-                }
-            }
-        });
-
         editLockedProperty.addListener((obs, oldVal, newVal)->{
             if(newVal){
                 setEraseModeOn(false);

@@ -13,6 +13,10 @@ public interface DisplayRule {
 
     Color getEdgeColor(Edge edge);
 
+    Color getNodeLabelColor(Node node);
+
+    Color getEdgeWeightColor(Edge edge);
+
     double getNodeSize(Node node);
 
     double getEdgeWidth(Edge edge);

@@ -11,20 +11,29 @@ OmniGraph
 - Drag one node or all selected nodes: left click on node + drag mouse
 - Zoom in\out: mouse scroll
 - Move camera: left mouse click on background + drag mouse
-- Copy selected subgraph: CTRL+C+left mouse click one of selected nodes or right click on one of selected nodes -> copy subgraph
-- Paste copied graph: CTRL+V+left mouse click on background or right click on background -> paste subgraph
-
-Press X to enter erase mode (delete nodes and edges by mouse drag)
 
 2. Keyboard shortcuts
 
-CTRL + DEL - delete graph
-CTRL + J - adjust camera to graph
-CTRL + R - create random graph
-CTRL + E - create preset graph
-CTRL + L - start graph layout
-CTRL + P - create path 
-CTRL + K - add all edges
+Ctrl+S 		    - Save Graph As...
+Ctrl+O 		    - Open Graph...
+Ctrl+Del  	    - Delete graph
+Ctrl+R  	    - Reset graph
+Ctrl+J 		    - Adjust camera to graph
+
+Ctrl+C		    - Copy selected subgraph
+Ctrl+V+LMB	    - Paste copied subgraph on clicked position
+
+Ctrl+Q 		    - Generate random graph
+Ctrl+E 		    - Create preset
+Ctrl+L 		    - Start layout algorithm
+Ctrl+Shift+L    - Toggle continuous layout
+Ctrl+F		    - Toggle erase mode
+
+Ctrl+F11	    - Toggle fullscreen
+
+Ctrl+Space 	    - Toggle Pause
+Ctrl+Right	    - Take the next step of the algorithm (when paused)
+Ctrl+Backspace	- Stop current algorithm
 
 
 3. Algorithms

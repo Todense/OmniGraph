@@ -42,6 +42,16 @@ public class DefaultDisplayRule implements DisplayRule{
     }
 
     @Override
+    public Color getNodeLabelColor(Node node) {
+        return graphScope.getNodeLabelColor();
+    }
+
+    @Override
+    public Color getEdgeWeightColor(Edge edge) {
+        return graphScope.getEdgeWeightColor();
+    }
+
+    @Override
     public double getNodeSize(Node node) {
         return graphScope.getNodeSize();
     }

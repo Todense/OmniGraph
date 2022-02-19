@@ -22,6 +22,8 @@ import javafx.beans.property.*;
 import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.paint.Color;
 import org.apache.commons.io.FilenameUtils;
 
@@ -155,8 +157,6 @@ public class MainViewModel implements ViewModel {
             }
         });
 
-        notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_REQUEST, (key, payload) -> stopAutoLayout());
-
         notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_SET, (key, payload) -> {
             if(isAutoLayoutOn()) {
                 stopAutoLayout();
@@ -213,12 +213,14 @@ public class MainViewModel implements ViewModel {
         Thread thread = new Thread(autoLayout);
         thread.start();
         layoutRunningProperty.set(true);
+        autoLayoutOnProperty.set(true);
     }
 
     private void stopAutoLayout(){
         if (autoLayout != null) {
             autoLayout.cancel();
             layoutRunningProperty.set(false);
+            autoLayoutOnProperty.set(false);
         }
     }
 
@@ -268,37 +270,42 @@ public class MainViewModel implements ViewModel {
     }
 
     public void setKeyInput(Scene scene){
-        scene.setOnKeyPressed(keyEvent -> {
-            inputScope.getPressedKeys().add(keyEvent.getCode());
-            keyEvent.consume();
 
-            if(inputScope.getPressedKeys().contains(KeyCode.CONTROL)) {
-                if (keyEvent.getCode() == KeyCode.R) {
-                    resetGraph();
-                } else if (keyEvent.getCode() == KeyCode.DELETE) {
-                    deleteGraph();
-                } else if (keyEvent.getCode() == KeyCode.P) {
-                    notificationCenter.publish(GRAPH_EDIT_REQUEST, (GraphOperation)() -> graphManager.createPath());
-                } else if (keyEvent.getCode() == KeyCode.K) {
-                    notificationCenter.publish(GRAPH_EDIT_REQUEST, (GraphOperation)() -> graphManager.createCompleteGraph());
-                } else if(keyEvent.getCode() == KeyCode.L){
-                    notificationCenter.publish(LayoutViewModel.LAYOUT_START);
-                } else if(keyEvent.getCode() == KeyCode.J){
-                    adjustCameraToGraph();
-                }  else if(keyEvent.getCode() == KeyCode.E){
-                    notificationCenter.publish("PRESET");
-                } else if(keyEvent.getCode() == KeyCode.Q){
-                    notificationCenter.publish("RANDOM");
-                } else if(keyEvent.getCode() == KeyCode.SPACE){
-                    animationScope.setPaused(!animationScope.isPaused());
-                } else if(keyEvent.getCode() == KeyCode.RIGHT){
-                    animationScope.nextStepProperty().set(true);
-                } else if(keyEvent.getCode() == KeyCode.BACK_SPACE){
-                    stopAll();
-                }
+        // toggle pause
+        KeyCodeCombination pauseComb = new KeyCodeCombination(KeyCode.SPACE, KeyCombination.CONTROL_DOWN);
+        scene.getAccelerators().put(pauseComb, () ->  animationScope.setPaused(!animationScope.isPaused()));
+
+        // next step
+        KeyCodeCombination nextStepComb = new KeyCodeCombination(KeyCode.RIGHT, KeyCombination.CONTROL_DOWN);
+        scene.getAccelerators().put(nextStepComb, () -> animationScope.nextStepProperty().set(true));
+
+        // stop algorithm
+        KeyCodeCombination stopComb = new KeyCodeCombination(KeyCode.BACK_SPACE, KeyCombination.CONTROL_DOWN);
+        scene.getAccelerators().put(stopComb, this::stopAll);
+
+        // start layout
+        KeyCodeCombination layoutComb = new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN);
+        scene.getAccelerators().put(layoutComb, () -> notificationCenter.publish(LayoutViewModel.LAYOUT_START));
+
+        // toggle continuous layout
+        KeyCodeCombination contLayoutComb = new KeyCodeCombination(KeyCode.L,
+                KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
+        scene.getAccelerators().put(contLayoutComb, () -> autoLayoutOnProperty.set(autoLayoutOnProperty.not().get()));
+
+        // toggle erase mode
+        KeyCodeCombination eraseComb = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN);
+        scene.getAccelerators().put(eraseComb, () -> {
+            if(!editLockedProperty().get()){
+                eraseModeOnProperty().set(eraseModeOnProperty().not().get());
             }
         });
 
+        // copy selected subgraph
+        KeyCodeCombination copyComb = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
+        scene.getAccelerators().put(copyComb, () -> graphScope.getGraphManager().copySelectedSubgraph());
+
+
+        scene.setOnKeyPressed(keyEvent -> inputScope.getPressedKeys().add(keyEvent.getCode()));
         scene.setOnKeyReleased(keyEvent -> inputScope.getPressedKeys().remove(keyEvent.getCode()));
     }
 
@@ -314,6 +321,14 @@ public class MainViewModel implements ViewModel {
 
     public void writeInfo(String s){
         Platform.runLater(() -> infoTextProperty.setValue(s));
+    }
+
+    public void generateRandomGraph(){
+        notificationCenter.publish(RandomGeneratorViewModel.RANDOM_GRAPH_REQUEST);
+    }
+
+    public void createPresetGraph(){
+        notificationCenter.publish(PresetCreatorViewModel.PRESET_GRAPH_REQUEST);
     }
 
     public void deleteGraph() {

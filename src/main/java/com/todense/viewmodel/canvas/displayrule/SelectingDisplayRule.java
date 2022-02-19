@@ -41,4 +41,24 @@ public class SelectingDisplayRule extends ResponsiveDisplayRule{
         }
         return displayColor;
     }
+
+    @Override
+    public Color getNodeLabelColor(Node node) {
+        Color labelColor = super.getNodeLabelColor(node);
+
+        if(!node.isSelected()){
+            labelColor = Util.getFaintColor(labelColor, backgroundScope.getBackgroundColor());
+        }
+        return labelColor;
+    }
+
+    @Override
+    public Color getEdgeWeightColor(Edge edge) {
+        Color weightColor = super.getEdgeWeightColor(edge);
+
+        if(!edge.isMarked()){
+            weightColor = Util.getFaintColor(weightColor, backgroundScope.getBackgroundColor());
+        }
+        return weightColor;
+    }
 }

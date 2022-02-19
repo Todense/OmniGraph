@@ -1,7 +1,6 @@
 package com.todense.viewmodel;
 
 import com.todense.model.graph.Graph;
-import com.todense.model.graph.Node;
 import com.todense.viewmodel.random.Generator;
 import com.todense.viewmodel.random.GeneratorModel;
 import com.todense.viewmodel.random.RandomEdgeGenerator;
@@ -14,7 +13,6 @@ import com.todense.viewmodel.random.generators.BarabasiAlbertGenerator;
 import com.todense.viewmodel.random.generators.ErdosRenyiGenerator;
 import com.todense.viewmodel.random.generators.GeometricGenerator;
 import com.todense.viewmodel.scope.CanvasScope;
-import com.todense.viewmodel.scope.GraphScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
@@ -24,6 +22,8 @@ import javafx.geometry.Point2D;
 import javax.inject.Inject;
 
 public class RandomGeneratorViewModel implements ViewModel {
+
+    public final static String RANDOM_GRAPH_REQUEST = "RANDOM_GRAPH_REQUEST";
 
     private final ObjectProperty<GeneratorModel> generatorProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<NodeArrangement> nodeArrangementProperty = new SimpleObjectProperty<>();
@@ -45,7 +45,7 @@ public class RandomGeneratorViewModel implements ViewModel {
     CanvasScope canvasScope;
 
     public void initialize(){
-        notificationCenter.subscribe("RANDOM", (key, payload) -> generate());
+        notificationCenter.subscribe(RandomGeneratorViewModel.RANDOM_GRAPH_REQUEST, (key, payload) -> generate());
     }
 
     private void generateGraph(){

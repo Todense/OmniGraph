@@ -34,26 +34,6 @@ public class GraphDrawLayer implements DrawLayer {
         this.inputScope = inputScope;
     }
 
-    public DisplayRule getDisplayRule(DisplayMode displayMode){
-        DisplayRule displayRule = null;
-        switch (displayMode){
-            case DEFAULT: {
-                Graph graph = graphScope.getGraphManager().getGraph();
-                boolean selecting = (inputScope.isSelecting() && graph.getNodes().stream().anyMatch(Node::isSelected)) ||
-                        !graphScope.getGraphManager().getSelectedNodes().isEmpty();
-                if(selecting){
-                    displayRule = new SelectingDisplayRule(graphScope, backgroundScope); break;
-                }else{
-                    displayRule = new ResponsiveDisplayRule(graphScope, backgroundScope);
-                }
-                break;
-            }
-            case ALGORITHMIC: displayRule = new AlgorithmDisplayRule(graphScope, backgroundScope); break;
-            case ANT_COLONY: displayRule = new AntColonyDisplayRule(graphScope, backgroundScope, antsScope); break;
-        }
-        return displayRule;
-    }
-
     @Override
     public void draw(GraphicsContext gc) {
         Graph graph = graphScope.getGraphManager().getGraph();
@@ -77,13 +57,33 @@ public class GraphDrawLayer implements DrawLayer {
         }
     }
 
-    private boolean isEdgePrimary(Edge e){
-        return e.isSelected() || e.isMarked() || e.isHighlighted() || e.getStatus() > 0;
-    }
-
     @Override
     public int getOrder() {
         return 3;
+    }
+
+    private DisplayRule getDisplayRule(DisplayMode displayMode){
+        DisplayRule displayRule = null;
+        switch (displayMode){
+            case DEFAULT: {
+                Graph graph = graphScope.getGraphManager().getGraph();
+                boolean selecting = (inputScope.isSelecting() && graph.getNodes().stream().anyMatch(Node::isSelected)) ||
+                        !graphScope.getGraphManager().getSelectedNodes().isEmpty();
+                if(selecting){
+                    displayRule = new SelectingDisplayRule(graphScope, backgroundScope); break;
+                }else{
+                    displayRule = new ResponsiveDisplayRule(graphScope, backgroundScope);
+                }
+                break;
+            }
+            case ALGORITHMIC: displayRule = new AlgorithmDisplayRule(graphScope, backgroundScope); break;
+            case ANT_COLONY: displayRule = new AntColonyDisplayRule(graphScope, backgroundScope, antsScope); break;
+        }
+        return displayRule;
+    }
+
+    private boolean isEdgePrimary(Edge e){
+        return e.isSelected() || e.isMarked() || e.isHighlighted() || e.getStatus() > 0;
     }
 
     private void drawNode(Node node, GraphicsContext gc, DisplayRule displayRule){
@@ -134,14 +134,14 @@ public class GraphDrawLayer implements DrawLayer {
 
         //label
         if(!graphScope.nodeLabelModeProperty().get().equals(NodeLabelMode.NONE)){
-            drawNodeLabel(node, gc);
+            drawNodeLabel(node, displayRule, gc);
         }
     }
 
-    private void drawNodeLabel(Node node, GraphicsContext gc) {
+    private void drawNodeLabel(Node node, DisplayRule displayRule, GraphicsContext gc) {
         double size = graphScope.getNodeSize();
 
-        gc.setFill(graphScope.getNodeLabelColor());
+        gc.setFill(displayRule.getNodeLabelColor(node));
         gc.setFont(new Font("Sans Serif", graphScope.getNodeSize() * 0.6));
         gc.setTextAlign(TextAlignment.CENTER);
 
@@ -163,8 +163,10 @@ public class GraphDrawLayer implements DrawLayer {
         double width = displayRule.getEdgeWidth(edge) * graphScope.getNodeSize();
         width = Math.min(width, graphScope.getNodeSize());
 
+        boolean isAntDisplayRuleOn = displayRule.getClass().equals(AntColonyDisplayRule.class);
+
         // ant colony algorithm cycle marker
-        if(edge.getStatus() == AntColonyAlgorithmTask.EDGE_ON_CYCLE && displayRule.getClass().equals(AntColonyDisplayRule.class)) {
+        if(edge.getStatus() == AntColonyAlgorithmTask.EDGE_ON_CYCLE && isAntDisplayRuleOn) {
             gc.setLineWidth(width + graphScope.getNodeSize() * 0.2);
             gc.setStroke(antsScope.getCycleColor());
             gc.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
@@ -173,7 +175,8 @@ public class GraphDrawLayer implements DrawLayer {
         if(width == 0)
             return;
 
-        if(displayRule.getClass().equals(AntColonyDisplayRule.class)  && !antsScope.isShowingPheromones()) return;
+        if(isAntDisplayRuleOn  && !antsScope.isShowingPheromones())
+            return;
 
         gc.setLineWidth(width);
 
@@ -182,29 +185,34 @@ public class GraphDrawLayer implements DrawLayer {
         if(edgeColor.equals(backgroundScope.getBackgroundColor())){
             return;
         }
-        gc.setStroke(edgeColor);
 
+        gc.setStroke(edgeColor);
         gc.strokeLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+
+        double fontSize = 3 * graphScope.getNodeSize() * graphScope.getEdgeWidth();
 
         if(graphScope.getEdgeWeightMode() != EdgeWeightMode.NONE){
             if(graphScope.getEdgeWeightMode() == EdgeWeightMode.LENGTH){
-                drawEdgeWeight(edge, gc, String.valueOf((int)(edge.calcLength())), width * 3);
+                int length = (int)(edge.calcLength());
+                drawEdgeWeight(edge, displayRule, gc, String.valueOf(length), fontSize);
             }
             else if(graphScope.getEdgeWeightMode() == EdgeWeightMode.CUSTOM){
                 double weight = edge.getWeight();
-                if((weight % 1) == 0){
-                    drawEdgeWeight(edge, gc, String.valueOf((int)weight), width * 3);
-                }else {
-                    drawEdgeWeight(edge, gc, String.valueOf(weight), width * 3);
-                }
+
+                // if weight is an integer, write it with integer formatting
+                String weightText = (weight % 1) == 0 ?
+                        String.valueOf((int)weight) :
+                        String.valueOf(weight);
+
+                drawEdgeWeight(edge, displayRule, gc, weightText, fontSize);
             }
         }
     }
 
-    private void drawEdgeWeight(Edge e, GraphicsContext gc, String weight, double fontSize) {
+    private void drawEdgeWeight(Edge e, DisplayRule displayRule, GraphicsContext gc, String weight, double fontSize) {
         Point2D midPoint = e.getN1().getPos().midpoint(e.getN2().getPos());
         gc.setFont(new Font("Sans Serif", fontSize));
-        gc.setFill(graphScope.getEdgeWeightColor());
+        gc.setFill(displayRule.getEdgeWeightColor(e));
         gc.setTextAlign(TextAlignment.CENTER);
         gc.fillText(weight, midPoint.getX(), midPoint.getY() + fontSize/3);
     }

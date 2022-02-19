@@ -6,12 +6,12 @@ import javafx.scene.paint.Color;
 
 public class BackgroundScope implements Scope {
 
-    private final Color INITIAL_BACKGROUND_COLOR = Color.rgb(40,40,40);
+    private final Color INITIAL_BACKGROUND_COLOR = Color.hsb(.0, .0, .13);
 
     private final ObjectProperty<Color> backgroundColor = new SimpleObjectProperty<>(INITIAL_BACKGROUND_COLOR);
     private final BooleanProperty showingGridProperty = new SimpleBooleanProperty(false);
     private final IntegerProperty gridGapProperty = new SimpleIntegerProperty(50);
-    private final IntegerProperty gridBrightnessProperty = new SimpleIntegerProperty(50);
+    private final IntegerProperty gridBrightnessProperty = new SimpleIntegerProperty(45);
     private final DoubleProperty gridWidthProperty = new SimpleDoubleProperty(1);
 
     public Color getBackgroundColor() {
