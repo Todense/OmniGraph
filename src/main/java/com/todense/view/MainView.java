@@ -34,7 +34,7 @@ import java.util.Scanner;
 
 public class MainView implements FxmlView<MainViewModel> {
 
-    @FXML private TextArea textArea;
+    @FXML private TextArea eventTextArea;
     @FXML private ProgressIndicator progressIndicator;
     @FXML private FontIcon lockIcon, fullScreenIcon;
     @FXML private ToggleButton lockToggleButton, autoLayoutToggleButton, graphAppearanceMenuButton,
@@ -73,19 +73,19 @@ public class MainView implements FxmlView<MainViewModel> {
         HBox.setHgrow(mainAnchor, Priority.ALWAYS);
         VBox.setVgrow(mainAnchor, Priority.ALWAYS);
 
-        textArea.textProperty().bindBidirectional(viewModel.textProperty());
+        eventTextArea.textProperty().bindBidirectional(viewModel.eventTextProperty());
         infoLabel.textProperty().bindBidirectional(viewModel.infoTextProperty());
 
         viewModel.leftPanelWidthProperty().bind(leftContentHBox.widthProperty());
         viewModel.rightPanelWidthProperty().bind(rightContentHBox.widthProperty());
 
         //fixes not scrolling down bug
-        viewModel.textProperty().addListener((observableValue, s, t1) -> {
-            textArea.selectPositionCaret(textArea.getLength());
-            textArea.deselect();
+        viewModel.eventTextProperty().addListener((observableValue, s, t1) -> {
+            eventTextArea.selectPositionCaret(eventTextArea.getLength());
+            eventTextArea.deselect();
         });
 
-        stopButton.disableProperty().bind(viewModel.taskRunningProperty().not());
+        stopButton.disableProperty().bind(viewModel.algorithmRunningProperty().not());
 
         viewModel.workingProperty().addListener((obs, oldVal, newVal) -> Platform.runLater(()->{
             if(newVal) {
@@ -113,7 +113,7 @@ public class MainView implements FxmlView<MainViewModel> {
         });
 
         autoLayoutToggleButton.selectedProperty().bindBidirectional(viewModel.autoLayoutOnProperty());
-        layoutMenuHBox.disableProperty().bind(viewModel.taskRunningProperty());
+        layoutMenuHBox.disableProperty().bind(viewModel.algorithmRunningProperty());
 
         eraseModeToggleButton.selectedProperty().bindBidirectional(viewModel.eraseModeOnProperty());
         eraseModeToggleButton.disableProperty().bind(lockToggleButton.selectedProperty());
@@ -427,7 +427,7 @@ public class MainView implements FxmlView<MainViewModel> {
 
     @FXML
     private void stopAction(){
-        viewModel.stopAll();
+        viewModel.stopCurrentAlgorithm();
     }
 
     @FXML

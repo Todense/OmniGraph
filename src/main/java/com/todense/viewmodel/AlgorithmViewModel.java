@@ -12,7 +12,7 @@ import com.todense.viewmodel.graph.GraphManager;
 import com.todense.viewmodel.scope.AlgorithmScope;
 import com.todense.viewmodel.scope.CanvasScope;
 import com.todense.viewmodel.scope.GraphScope;
-import com.todense.viewmodel.scope.TaskScope;
+import com.todense.viewmodel.scope.AlgorithmTaskScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
@@ -38,7 +38,7 @@ public class AlgorithmViewModel extends AlgorithmTaskManager implements ViewMode
     CanvasScope canvasScope;
 
     @InjectScope
-    TaskScope taskScope;
+    AlgorithmTaskScope algorithmTaskScope;
 
     private GraphManager graphManager;
     private BooleanProperty connectivityChecksProperty = new SimpleBooleanProperty(true);
@@ -67,7 +67,7 @@ public class AlgorithmViewModel extends AlgorithmTaskManager implements ViewMode
             goalNodeProperty().set(null);
         });
 
-        super.initialize(taskScope, canvasScope, notificationCenter);
+        super.initialize(algorithmTaskScope, canvasScope, notificationCenter);
     }
 
 

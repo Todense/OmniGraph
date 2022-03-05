@@ -74,7 +74,7 @@ public class MouseHandler {
 
         hidePopOver();
 
-        dragging = false;
+        setDragging(false);
 
         this.clickedNode = getNodeFromPoint(mousePressPt);
         this.clickedEdge = getEdgeFromPoint(mousePressPt);
@@ -301,8 +301,12 @@ public class MouseHandler {
     
     public void onMouseDragged(MouseEvent event) {
 
-        Point2D delta = new Point2D( event.getX() - currentMousePt.getX(), event.getY() - currentMousePt.getY());
+        Point2D delta = new Point2D(
+                event.getX() - currentMousePt.getX(),
+                event.getY() - currentMousePt.getY()
+        );
         Point2D mouseDragPt = new Point2D(event.getX(), event.getY());
+
         inputScope.mousePositionProperty().set(camera.inverse(mouseDragPt));
         currentMousePt = mouseDragPt;
 
@@ -313,8 +317,8 @@ public class MouseHandler {
             return;
         }
 
-        if(mouseDragPt.distance(mousePressPt) > 10)
-            dragging = true;
+        if(event.getButton() == MouseButton.PRIMARY && mouseDragPt.distance(mousePressPt) > 10)
+            setDragging(true);
 
         if(!inputScope.isConnecting()) {
             if (edgeStartNode != null && getNodeFromPoint(mouseDragPt) != edgeStartNode){
@@ -558,6 +562,15 @@ public class MouseHandler {
         double y1 = Math.min(n.getPos().getY(), m.getPos().getY());
         double y2 = Math.max(n.getPos().getY(), m.getPos().getY());
         return p.getX() >= x1 - tol && p.getX() <= x2 + tol && p.getY() >= y1 - tol && p.getY() <= y2 + tol;
+    }
+
+    private void setDragging(boolean b){
+        this.dragging = b;
+        if (!inputScope.isEraseModeOn() && !draggingNode){
+            if(b){
+                inputScope.setCanvasCursor(Cursor.MOVE);
+            }
+        }
     }
 
 

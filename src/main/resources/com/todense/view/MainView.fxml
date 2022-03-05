@@ -270,7 +270,7 @@
       </HBox>
       <HBox alignment="CENTER" spacing="3.0" SplitPane.resizableWithParent="false">
          <SplitPane dividerPositions="0.31411677753141165" prefHeight="160.0" prefWidth="200.0" HBox.hgrow="ALWAYS">
-            <TextArea fx:id="textArea" editable="false" focusTraversable="false" scrollLeft="10.0" scrollTop="10.0" wrapText="true">
+            <TextArea fx:id="eventTextArea" editable="false" focusTraversable="false" scrollLeft="10.0" scrollTop="10.0" wrapText="true">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>

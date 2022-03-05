@@ -33,7 +33,7 @@ public class AntsViewModel extends AlgorithmTaskManager implements ViewModel {
     GraphScope graphScope;
 
     @InjectScope
-    TaskScope taskScope;
+    AlgorithmTaskScope algorithmTaskScope;
 
     @Inject
     NotificationCenter notificationCenter;
@@ -41,7 +41,7 @@ public class AntsViewModel extends AlgorithmTaskManager implements ViewModel {
     DateFormat dateFormat = new SimpleDateFormat("mm:ss:SSS");
 
     public void initialize(){
-        super.initialize(taskScope, canvasScope, notificationCenter);
+        super.initialize(algorithmTaskScope, canvasScope, notificationCenter);
     }
 
     @Override

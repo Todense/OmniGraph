@@ -71,12 +71,12 @@ public class PresetCreatorViewModel implements ViewModel {
     }
 
     public void createPreset() {
-        notificationCenter.publish(MainViewModel.THREAD_STARTED, "Creating preset...");
+        notificationCenter.publish(MainViewModel.TASK_STARTED, "Creating preset...");
         ExecutorService executor = Executors.newSingleThreadExecutor();
         Thread thread = new Thread(() -> {
             Graph presetGraph = create(presetProperty.get(), new Point2D(canvasScope.getCanvasWidth(), canvasScope.getCanvasHeight()));
             notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, presetGraph);
-            notificationCenter.publish(MainViewModel.THREAD_FINISHED, presetProperty.get().toString() +" created");
+            notificationCenter.publish(MainViewModel.TASK_FINISHED, presetProperty.get().toString() +" created");
         });
         executor.execute(thread);
     }

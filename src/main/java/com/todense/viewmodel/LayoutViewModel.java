@@ -11,7 +11,7 @@ import com.todense.viewmodel.random.arrangement.generators.RandomCirclePointGene
 import com.todense.viewmodel.scope.CanvasScope;
 import com.todense.viewmodel.scope.GraphScope;
 import com.todense.viewmodel.scope.LayoutScope;
-import com.todense.viewmodel.scope.TaskScope;
+import com.todense.viewmodel.scope.AlgorithmTaskScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
@@ -30,7 +30,7 @@ public class LayoutViewModel extends AlgorithmTaskManager implements ViewModel {
     CanvasScope canvasScope;
 
     @InjectScope
-    TaskScope taskScope;
+    AlgorithmTaskScope algorithmTaskScope;
 
     @InjectScope
     LayoutScope layoutScope;
@@ -41,7 +41,7 @@ public class LayoutViewModel extends AlgorithmTaskManager implements ViewModel {
 
     public void initialize(){
         notificationCenter.subscribe(LayoutViewModel.LAYOUT_START, (key, payload) -> startTask());
-        super.initialize(taskScope, canvasScope, notificationCenter);
+        super.initialize(algorithmTaskScope, canvasScope, notificationCenter);
     }
 
     @Override

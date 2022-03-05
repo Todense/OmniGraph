@@ -73,12 +73,7 @@ public abstract class LayoutTask extends AlgorithmTask {
                     quadTree = new QuadTree(7, graph);
                 } catch (IncorrectGraphBoundaryException e){
                     quadTreeBuild = false;
-                } finally {
-                    if(!quadTreeBuild){
-
-                    }
                 }
-
             }
             onIterationStart(graph);
             applyForces(graph);

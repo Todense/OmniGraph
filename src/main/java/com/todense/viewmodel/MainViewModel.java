@@ -34,39 +34,64 @@ import java.text.SimpleDateFormat;
 
 @ScopeProvider(scopes = {AlgorithmScope.class, GraphScope.class,
         BackgroundScope.class, CanvasScope.class,
-        AnimationScope.class, AntsScope.class, TaskScope.class,
+        AnimationScope.class, AntsScope.class, AlgorithmTaskScope.class,
         InputScope.class, LayoutScope.class, FileScope.class})
 public class MainViewModel implements ViewModel {
 
+    // algorithm management notification ids (manage "AlgorithmTask" tasks)
+    public final static String ALGORITHM_STARTED = "ALGORITHM_STARTED";
+    public final static String ALGORITHM_FINISHED = "ALGORITHM_FINISHED";
+    public final static String ALGORITHM_CANCELLED = "ALGORITHM_CANCELLED";
+
+    // task management notification ids
     public final static String TASK_STARTED = "TASK_STARTED";
     public final static String TASK_FINISHED = "TASK_FINISHED";
-    public final static String TASK_CANCELLED = "TASK_CANCELLED";
-    public final static String THREAD_STARTED = "THREAD_STARTED";
-    public final static String THREAD_FINISHED = "THREAD_FINISHED";
+
+    // graph edit request notification ids - used for sending GraphOperation instances
     public final static String GRAPH_EDIT_REQUEST = "GRAPH_EDIT_REQUEST";
     public final static String WRITE = "WRITE";
     public final static String RESET = "RESET";
 
-    private final ObjectProperty<String> textProperty = new SimpleObjectProperty<>("");
+    // text properties
+    private final ObjectProperty<String> eventTextProperty = new SimpleObjectProperty<>("");
     private final ObjectProperty<String> infoTextProperty = new SimpleObjectProperty<>();
+
+    // application theme color
     private final ObjectProperty<Color> appColorProperty = new SimpleObjectProperty<>(Color.rgb(55,85,125));
+
+    // current mouse position
     private final ObjectProperty<Point2D> mousePositionProperty = new SimpleObjectProperty<>(new Point2D(0,0));
+
+    // indicates if any task is now running
     private final BooleanProperty workingProperty = new SimpleBooleanProperty(false);
-    private final BooleanProperty taskRunningProperty = new SimpleBooleanProperty(false);
+
+    // indicates if any AlgorithmTask is now running
+    private final BooleanProperty algorithmRunningProperty = new SimpleBooleanProperty(false);
+
+    // indicates if any LayoutTask is now running
     private final BooleanProperty layoutRunningProperty = new SimpleBooleanProperty(false);
-    private final BooleanProperty manualEditLockProperty = new SimpleBooleanProperty(false);
-    private final BooleanProperty autoEditLockProperty = new SimpleBooleanProperty(false);
-    private final BooleanProperty editLockedProperty = new SimpleBooleanProperty(false);
+
+    // indicates if AutoD3Layout is now running
     private final BooleanProperty autoLayoutOnProperty = new SimpleBooleanProperty(false);
 
+    // indicates if graph edition is locked by user
+    private final BooleanProperty manualEditLockProperty = new SimpleBooleanProperty(false);
+
+    // indicates if graph edition is locked by running task
+    private final BooleanProperty autoEditLockProperty = new SimpleBooleanProperty(false);
+
+    // indicates if graph edition is locked
+    private final BooleanProperty editLockedProperty = new SimpleBooleanProperty(false);
+
+    // side panel widths
     private final DoubleProperty leftPanelWidthProperty = new SimpleDoubleProperty();
     private final DoubleProperty rightPanelWidthProperty = new SimpleDoubleProperty();
 
+    // date formats
     private final DateFormat durationFormatter = new SimpleDateFormat("mm:ss:SSS");
     private final DateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
 
     private AutoD3LayoutTask autoLayout;
-
 
     @Inject
     NotificationCenter notificationCenter;
@@ -75,7 +100,7 @@ public class MainViewModel implements ViewModel {
     GraphScope graphScope;
 
     @InjectScope
-    TaskScope taskScope;
+    AlgorithmTaskScope algorithmTaskScope;
 
     @InjectScope
     InputScope inputScope;
@@ -97,57 +122,86 @@ public class MainViewModel implements ViewModel {
     public void initialize(){
         graphManager = graphScope.getGraphManager();
 
-        notificationCenter.subscribe(MainViewModel.WRITE, (key, payload) -> write((String) payload[0]));
+        // ---------NOTIFICATIONS----------
 
-        notificationCenter.subscribe(TASK_CANCELLED, (key, payload) ->{
+        // receive write notification
+        notificationCenter.subscribe(MainViewModel.WRITE, (key, payload) -> writeEvent((String) payload[0]));
+
+        // receive notification on algorithm cancelled
+        notificationCenter.subscribe(ALGORITHM_CANCELLED, (key, payload) ->{
+            // set info & event texts
             writeInfo("");
-            write(payload[0]+ " cancelled");
+            writeEvent(payload[0]+ " cancelled");
+
+            // set flags
             workingProperty.set(false);
             autoEditLockProperty.set(false);
-            taskRunningProperty.set(false);
+            algorithmRunningProperty.set(false);
             layoutRunningProperty.set(false);
         });
 
-        notificationCenter.subscribe(TASK_STARTED, (key, payload) -> {
+        // receive notification on algorithm started
+        notificationCenter.subscribe(ALGORITHM_STARTED, (key, payload) -> {
             AlgorithmTask task = (AlgorithmTask) payload[0];
-            onTaskStarted(task);
+            onAlgorithmStarted(task);
         });
 
-        notificationCenter.subscribe(TASK_FINISHED, (key, payload) -> { //payload = name, duration, result
+        // receive notification on algorithm finished
+        notificationCenter.subscribe(ALGORITHM_FINISHED, (key, payload) -> { //payload = name, duration, result
             String name = (String) payload[0];
             long duration = (long) payload[1];
             String result = (String) payload[2];
 
-            onTaskFinished(name, duration, result);
+            onAlgorithmFinished(name, duration, result);
         });
 
-        notificationCenter.subscribe(THREAD_STARTED, (key, payload) -> {
-            stopAll();
+        // receive notification on task started
+        notificationCenter.subscribe(TASK_STARTED, (key, payload) -> {
+            stopCurrentAlgorithm();
             writeInfo((String) payload[0]);
             workingProperty.set(true);
         });
 
-        notificationCenter.subscribe(THREAD_FINISHED, (key, payload) -> {
-            write((String) payload[0]);
+        // receive notification on task finished
+        notificationCenter.subscribe(TASK_FINISHED, (key, payload) -> {
+            writeEvent((String) payload[0]);
             writeInfo("");
             workingProperty.set(false);
         });
 
+        // receive notification on graph edit request - perform received GraphOperation and repaint
         notificationCenter.subscribe(GRAPH_EDIT_REQUEST, (key, payload) -> {
-            if(!taskRunningProperty.get()) {
+            if(!algorithmRunningProperty.get()) {
                 GraphOperation operation = ((GraphOperation) payload[0]);
                 graphManager.performOperation(operation);
                 canvasScope.getPainter().repaint();
             }
         });
 
+        // receive notification when new graph is set
+        notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_SET, (key, payload) -> {
+            // reset auto layout
+            if(isAutoLayoutOn()) {
+                stopAutoLayout();
+                startAutoLayout();
+            }
+        });
 
+        // ---------BINDINGS----------
+
+        // lock properties bindings
         editLockedProperty.bind(Bindings.createBooleanBinding(
                 () -> manualEditLockProperty.get() || autoEditLockProperty.get(),
                 manualEditLockProperty,
                 autoEditLockProperty
         ));
 
+        inputScope.editLockedProperty().bind(editLockedProperty);
+        mousePositionProperty.bind(inputScope.mousePositionProperty());
+
+        // ---------LISTENERS----------
+
+        // listen to auto layout on/off - start/stop layout
         autoLayoutOnProperty.addListener((obs, oldVal, newVal) -> {
             if(newVal){
                 startAutoLayout();
@@ -157,53 +211,50 @@ public class MainViewModel implements ViewModel {
             }
         });
 
-        notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_SET, (key, payload) -> {
-            if(isAutoLayoutOn()) {
-                stopAutoLayout();
-                startAutoLayout();
-            }
-        });
-
-        inputScope.editLockedProperty().bind(editLockedProperty);
-        mousePositionProperty.bind(inputScope.mousePositionProperty());
 
         // unlock graph operations when layout is paused
         animationScope.pausedProperty().addListener((obs, oldVal, newVal) ->{
-            if(!taskRunningProperty.get())
+            if(layoutRunningProperty.get()){
                 graphManager.setQueueGraphOperationsOn(!newVal);
+                writeEvent("Queue set to: "+(!newVal));
+            }
+
         });
 
+        // repaint when animatedProperty is changed
         animationScope.animatedProperty().addListener((obs, oldVal, newVel) -> canvasScope.getPainter().repaint());
-        appColorProperty.addListener((obs, oldVal, newVel) -> canvasScope.getPainter().repaint());
     }
 
-    private void onTaskStarted(AlgorithmTask task){
+    private void onAlgorithmStarted(AlgorithmTask task){
         String taskName = task.getAlgorithmName();
-        write(taskName + " started");
-        writeInfo("Running: "+ taskName);
-        workingProperty.set(true);
-        if (!(task instanceof LayoutTask)){
-            autoEditLockProperty.set(true);
-        } else{
-            layoutRunningProperty.set(true);
-        }
 
+        // set info & event texts
+        writeEvent(taskName + " started");
+        writeInfo("Running: "+ taskName);
+
+        // set flags
+        autoEditLockProperty.set(!(task instanceof LayoutTask)); // when layout, don't lock graph edit
         autoLayoutOnProperty.set(false);
-        taskRunningProperty.set(true);
+        algorithmRunningProperty.set(true);
+
+        // reset graph
         graphManager.resetGraph();
     }
 
-    private void onTaskFinished(String name, long duration, String result){
+    private void onAlgorithmFinished(String name, long duration, String result){
+        // set info & event texts
         if(name != null){
-            write(name + " finished in "+ durationFormatter.format(duration));
+            writeEvent(name + " finished in "+ durationFormatter.format(duration));
         }
         if(!result.isEmpty()){
-            write(result); // result message
+            writeEvent(result);
         }
         writeInfo("");
+
+        // set flags
         workingProperty.set(false);
         autoEditLockProperty.set(false);
-        taskRunningProperty.set(false);
+        algorithmRunningProperty.set(false);
         layoutRunningProperty.set(false);
     }
 
@@ -212,6 +263,7 @@ public class MainViewModel implements ViewModel {
         autoLayout.setPainter(canvasScope.getPainter());
         Thread thread = new Thread(autoLayout);
         thread.start();
+
         layoutRunningProperty.set(true);
         autoLayoutOnProperty.set(true);
     }
@@ -230,7 +282,7 @@ public class MainViewModel implements ViewModel {
 
     public void openGraph(File file) {
 
-        if(taskScope.getTask() != null && taskScope.getTask().isRunning())
+        if(algorithmTaskScope.getAlgorithmTask() != null && algorithmTaskScope.getAlgorithmTask().isRunning())
             return;
 
         String extension = FilenameUtils.getExtension(file.getAbsolutePath());
@@ -260,13 +312,50 @@ public class MainViewModel implements ViewModel {
         if(openedGraph != null){
             notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, openedGraph);
             notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
-            write("Graph opened");
+            writeEvent("Graph opened");
         }
     }
 
+    public void stopCurrentAlgorithm() {
+        algorithmTaskScope.stopAlgorithmTask();
+    }
 
-    public void stopAll() {
-        taskScope.stopTask();
+    public void writeEvent(String s){
+        Platform.runLater(() -> {
+            String message = "["+timeFormatter.format(System.currentTimeMillis())+"]"+" "+s;
+            String text = eventTextProperty.get() + "\n"+message;
+            eventTextProperty.setValue(text);
+            System.out.println(message);
+        });
+    }
+
+    public void writeInfo(String s){
+        Platform.runLater(() -> infoTextProperty.setValue(s));
+    }
+
+    public void generateRandomGraph(){
+        notificationCenter.publish(RandomGeneratorViewModel.RANDOM_GRAPH_REQUEST);
+    }
+
+    public void createPresetGraph(){
+        notificationCenter.publish(PresetCreatorViewModel.PRESET_GRAPH_REQUEST);
+    }
+
+    public void deleteGraph() {
+        notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, new Graph());
+    }
+
+    public void resetGraph(){
+        if(!algorithmRunningProperty.get()){
+            graphManager.resetGraph();
+            notificationCenter.publish(MainViewModel.RESET);
+            notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
+        }
+    }
+
+    public void adjustCameraToGraph() {
+        notificationCenter.publish("ADJUST", leftPanelWidthProperty.get(), rightPanelWidthProperty.get());
+        notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
     }
 
     public void setKeyInput(Scene scene){
@@ -281,7 +370,7 @@ public class MainViewModel implements ViewModel {
 
         // stop algorithm
         KeyCodeCombination stopComb = new KeyCodeCombination(KeyCode.BACK_SPACE, KeyCombination.CONTROL_DOWN);
-        scene.getAccelerators().put(stopComb, this::stopAll);
+        scene.getAccelerators().put(stopComb, this::stopCurrentAlgorithm);
 
         // start layout
         KeyCodeCombination layoutComb = new KeyCodeCombination(KeyCode.L, KeyCombination.CONTROL_DOWN);
@@ -304,54 +393,14 @@ public class MainViewModel implements ViewModel {
         KeyCodeCombination copyComb = new KeyCodeCombination(KeyCode.C, KeyCombination.CONTROL_DOWN);
         scene.getAccelerators().put(copyComb, () -> graphScope.getGraphManager().copySelectedSubgraph());
 
-
         scene.setOnKeyPressed(keyEvent -> inputScope.getPressedKeys().add(keyEvent.getCode()));
         scene.setOnKeyReleased(keyEvent -> inputScope.getPressedKeys().remove(keyEvent.getCode()));
     }
 
-    public void write(String s){
-        Platform.runLater(() -> {
-            String message = "["+timeFormatter.format(System.currentTimeMillis())+"]"+" "+s;
-            String text = textProperty.get() + "\n"+message;
-            textProperty.setValue(text);
-            System.out.println(message);
-        });
+    // ---------GETTERS/SETTERS---------
 
-    }
-
-    public void writeInfo(String s){
-        Platform.runLater(() -> infoTextProperty.setValue(s));
-    }
-
-    public void generateRandomGraph(){
-        notificationCenter.publish(RandomGeneratorViewModel.RANDOM_GRAPH_REQUEST);
-    }
-
-    public void createPresetGraph(){
-        notificationCenter.publish(PresetCreatorViewModel.PRESET_GRAPH_REQUEST);
-    }
-
-    public void deleteGraph() {
-        notificationCenter.publish(GraphViewModel.NEW_GRAPH_REQUEST, new Graph());
-    }
-
-    public void resetGraph(){
-        if(!taskRunningProperty.get()){
-            graphManager.resetGraph();
-            notificationCenter.publish(MainViewModel.RESET);
-            notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
-        }
-
-    }
-
-    public void adjustCameraToGraph() {
-        notificationCenter.publish("ADJUST", leftPanelWidthProperty.get(), rightPanelWidthProperty.get());
-        notificationCenter.publish(CanvasViewModel.REPAINT_REQUEST);
-    }
-
-
-    public ObjectProperty<String> textProperty() {
-        return textProperty;
+    public ObjectProperty<String> eventTextProperty() {
+        return eventTextProperty;
     }
 
     public ObjectProperty<String> infoTextProperty() {
@@ -374,16 +423,8 @@ public class MainViewModel implements ViewModel {
         return editLockedProperty;
     }
 
-    public boolean isAutoEditLockOn() {
-        return autoEditLockProperty.get();
-    }
-
-    public BooleanProperty autoEditLockProperty() {
-        return autoEditLockProperty;
-    }
-
-    public BooleanProperty taskRunningProperty() {
-        return taskRunningProperty;
+    public BooleanProperty algorithmRunningProperty() {
+        return algorithmRunningProperty;
     }
 
     public Color getAppColor() {
@@ -428,10 +469,6 @@ public class MainViewModel implements ViewModel {
 
     public BooleanProperty pausedProperty() {
         return animationScope.pausedProperty();
-    }
-
-    public BooleanProperty nextStepProperty() {
-        return animationScope.nextStepProperty();
     }
 
     public LayoutScope getLayoutScope() {

@@ -2,28 +2,28 @@ package com.todense.viewmodel.algorithm;
 
 import com.todense.viewmodel.MainViewModel;
 import com.todense.viewmodel.scope.CanvasScope;
-import com.todense.viewmodel.scope.TaskScope;
+import com.todense.viewmodel.scope.AlgorithmTaskScope;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
 
 public abstract class AlgorithmTaskManager {
 
     private AlgorithmTask task;
-    private TaskScope taskScope;
+    private AlgorithmTaskScope algorithmTaskScope;
     private CanvasScope canvasScope;
     private NotificationCenter notificationCenter;
 
     private long startTime;
 
 
-    public void initialize(TaskScope taskScope, CanvasScope canvasScope, NotificationCenter notificationCenter){
-        this.taskScope = taskScope;
+    public void initialize(AlgorithmTaskScope algorithmTaskScope, CanvasScope canvasScope, NotificationCenter notificationCenter){
+        this.algorithmTaskScope = algorithmTaskScope;
         this.canvasScope = canvasScope;
         this.notificationCenter = notificationCenter;
 
     }
 
     public void startTask() {
-        if (!taskScope.isDone())
+        if (!algorithmTaskScope.isDone())
             return;
 
         task = null;
@@ -47,11 +47,11 @@ public abstract class AlgorithmTaskManager {
                 task.getResultMessage()));
 
         task.setOnCancelled(workerStateEvent ->
-                notificationCenter.publish(MainViewModel.TASK_CANCELLED, task.getAlgorithmName()));
+                notificationCenter.publish(MainViewModel.ALGORITHM_CANCELLED, task.getAlgorithmName()));
 
         startTime = System.currentTimeMillis();
-        notificationCenter.publish(MainViewModel.TASK_STARTED, task);
-        taskScope.start(task);
+        notificationCenter.publish(MainViewModel.ALGORITHM_STARTED, task);
+        algorithmTaskScope.startAlgorithmTask(task);
     }
 
     public void stopTask(){
