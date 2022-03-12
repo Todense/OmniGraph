@@ -24,8 +24,8 @@ public class EdgeList extends ArrayList<Edge> {
         return super.remove(index);
     }
 
-    public boolean remove(Node n, Node m){
-       return remove(getEdge(n, m));
+    public void remove(Node n, Node m){
+        remove(getEdge(n, m));
     }
 
     @Override

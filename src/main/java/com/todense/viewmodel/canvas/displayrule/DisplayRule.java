@@ -1,7 +1,6 @@
 package com.todense.viewmodel.canvas.displayrule;
 
 import com.todense.model.graph.Edge;
-import com.todense.viewmodel.scope.BackgroundScope;
 import javafx.scene.paint.Color;
 import com.todense.model.graph.Node;
 

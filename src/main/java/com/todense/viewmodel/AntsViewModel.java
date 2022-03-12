@@ -38,7 +38,7 @@ public class AntsViewModel extends AlgorithmTaskManager implements ViewModel {
     @Inject
     NotificationCenter notificationCenter;
 
-    DateFormat dateFormat = new SimpleDateFormat("mm:ss:SSS");
+    final DateFormat dateFormat = new SimpleDateFormat("mm:ss:SSS");
 
     public void initialize(){
         super.initialize(algorithmTaskScope, canvasScope, notificationCenter);

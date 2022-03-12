@@ -18,12 +18,12 @@ import java.util.regex.Pattern;
 
 public class ParameterHBox extends HBox {
 
-    private double defVal;
+    private final double defVal;
     private double minVal;
     private double maxVal;
 
-    protected Label label = new Label();
-    protected TextField textField = new TextField();
+    protected final Label label = new Label();
+    protected final TextField textField = new TextField();
 
     private double previousMouseY = -1.0;
     private double previousMouseX = -1.0;
@@ -99,7 +99,7 @@ public class ParameterHBox extends HBox {
             precision = 0;
 
         setUpMouseControls(precision);
-        property.setValue(defVal);
+        property.setValue(this.defVal);
         Bindings.bindBidirectional(textField.textProperty(), property, DOUBLE_CONVERTER);
     }
 

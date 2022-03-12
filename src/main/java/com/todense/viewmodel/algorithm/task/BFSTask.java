@@ -9,7 +9,7 @@ import java.util.LinkedList;
 
 public class BFSTask extends AlgorithmTask {
 
-	private Node startNode;
+	private final Node startNode;
 
 	public BFSTask(Node startNode, Graph graph){
 		super(graph);

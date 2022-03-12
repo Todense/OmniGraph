@@ -22,6 +22,7 @@ public class OgrReader implements GraphReader {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        assert scanner != null;
         String[] nameLine = scanner.nextLine().split(" ");
         assert nameLine[0].equals("NAME:");
         String name = nameLine[1];

@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 
 public class ResponsiveDisplayRule extends DefaultDisplayRule{
 
-    BackgroundScope backgroundScope;
+    final BackgroundScope backgroundScope;
 
     public ResponsiveDisplayRule(GraphScope graphScope, BackgroundScope backgroundScope) {
         super(graphScope);

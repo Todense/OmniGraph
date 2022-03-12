@@ -153,7 +153,7 @@ class AntColonyAlgoritmsTest {
     void guideTableDistributionsTest(){
         long startTime = System.nanoTime();
         UniformRandomProvider provider = new UniformRandomProvider() {
-            Random random = new Random();
+            final Random random = new Random();
             @Override
             public void nextBytes(byte[] bytes) {
 

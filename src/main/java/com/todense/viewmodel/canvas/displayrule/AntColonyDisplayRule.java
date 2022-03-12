@@ -7,7 +7,7 @@ import com.todense.viewmodel.scope.GraphScope;
 
 public class AntColonyDisplayRule extends ResponsiveDisplayRule{
 
-    private AntsScope antsScope;
+    private final AntsScope antsScope;
 
     public AntColonyDisplayRule(GraphScope graphScope,BackgroundScope backgroundScope, AntsScope antsScope) {
         super(graphScope, backgroundScope);

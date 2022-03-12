@@ -328,7 +328,7 @@ public class MainView implements FxmlView<MainViewModel> {
 
 
     //speeds up scrolling (default is too slow)
-    private void setScrollSpeed(double speed, ScrollPane scrollPane){
+    private void setScrollSpeed(@SuppressWarnings("SameParameterValue") double speed, ScrollPane scrollPane){
         scrollPane.getContent().setOnScroll(scrollEvent -> {
             double deltaY = scrollEvent.getDeltaY() * speed;
             scrollPane.setVvalue(scrollPane.getVvalue() - deltaY);

@@ -13,7 +13,7 @@ public class GraphManager {
     private Graph clipboardGraph;
 
     private boolean queueGraphOperationsOn = false;
-    public Queue<GraphOperation> operationQueue = new LinkedList<>();
+    public final Queue<GraphOperation> operationQueue = new LinkedList<>();
 
     public GraphManager(){
         setGraph(new Graph());

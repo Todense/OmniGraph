@@ -18,6 +18,7 @@ public class TspReader implements GraphReader {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        assert scanner != null;
         String name = scanner.nextLine().split(":")[1];
         Graph graph = new Graph(name);
         String line = "";

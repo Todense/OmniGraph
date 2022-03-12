@@ -292,9 +292,7 @@ public class MainViewModel implements ViewModel {
             case "ogr": graphReader = new OgrReader(); break;
             case "tsp": graphReader = new TspReader(); break;
             case "graphml" : graphReader = new GraphMLReader(); break;
-            case "mtx": graphReader = new MtxReader(
-                    new Point2D(canvasScope.getCanvasWidth()/2, canvasScope.getCanvasHeight()/2),
-                    canvasScope.getCanvasHeight() * 0.9); break;
+            case "mtx": graphReader = new MtxReader(canvasScope.getCanvasHeight() * 0.9); break;
         }
         assert graphReader != null;
         Graph openedGraph = null;

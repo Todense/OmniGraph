@@ -7,7 +7,7 @@ import java.util.function.ToDoubleFunction;
 
 public abstract class WeightedAlgorithmTask extends AlgorithmTask {
 
-    protected ToDoubleFunction<Edge> weightFunction;
+    protected final ToDoubleFunction<Edge> weightFunction;
 
     public WeightedAlgorithmTask(Graph graph, boolean customWeight) {
         super(graph);

@@ -24,7 +24,7 @@ public class LayoutView implements FxmlView<LayoutViewModel> {
     @FXML private ProgressBar alphaBar, stepSizeProgressBar;
 
     private final HashMap<LayoutAlgorithm, List<ParameterHBox>> algorithmParametersBoxes = new HashMap<>();
-    private List<ParameterHBox> generalParametersHBoxes = new ArrayList<>();
+    private final List<ParameterHBox> generalParametersHBoxes = new ArrayList<>();
 
     @InjectViewModel
     LayoutViewModel viewModel;

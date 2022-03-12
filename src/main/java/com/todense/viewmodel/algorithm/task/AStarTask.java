@@ -12,8 +12,8 @@ import java.util.PriorityQueue;
 
 public class AStarTask extends ShortestPathAlgorithmTask {
 
-    private Node startNode;
-    private Node goalNode;
+    private final Node startNode;
+    private final Node goalNode;
 
     private List<Double> goalDist; //goalDist(i) = dist(goal, i)
     private List<Double> gScores;  //gScore(i) = the cost of the cheapest path from start to i currently known

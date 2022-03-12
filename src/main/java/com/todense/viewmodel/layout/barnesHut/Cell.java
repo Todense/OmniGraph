@@ -15,10 +15,10 @@ public class Cell {
 
     private Point2D centerOfMass;
 
-    private List<Node> nodes = new ArrayList<>();
+    private final List<Node> nodes = new ArrayList<>();
 
-    private Cell[] children = new Cell[4];
-    private Cell parent;
+    private final Cell[] children = new Cell[4];
+    private final Cell parent;
 
     public Cell(Cell parent, Point2D center, double width){
         this.parent = parent;

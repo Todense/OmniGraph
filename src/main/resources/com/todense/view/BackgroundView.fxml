@@ -10,27 +10,26 @@
 
 <VBox alignment="TOP_CENTER" prefHeight="130.0" prefWidth="250.0" spacing="3.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.todense.view.BackgroundView">
    <Label alignment="CENTER" prefHeight="4.0" prefWidth="187.0" styleClass="darkLabel" text="Background Options" />
-   <VBox alignment="BOTTOM_LEFT" prefWidth="100.0" spacing="3.0" styleClass="subsection">
-      <children>
-         <HBox alignment="CENTER_LEFT" spacing="3.0" VBox.vgrow="NEVER">
-            <children>
-               <Label prefWidth="150.0" text="Background color">
-                  <font>
-                     <Font size="10.0" />
-                  </font>
-               </Label>
-               <ColorPicker fx:id="backgroundColorPicker" maxWidth="1.7976931348623157E308" minHeight="-Infinity" prefHeight="25.0" HBox.hgrow="ALWAYS" />
-            </children>
-         </HBox>
-         <ToggleSwitch fx:id="gridToggleSwitch" contentDisplay="TOP" graphicTextGap="0.0" maxWidth="1.7976931348623157E308" prefHeight="15.0" text="Show Grid" textAlignment="CENTER" viewOrder="1.0">
-            <font>
-               <Font size="10.0" />
-            </font>
-         </ToggleSwitch>
-         <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="darkLabel" text="Grid Options" />
-         <VBox fx:id="gridOptionsVBox" alignment="CENTER" spacing="3.0" styleClass="subsection" />
-      </children>
-   </VBox>
+    <VBox alignment="BOTTOM_LEFT" prefWidth="100.0" spacing="3.0" styleClass="subsection">
+        <HBox alignment="CENTER_LEFT" spacing="3.0" VBox.vgrow="NEVER">
+            <Label prefWidth="150.0" text="Background color">
+                <font>
+                    <Font size="10.0"/>
+                </font>
+            </Label>
+            <ColorPicker fx:id="backgroundColorPicker" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+                         prefHeight="25.0" HBox.hgrow="ALWAYS"/>
+        </HBox>
+        <ToggleSwitch fx:id="gridToggleSwitch" contentDisplay="TOP" graphicTextGap="0.0"
+                      maxWidth="1.7976931348623157E308" prefHeight="15.0" text="Show Grid" textAlignment="CENTER"
+                      viewOrder="1.0">
+           <font>
+               <Font size="10.0"/>
+           </font>
+        </ToggleSwitch>
+        <Label alignment="CENTER" maxWidth="1.7976931348623157E308" styleClass="darkLabel" text="Grid Options"/>
+        <VBox fx:id="gridOptionsVBox" alignment="CENTER" spacing="3.0" styleClass="subsection"/>
+    </VBox>
    <padding>
       <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
    </padding>

@@ -9,7 +9,7 @@ import java.util.Stack;
 
 public abstract class RandomEdgeGenerator implements EdgeGenerator {
 
-    protected Random rnd = new Random();
+    protected final Random rnd = new Random();
     protected List<Node> nodes;
     private Pair<Stack<Integer>, Stack<Integer>> connections;
 

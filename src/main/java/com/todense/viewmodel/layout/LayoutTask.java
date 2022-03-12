@@ -20,15 +20,15 @@ public abstract class LayoutTask extends AlgorithmTask {
     protected final double GAMMA = Math.sqrt(9d/4d);  // scales optimum distance between multilevel steps
 
     protected int iterationCounter = 0;
-    protected LayoutScope layoutScope;
-    protected GraphManager graphManager;
+    protected final LayoutScope layoutScope;
+    protected final GraphManager graphManager;
     private QuadTree quadTree;
     protected Point2D [] forces;
     protected Point2D [] prevForces;
-    protected HashMap<Node, Integer> prevNodeIdx;
+    protected final HashMap<Node, Integer> prevNodeIdx;
     protected boolean topologyChanged = false;
     private long lastIterationStartTime;
-    Random rnd = new Random();
+    final Random rnd = new Random();
 
     private int graphSequenceLength = 0;
     private boolean quadTreeBuild;
@@ -55,7 +55,7 @@ public abstract class LayoutTask extends AlgorithmTask {
         graphManager.setQueueGraphOperationsOn(false);
     }
 
-    protected void layout(Graph graph) throws InterruptedException{
+    protected void layout(Graph graph){
         iterationCounter = 0;
         while(!stopConditionMet()){
             try {

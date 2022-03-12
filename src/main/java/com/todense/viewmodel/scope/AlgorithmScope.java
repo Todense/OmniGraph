@@ -14,10 +14,10 @@ import java.util.List;
 
 public class AlgorithmScope implements Scope {
 
-    private ObjectProperty<Node> startNodeProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<Node> goalNodeProperty = new SimpleObjectProperty<>();
-    private ObjectProperty<Algorithm> algorithmProperty = new SimpleObjectProperty<>();
-    private BooleanProperty showingEndpointsProperty = new SimpleBooleanProperty(true);
+    private final ObjectProperty<Node> startNodeProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Node> goalNodeProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<Algorithm> algorithmProperty = new SimpleObjectProperty<>();
+    private final BooleanProperty showingEndpointsProperty = new SimpleBooleanProperty(true);
 
     private List<? extends WalkingAgent> walkingAgents = new ArrayList<>();
 

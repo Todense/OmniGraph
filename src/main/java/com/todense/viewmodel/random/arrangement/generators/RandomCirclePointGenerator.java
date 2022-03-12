@@ -8,8 +8,8 @@ import java.util.Random;
 
 public class RandomCirclePointGenerator implements Generator<Point2D> {
 
-    double radius;
-    Random rnd = new Random();
+    final double radius;
+    final Random rnd = new Random();
 
     public RandomCirclePointGenerator(double radius){
         this.radius = radius;

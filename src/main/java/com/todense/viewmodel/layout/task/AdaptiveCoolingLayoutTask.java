@@ -83,7 +83,7 @@ public class AdaptiveCoolingLayoutTask extends LayoutTask {
 		if(!layoutScope.isMultilevelOn()){
 			optDist = layoutScope.getHuOptDist();
 		}
-		repulsiveStrength = getRepulsiveStrength(1.0);
+		repulsiveStrength = getRepulsiveStrength();
 		longRangeExponent = layoutScope.getLongRangeForce();
 		gravity = layoutScope.gravityPullStrength() / optDist;
 	}
@@ -153,7 +153,7 @@ public class AdaptiveCoolingLayoutTask extends LayoutTask {
 		}
 	}
 
-	private double getRepulsiveStrength(double repulsiveness){
-		return -repulsiveness * Math.pow(layoutScope.getHuOptDist(), longRangeExponent);
+	private double getRepulsiveStrength(){
+		return Math.pow(layoutScope.getHuOptDist(), longRangeExponent);
 	}
 }

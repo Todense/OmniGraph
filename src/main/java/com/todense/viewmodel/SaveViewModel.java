@@ -31,7 +31,7 @@ public class SaveViewModel implements ViewModel {
     @Inject
     NotificationCenter notificationCenter;
 
-    private StringProperty errorMessageProperty = new SimpleStringProperty();
+    private final StringProperty errorMessageProperty = new SimpleStringProperty();
 
     public boolean saveGraph(GraphFileFormat graphFileFormat, String name, File directory) {
         Graph graph = graphScope.getGraphManager().getGraph();

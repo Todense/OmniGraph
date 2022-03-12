@@ -13,7 +13,7 @@ public abstract class AlgorithmTask extends Task<Void>{
 
     protected String algorithmName = "Unnamed Algorithm";
 
-    protected Graph graph;
+    protected final Graph graph;
     protected String resultMessage = "";
     protected Painter painter;
 

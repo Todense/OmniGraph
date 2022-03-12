@@ -17,7 +17,7 @@ public class PrimTask extends WeightedAlgorithmTask {
 	private Node[] prev;
 	private PriorityQueue<Node> queue;
 	private int componentCount;
-	private Node startNode;
+	private final Node startNode;
 
 	public PrimTask(Node startNode, Graph graph, boolean customWeight) {
 		super(graph, customWeight);

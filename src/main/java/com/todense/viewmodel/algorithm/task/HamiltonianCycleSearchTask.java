@@ -17,8 +17,8 @@ public class HamiltonianCycleSearchTask extends AlgorithmTask {
 
     boolean cycleFound;
     
-    private Node startNode;
-    private boolean checkingConnectivity;
+    private final Node startNode;
+    private final boolean checkingConnectivity;
 
     public HamiltonianCycleSearchTask(Node startNode, Graph graph, boolean checkingConnectivity){
         super(graph);

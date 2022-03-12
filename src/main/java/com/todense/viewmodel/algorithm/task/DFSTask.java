@@ -10,7 +10,7 @@ import java.util.Stack;
 
 public class DFSTask extends AlgorithmTask {
 
-	private Node startNode;
+	private final Node startNode;
 
 	public DFSTask(Node startNode, Graph graph){
 		super(graph);

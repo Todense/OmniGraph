@@ -31,7 +31,8 @@ public class Starter extends MvvmfxGuiceApplication {
                         .toExternalForm()
         );
         stage.setScene(scene);
-        stage.getIcons().add(new Image(getClass().getResource("/icon.png").toExternalForm()));
+        stage.getIcons().add(
+                new Image(Objects.requireNonNull(getClass().getResource("/icon.png")).toExternalForm()));
         stage.setMaximized(true);
         stage.show();
     }

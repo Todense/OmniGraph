@@ -41,7 +41,7 @@ public class AlgorithmViewModel extends AlgorithmTaskManager implements ViewMode
     AlgorithmTaskScope algorithmTaskScope;
 
     private GraphManager graphManager;
-    private BooleanProperty connectivityChecksProperty = new SimpleBooleanProperty(true);
+    private final BooleanProperty connectivityChecksProperty = new SimpleBooleanProperty(true);
     private double startTime;
 
     public void initialize(){

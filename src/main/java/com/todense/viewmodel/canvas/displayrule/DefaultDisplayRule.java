@@ -8,7 +8,7 @@ import javafx.scene.paint.Color;
 
 public class DefaultDisplayRule implements DisplayRule{
 
-    GraphScope graphScope;
+    final GraphScope graphScope;
 
     public DefaultDisplayRule(GraphScope graphScope){
         this.graphScope = graphScope;

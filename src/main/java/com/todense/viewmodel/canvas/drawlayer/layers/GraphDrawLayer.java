@@ -41,7 +41,7 @@ public class GraphDrawLayer implements DrawLayer {
         DisplayRule displayRule = this.getDisplayRule(displayMode);
 
         synchronized (Graph.LOCK) {
-            if (graphScope.areEdgesVisibile()) {
+            if (graphScope.areEdgesVisible()) {
                 graph.getEdges().stream().filter(e -> e != null && !isEdgePrimary(e) && e.isVisible()).forEach(e ->
                         drawEdge(e, gc, displayRule));
                 graph.getEdges().stream().filter(e -> e != null && isEdgePrimary(e) && e.isVisible()).forEach(e ->
@@ -67,8 +67,11 @@ public class GraphDrawLayer implements DrawLayer {
         switch (displayMode){
             case DEFAULT: {
                 Graph graph = graphScope.getGraphManager().getGraph();
-                boolean selecting = (inputScope.isSelecting() && graph.getNodes().stream().anyMatch(Node::isSelected)) ||
-                        !graphScope.getGraphManager().getSelectedNodes().isEmpty();
+
+                boolean isAnyNodeSelected = graph.getNodes().stream().anyMatch(Node::isSelected);
+                boolean isAnyEdgeSelected = graph.getEdges().stream().anyMatch(Edge::isSelected);
+                boolean selecting = isAnyNodeSelected || isAnyEdgeSelected;
+
                 if(selecting){
                     displayRule = new SelectingDisplayRule(graphScope, backgroundScope); break;
                 }else{

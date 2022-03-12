@@ -20,7 +20,7 @@ import java.util.List;
 
 public class NodePopOverViewModel implements ViewModel {
 
-    public static String NODES = "NODES";
+    public static final String NODES = "NODES";
     
     private final ObjectProperty<Color> nodeColorProperty = new SimpleObjectProperty<>(Node.DEFAULT_COLOR);
     private final ObjectProperty<String> labelProperty = new SimpleObjectProperty<>("");

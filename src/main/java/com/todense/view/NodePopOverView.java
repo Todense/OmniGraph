@@ -26,6 +26,7 @@ public class NodePopOverView implements FxmlView<NodePopOverViewModel> {
     @InjectViewModel
     NodePopOverViewModel viewModel;
 
+    @SuppressWarnings("unchecked")
     public void initialize(){
         this.editNodeColorPicker.valueProperty().bindBidirectional(viewModel.nodeColorProperty());
         this.nodeLabelTextField.textProperty().bindBidirectional(viewModel.labelProperty());

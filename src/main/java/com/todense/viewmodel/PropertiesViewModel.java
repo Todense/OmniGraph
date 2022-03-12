@@ -15,16 +15,16 @@ import javax.inject.Inject;
 
 public class PropertiesViewModel implements ViewModel {
 
-    private StringProperty orderProperty = new SimpleStringProperty();
-    private StringProperty sizeProperty = new SimpleStringProperty();
-    private StringProperty componentsProperty = new SimpleStringProperty();
-    private StringProperty maxDegreeProperty = new SimpleStringProperty();
-    private StringProperty minDegreeProperty = new SimpleStringProperty();
-    private StringProperty avgDegreeProperty = new SimpleStringProperty();
-    private StringProperty diameterProperty = new SimpleStringProperty();
-    private StringProperty radiusProperty = new SimpleStringProperty();
-    private StringProperty clusterCoeffProperty = new SimpleStringProperty();
-    private StringProperty densityProperty = new SimpleStringProperty();
+    private final StringProperty orderProperty = new SimpleStringProperty();
+    private final StringProperty sizeProperty = new SimpleStringProperty();
+    private final StringProperty componentsProperty = new SimpleStringProperty();
+    private final StringProperty maxDegreeProperty = new SimpleStringProperty();
+    private final StringProperty minDegreeProperty = new SimpleStringProperty();
+    private final StringProperty avgDegreeProperty = new SimpleStringProperty();
+    private final StringProperty diameterProperty = new SimpleStringProperty();
+    private final StringProperty radiusProperty = new SimpleStringProperty();
+    private final StringProperty clusterCoeffProperty = new SimpleStringProperty();
+    private final StringProperty densityProperty = new SimpleStringProperty();
 
     @InjectScope
     GraphScope graphScope;

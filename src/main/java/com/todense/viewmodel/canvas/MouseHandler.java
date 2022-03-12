@@ -31,7 +31,7 @@ public class MouseHandler {
     // key used for rotating subgraphs
     private final KeyCode NODE_ROTATION_KEY = KeyCode.N;
 
-    PopOverManager popOverManager;
+    final PopOverManager popOverManager;
 
     private Point2D mousePressPt;
     private Point2D mousePressScreenPt;

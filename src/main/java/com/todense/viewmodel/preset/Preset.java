@@ -11,7 +11,7 @@ public enum Preset {
     STAR("Star"),
     COMPLETE_BIPARTITE("Complete bipartite");
 
-    private String name;
+    private final String name;
 
     Preset(String name){
         this.name = name;

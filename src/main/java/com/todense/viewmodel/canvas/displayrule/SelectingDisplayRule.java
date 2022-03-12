@@ -36,7 +36,7 @@ public class SelectingDisplayRule extends ResponsiveDisplayRule{
     @Override
     public Color getEdgeColor(Edge edge) {
         Color displayColor = super.getEdgeColor(edge);
-        if(!edge.isMarked()){
+        if(!edge.isMarked() && !edge.isSelected()){
             displayColor = Util.getFaintColor(displayColor, backgroundScope.getBackgroundColor());
         }
         return displayColor;

@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class EdgePopOverViewModel implements ViewModel {
 
     public static final String EDGES = "EDGES";
-    private ObjectProperty<Color> edgeColorProperty = new SimpleObjectProperty<>(Edge.DEFAULT_COLOR);
+    private final ObjectProperty<Color> edgeColorProperty = new SimpleObjectProperty<>(Edge.DEFAULT_COLOR);
     private final StringProperty edgeWeightProperty = new SimpleStringProperty();
 
     private ArrayList<Edge> edges;

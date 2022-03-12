@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 
 public class Edge {
 
-    public static Color DEFAULT_COLOR = Color.rgb(120,160,200);
+    public static final Color DEFAULT_COLOR = Color.rgb(120,160,200);
 
     private final String id;
 

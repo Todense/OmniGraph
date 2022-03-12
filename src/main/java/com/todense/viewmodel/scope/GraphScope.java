@@ -31,11 +31,6 @@ public class GraphScope implements Scope {
     private final ObjectProperty<EdgeWeightMode> edgeWeightModeProperty = new SimpleObjectProperty<>(EdgeWeightMode.NONE);
     private final ObjectProperty<DisplayMode> displayModeProperty = new SimpleObjectProperty<>(DisplayMode.DEFAULT);
 
-    public GraphScope(){
-        nodeColorProperty.addListener((obs, oldVal, newVal) -> Node.DEFAULT_COLOR = newVal);
-        edgeColorProperty.addListener((obs, oldVal, newVal) -> Edge.DEFAULT_COLOR = newVal);
-    }
-
     private Function<Node, Double> nodeScaleFunction = node -> 1.0;
 
     private final GraphManager graphManager = new GraphManager();
@@ -124,7 +119,7 @@ public class GraphScope implements Scope {
         return nodeBorderProperty;
     }
 
-    public boolean areEdgesVisibile() {
+    public boolean areEdgesVisible() {
         return edgeVisibilityProperty.get();
     }
 

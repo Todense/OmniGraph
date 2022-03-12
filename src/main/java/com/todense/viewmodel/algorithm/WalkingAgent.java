@@ -5,8 +5,8 @@ import javafx.beans.property.SimpleDoubleProperty;
 
 public class WalkingAgent {
 
-    DoubleProperty x  = new SimpleDoubleProperty();
-    DoubleProperty y  = new SimpleDoubleProperty();
+    final DoubleProperty x  = new SimpleDoubleProperty();
+    final DoubleProperty y  = new SimpleDoubleProperty();
 
     public double getX() {
         return x.get();

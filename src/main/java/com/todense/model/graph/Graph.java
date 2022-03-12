@@ -57,10 +57,9 @@ public class Graph {
         return e;
     }
 
-    public Edge addEdge(Node n, Node m, Color color){
+    public void addEdge(Node n, Node m, Color color){
         Edge edge = addEdge(n, m);
         edge.setColor(color);
-        return edge;
     }
 
     public void removeEdge(Node n1, Node n2){
@@ -106,7 +105,7 @@ public class Graph {
     }
 
     public void removeNode(Node n){
-        //decrement indexes
+        //decrement indices
         boolean exist = nodes.remove(n);
         if(!exist) return;
 

@@ -14,8 +14,8 @@ public class DijkstraTask extends ShortestPathAlgorithmTask {
 
  	private List<Double> costList;
 
-	private Node startNode;
-	private Node goalNode;
+	private final Node startNode;
+	private final Node goalNode;
 
 	public DijkstraTask(Node startNode, Node goalNode, Graph graph, boolean customWeight) {
 		super(graph, customWeight);

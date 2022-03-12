@@ -24,7 +24,7 @@ public class EdgePopOverView implements FxmlView<EdgePopOverViewModel> {
         textField.textProperty().bindBidirectional(viewModel.edgeWeightProperty());
 
         viewModel.subscribe(EdgePopOverViewModel.EDGES, (key, payload) ->{
-            List<Edge> edges = (List<Edge>) payload[0];
+            @SuppressWarnings("unchecked") List<Edge> edges = (List<Edge>) payload[0];
 
             if(edges.size() == 1){
                 Edge edge = edges.get(0);

@@ -10,8 +10,8 @@ import java.util.PriorityQueue;
 
 public abstract class ShortestPathAlgorithmTask extends WeightedAlgorithmTask {
 
-    protected List<Node> path = new ArrayList<>();
-    protected List<Node> previousNodes;
+    protected final List<Node> path = new ArrayList<>();
+    protected final List<Node> previousNodes;
     protected PriorityQueue<Node> openSet;
 
     protected double pathLength = 0;

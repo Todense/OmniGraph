@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 
 public class QuadTree {
 
-    private Cell root;
+    private final Cell root;
 
     public QuadTree(int depth, Graph graph){
         Rectangle2D boundarySquare = getGraphBoundary(graph);

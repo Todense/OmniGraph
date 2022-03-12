@@ -4,7 +4,7 @@ import com.todense.viewmodel.random.RandomEdgeGenerator;
 
 public class ErdosRenyiGenerator extends RandomEdgeGenerator {
 
-    private double probability;
+    private final double probability;
 
     public ErdosRenyiGenerator(double probability){
         super();

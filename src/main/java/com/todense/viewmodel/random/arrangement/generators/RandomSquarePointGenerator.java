@@ -7,8 +7,8 @@ import java.util.Random;
 
 public class RandomSquarePointGenerator implements Generator<Point2D> {
 
-    double squareLength;
-    Random rnd = new Random();
+    final double squareLength;
+    final Random rnd = new Random();
 
     public RandomSquarePointGenerator(double squareLength){
         this.squareLength = squareLength;

@@ -6,7 +6,7 @@ import org.controlsfx.control.ToggleSwitch;
 
 public class SwitchableParameterHBox extends ParameterHBox{
 
-    protected ToggleSwitch toggleSwitch = new ToggleSwitch();
+    protected final ToggleSwitch toggleSwitch = new ToggleSwitch();
 
     public SwitchableParameterHBox(String labelText, Property<Number> property, BooleanProperty booleanProperty,
                                    int precision, double defVal, double minVal, double maxVal) {

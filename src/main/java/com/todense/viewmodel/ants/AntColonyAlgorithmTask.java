@@ -34,7 +34,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
     //global best cycle length
     private final DoubleProperty bestSolutionLength = new SimpleDoubleProperty(Double.POSITIVE_INFINITY);
     
-    protected int graphOrder;
+    protected final int graphOrder;
     
     private int iterationCounter = 0;
     private int explorationCounter = 0;
@@ -54,7 +54,7 @@ public abstract class AntColonyAlgorithmTask extends AlgorithmTask {
     private final LocalSearcher localSearcher = new LocalSearcher();
     private final Random rnd = new Random();
     private final Object lock = new Object();
-    UniformRandomProvider randomProvider;  //faster than EnumeratedDistribution
+    final UniformRandomProvider randomProvider;  //faster than EnumeratedDistribution
 
     public AntColonyAlgorithmTask(Graph graph, AntsScope antsScope, AlgorithmScope algorithmScope){
         super(graph);
