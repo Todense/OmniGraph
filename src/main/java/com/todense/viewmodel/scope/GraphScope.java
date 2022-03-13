@@ -35,6 +35,11 @@ public class GraphScope implements Scope {
 
     private final GraphManager graphManager = new GraphManager();
 
+    public GraphScope(){
+        nodeColorProperty.addListener((obs, oldVal, newVal) -> Node.DEFAULT_COLOR = newVal);
+        edgeColorProperty.addListener((obs, oldVal, newVal) -> Edge.DEFAULT_COLOR = newVal);
+    }
+
     public double getNodeSize() {
         return nodeSizeProperty.get();
     }

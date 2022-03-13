@@ -4,7 +4,7 @@ import javafx.scene.paint.Color;
 
 public class Edge {
 
-    public static final Color DEFAULT_COLOR = Color.rgb(120,160,200);
+    public static Color DEFAULT_COLOR = Color.rgb(120,160,200);
 
     private final String id;
 
@@ -31,6 +31,7 @@ public class Edge {
         id = n1.getID() < n2.getID() ?
                 n1.getID()+"-"+n2.getID() :
                 n2.getID()+"-"+n1.getID();
+        this.color = Edge.DEFAULT_COLOR;
     }
 
     public void setWeight(double weight){
@@ -50,7 +51,7 @@ public class Edge {
     }
 
     public Color getColor() {
-        return color == null ? DEFAULT_COLOR : color;
+        return color;
     }
 
     public double calcLength() {
