@@ -41,7 +41,7 @@ public abstract class AlgorithmTaskManager {
     private void setUpAndStartTask(AlgorithmTask task){
         task.setPainter(canvasScope.getPainter());
 
-        task.setOnSucceeded(workerStateEvent -> notificationCenter.publish(MainViewModel.TASK_FINISHED,
+        task.setOnSucceeded(workerStateEvent -> notificationCenter.publish(MainViewModel.ALGORITHM_FINISHED,
                 task.getAlgorithmName(),
                 System.currentTimeMillis() - startTime,
                 task.getResultMessage()));

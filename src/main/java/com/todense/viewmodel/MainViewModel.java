@@ -10,7 +10,7 @@ import com.todense.viewmodel.file.format.tsp.TspReader;
 import com.todense.viewmodel.graph.GraphManager;
 import com.todense.viewmodel.graph.GraphOperation;
 import com.todense.viewmodel.layout.LayoutTask;
-import com.todense.viewmodel.layout.task.AutoD3LayoutTask;
+import com.todense.viewmodel.layout.task.ContinuousD3LayoutTask;
 import com.todense.viewmodel.scope.*;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ScopeProvider;
@@ -71,8 +71,8 @@ public class MainViewModel implements ViewModel {
     // indicates if any LayoutTask is now running
     private final BooleanProperty layoutRunningProperty = new SimpleBooleanProperty(false);
 
-    // indicates if AutoD3Layout is now running
-    private final BooleanProperty autoLayoutOnProperty = new SimpleBooleanProperty(false);
+    // indicates if ContinuousD3Layout is now running
+    private final BooleanProperty continuousLayoutOnProperty = new SimpleBooleanProperty(false);
 
     // indicates if graph edition is locked by user
     private final BooleanProperty manualEditLockProperty = new SimpleBooleanProperty(false);
@@ -91,7 +91,7 @@ public class MainViewModel implements ViewModel {
     private final DateFormat durationFormatter = new SimpleDateFormat("mm:ss:SSS");
     private final DateFormat timeFormatter = new SimpleDateFormat("HH:mm:ss");
 
-    private AutoD3LayoutTask autoLayout;
+    private ContinuousD3LayoutTask continuousLayout;
 
     @Inject
     NotificationCenter notificationCenter;
@@ -180,10 +180,10 @@ public class MainViewModel implements ViewModel {
 
         // receive notification when new graph is set
         notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_SET, (key, payload) -> {
-            // reset auto layout
-            if(isAutoLayoutOn()) {
-                stopAutoLayout();
-                startAutoLayout();
+            // reset continuous layout
+            if(isContinuousLayoutOn()) {
+                stopContinuousLayout();
+                startContinuousLayout();
             }
         });
 
@@ -201,12 +201,12 @@ public class MainViewModel implements ViewModel {
 
         // ---------LISTENERS----------
 
-        // listen to auto layout on/off - start/stop layout
-        autoLayoutOnProperty.addListener((obs, oldVal, newVal) -> {
+        // listen to continuous layout on/off - start/stop layout
+        continuousLayoutOnProperty.addListener((obs, oldVal, newVal) -> {
             if(newVal){
-                startAutoLayout();
+                startContinuousLayout();
             }else {
-                stopAutoLayout();
+                stopContinuousLayout();
                 canvasScope.getPainter().stopAnimationTimer();
             }
         });
@@ -233,9 +233,12 @@ public class MainViewModel implements ViewModel {
         writeInfo("Running: "+ taskName);
 
         // set flags
-        autoEditLockProperty.set(!(task instanceof LayoutTask)); // when layout, don't lock graph edit
-        autoLayoutOnProperty.set(false);
+        boolean isLayout = task instanceof LayoutTask;
+        autoEditLockProperty.set(!isLayout); // when layout, don't lock graph edit
+        layoutRunningProperty.set(isLayout);
+        continuousLayoutOnProperty.set(false);
         algorithmRunningProperty.set(true);
+        workingProperty.set(true);
 
         // reset graph
         graphManager.resetGraph();
@@ -258,21 +261,21 @@ public class MainViewModel implements ViewModel {
         layoutRunningProperty.set(false);
     }
 
-    private void startAutoLayout(){
-        autoLayout = new AutoD3LayoutTask(layoutScope, graphManager);
-        autoLayout.setPainter(canvasScope.getPainter());
-        Thread thread = new Thread(autoLayout);
+    private void startContinuousLayout(){
+        continuousLayout = new ContinuousD3LayoutTask(layoutScope, graphManager);
+        continuousLayout.setPainter(canvasScope.getPainter());
+        Thread thread = new Thread(continuousLayout);
         thread.start();
 
         layoutRunningProperty.set(true);
-        autoLayoutOnProperty.set(true);
+        continuousLayoutOnProperty.set(true);
     }
 
-    private void stopAutoLayout(){
-        if (autoLayout != null) {
-            autoLayout.cancel();
+    private void stopContinuousLayout(){
+        if (continuousLayout != null) {
+            continuousLayout.cancel();
             layoutRunningProperty.set(false);
-            autoLayoutOnProperty.set(false);
+            continuousLayoutOnProperty.set(false);
         }
     }
 
@@ -377,7 +380,7 @@ public class MainViewModel implements ViewModel {
         // toggle continuous layout
         KeyCodeCombination contLayoutComb = new KeyCodeCombination(KeyCode.L,
                 KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
-        scene.getAccelerators().put(contLayoutComb, () -> autoLayoutOnProperty.set(autoLayoutOnProperty.not().get()));
+        scene.getAccelerators().put(contLayoutComb, () -> continuousLayoutOnProperty.set(continuousLayoutOnProperty.not().get()));
 
         // toggle erase mode
         KeyCodeCombination eraseComb = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN);
@@ -433,12 +436,12 @@ public class MainViewModel implements ViewModel {
         return appColorProperty;
     }
 
-    public boolean isAutoLayoutOn() {
-        return autoLayoutOnProperty.get();
+    public boolean isContinuousLayoutOn() {
+        return continuousLayoutOnProperty.get();
     }
 
-    public BooleanProperty autoLayoutOnProperty() {
-        return autoLayoutOnProperty;
+    public BooleanProperty continuousLayoutOnProperty() {
+        return continuousLayoutOnProperty;
     }
 
     public DoubleProperty leftPanelWidthProperty() {

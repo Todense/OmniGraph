@@ -80,7 +80,9 @@ public abstract class LayoutTask extends AlgorithmTask {
             updateGraph(graph);
             onIterationEnd();
             topologyChanged = graphManager.performQueuedOperations();
-            sleepIfNeeded();
+            if(super.isConnectedToUI()){
+                sleepIfNeeded();
+            }
         }
         super.repaint();
     }

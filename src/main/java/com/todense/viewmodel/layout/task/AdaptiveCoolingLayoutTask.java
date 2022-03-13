@@ -22,7 +22,7 @@ public class AdaptiveCoolingLayoutTask extends LayoutTask {
 
 	public AdaptiveCoolingLayoutTask(LayoutScope layoutScope, GraphManager graphManager) {
 		super(layoutScope, graphManager);
-		super.algorithmName = "Yifan Hu Layout";
+		super.algorithmName = "Adaptive Cooling Layout";
 		layoutScope.setStepSize(layoutScope.getInitialStepSize());
 	}
 
@@ -154,6 +154,6 @@ public class AdaptiveCoolingLayoutTask extends LayoutTask {
 	}
 
 	private double getRepulsiveStrength(){
-		return Math.pow(layoutScope.getHuOptDist(), longRangeExponent);
+		return -Math.pow(layoutScope.getHuOptDist(), longRangeExponent);
 	}
 }

@@ -3,11 +3,12 @@ package com.todense.viewmodel.layout.task;
 import com.todense.viewmodel.graph.GraphManager;
 import com.todense.viewmodel.scope.LayoutScope;
 
-public class AutoD3LayoutTask extends D3LayoutTask{
+public class ContinuousD3LayoutTask extends D3LayoutTask{
 
 
-    public AutoD3LayoutTask(LayoutScope layoutScope, GraphManager graphManager) {
+    public ContinuousD3LayoutTask(LayoutScope layoutScope, GraphManager graphManager) {
         super(layoutScope, graphManager);
+        super.algorithmName = "Continuous D3 Layout";
     }
 
     @Override

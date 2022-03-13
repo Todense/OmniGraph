@@ -6,6 +6,7 @@ import com.todense.viewmodel.MainViewModel;
 import com.todense.viewmodel.SaveViewModel;
 import de.saxsys.mvvmfx.*;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
@@ -112,8 +113,15 @@ public class MainView implements FxmlView<MainViewModel> {
             }
         });
 
-        autoLayoutToggleButton.selectedProperty().bindBidirectional(viewModel.autoLayoutOnProperty());
-        layoutMenuHBox.disableProperty().bind(viewModel.algorithmRunningProperty());
+        autoLayoutToggleButton.selectedProperty().bindBidirectional(viewModel.continuousLayoutOnProperty());
+
+        var nonLayoutAlgorithmRunning = Bindings.createBooleanBinding(
+                () -> viewModel.algorithmRunningProperty().get() && viewModel.layoutRunningProperty().not().get(),
+                viewModel.algorithmRunningProperty(),
+                viewModel.layoutRunningProperty()
+        );
+
+        layoutMenuHBox.disableProperty().bind(nonLayoutAlgorithmRunning);
 
         eraseModeToggleButton.selectedProperty().bindBidirectional(viewModel.eraseModeOnProperty());
         eraseModeToggleButton.disableProperty().bind(lockToggleButton.selectedProperty());
