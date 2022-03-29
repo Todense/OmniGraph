@@ -103,7 +103,7 @@
             <FontIcon iconColor="#e14444" iconLiteral="fas-stop" iconSize="15" selectionStart="0" styleClass="stop-icon" />
          </graphic>
          <tooltip>
-            <Tooltip text="Stop all" />
+            <Tooltip text="Stop layout" />
          </tooltip>
       </Button>
       <Button layoutX="153.0" layoutY="10.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#randomLayoutAction" prefHeight="25.0" prefWidth="25.0">

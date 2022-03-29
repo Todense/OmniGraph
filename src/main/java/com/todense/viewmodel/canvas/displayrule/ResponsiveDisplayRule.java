@@ -36,7 +36,7 @@ public class ResponsiveDisplayRule extends DefaultDisplayRule{
     @Override
     public Color getEdgeColor(Edge edge) {
         Color displayColor = super.getEdgeColor(edge);
-        if(edge.isHighlighted() || edge.isSelected() || edge.isMarked()){
+        if(edge.isHighlighted()){
             displayColor = displayColor.brighter().brighter();
         }
         return displayColor;

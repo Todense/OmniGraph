@@ -216,7 +216,6 @@ public class MainViewModel implements ViewModel {
         animationScope.pausedProperty().addListener((obs, oldVal, newVal) ->{
             if(layoutRunningProperty.get()){
                 graphManager.setQueueGraphOperationsOn(!newVal);
-                writeEvent("Queue set to: "+(!newVal));
             }
 
         });

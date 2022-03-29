@@ -51,7 +51,7 @@ public class RandomGraphGenerator {
             }
 
             if(failCount > 1000){
-                throw new RuntimeException("Minimum node distance is too big");
+                throw new RuntimeException("Minimum node distance is too large");
             }
         }
     }
