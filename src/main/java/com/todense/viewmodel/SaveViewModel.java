@@ -7,6 +7,7 @@ import com.todense.viewmodel.file.format.GraphFileFormat;
 import com.todense.viewmodel.file.format.graphml.GraphMLWriter;
 import com.todense.viewmodel.file.format.mtx.MtxWriter;
 import com.todense.viewmodel.file.format.ogr.OgrWriter;
+import com.todense.viewmodel.file.format.svg.SvgWriter;
 import com.todense.viewmodel.file.format.tsp.TspWriter;
 import com.todense.viewmodel.scope.FileScope;
 import com.todense.viewmodel.scope.GraphScope;
@@ -37,12 +38,15 @@ public class SaveViewModel implements ViewModel {
         Graph graph = graphScope.getGraphManager().getGraph();
         graph.setName(name);
         File file = new File(directory+File.separator+graph +"."+ graphFileFormat.getExtension());
-        GraphWriter graphWriter = null;
+        GraphWriter graphWriter;
         switch (graphFileFormat){
             case OGR: graphWriter = new OgrWriter(); break;
             case TSP: graphWriter = new TspWriter(); break;
             case MTX: graphWriter = new MtxWriter(); break;
             case GRAPHML: graphWriter = new GraphMLWriter(); break;
+            case SVG: graphWriter = new SvgWriter(); break;
+            default:
+                throw new IllegalArgumentException("Unknown graph format");
         }
         boolean saveSuccess = true;
         try {
