@@ -182,8 +182,8 @@ public class MainViewModel implements ViewModel {
         notificationCenter.subscribe(GraphViewModel.NEW_GRAPH_SET, (key, payload) -> {
             // reset continuous layout
             if(isContinuousLayoutOn()) {
-                stopContinuousLayout();
-                startContinuousLayout();
+                stopContinuousLayout(false);
+                startContinuousLayout(false);
             }
         });
 
@@ -204,9 +204,9 @@ public class MainViewModel implements ViewModel {
         // listen to continuous layout on/off - start/stop layout
         continuousLayoutOnProperty.addListener((obs, oldVal, newVal) -> {
             if(newVal){
-                startContinuousLayout();
+                startContinuousLayout(false);
             }else {
-                stopContinuousLayout();
+                stopContinuousLayout(false);
                 canvasScope.getPainter().stopAnimationTimer();
             }
         });
@@ -231,11 +231,12 @@ public class MainViewModel implements ViewModel {
         writeEvent(taskName + " started");
         writeInfo("Running: "+ taskName);
 
+        stopContinuousLayout(true);
+
         // set flags
         boolean isLayout = task instanceof LayoutTask;
         autoEditLockProperty.set(!isLayout); // when layout, don't lock graph edit
         layoutRunningProperty.set(isLayout);
-        continuousLayoutOnProperty.set(false);
         algorithmRunningProperty.set(true);
         workingProperty.set(true);
 
@@ -260,21 +261,30 @@ public class MainViewModel implements ViewModel {
         layoutRunningProperty.set(false);
     }
 
-    private void startContinuousLayout(){
+    // start layout (notify to change toggle button)
+    public void startContinuousLayout(boolean notify){
+        if(algorithmRunningProperty.get()){
+            return;
+        }
+
         continuousLayout = new ContinuousD3LayoutTask(layoutScope, graphManager);
         continuousLayout.setPainter(canvasScope.getPainter());
         Thread thread = new Thread(continuousLayout);
         thread.start();
 
         layoutRunningProperty.set(true);
-        continuousLayoutOnProperty.set(true);
+
+        if(notify)
+            continuousLayoutOnProperty.set(true);
     }
 
-    private void stopContinuousLayout(){
+    // stop layout (notify to change toggle button)
+    public void stopContinuousLayout(boolean notify){
         if (continuousLayout != null) {
             continuousLayout.cancel();
             layoutRunningProperty.set(false);
-            continuousLayoutOnProperty.set(false);
+            if(notify)
+                continuousLayoutOnProperty.set(false);
         }
     }
 
@@ -379,7 +389,15 @@ public class MainViewModel implements ViewModel {
         // toggle continuous layout
         KeyCodeCombination contLayoutComb = new KeyCodeCombination(KeyCode.L,
                 KeyCombination.CONTROL_DOWN, KeyCombination.SHIFT_DOWN);
-        scene.getAccelerators().put(contLayoutComb, () -> continuousLayoutOnProperty.set(continuousLayoutOnProperty.not().get()));
+        scene.getAccelerators().put(contLayoutComb, () -> {
+            if(!algorithmRunningProperty.get() || isContinuousLayoutOn()){ //if other algorithm isn't running
+                if(isContinuousLayoutOn()){
+                    stopContinuousLayout(true);
+                }else{
+                    startContinuousLayout(true);
+                }
+            }
+        });
 
         // toggle erase mode
         KeyCodeCombination eraseComb = new KeyCodeCombination(KeyCode.F, KeyCombination.CONTROL_DOWN);

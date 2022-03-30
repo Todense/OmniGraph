@@ -113,7 +113,9 @@ public class MainView implements FxmlView<MainViewModel> {
             }
         });
 
+
         autoLayoutToggleButton.selectedProperty().bindBidirectional(viewModel.continuousLayoutOnProperty());
+
 
         var nonLayoutAlgorithmRunning = Bindings.createBooleanBinding(
                 () -> viewModel.algorithmRunningProperty().get() && viewModel.layoutRunningProperty().not().get(),
@@ -121,7 +123,14 @@ public class MainView implements FxmlView<MainViewModel> {
                 viewModel.layoutRunningProperty()
         );
 
+        var nonContinuousLayoutAlgorithmRunning = Bindings.createBooleanBinding(
+                () -> viewModel.algorithmRunningProperty().get() && viewModel.continuousLayoutOnProperty().not().get(),
+                viewModel.algorithmRunningProperty(),
+                viewModel.continuousLayoutOnProperty()
+        );
+
         layoutMenuHBox.disableProperty().bind(nonLayoutAlgorithmRunning);
+        autoLayoutToggleButton.disableProperty().bind(nonContinuousLayoutAlgorithmRunning);
 
         eraseModeToggleButton.selectedProperty().bindBidirectional(viewModel.eraseModeOnProperty());
         eraseModeToggleButton.disableProperty().bind(lockToggleButton.selectedProperty());
