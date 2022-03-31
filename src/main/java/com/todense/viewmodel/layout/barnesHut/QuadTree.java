@@ -1,7 +1,7 @@
 package com.todense.viewmodel.layout.barnesHut;
 
 import com.todense.model.graph.Graph;
-import com.todense.model.graph.Node;
+import com.todense.util.Util;
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 
@@ -15,7 +15,7 @@ public class QuadTree {
     private final Cell root;
 
     public QuadTree(int depth, Graph graph){
-        Rectangle2D boundarySquare = getGraphBoundary(graph);
+        Rectangle2D boundarySquare = Util.getGraphBoundary(graph, true);
         Point2D center = new Point2D(boundarySquare.getMinX() + boundarySquare.getWidth()/2,
                 boundarySquare.getMinY() + boundarySquare.getHeight()/2);
 
@@ -37,31 +37,7 @@ public class QuadTree {
         root.calcCenterOfMassFromChildren();
     }
 
-    public Rectangle2D getGraphBoundary(Graph graph){
-        double xMin = Double.MAX_VALUE;
-        double yMin = Double.MAX_VALUE;
-        double xMax = -Double.MAX_VALUE;
-        double yMax = -Double.MAX_VALUE;
 
-        for (Node node : graph.getNodes()) {
-            double x = node.getPos().getX();
-            if(x < xMin) xMin = x;
-            if(x > xMax) xMax = x;
-
-            double y = node.getPos().getY();
-            if(y < yMin) yMin = y;
-            if(y > yMax) yMax = y;
-        }
-
-        double squareLength = Math.max(xMax-xMin, yMax-yMin);
-
-        if(Double.isInfinite(squareLength)){
-            throw new IncorrectGraphBoundaryException("Infinite boundary width");
-        }else if(squareLength <= 0){
-            throw new IncorrectGraphBoundaryException("Non positive boundary width");
-        }
-        return new Rectangle2D(xMin, yMin, squareLength, squareLength);
-    }
 
 
     public Cell getRoot() {
