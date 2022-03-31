@@ -1,8 +1,12 @@
 package com.todense.util;
 
+import com.todense.model.graph.Graph;
+import com.todense.model.graph.Node;
+import com.todense.viewmodel.layout.barnesHut.IncorrectGraphBoundaryException;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.StringProperty;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.paint.Color;
@@ -57,6 +61,42 @@ public class Util {
 
     public static void bindSliderAndTextField(Slider slider, TextField textField){
         bindSliderAndTextField(slider, textField, "###.###");
+    }
+
+    public static Rectangle2D getGraphBoundary(Graph graph, boolean asSquare){
+        double xMin = Double.MAX_VALUE;
+        double yMin = Double.MAX_VALUE;
+        double xMax = -Double.MAX_VALUE;
+        double yMax = -Double.MAX_VALUE;
+
+        for (Node node : graph.getNodes()) {
+            double x = node.getPos().getX();
+            if(x < xMin) xMin = x;
+            if(x > xMax) xMax = x;
+
+            double y = node.getPos().getY();
+            if(y < yMin) yMin = y;
+            if(y > yMax) yMax = y;
+        }
+
+        double width, height;
+
+        if(asSquare){
+            double squareLength = Math.max(xMax-xMin, yMax-yMin);
+            width = squareLength;
+            height = squareLength;
+        }
+        else{
+            width = xMax-xMin;
+            height = yMax-yMin;
+        }
+
+        if(Double.isInfinite(width) || Double.isInfinite(height)){
+            throw new IncorrectGraphBoundaryException("Infinite boundary width or height");
+        }else if(width <= 0 || height <= 0){
+            throw new IncorrectGraphBoundaryException("Non positive boundary width or height");
+        }
+        return new Rectangle2D(xMin, yMin, width, height);
     }
 
 }

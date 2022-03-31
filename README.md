@@ -97,6 +97,7 @@ Supported file formats:
 * .tsp -  [TSPLIB](http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/) format for the travelling salesman problem (only EUC_2D edge weight type)
 * .mtx - [Matrix Market](https://math.nist.gov/MatrixMarket/) format (save structure of a graph)
 * .graphml - [GraphML](http://graphml.graphdrawing.org/) format (save node positions)
+* .svg - export graph as SVG image
 
 
 ## Build with

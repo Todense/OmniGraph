@@ -7,13 +7,17 @@ import com.todense.viewmodel.file.format.GraphFileFormat;
 import com.todense.viewmodel.file.format.graphml.GraphMLWriter;
 import com.todense.viewmodel.file.format.mtx.MtxWriter;
 import com.todense.viewmodel.file.format.ogr.OgrWriter;
+import com.todense.viewmodel.file.format.svg.SvgBackground;
 import com.todense.viewmodel.file.format.svg.SvgWriter;
 import com.todense.viewmodel.file.format.tsp.TspWriter;
+import com.todense.viewmodel.scope.BackgroundScope;
 import com.todense.viewmodel.scope.FileScope;
 import com.todense.viewmodel.scope.GraphScope;
 import de.saxsys.mvvmfx.InjectScope;
 import de.saxsys.mvvmfx.ViewModel;
 import de.saxsys.mvvmfx.utils.notifications.NotificationCenter;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
@@ -27,10 +31,15 @@ public class SaveViewModel implements ViewModel {
     GraphScope graphScope;
 
     @InjectScope
+    BackgroundScope backgroundScope;
+
+    @InjectScope
     FileScope fileScope;
 
     @Inject
     NotificationCenter notificationCenter;
+
+    private final ObjectProperty<SvgBackground> svgBackgroundProperty = new SimpleObjectProperty<>();
 
     private final StringProperty errorMessageProperty = new SimpleStringProperty();
 
@@ -44,7 +53,9 @@ public class SaveViewModel implements ViewModel {
             case TSP: graphWriter = new TspWriter(); break;
             case MTX: graphWriter = new MtxWriter(); break;
             case GRAPHML: graphWriter = new GraphMLWriter(); break;
-            case SVG: graphWriter = new SvgWriter(); break;
+            case SVG:
+                graphWriter = new SvgWriter(graphScope, backgroundScope, getSvgBackground());
+            break;
             default:
                 throw new IllegalArgumentException("Unknown graph format");
         }
@@ -69,6 +80,14 @@ public class SaveViewModel implements ViewModel {
 
     public FileScope getFileScope() {
         return fileScope;
+    }
+
+    public SvgBackground getSvgBackground() {
+        return svgBackgroundProperty.get();
+    }
+
+    public ObjectProperty<SvgBackground> svgBackgroundProperty() {
+        return svgBackgroundProperty;
     }
 
     public StringProperty errorMessageProperty() {
